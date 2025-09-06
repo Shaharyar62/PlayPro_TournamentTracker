@@ -16,7 +16,7 @@ import logo9 from "./logos/9.png";
 import appStore from "./apple.jpg";
 import googlePlay from "./google.jpg";
 import sdksl from "./akdsl.png";
-import sponsor from "./sponsor.jpg";
+import sponsor from "./bg-img.jpg";
 
 import playproColorVertical from "./playpro_logo_vertical.png";
 import padelVersewhite from "./padelverselogo.png";
