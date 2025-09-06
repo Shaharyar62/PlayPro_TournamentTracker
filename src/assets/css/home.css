@@ -1,0 +1,107 @@
+.home-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  }
+  
+  .home-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  
+  .buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1200px;
+  }
+  
+  .button-wrapper {
+    display: flex;
+    width: 100%;
+  }
+  
+  .nav-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 150px;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+  }
+  a.nav-button:hover{
+    color: #f5f7fa !important;
+  }
+  .button-content {
+    z-index: 1;
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  .nav-button:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(0);
+    transition: 0.5s;
+    border-radius: 50%;
+  }
+  
+  .nav-button:hover:after {
+    transform: scale(2);
+  }
+  
+  /* Make it responsive */
+  @media (max-width: 768px) {
+    .buttons-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .home-header h1 {
+      font-size: 2.5rem;
+    }
+    
+    .nav-button {
+      height: 120px;
+    }
+  }
+
+  footer a:hover {
+    color: #fff;
+}
+footer a {
+  color: #fff;
+}
+.cus-width{
+  min-width: 700px;
+}
+.cus-sty-img.playpro-logo{    width: 337px;
+  height: 146px !important;
+  margin-left: 100px;
+}
+.cus-sty-img.akd-logo{
+object-position: 0px -42px;
+margin-right: 90px;
+}
+.cus-sty-img{
+  object-fit: cover !important;
+  height: 185px !important;
+}

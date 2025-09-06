@@ -1,0 +1,22 @@
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBOhZEXvcPpTgk8HygkqyAEIBs9XG7-BJU",
+  authDomain: "playpro-tscore.firebaseapp.com",
+  projectId: "playpro-tscore",
+  storageBucket: "playpro-tscore.firebasestorage.app",
+  messagingSenderId: "423605339456",
+  appId: "1:423605339456:web:8aad6433e70b4e5ce626a5",
+  measurementId: "G-CM2J943F1W"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
