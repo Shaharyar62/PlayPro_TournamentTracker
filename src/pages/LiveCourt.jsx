@@ -13,6 +13,7 @@ const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
   const courtId = searchParams.get("courtId");
+  const teamNamesCatIds = [74, 75];
 
   // State management
   const [matchData, setMatchData] = useState(null);
@@ -77,19 +78,21 @@ const MatchScoreCard = () => {
 
       if (response?.data) {
         setUpcomingMatch(response.data.upcomingMatch);
-        setMatchData(response.data.currentMatch);
+        var currentMatch = response.data.currentMatch;
+        setMatchData(currentMatch);
 
         debugger
         // If current match is in progress, set up Firebase listener
         if (
-          response.data.currentMatch?.playStatus ===
+          currentMatch?.playStatus ===
           TournamentMatchPlayStatusEnum.In_Progress ||
-          response.data.currentMatch?.playStatus ===
+          currentMatch?.playStatus ===
           TournamentMatchPlayStatusEnum.Completed
         ) {
+          debugger;
           const unsubscribe = listenToSpecificMatch(
-            tournamentId,
-            response.data.currentMatch.id.toString(),
+            currentMatch.tournamentId.toString(),
+            currentMatch.id.toString(),
             (firebaseMatch) => {
               if (firebaseMatch) {
                 matchStatus.current = firebaseMatch["status"];
@@ -217,7 +220,10 @@ const MatchScoreCard = () => {
   // Get display data - use Firebase data if available, otherwise use API data
   const displayMatch = liveMatchData;
 
-  const getTeamName = (team) => team?.teamName || team?.name || "Team";
+  const getTeamName = (team) => {
+    debugger;
+    return team?.teamName || team?.name || "Team";
+  }
 
   // Helper functions for JSON data binding
   const getNumberOfSets = () => {
@@ -296,6 +302,8 @@ const MatchScoreCard = () => {
     if (liveMatchData?.isInTiebreak) return "TIEBREAK";
     return "SCORE";
   };
+
+
 
   return (
     <>
@@ -391,16 +399,19 @@ const MatchScoreCard = () => {
                       <div className="flex items-center justify-between  justify-center px-4">
                         <div className="flex items-center space-x-4">
                           <div>
-                            <div className="text-2xl  font-bold text-gray-800 mb-1">
-                              {getPlayerName(1, 0)} & {getPlayerName(1, 1)}
+                            <div className="text-3xl  font-bold text-gray-800 mb-1">
+
+                              {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamA) : getPlayerName(1, 0) + " & " + getPlayerName(1, 1)} */}
+                              {getTeamName(matchData.teamA)}
+                              {/* {getPlayerName(1, 0)} & {getPlayerName(1, 1)} */}
                             </div>
                             {/* <div className="text-lg text-gray-600">
-                              {getTeamName(displayMatch.teamA)}
+                              {getTeamName(matchData.teamA)}
                             </div> */}
                           </div>
                           {isServingTeam(1) && (
                             <div className="flex items-center text-blue-600">
-                              <span className="text-2xl">
+                              <span className="text-xl">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
                                   width="24"
@@ -413,9 +424,9 @@ const MatchScoreCard = () => {
                                   />
                                 </svg>
                               </span>
-                              <span className="ml-1 text-sm font-medium">
+                              {/* <span className="ml-1 text-sm font-medium">
                                 {getServingPlayerName()}
-                              </span>
+                              </span> */}
                             </div>
                           )}
                         </div>
@@ -446,11 +457,13 @@ const MatchScoreCard = () => {
                       <div className="flex items-center justify-between justify-center px-4">
                         <div className="flex items-center space-x-4">
                           <div>
-                            <div className="text-2xl font-bold text-gray-800 mb-1">
-                              {getPlayerName(2, 0)} & {getPlayerName(2, 1)}
+                            <div className="text-3xl font-bold text-gray-800 mb-1">
+                              {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamB) : getPlayerName(2, 0) + " & " + getPlayerName(2, 1)} */}
+                              {getTeamName(matchData.teamB)}
+                              {/* {getTeamName(matchData.teamB)} */}
                             </div>
                             {/* <div className="text-lg text-gray-600">
-                              {getTeamName(displayMatch.teamB)}
+                              {getTeamName(matchData.teamB)}
                             </div> */}
                           </div>
                           {isServingTeam(2) && (
@@ -468,9 +481,9 @@ const MatchScoreCard = () => {
                                   />
                                 </svg>
                               </span>
-                              <span className="ml-1 text-sm font-medium">
+                              {/* <span className="ml-1 text-sm font-medium">
                                 {getServingPlayerName()}
-                              </span>
+                              </span> */}
                             </div>
                           )}
                         </div>

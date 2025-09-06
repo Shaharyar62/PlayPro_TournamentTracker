@@ -715,6 +715,7 @@ export const getSpecificMatch = async (tournamentId, matchId) => {
  * Listen to a specific match updates
  */
 export const listenToSpecificMatch = (tournamentId, matchId, callback) => {
+  debugger;
   const matchRef = doc(db, tableName, tournamentId, "matches", matchId);
 
   // Set up real-time listener for specific match
