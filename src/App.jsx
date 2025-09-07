@@ -14,6 +14,8 @@ import LiveCourt from "./pages/LiveCourt";
 import Common from "./helper/common";
 import Scoreboard from "./live/overlays/scorebar";
 import NullLayout from "./components/NullLayout";
+import UmpirePage from "./pages/UmpirePage";
+import UserPage from "./pages/UserPage";
 
 function App() {
   const isLoaded = useRef(false);
@@ -39,6 +41,8 @@ function App() {
           <Route path="score-table" element={<ScoreTable />} />
           <Route path="score-card" element={<ScoreCard />} />
           <Route path="today-match" element={<TodayMatch />} />
+          <Route path="umpire" element={<UmpirePage />} />
+          <Route path="viewer" element={<UserPage />} />
 
           {/* <Route
             path="matches-timetable"
