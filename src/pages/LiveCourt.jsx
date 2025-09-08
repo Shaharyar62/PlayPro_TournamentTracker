@@ -350,8 +350,8 @@ const MatchScoreCard = () => {
   };
 
   const getHeaderText = () => {
-    if (liveMatchData?.isInSuperTiebreak) return "SUPER TIEBREAK";
-    if (liveMatchData?.isInTiebreak) return "TIEBREAK";
+    if (liveMatchData?.isInSuperTiebreak) return "SUPER TIE BREAK";
+    if (liveMatchData?.isInTiebreak) return "TIE BREAK";
     return "SCORE";
   };
 
@@ -382,7 +382,7 @@ const MatchScoreCard = () => {
               }`}
             ></div>
             <span className="text-sm font-medium">
-              {isConnected ? "Connected" : "Disconnected"}
+              {isConnected ? "Live" : "Network Error"}
             </span>
           </div>
         </div>
@@ -428,7 +428,7 @@ const MatchScoreCard = () => {
             </div>
 
             {/* Main scoreboard */}
-            <div className="bg-white rounded-lg ml-[100px] mr-[100px] mt-0 mb-[80px] shadow-2xl overflow-hidden">
+            <div className="bg-white rounded-lg ml-[100px] mr-[100px] mt-0 mb-[60px] shadow-2xl overflow-hidden">
               {/* Header row - Dynamic based on number of sets */}
               <div className="bg-[#015d9c] text-white py-4">
                 <div
@@ -448,7 +448,7 @@ const MatchScoreCard = () => {
                     </div>
                   ))}
                   <div className="text-center">
-                    <h2 className="text-4xl font-bold">{getHeaderText()}</h2>
+                    <h2 className="text-4xl font-bold">{getHeaderText()} </h2>
                   </div>
                 </div>
               </div>
