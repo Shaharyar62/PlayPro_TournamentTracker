@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "network": "vite --host",
     "preview": "vite preview",
     "live": "yarn build && firebase deploy --only hosting",
     "build:dev": "vite build --mode development",

@@ -7,6 +7,7 @@ const ScoreViewer = ({ matchId, tournamentId, onClose }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showResetNotification, setShowResetNotification] = useState(false);
   const socketRef = useRef(null);
 
   useEffect(() => {
@@ -43,6 +44,16 @@ const ScoreViewer = ({ matchId, tournamentId, onClose }) => {
       console.log("Match update received:", data);
       setMatchData(data);
       setLoading(false);
+    });
+
+    // Listen for reset events
+    socket.on(`match_reset_${matchId}`, (data) => {
+      console.log("Match reset received:", data);
+      setMatchData(data);
+      setLoading(false);
+      setShowResetNotification(true);
+      // Hide notification after 3 seconds
+      setTimeout(() => setShowResetNotification(false), 3000);
     });
 
     // Listen for tournament updates
@@ -205,6 +216,11 @@ const ScoreViewer = ({ matchId, tournamentId, onClose }) => {
             <span className="active">Match in Progress</span>
           )}
         </div>
+        {showResetNotification && (
+          <div className="reset-notification">
+            🔄 Match has been reset by the scorer
+          </div>
+        )}
       </div>
 
       <div className="scoreboard">

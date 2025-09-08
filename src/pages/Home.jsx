@@ -7,37 +7,37 @@ import { ImageConstants } from "../assets/images/ImageConstants";
 const Home = () => {
   const pages = [
     {
-      path: "/live-court?tournamentId=76&courtId=79",
+      path: "/live-court?tournamentId=25&courtId=79",
       name: "Galaxy 1 -",
       color: "#2e55b9",
     },
     {
-      path: "/live-court?tournamentId=76&courtId=80",
+      path: "/live-court?tournamentId=25&courtId=80",
       name: "Galaxy 2",
       color: "#2e55b9",
     },
     {
-      path: "/live-court?tournamentId=76&courtId=81",
+      path: "/live-court?tournamentId=25&courtId=81",
       name: "Galaxy 3",
       color: "#2e55b9",
     },
     {
-      path: "/live-court?tournamentId=76&courtId=82",
+      path: "/live-court?tournamentId=25&courtId=82",
       name: "Galaxy 4",
       color: "#2e55b9",
     },
     {
-      path: "/live-court?tournamentId=76&courtId=83",
+      path: "/live-court?tournamentId=25&courtId=83",
       name: "Black Star 1 -",
       color: "#2e55b9",
     },
     {
-      path: "/live-court?tournamentId=76&courtId=84",
+      path: "/live-court?tournamentId=25&courtId=84",
       name: "Black Star 2",
       color: "#2e55b9",
     },
     {
-      path: "/live-court?tournamentId=76&courtId=85",
+      path: "/live-court?tournamentId=25&courtId=85",
       name: "Infinity -",
       color: "#2e55b9",
     },

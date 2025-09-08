@@ -112,7 +112,13 @@ body{
   }
 }
 
+body{
+  background-color: #2b2b8a !important;
+}
 
+.main-body {
+  background-size: cover !important;
+  background-repeat: repeat !important;}
 
 
 
