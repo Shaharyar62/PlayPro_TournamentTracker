@@ -28,6 +28,12 @@ const MatchScoreCard = () => {
   const matchStatus = useRef();
   const socketRef = useRef(null);
 
+  useEffect(() => {
+    if (liveMatchData) {
+      matchStatus.current = liveMatchData.status;
+    }
+  }, [liveMatchData]);
+
   // Tennis scoring constants
   const scoreStrings = ["0", "15", "30", "40", "AD"];
 
@@ -58,6 +64,9 @@ const MatchScoreCard = () => {
 
   // Function to fetch court match schedule
   const fetchCourtMatchSchedule = async () => {
+    if (matchStatus.current && matchStatus.current !== "completed") {
+      return;
+    }
     console.log("Fetching court match schedule");
     if (!tournamentId || !courtId) {
       setError("Tournament ID and Court ID are required");
@@ -119,7 +128,7 @@ const MatchScoreCard = () => {
     }
 
     // Initialize socket connection
-    const socket = io("http://3.216.122.79", {
+    const socket = io("https://ttwp.playpro.pk", {
       transports: ["websocket"],
       timeout: 20000,
       reconnectionAttempts: 5,
@@ -207,7 +216,7 @@ const MatchScoreCard = () => {
       // Set up 10-minute interval for schedule updates
       intervalId = setInterval(async () => {
         await fetchCourtMatchSchedule();
-      }, 10 * 60 * 1000); // 10 minutes
+      }, 30000); // 30 seconds
     };
 
     setupDataFetching();
@@ -265,7 +274,6 @@ const MatchScoreCard = () => {
   const displayMatch = liveMatchData || matchData;
 
   const getTeamName = (team) => {
-    debugger;
     return team?.teamName || team?.name || "Team";
   };
 
