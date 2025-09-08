@@ -609,17 +609,7 @@ const MatchScoreCard = () => {
             {/* Bottom indicator and Upcoming Match */}
             <div className="grid grid-cols-3 gap-4 items-center mt-[-10px]">
               <div className="bg-[#015d9c] ml-5 text-white w-min px-[50px] whitespace-nowrap py-1 rounded-lg font-bold text-3xl">
-                {liveMatchData && liveMatchData.status === "ongoing"
-                  ? getMatchFormat()
-                  : liveMatchData && liveMatchData.status === "completed"
-                  ? "COMPLETED"
-                  : displayMatch?.playStatus ===
-                    TournamentMatchPlayStatusEnum.In_Progress
-                  ? "LIVE"
-                  : displayMatch?.playStatus ===
-                    TournamentMatchPlayStatusEnum.Completed
-                  ? "COMPLETED"
-                  : "SCHEDULED"}
+                {getMatchFormat()}
               </div>
               <div className="font-bold text-3xl text-center text-white">
                 {matchData.court?.name || "LIVE SCOREBOARD"}
