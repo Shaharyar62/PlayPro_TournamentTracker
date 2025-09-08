@@ -42,6 +42,9 @@ const ScoreViewer = ({ matchId, tournamentId, onClose }) => {
     // Listen for match updates
     socket.on(`match_update_${matchId}`, (data) => {
       console.log("Match update received:", data);
+      console.log("Sets data:", data.sets);
+      console.log("Team1 sets:", data.team1?.sets);
+      console.log("Team2 sets:", data.team2?.sets);
       setMatchData(data);
       setLoading(false);
     });
@@ -93,15 +96,25 @@ const ScoreViewer = ({ matchId, tournamentId, onClose }) => {
   };
 
   const getSetScore = (teamName, setIndex) => {
-    if (!matchData || !matchData.sets) return "-";
+    if (!matchData || !matchData.sets) {
+      console.log(`No match data or sets for ${teamName} set ${setIndex}`);
+      return "-";
+    }
 
     const setKey = setIndex.toString();
     const setData = matchData.sets[setKey];
 
-    if (!setData) return "-";
+    if (!setData) {
+      console.log(
+        `No set data for ${teamName} set ${setIndex} (key: ${setKey})`
+      );
+      return "-";
+    }
 
     const teamKey = teamName === "Team 1" ? "team1Games" : "team2Games";
-    return setData[teamKey] || 0;
+    const score = setData[teamKey] || 0;
+    console.log(`${teamName} set ${setIndex}: ${score} (from ${teamKey})`);
+    return score;
   };
 
   const getCurrentScore = (teamName) => {

@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Trophy, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { ImageConstants } from "../assets/images/ImageConstants";
-import { listenToSpecificMatch } from "../services/FirebaseService";
+import io from "socket.io-client";
 import Common from "../helper/common";
 import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
 import moment from "moment-timezone";
@@ -13,7 +13,6 @@ const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
   const courtId = searchParams.get("courtId");
-  const teamNamesCatIds = [74, 75];
 
   // State management
   const [matchData, setMatchData] = useState(null);
@@ -23,8 +22,11 @@ const MatchScoreCard = () => {
   const [error, setError] = useState(null);
   const [displayTime, setDisplayTime] = useState(moment().tz("Asia/Karachi"));
   const [liveMatchData, setLiveMatchData] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [showResetNotification, setShowResetNotification] = useState(false);
 
   const matchStatus = useRef();
+  const socketRef = useRef(null);
 
   // Tennis scoring constants
   const scoreStrings = ["0", "15", "30", "40", "AD"];
@@ -52,14 +54,10 @@ const MatchScoreCard = () => {
     }
   };
 
-  // No transformation needed - use Firebase data directly
+  // WebSocket data handling
 
   // Function to fetch court match schedule
   const fetchCourtMatchSchedule = async () => {
-    if (matchStatus.current && matchStatus.current === "ongoing") {
-      console.log("Live match data is ongoing");
-      return;
-    }
     console.log("Fetching court match schedule");
     if (!tournamentId || !courtId) {
       setError("Tournament ID and Court ID are required");
@@ -81,63 +79,24 @@ const MatchScoreCard = () => {
         var currentMatch = response.data.currentMatch;
         setMatchData(currentMatch);
 
-        debugger
-        // If current match is in progress, set up Firebase listener
-        if (
-          currentMatch?.playStatus ===
-          TournamentMatchPlayStatusEnum.In_Progress ||
-          currentMatch?.playStatus ===
-          TournamentMatchPlayStatusEnum.Completed
-        ) {
-          debugger;
-          const unsubscribe = listenToSpecificMatch(
-            currentMatch.tournamentId.toString(),
-            currentMatch.id.toString(),
-            (firebaseMatch) => {
-              if (firebaseMatch) {
-                matchStatus.current = firebaseMatch["status"];
-                var match = firebaseMatch;
-                if (match["status"] === "completed" && match["history"]) {
-                  var lastHistory =
-                    match["history"][match["history"].length - 1].previousState;
-                  debugger;
-                  if (
-                    (lastHistory.isInSuperTiebreak ||
-                      lastHistory.isInTiebreak) &&
-                    match.matchSettings.numberOfSets === 2
-                  ) {
-                    var winnerTeamSuperTiebreakScore =
-                      lastHistory.team1TiebreakScore >
-                        lastHistory.team2TiebreakScore
-                        ? "team1"
-                        : "team2";
-
-                    match = {
-                      ...match,
-                      isInSuperTiebreak: match.matchSettings.numberOfSets === 2,
-                      team1: {
-                        ...match.team1,
-                        tiebreakScore:
-                          winnerTeamSuperTiebreakScore === "team1"
-                            ? lastHistory.team1TiebreakScore + 1
-                            : lastHistory.team1TiebreakScore,
-                      },
-                      team2: {
-                        ...match.team2,
-                        tiebreakScore:
-                          winnerTeamSuperTiebreakScore === "team2"
-                            ? lastHistory.team2TiebreakScore + 1
-                            : lastHistory.team2TiebreakScore,
-                      },
-                    };
-                  }
-                }
-                setLiveMatchData(match);
-              }
-            }
+        // Always try to set up WebSocket connection for any current match
+        if (currentMatch) {
+          console.log("Setting up WebSocket for current match:", currentMatch);
+          console.log(
+            "Match ID:",
+            currentMatch.id,
+            "Type:",
+            typeof currentMatch.id
           );
+          console.log(
+            "Tournament ID:",
+            tournamentId,
+            "Type:",
+            typeof tournamentId
+          );
+          setupWebSocketConnection(currentMatch);
         } else {
-          // Use API data for completed or pending matches
+          console.log("No current match found");
           setLiveMatchData(null);
         }
 
@@ -152,28 +111,113 @@ const MatchScoreCard = () => {
     }
   };
 
+  // Function to setup WebSocket connection
+  const setupWebSocketConnection = (currentMatch) => {
+    // Disconnect existing socket if any
+    if (socketRef.current) {
+      socketRef.current.disconnect();
+    }
+
+    // Initialize socket connection
+    const socket = io("http://3.216.122.79", {
+      transports: ["websocket"],
+      timeout: 20000,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
+
+    socketRef.current = socket;
+
+    // Connection event handlers
+    socket.on("connect", () => {
+      console.log("Connected to WebSocket server");
+      setIsConnected(true);
+      setError(null);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from WebSocket server");
+      setIsConnected(false);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("WebSocket connection error:", error);
+      setError("Failed to connect to live match server");
+      setIsConnected(false);
+    });
+
+    // Listen for match updates
+    socket.on(`match_update_${currentMatch.id}`, (data) => {
+      console.log("Match update received:", data);
+      matchStatus.current = data.status;
+      setLiveMatchData(data);
+    });
+
+    // Listen for reset events
+    socket.on(`match_reset_${currentMatch.id}`, (data) => {
+      console.log("Match reset received:", data);
+      setLiveMatchData(data);
+      setShowResetNotification(true);
+      // Hide notification after 3 seconds
+      setTimeout(() => setShowResetNotification(false), 3000);
+    });
+
+    // Listen for tournament updates
+    socket.on(`tournament_update_${tournamentId}`, (data) => {
+      console.log("Tournament update received:", data);
+    });
+
+    // Request initial match state
+    const matchStateRequest = {
+      tournamentId: tournamentId.toString(),
+      matchId: currentMatch.id.toString(),
+    };
+    console.log("Requesting match state with:", matchStateRequest);
+    socket.emit("get_match_state", matchStateRequest);
+
+    // Set a timeout to use API data if no response from server
+    const fallbackTimeout = setTimeout(() => {
+      console.log("Timeout waiting for match state, using API data");
+      setLiveMatchData(currentMatch);
+    }, 5000); // 5 second timeout
+
+    // Handle match state response
+    socket.on("get_match_state_response", (data) => {
+      console.log("Match state response received:", data);
+      clearTimeout(fallbackTimeout); // Clear timeout since we got a response
+
+      if (data) {
+        matchStatus.current = data.status;
+        setLiveMatchData(data);
+      } else {
+        console.log("No match state from server, using API data as fallback");
+        // Use API data as fallback when server doesn't have the match
+        setLiveMatchData(currentMatch);
+      }
+    });
+  };
+
   // Initial fetch and setup interval
   useEffect(() => {
     let intervalId;
-    let unsubscribe;
 
     const setupDataFetching = async () => {
-      unsubscribe = await fetchCourtMatchSchedule();
+      await fetchCourtMatchSchedule();
 
-      // Set up 10-minute interval
+      // Set up 10-minute interval for schedule updates
       intervalId = setInterval(async () => {
-        if (unsubscribe) {
-          unsubscribe();
-        }
-        unsubscribe = await fetchCourtMatchSchedule();
-      }, 10 * 60 * 100); // 1 minutes
+        await fetchCourtMatchSchedule();
+      }, 10 * 60 * 1000); // 10 minutes
     };
 
     setupDataFetching();
 
     return () => {
       if (intervalId) clearInterval(intervalId);
-      if (unsubscribe) unsubscribe();
+      // Cleanup WebSocket connection
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
     };
   }, [tournamentId, courtId]);
 
@@ -207,7 +251,7 @@ const MatchScoreCard = () => {
   }
 
   // No match data
-  if (!liveMatchData) {
+  if (!liveMatchData && !matchData) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-4xl font-bold text-gray-600">
@@ -217,13 +261,13 @@ const MatchScoreCard = () => {
     );
   }
 
-  // Get display data - use Firebase data if available, otherwise use API data
-  const displayMatch = liveMatchData;
+  // Get display data - use WebSocket data if available, otherwise use API data
+  const displayMatch = liveMatchData || matchData;
 
   const getTeamName = (team) => {
     debugger;
     return team?.teamName || team?.name || "Team";
-  }
+  };
 
   // Helper functions for JSON data binding
   const getNumberOfSets = () => {
@@ -239,8 +283,8 @@ const MatchScoreCard = () => {
       return liveMatchData.sets[setIndex.toString()][teamKey] || 0;
     }
     // Fallback to API data
-    if (displayMatch.results?.sets?.[setIndex]) {
-      return displayMatch.results.sets[setIndex][`team${teamIndex}`] || "0";
+    if (matchData?.results?.sets?.[setIndex]) {
+      return matchData.results.sets[setIndex][`team${teamIndex}`] || "0";
     }
     return setIndex === 0 ? "0" : "-";
   };
@@ -260,8 +304,8 @@ const MatchScoreCard = () => {
     }
 
     // Fallback to API data
-    if (displayMatch.results?.currentGame) {
-      return displayMatch.results.currentGame[`team${teamIndex}`] || "0";
+    if (matchData?.results?.currentGame) {
+      return matchData.results.currentGame[`team${teamIndex}`] || "0";
     }
     return "0";
   };
@@ -274,7 +318,7 @@ const MatchScoreCard = () => {
     }
 
     // Fallback to API data
-    const team = teamIndex === 1 ? displayMatch.teamA : displayMatch.teamB;
+    const team = teamIndex === 1 ? matchData?.teamA : matchData?.teamB;
     const players = team?.players || [];
     return players[playerIndex]?.name || players[playerIndex]?.playerName || "";
   };
@@ -303,8 +347,6 @@ const MatchScoreCard = () => {
     return "SCORE";
   };
 
-
-
   return (
     <>
       <div className="min-h-screen  from-blue-900 via-blue-800 to-blue-900 relative overflow-hidden">
@@ -322,6 +364,27 @@ const MatchScoreCard = () => {
             />
           ))}
         </div>
+
+        {/* Connection Status */}
+        <div className="absolute top-4 right-4 z-20">
+          <div className="flex items-center space-x-2 bg-black/50 text-white px-3 py-1 rounded-lg">
+            <div
+              className={`w-2 h-2 rounded-full ${
+                isConnected ? "bg-green-500" : "bg-red-500"
+              }`}
+            ></div>
+            <span className="text-sm font-medium">
+              {isConnected ? "Connected" : "Disconnected"}
+            </span>
+          </div>
+        </div>
+
+        {/* Reset Notification */}
+        {showResetNotification && (
+          <div className="absolute top-16 right-4 z-20 bg-yellow-500 text-black px-4 py-2 rounded-lg font-bold animate-pulse">
+            🔄 Match has been reset by the scorer
+          </div>
+        )}
 
         {/* Main content */}
         <div className="relative z-10 flex  mt-[-30px] items-center justify-center min-h-screen">
@@ -400,7 +463,6 @@ const MatchScoreCard = () => {
                         <div className="flex items-center space-x-4">
                           <div>
                             <div className="text-3xl  font-bold text-gray-800 mb-1">
-
                               {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamA) : getPlayerName(1, 0) + " & " + getPlayerName(1, 1)} */}
                               {getTeamName(matchData.teamA)}
                               {/* {getPlayerName(1, 0)} & {getPlayerName(1, 1)} */}
@@ -435,10 +497,11 @@ const MatchScoreCard = () => {
                           {getTeamWarnings(1).map((warning, index) => (
                             <span
                               key={index}
-                              className={`px-2 py-1 text-xs font-bold rounded ${warning === "W1"
-                                ? "bg-yellow-400 text-black"
-                                : "bg-red-500 text-white"
-                                }`}
+                              className={`px-2 py-1 text-xs font-bold rounded ${
+                                warning === "W1"
+                                  ? "bg-yellow-400 text-black"
+                                  : "bg-red-500 text-white"
+                              }`}
                             >
                               {warning}
                             </span>
@@ -492,10 +555,11 @@ const MatchScoreCard = () => {
                           {getTeamWarnings(2).map((warning, index) => (
                             <span
                               key={index}
-                              className={`px-2 py-1 text-xs font-bold rounded ${warning === "W1"
-                                ? "bg-yellow-400 text-black"
-                                : "bg-red-500 text-white"
-                                }`}
+                              className={`px-2 py-1 text-xs font-bold rounded ${
+                                warning === "W1"
+                                  ? "bg-yellow-400 text-black"
+                                  : "bg-red-500 text-white"
+                              }`}
                             >
                               {warning}
                             </span>
@@ -539,13 +603,15 @@ const MatchScoreCard = () => {
               <div className="bg-[#015d9c] ml-5 text-white w-min px-[50px] whitespace-nowrap py-1 rounded-lg font-bold text-3xl">
                 {liveMatchData && liveMatchData.status === "ongoing"
                   ? getMatchFormat()
-                  : displayMatch.playStatus ===
+                  : liveMatchData && liveMatchData.status === "completed"
+                  ? "COMPLETED"
+                  : displayMatch?.playStatus ===
                     TournamentMatchPlayStatusEnum.In_Progress
-                    ? "LIVE"
-                    : displayMatch.playStatus ===
-                      TournamentMatchPlayStatusEnum.Completed
-                      ? "SCHEDULED"
-                      : "COMPLETED"}
+                  ? "LIVE"
+                  : displayMatch?.playStatus ===
+                    TournamentMatchPlayStatusEnum.Completed
+                  ? "COMPLETED"
+                  : "SCHEDULED"}
               </div>
               <div className="font-bold text-3xl text-center text-white">
                 {matchData.court?.name || "LIVE SCOREBOARD"}
