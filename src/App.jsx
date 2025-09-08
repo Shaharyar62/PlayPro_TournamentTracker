@@ -17,6 +17,8 @@ import NullLayout from "./components/NullLayout";
 import UmpirePage from "./pages/UmpirePage";
 import UserPage from "./pages/UserPage";
 
+import ScorePage from "./pages/ScoreViewer/ScorePage";
+
 function App() {
   const isLoaded = useRef(false);
 
@@ -43,6 +45,7 @@ function App() {
           <Route path="today-match" element={<TodayMatch />} />
           <Route path="umpire" element={<UmpirePage />} />
           <Route path="viewer" element={<UserPage />} />
+          <Route path="score-page" element={<ScorePage />} />
 
           {/* <Route
             path="matches-timetable"
