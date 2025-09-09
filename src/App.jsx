@@ -18,6 +18,8 @@ import UmpirePage from "./pages/UmpirePage";
 import UserPage from "./pages/UserPage";
 
 import ScorePage from "./pages/ScoreViewer/ScorePage";
+import StreamingHome from "./pages/streaming/SteamingHome";
+import StreamingLiveCourt from "./pages/streaming/StreamingLiveCourt";
 
 function App() {
   const isLoaded = useRef(false);
@@ -33,6 +35,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="streaming-home" element={<StreamingHome />} />
+          <Route path="streaming-live-court" element={<StreamingLiveCourt />} />
           <Route path="live-court" element={<LiveCourt />} />
           <Route
             path="live-court/:tournamentId/:matchId"
