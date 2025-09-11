@@ -354,106 +354,18 @@ const StreamingLiveCourt = () => {
 
   return (
     <>
-      <div className="min-h-screen  from-blue-900 via-blue-800 to-blue-900 relative overflow-hidden">
-        {/* Stars background */}
-        <div className="absolute inset-0">
-          {[...Array(50)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-white rounded-full opacity-60"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animation: `twinkle ${2 + Math.random() * 3}s infinite`,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Connection Status */}
-        <div className="absolute top-4 right-4 z-20">
-          <div className="flex items-center space-x-2 bg-black/50 text-white px-3 py-1 rounded-lg">
-            <div
-              className={`w-2 h-2 rounded-full ${
-                isConnected ? "bg-green-500" : "bg-red-500"
-              }`}
-            ></div>
-            <span className="text-sm font-medium">
-              {isConnected ? "Live" : "Network Error"}
-            </span>
-          </div>
-        </div>
-
-        {/* Reset Notification */}
-        {showResetNotification && (
-          <div className="absolute top-16 right-4 z-20 bg-yellow-500 text-black px-4 py-2 rounded-lg font-bold animate-pulse">
-            🔄 Match has been reset by the scorer
-          </div>
-        )}
-
+      <div className="mt-[50px]">
         {/* Main content */}
-        <div className="relative z-10 flex  mt-[-30px] items-center justify-center min-h-screen">
-          <div className="w-full  ">
-            {/* Header with logos */}
-            <div className="flex justify-between items-center">
-              <div className="text-center">
-                <img
-                  width={200}
-                  className="justify-self-end p-5"
-                  src={ImageConstants.padelVersewhite}
-                  alt="Playpro"
-                />
-              </div>
-
-              <div className="text-center">
-                <img
-                  width={300}
-                  className="justify-self-end p-5"
-                  src={ImageConstants.padelVerse}
-                  alt="Playpro"
-                />
-              </div>
-
-              <div className="text-center">
-                <img
-                  width={280}
-                  className="justify-self-end p-5"
-                  src={ImageConstants.playproWhite}
-                  alt="Playpro"
-                />
-              </div>
-            </div>
-
+        <div className="">
+          <div className="">
             {/* Main scoreboard */}
-            <div className="bg-white rounded-lg ml-[100px] mr-[100px] mt-0 mb-[60px] shadow-2xl overflow-hidden">
+            <div className=" live-live-box bg-white rounded-lg ml-[100px] mr-[100px] mt-0 mb-[60px] overflow-hidden">
               {/* Header row - Dynamic based on number of sets */}
-              <div className="bg-[#015d9c] text-white py-4">
-                <div
-                  className="grid gap-4 items-center"
-                  style={{
-                    gridTemplateColumns: `2fr ${Array(getNumberOfSets())
-                      .fill("1fr")
-                      .join(" ")} 1fr`,
-                  }}
-                >
-                  <div className="text-center">
-                    <h2 className="text-4xl font-bold">PLAYERS</h2>
-                  </div>
-                  {Array.from({ length: getNumberOfSets() }, (_, index) => (
-                    <div key={index} className="text-center">
-                      <h2 className="text-4xl font-bold">SET {index + 1}</h2>
-                    </div>
-                  ))}
-                  <div className="text-center">
-                    <h2 className="text-4xl font-bold">{getHeaderText()} </h2>
-                  </div>
-                </div>
-              </div>
 
               {/* Score content - Dynamic layout */}
               <div className="p-0">
                 <div
-                  className="grid gap-4 items-center"
+                  className="grid gap-1 items-center"
                   style={{
                     gridTemplateColumns: `2fr ${Array(getNumberOfSets())
                       .fill("1fr")
@@ -461,13 +373,13 @@ const StreamingLiveCourt = () => {
                   }}
                 >
                   {/* Team Names and Players */}
-                  <div className="py-8">
+                  <div className="py-8 w-[500px]">
                     {/* Team 1 */}
-                    <div className="mb-8">
-                      <div className="flex items-center justify-between  justify-center px-4">
-                        <div className="flex items-center space-x-4">
+                    <div className="mb-2">
+                      <div className="flex items-center justify-between  justify-center px-1">
+                        <div className="flex items-center space-x-1">
                           <div>
-                            <div className="text-3xl  font-bold text-gray-800 mb-1">
+                            <div className="text-5xl  font-bold text-gray-800 mb-1">
                               {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamA) : getPlayerName(1, 0) + " & " + getPlayerName(1, 1)} */}
                               {getTeamName(matchData.teamA)}
                               {/* {getPlayerName(1, 0)} & {getPlayerName(1, 1)} */}
@@ -516,7 +428,7 @@ const StreamingLiveCourt = () => {
                     </div>
 
                     {/* VS Divider */}
-                    <div className="text-center text-2xl font-bold  mb-8">
+                    <div className="text-center text-2xl font-bold  mb-1">
                       VS
                     </div>
 
@@ -525,7 +437,7 @@ const StreamingLiveCourt = () => {
                       <div className="flex items-center justify-between justify-center px-4">
                         <div className="flex items-center space-x-4">
                           <div>
-                            <div className="text-3xl font-bold text-gray-800 mb-1">
+                            <div className="text-5xl font-bold text-gray-800 mb-1">
                               {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamB) : getPlayerName(2, 0) + " & " + getPlayerName(2, 1)} */}
                               {getTeamName(matchData.teamB)}
                               {/* {getTeamName(matchData.teamB)} */}
@@ -577,11 +489,11 @@ const StreamingLiveCourt = () => {
                   {/* Dynamic Set Scores */}
                   {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
                     <div key={setIndex} className="text-center">
-                      <div className="space-y-8">
-                        <div className="text-6xl font-bold set-score-style">
+                      <div className="space-y-1">
+                        <div className="text-8xl font-bold set-score-style">
                           {getSetScore(1, setIndex)}
                         </div>
-                        <div className="text-6xl font-bold set-score-style">
+                        <div className="text-8xl font-bold set-score-style">
                           {getSetScore(2, setIndex)}
                         </div>
                       </div>
@@ -590,7 +502,7 @@ const StreamingLiveCourt = () => {
 
                   {/* Current Game/Points Score */}
                   <div className="text-center bg-[#015d9c]">
-                    <div className="space-y-4 pt-[25px] pb-[25px]">
+                    <div className="space-y-1 pt-[20px] pb-[25px]">
                       <div className="text-8xl font-bold text-white game-score-style">
                         {getCurrentGameScore(1)}
                       </div>
@@ -600,40 +512,10 @@ const StreamingLiveCourt = () => {
                     </div>
                   </div>
                 </div>
+                <p className="text-center text-6xl text-bold mt-[-3px] pt-[10px] pb-[10px] text-white bg-[#015d9c]">
+                  Live Scoring by PlayPro
+                </p>
               </div>
-            </div>
-
-            {/* Bottom indicator and Upcoming Match */}
-            <div className="grid grid-cols-3 gap-4 items-center mt-[-10px]">
-              <div className="bg-[#015d9c] ml-5 text-white w-min px-[50px] whitespace-nowrap py-1 rounded-lg font-bold text-3xl">
-                {getMatchFormat()}
-              </div>
-              <div className="font-bold text-3xl text-center text-white">
-                {matchData.court?.name || "LIVE SCOREBOARD"}
-              </div>
-              <div className="bg-[#015d9c] mr-5 ml-auto text-white w-min px-[20px] whitespace-nowrap py-1 rounded-lg font-bold text-1xl">
-                {upcomingMatch && (
-                  <div>
-                    UPCOMING: {getTeamName(upcomingMatch.teamA)} VS{" "}
-                    {getTeamName(upcomingMatch.teamB)}
-                  </div>
-                )}
-              </div>
-              {/* {upcomingMatch && (
-                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
-                  <div className="text-lg font-bold mb-2">UPCOMING</div>
-                  <div className="text-sm">
-                    {getTeamName(upcomingMatch.teamA)}
-                  </div>
-                  <div className="text-xs">vs</div>
-                  <div className="text-sm">
-                    {getTeamName(upcomingMatch.teamB)}
-                  </div>
-                  <div className="text-xs mt-1">
-                    {moment(upcomingMatch.matchStartDateTime).format("HH:mm")}
-                  </div>
-                </div>
-              )} */}
             </div>
           </div>
 
@@ -647,14 +529,31 @@ const StreamingLiveCourt = () => {
         </div>
 
         <style jsx>{`
-          @keyframes twinkle {
-            0%,
-            100% {
-              opacity: 0.3;
-            }
-            50% {
-              opacity: 1;
-            }
+          body {
+            background: none !important;
+          }
+          .bg-cover.bg-center.main-body {
+            background: none !important;
+          }
+          body {
+            visibility: inherit;
+            transform: scale(0.675556, 0.675556) translate(0px, 0px);
+            width: 1920px;
+            height: 1080px;
+            z-index: 0;
+            position: absolute;
+            left: -192px;
+            top: -175.2px;
+            overflow: hidden;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-drag: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+          }
+          .live-live-box {
+            margin: 0px;
+            width: 970px;
+            zoom: 0.5;
           }
         `}</style>
       </div>
