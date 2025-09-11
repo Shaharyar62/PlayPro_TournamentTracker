@@ -607,14 +607,14 @@ const MatchScoreCard = () => {
             </div>
 
             {/* Bottom indicator and Upcoming Match */}
-            <div className="grid grid-cols-3 gap-4 items-center mt-[-10px]">
-              <div className="bg-[#015d9c] ml-5 text-white w-min px-[50px] whitespace-nowrap py-1 rounded-lg font-bold text-3xl">
+            <div className="grid grid-cols-12 gap-4 items-center mt-[-10px]">
+              <div className="bg-[#015d9c] col-span-5 ml-5 text-white w-min px-[50px] whitespace-nowrap py-1 rounded-lg font-bold text-3xl">
                 {getMatchFormat()}
               </div>
-              <div className="font-bold text-3xl text-center text-white">
+              <div className="font-bold text-3xl col-span-2 text-center text-white">
                 {matchData.court?.name || "LIVE SCOREBOARD"}
               </div>
-              <div className="bg-[#015d9c] mr-5 ml-auto text-white w-min px-[20px] whitespace-nowrap py-1 rounded-lg font-bold text-1xl">
+              <div className="bg-[#015d9c] mr-5 col-span-5 ml-auto text-white  px-[20px]  py-1 rounded-lg font-bold text-1xl">
                 {upcomingMatch && (
                   <div>
                     UPCOMING: {getTeamName(upcomingMatch.teamA)} VS{" "}
@@ -622,31 +622,8 @@ const MatchScoreCard = () => {
                   </div>
                 )}
               </div>
-              {/* {upcomingMatch && (
-                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
-                  <div className="text-lg font-bold mb-2">UPCOMING</div>
-                  <div className="text-sm">
-                    {getTeamName(upcomingMatch.teamA)}
-                  </div>
-                  <div className="text-xs">vs</div>
-                  <div className="text-sm">
-                    {getTeamName(upcomingMatch.teamB)}
-                  </div>
-                  <div className="text-xs mt-1">
-                    {moment(upcomingMatch.matchStartDateTime).format("HH:mm")}
-                  </div>
-                </div>
-              )} */}
             </div>
           </div>
-
-          {/* Live indicator */}
-          {/* {displayMatch.playStatus ===
-            TournamentMatchPlayStatusEnum.In_Progress && (
-            <div className="absolute top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg font-bold animate-pulse">
-              ● LIVE
-            </div>
-          )} */}
         </div>
 
         <style jsx>{`

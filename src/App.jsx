@@ -35,8 +35,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="streaming-home" element={<StreamingHome />} />
-          <Route path="streaming-live-court" element={<StreamingLiveCourt />} />
+
           <Route path="live-court" element={<LiveCourt />} />
           <Route
             path="live-court/:tournamentId/:matchId"
@@ -58,6 +57,8 @@ function App() {
         </Route>
         <Route path="/" element={<NullLayout />}>
           <Route path="scorebar" element={<Scoreboard />} />
+          <Route path="streaming-home" element={<StreamingHome />} />
+          <Route path="streaming-live-court" element={<StreamingLiveCourt />} />
           <Route
             path="scorebar/:tournamentId/:matchId"
             element={<Scoreboard />}
