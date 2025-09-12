@@ -57,6 +57,8 @@ const MatchScoreCard = () => {
         return "2 Sets - Super Tie Break";
       case TournamentRuleMatchFormatTypeEnum.threeSets:
         return "3 Sets";
+      default:
+        return "Happ";
     }
   };
 
@@ -609,7 +611,9 @@ const MatchScoreCard = () => {
             {/* Bottom indicator and Upcoming Match */}
             <div className="grid grid-cols-12 gap-4 items-center mt-[-10px]">
               <div className="bg-[#015d9c] col-span-5 ml-5 text-white w-min px-[50px] whitespace-nowrap py-1 rounded-lg font-bold text-3xl">
-                {getMatchFormat()}
+                {matchStatus.current == "completed"
+                  ? "COMPLETED"
+                  : getMatchFormat()}
               </div>
               <div className="font-bold text-3xl col-span-2 text-center text-white">
                 {matchData.court?.name || "LIVE SCOREBOARD"}
