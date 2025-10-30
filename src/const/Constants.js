@@ -5,7 +5,7 @@ const GAMES_PER_SET_KNOCKOUT = 6; // Games needed to win a set in knockout stage
 const SETS_TO_WIN_KNOCKOUT = 2; // Sets needed to win in knockout stage
 
 export const isLive = true;
-const devUrl = "https://dev2playpro.nascentinnovations.com/api/Service";
+const devUrl = "https://dev3playpro.nascentinnovations.com/api/Service";
 const liveUrl = "https://playpro.nascentinnovations.com/api/Service";
 export const baseUrl = isLive ? liveUrl : devUrl;
 

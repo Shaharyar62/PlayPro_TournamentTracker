@@ -38,7 +38,10 @@ const TournamentStandings = () => {
         return parsed;
       } catch (e) {
         // If JSON parsing fails, try comma-separated values
-        const csvParsed = tournamentIdsParam.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+        const csvParsed = tournamentIdsParam
+          .split(",")
+          .map((id) => parseInt(id.trim()))
+          .filter((id) => !isNaN(id));
         console.log("CSV parsed tournament IDs:", csvParsed);
         return csvParsed;
       }
@@ -56,11 +59,17 @@ const TournamentStandings = () => {
   const groupDisplayTime = parseInt(params.get("groupDisplayTime"));
   if (!groupDisplayTime || groupDisplayTime <= 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
         <div className="text-center">
-          <div className="text-4xl font-bold text-red-400 mb-4">Missing Parameter</div>
-          <div className="text-white text-lg mb-4">groupDisplayTime parameter is required (in seconds)</div>
-          <div className="text-gray-300 text-sm">Example: ?groupDisplayTime=15</div>
+          <div className="text-4xl font-bold text-red-400 mb-4">
+            Missing Parameter
+          </div>
+          <div className="text-white text-lg mb-4">
+            groupDisplayTime parameter is required (in seconds)
+          </div>
+          <div className="text-gray-300 text-sm">
+            Example: ?groupDisplayTime=15
+          </div>
         </div>
       </div>
     );
@@ -70,11 +79,17 @@ const TournamentStandings = () => {
   const refreshInterval = parseInt(params.get("refreshInterval"));
   if (!refreshInterval || refreshInterval <= 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
         <div className="text-center">
-          <div className="text-4xl font-bold text-red-400 mb-4">Missing Parameter</div>
-          <div className="text-white text-lg mb-4">refreshInterval parameter is required (in minutes)</div>
-          <div className="text-gray-300 text-sm">Example: ?refreshInterval=10</div>
+          <div className="text-4xl font-bold text-red-400 mb-4">
+            Missing Parameter
+          </div>
+          <div className="text-white text-lg mb-4">
+            refreshInterval parameter is required (in minutes)
+          </div>
+          <div className="text-gray-300 text-sm">
+            Example: ?refreshInterval=10
+          </div>
         </div>
       </div>
     );
@@ -97,10 +112,10 @@ const TournamentStandings = () => {
   };
 
   const getCourtBackgroundColor = (courtName) => {
-    if (!courtName) return "bg-[#737373]";
+    if (!courtName) return "bg-[#17626c]";
 
     const name = courtName.toLowerCase();
-    if (name.includes("galaxy")) return "bg-[#737373]";
+    if (name.includes("galaxy")) return "bg-[#17626c]";
     if (name.includes("black") || name.includes("star")) return "bg-[#000000]";
     if (name.includes("infinity")) return "bg-[#430750]";
     return "bg-[#737373]"; // default
@@ -220,7 +235,11 @@ const TournamentStandings = () => {
       return a[0].group.localeCompare(b[0].group);
     });
 
-    console.log("groupedTeams for tournament", currentTournament.name, sortedGroupedTeams);
+    console.log(
+      "groupedTeams for tournament",
+      currentTournament.name,
+      sortedGroupedTeams
+    );
     return sortedGroupedTeams;
   }, [currentTournament]);
 
@@ -276,7 +295,8 @@ const TournamentStandings = () => {
             const nextPage = prevPage + 1;
             if (nextPage >= totalPages) {
               // All pages shown for current tournament, move to next tournament
-              const nextTournamentIndex = (currentTournamentIndex + 1) % tournamentsData.length;
+              const nextTournamentIndex =
+                (currentTournamentIndex + 1) % tournamentsData.length;
 
               if (nextTournamentIndex === 0) {
                 // We've completed all tournaments, show TodayMatch
@@ -295,7 +315,8 @@ const TournamentStandings = () => {
           });
         } else {
           // Current tournament has only one page, move to next tournament
-          const nextTournamentIndex = (currentTournamentIndex + 1) % tournamentsData.length;
+          const nextTournamentIndex =
+            (currentTournamentIndex + 1) % tournamentsData.length;
 
           if (nextTournamentIndex === 0) {
             // We've completed all tournaments, show TodayMatch
@@ -313,54 +334,70 @@ const TournamentStandings = () => {
     }, groupDisplayTime * 1000); // Convert seconds to milliseconds
 
     return () => clearInterval(interval);
-  }, [currentTournament, groupedTeams.length, tournamentsData.length, groupDisplayTime, showTodayMatch, todayMatchData, currentTournamentIndex]);
+  }, [
+    currentTournament,
+    groupedTeams.length,
+    tournamentsData.length,
+    groupDisplayTime,
+    showTodayMatch,
+    todayMatchData,
+    currentTournamentIndex,
+  ]);
 
   // Function to fetch multiple tournaments points table
-  const fetchMultipleTournamentsPointsTable = useCallback(async (isRefresh = false) => {
-    if (!tournamentIds || tournamentIds.length === 0) {
-      setError("Tournament IDs are required");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      // Only set loading if it's not already set (for refresh)
-      if (!isRefresh) {
-        setLoading(true);
+  const fetchMultipleTournamentsPointsTable = useCallback(
+    async (isRefresh = false) => {
+      if (!tournamentIds || tournamentIds.length === 0) {
+        setError("Tournament IDs are required");
+        setLoading(false);
+        return;
       }
-      setError(null);
-      console.log("Tournament IDs for API:", tournamentIds);
 
-      const response = await Common.ApiService.getInstance().request(
-        `GetMultipleTournamentsPointsTable`,
-        tournamentIds,
-        "POST"
-      );
+      try {
+        // Only set loading if it's not already set (for refresh)
+        if (!isRefresh) {
+          setLoading(true);
+        }
+        setError(null);
+        console.log("Tournament IDs for API:", tournamentIds);
 
-      console.log("API Response:", response);
+        const response = await Common.ApiService.getInstance().request(
+          `GetMultipleTournamentsPointsTable`,
+          tournamentIds,
+          "POST"
+        );
 
-      if (response && response.data && Array.isArray(response.data) && response.data.length > 0) {
-        // Clear old data and set new data
+        console.log("API Response:", response);
+
+        if (
+          response &&
+          response.data &&
+          Array.isArray(response.data) &&
+          response.data.length > 0
+        ) {
+          // Clear old data and set new data
+          setTournamentsData([]);
+          setTimeout(() => {
+            setTournamentsData(response.data);
+            setCurrentTournamentIndex(0);
+            setCurrentGroupPage(0);
+            setError(null);
+            console.log("Fetched tournaments data:", response.data);
+          }, 100); // Small delay to show loading state
+        } else {
+          setError("No tournament data found");
+          setTournamentsData([]);
+        }
+      } catch (err) {
+        console.error("Error fetching tournaments:", err);
+        setError(err.message || "Failed to fetch tournament data");
         setTournamentsData([]);
-        setTimeout(() => {
-          setTournamentsData(response.data);
-          setCurrentTournamentIndex(0);
-          setCurrentGroupPage(0);
-          setError(null);
-          console.log("Fetched tournaments data:", response.data);
-        }, 100); // Small delay to show loading state
-      } else {
-        setError("No tournament data found");
-        setTournamentsData([]);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Error fetching tournaments:", err);
-      setError(err.message || "Failed to fetch tournament data");
-      setTournamentsData([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [tournamentIds]);
+    },
+    [tournamentIds]
+  );
 
   // Initial fetch
   useEffect(() => {
@@ -403,7 +440,7 @@ const TournamentStandings = () => {
       case "champion":
         return <Trophy className="h-5 w-5 text-yellow-400" />;
       case "qualified":
-        return <Award className="h-5 w-5 text-blue-400" />;
+        return <Award className="h-5 w-5 text-[#17626c]" />;
       case "eliminated":
         return <Shield className="h-5 w-5 text-gray-400" />;
       default:
@@ -413,16 +450,16 @@ const TournamentStandings = () => {
 
   const getRowGradient = (id) => {
     if (id === 1)
-      return "bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 border-l-4 border-yellow-400";
+      return "bg-gradient-to-r from-green-100 via-green-50 to-green-100 border-l-4 border-yellow-400";
     if (id === 2)
-      return "bg-gradient-to-r from-blue-50 to-white border-l-4 border-blue-400";
+      return "bg-gradient-to-r from-green-50 to-white border-l-4 border-[#17626c]";
     return "bg-white border-l-4 border-gray-200";
   };
 
   // Loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
         <div className="text-4xl font-bold text-white">
           Loading tournament data...
         </div>
@@ -433,7 +470,7 @@ const TournamentStandings = () => {
   // Error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
         <div className="text-4xl font-bold text-red-400">Error: {error}</div>
       </div>
     );
@@ -442,7 +479,7 @@ const TournamentStandings = () => {
   // No tournament data
   if (!tournamentsData || tournamentsData.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
         <div className="text-4xl font-bold text-gray-400">
           No tournament data available
         </div>
@@ -453,7 +490,7 @@ const TournamentStandings = () => {
   // Add error boundary protection
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">Error</div>
           <div className="text-white text-lg mb-4">{error}</div>
@@ -462,7 +499,7 @@ const TournamentStandings = () => {
               setError(null);
               fetchMultipleTournamentsPointsTable();
             }}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-6 py-2 bg-[#17626c] text-white rounded-lg hover:bg-[#093337]"
           >
             Retry
           </button>
@@ -492,7 +529,7 @@ const TournamentStandings = () => {
                 />
               ))}
             </div>
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
               <div className="text-4xl font-bold text-white">
                 Loading tournament courts data...
               </div>
@@ -519,9 +556,11 @@ const TournamentStandings = () => {
                 />
               ))}
             </div>
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
               <div className="text-center">
-                <div className="text-4xl font-bold text-red-400 mb-4">Error</div>
+                <div className="text-4xl font-bold text-red-400 mb-4">
+                  Error
+                </div>
                 <div className="text-white text-lg">{todayMatchError}</div>
               </div>
             </div>
@@ -547,7 +586,7 @@ const TournamentStandings = () => {
                 />
               ))}
             </div>
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
               <div className="text-4xl font-bold text-gray-400">
                 No tournament courts data available
               </div>
@@ -576,16 +615,16 @@ const TournamentStandings = () => {
             </div>
 
             {/* Main content */}
-            <div className="relative z-10 mt-[-30px] items-center justify-center min-h-screen">
+            <div className="relative z-10 mt-[-20px] items-center justify-center min-h-screen">
               <div className="w-full">
                 {/* Header with logos */}
                 <div className="flex justify-between items-center">
-                  <div className="text-center" style={{ width: "280px" }}>
+                  <div className="text-center" style={{ width: "400px" }}>
                     <img
-                      width={180}
+                      width={400}
                       className="justify-self-start p-5"
-                      src={ImageConstants.padelVersewhite}
-                      alt="Playpro"
+                      src={ImageConstants.premierwhite}
+                      alt="Premier Club"
                     />
                   </div>
 
@@ -593,14 +632,14 @@ const TournamentStandings = () => {
                     <img
                       width={220}
                       className="justify-self-end p-5"
-                      src={ImageConstants.padelVerse}
+                      src={ImageConstants.premiercup}
                       alt="Playpro"
                     />
                   </div>
 
-                  <div className="text-center" style={{ width: "280px" }}>
+                  <div className="text-center" style={{ width: "400px" }}>
                     <img
-                      width={230}
+                      width={300}
                       className="justify-self-end p-5"
                       src={ImageConstants.playproWhite}
                       alt="Playpro"
@@ -609,7 +648,7 @@ const TournamentStandings = () => {
                 </div>
                 <div className="p-[50px] pt-[0px] pb-[120px] grid grid-cols-1 gap-6 items-center">
                   <div className="col-span-1 text-center">
-                    <div className="text-4xl text-white font-bold mt-[-20px] mb-2">
+                    <div className="text-4xl text-white font-bold  mb-2">
                       HAPPENING NOW
                     </div>
                   </div>
@@ -645,9 +684,9 @@ const TournamentStandings = () => {
                 </div>
               </div>
               {/* Bottom indicator - Fixed to bottom */}
-              <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
+              {/* <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
                 <img src={ImageConstants.sponsor} className="w-full" />
-              </div>
+              </div> */}
             </div>
 
             <style jsx>{`
@@ -665,6 +704,7 @@ const TournamentStandings = () => {
         </>
       );
     }
+    //Groups Section
 
     return (
       <>
@@ -686,10 +726,10 @@ const TournamentStandings = () => {
             </div>
 
             {/* Main content */}
-            <div className="relative z-10  mt-[-30px] items-center justify-center min-h-screen">
+            <div className="relative z-10  mt-[-20px] items-center justify-center min-h-screen">
               <div
                 style={{ position: "absolute" }}
-                className="text-white bg-[#23284c] text-3xl font-bold px-6 py-2 rounded-lg rotate-[-90deg]  top-[500px] left-[-40px]   "
+                className="text-white bg-[#093337] text-3xl font-bold px-6 py-2 rounded-lg rotate-[-90deg]  top-[500px] left-[-40px]   "
               >
                 GROUPS
               </div>
@@ -697,12 +737,12 @@ const TournamentStandings = () => {
               <div className="w-full">
                 {/* Header with logos */}
                 <div className="flex justify-between items-center">
-                  <div className="text-center" style={{ width: "280px" }}>
+                  <div className="text-center" style={{ width: "400px" }}>
                     <img
-                      width={180}
+                      width={400}
                       className="justify-self-start p-5"
-                      src={ImageConstants.padelVersewhite}
-                      alt="Playpro"
+                      src={ImageConstants.premierwhite}
+                      alt="Premier Club"
                     />
                   </div>
 
@@ -710,14 +750,14 @@ const TournamentStandings = () => {
                     <img
                       width={220}
                       className="justify-self-end p-5"
-                      src={ImageConstants.padelVerse}
+                      src={ImageConstants.premiercup}
                       alt="Playpro"
                     />
                   </div>
 
-                  <div className="text-center" style={{ width: "280px" }}>
+                  <div className="text-center" style={{ width: "400px" }}>
                     <img
-                      width={230}
+                      width={300}
                       className="justify-self-end p-5"
                       src={ImageConstants.playproWhite}
                       alt="Playpro"
@@ -726,7 +766,7 @@ const TournamentStandings = () => {
                 </div>
                 <div className="p-[50px] pb-[10px] pt-[0px] grid grid-cols-1 gap-6 items-center">
                   <div className="col-span-1 text-center">
-                    <div className="text-4xl text-white font-bold mt-[-30px] mb-2 ">
+                    <div className="text-4xl text-white font-bold   mb-2 ">
                       {currentTournament?.name || "Tournament"}
                     </div>
                   </div>
@@ -735,7 +775,10 @@ const TournamentStandings = () => {
                     className="grid grid-cols-2 pr-[50px] pl-[50px] gap-5"
                   >
                     {groupedTeams
-                      .slice(currentGroupPage * GROUPS_PER_PAGE, (currentGroupPage + 1) * GROUPS_PER_PAGE)
+                      .slice(
+                        currentGroupPage * GROUPS_PER_PAGE,
+                        (currentGroupPage + 1) * GROUPS_PER_PAGE
+                      )
                       .map((group) => {
                         // Add safety check for group
                         if (
@@ -753,10 +796,10 @@ const TournamentStandings = () => {
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               style={{ zoom: 1.3 }}
-                              className="max-w-[1024px]  mt-[-15px]  mx-auto rounded-lg shadow-lg overflow-hidden bg-white"
+                              className="max-w-[1024px]   mx-auto rounded-lg shadow-lg overflow-hidden bg-white"
                             >
                               {/* Header with glow effect */}
-                              <div className="relative bg-gradient-to-r from-blue-800 via-blue-600 to-blue-700 px-6 py-1 text-white">
+                              <div className="relative bg-gradient-to-r from-[#093337] via-[#17626c] to-[#093337] px-6 py-1 text-white">
                                 <div className="flex justify-between items-center relative z-10">
                                   <div className="flex items-center space-x-1">
                                     <motion.div
@@ -770,19 +813,19 @@ const TournamentStandings = () => {
                                       Group {groupName}
                                     </h2>
                                   </div>
-                                  <div className="text-sm text-blue-100">
+                                  <div className="text-sm text-green-100">
                                     {currentTournament?.tournamentMasterName ||
                                       currentTournament?.name}
                                   </div>
                                 </div>
-                                {/* <div className="text-xs text-blue-200 mt-1 relative z-10">
+                                {/* <div className="text-xs text-green-200 mt-1 relative z-10">
             
           </div> */}
                               </div>
                               <div className="bg-gradient-to-b from-gray-50 to-white">
                                 <table className="w-full">
                                   <thead>
-                                    <tr className="bg-gradient-to-r from-blue-900 to-blue-800 text-white">
+                                    <tr className="bg-gradient-to-r from-[#093337] to-[#17626c] text-white">
                                       <th className="py-1 px-4 text-left">#</th>
                                       <th className="py-1 px-4 text-left">
                                         Team Name
@@ -832,10 +875,11 @@ const TournamentStandings = () => {
                                           key={team.id}
                                           className={`${getRowGradient(
                                             index + 1
-                                          )} ${highlightedRow === team.id
-                                            ? "bg-blue-50"
-                                            : ""
-                                            }`}
+                                          )} ${
+                                            highlightedRow === team.id
+                                              ? "bg-green-50"
+                                              : ""
+                                          }`}
                                           onMouseEnter={() =>
                                             setHighlightedRow(team.id)
                                           }
@@ -852,7 +896,7 @@ const TournamentStandings = () => {
                                             <motion.div
                                               initial={{
                                                 scale: animateRanks ? 1.5 : 1,
-                                                color: "#3B82F6",
+                                                color: "#17626c",
                                               }}
                                               animate={{
                                                 scale: 1,
@@ -882,28 +926,29 @@ const TournamentStandings = () => {
                                           <td className="py-1 px-1 text-center text-gray-600">
                                             {team.draw ?? 0}
                                           </td>
-                                          <td className="py-1 px-1 text-center font-bold text-blue-600">
+                                          <td className="py-1 px-1 text-center font-bold text-[#17626c]">
                                             {team.points ?? 0}
                                           </td>
-                                          <td className="py-1 px-1 text-center text-blue-600 font-mono">
+                                          <td className="py-1 px-1 text-center text-[#17626c] font-mono">
                                             {calculatePCT(
                                               team.wins,
                                               team.played
                                             ).toFixed(3)}
                                           </td>
-                                          <td className="py-1 px-1 text-center text-blue-600 font-bold">
+                                          <td className="py-1 px-1 text-center text-[#17626c] font-bold">
                                             {team.pf ?? 0}
                                           </td>
                                           <td className="py-1 px-1 text-center">
                                             {team.pa ?? 0}
                                           </td>
                                           <td
-                                            className={`py-1 px-1 text-center font-bold ${team.pd > 0
-                                              ? "text-green-600"
-                                              : team.pd < 0
+                                            className={`py-1 px-1 text-center font-bold ${
+                                              team.pd > 0
+                                                ? "text-[#17626c]"
+                                                : team.pd < 0
                                                 ? "text-red-500"
                                                 : "text-gray-600"
-                                              }`}
+                                            }`}
                                           >
                                             {team.pd > 0 ? "+" : ""}
                                             {team.pd ?? 0}
@@ -928,14 +973,14 @@ const TournamentStandings = () => {
                                   </tbody>
                                 </table>
                               </div>
-                              <div className="px-4 py-1 bg-gradient-to-r from-blue-900 to-blue-800 text-white text-xs">
+                              <div className="px-4 py-1 bg-gradient-to-r from-[#093337] to-[#17626c] text-white text-xs">
                                 <div className="flex justify-between items-center">
                                   <div className="flex items-center space-x-2">
                                     <Trophy className="h-4 w-4 text-yellow-400" />
                                     <span>Champion</span>
                                   </div>
                                   <div className="flex items-center space-x-2">
-                                    <Award className="h-4 w-4 text-blue-400" />
+                                    <Award className="h-4 w-4 text-[#17626c]" />
                                     <span>Qualified</span>
                                   </div>
                                   <div className="flex items-center space-x-2">
@@ -952,15 +997,10 @@ const TournamentStandings = () => {
                 </div>
               </div>
               {/* Bottom indicator */}
-              <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
+              {/* <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
                 <img src={ImageConstants.sponsor} className="w-full " />
-                {/* <div className="bg-[#015d9c] ml-5 text-white w-min px-[50px] whitespace-nowrap py-1  rounded-lg font-bold text-3xl">
-              3 SETS
-            </div>
-            <div className="font-bold text-3xl text-center text-white">
-              LIVE SCOREBOARD
-            </div> */}
-              </div>
+                 
+              </div> */}
 
               {/* Live indicator */}
             </div>
@@ -983,7 +1023,7 @@ const TournamentStandings = () => {
   } catch (error) {
     console.error("Error in TournamentStandings component:", error);
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">
             Component Error
@@ -993,7 +1033,7 @@ const TournamentStandings = () => {
           </div>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="mt-4 px-6 py-2 bg-[#17626c] text-white rounded-lg hover:bg-[#093337]"
           >
             Reload Page
           </button>
@@ -1004,4 +1044,3 @@ const TournamentStandings = () => {
 };
 
 export default TournamentStandings;
-

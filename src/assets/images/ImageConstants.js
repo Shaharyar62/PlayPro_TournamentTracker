@@ -1,7 +1,8 @@
 import padelVerse from "./padel-verse.png";
 import playproWhite from "./playpro-w.png";
 import playpro from "./logo.png";
-import bg from "./bg-vers.jpg";
+import bg from "./bg-premier.png";
+// import bg from "./bg-vers.jpg";
 //import bg from "./bg.jpg";
 //import bg from "./bg-min.png";
 import logo1 from "./logos/1.png";
@@ -17,10 +18,14 @@ import appStore from "./apple.jpg";
 import googlePlay from "./google.jpg";
 import sdksl from "./akdsl.png";
 import sponsor from "./bg-img.jpg";
-
 import playproColorVertical from "./playpro_logo_vertical.png";
+
 import padelVersewhite from "./padelverselogo.png";
+import premierwhite from "./premier-white.png";
+import premiercup from "./premier-cup.png";
 export const ImageConstants = {
+  premierwhite,
+  premiercup,
   sponsor,
   padelVersewhite,
   padelVerse,

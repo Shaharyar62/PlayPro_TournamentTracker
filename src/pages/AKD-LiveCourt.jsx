@@ -88,7 +88,7 @@ const MatchScoreCard = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-4xl font-bold text-blue-700">
+        <div className="text-4xl font-bold text-[#17626c]">
           Loading match data...
         </div>
       </div>
@@ -122,7 +122,7 @@ const MatchScoreCard = () => {
         className="w-full flex justify-end mb-2"
         style={{ marginBottom: "-90px" }}
       >
-        <div className="bg-[#00084e] p-[15px] rounded-lg shadow-lg text-[55px] font-bold">
+        <div className="bg-[#093337] p-[15px] rounded-lg shadow-lg text-[55px] font-bold">
           {displayTime.format("HH:mm:ss")}
         </div>
       </div> */}
@@ -148,12 +148,12 @@ const MatchScoreCard = () => {
           <h1 className="text-6xl font-bold mt-4">MATCH SCHEDULE</h1>
           <p
             style={{
-              color: "#091368",
+              color: "#093337",
               textShadow: "1px 1px 8px white, 3px 3px 11px white",
               fontWeight: 700,
               fontSize: "40px",
             }}
-            className="text-[#0caced] text-4xl mt-2 font-semibold"
+            className="text-[#17626c] text-4xl mt-2 font-semibold"
           >
             HAPPENING NOW
           </p>
@@ -204,7 +204,7 @@ const MatchScoreCard = () => {
         <div className="col-span-3">
           <div className=" rounded-lg shadow-lg overflow-hidden">
             {/* Header with match info */}
-            <div className="relative bg-gradient-to-r from-blue-800 via-blue-600 to-blue-700 px-6 py-4 text-white">
+            <div className="relative bg-gradient-to-r from-[#093337] via-[#17626c] to-[#093337] px-6 py-4 text-white">
               <div className="absolute inset-0 bg-opacity-50"></div>
               <div className="flex justify-between items-center relative z-10">
                 <div className="flex items-center space-x-3">
@@ -213,7 +213,7 @@ const MatchScoreCard = () => {
                     Court {matchData.id || "Live"}
                   </h2>
                 </div>
-                <div className="text-2xl bg-blue-900 bg-opacity-70 px-4 py-2 rounded-full flex items-center">
+                <div className="text-2xl bg-[#093337] bg-opacity-70 px-4 py-2 rounded-full flex items-center">
                   <Clock className="h-5 w-5 mr-2" />
                   {matchData.matchTitle || "Live Match"}
                 </div>
@@ -246,7 +246,7 @@ const MatchScoreCard = () => {
                             <img
                               src={
                                 player.image
-                                  ? `https://dev2playpro.nascentinnovations.com/img/upload/${player.image}`
+                                  ? `https://dev3playpro.nascentinnovations.com/img/upload/${player.image}`
                                   : "https://via.placeholder.com/150x150?text=No+Image"
                               }
                               alt={player.name}
@@ -282,7 +282,7 @@ const MatchScoreCard = () => {
                             <img
                               src={
                                 player.image
-                                  ? `https://dev2playpro.nascentinnovations.com/img/upload/${player.image}`
+                                  ? `https://dev3playpro.nascentinnovations.com/img/upload/${player.image}`
                                   : "https://via.placeholder.com/150x150?text=No+Image"
                               }
                               alt={player.name}
@@ -311,7 +311,7 @@ const MatchScoreCard = () => {
                           <span
                             className={`text-8xl font-bold ${
                               matchData.team1?.sets > matchData.team2?.sets
-                                ? "text-blue-700"
+                                ? "text-[#17626c]"
                                 : "text-gray-800"
                             }`}
                           >
@@ -323,7 +323,7 @@ const MatchScoreCard = () => {
                           <span
                             className={`text-8xl font-bold ${
                               matchData.team2?.sets > matchData.team1?.sets
-                                ? "text-blue-700"
+                                ? "text-[#17626c]"
                                 : "text-gray-800"
                             }`}
                           >
@@ -374,7 +374,7 @@ const MatchScoreCard = () => {
                           <span
                             className={`text-8xl font-bold ${
                               matchData.team1?.games > matchData.team2?.games
-                                ? "text-blue-700"
+                                ? "text-[#17626c]"
                                 : "text-gray-800"
                             }`}
                           >
@@ -386,7 +386,7 @@ const MatchScoreCard = () => {
                           <span
                             className={`text-8xl font-bold ${
                               matchData.team2?.games > matchData.team1?.games
-                                ? "text-blue-700"
+                                ? "text-[#17626c]"
                                 : "text-gray-800"
                             }`}
                           >
@@ -400,13 +400,13 @@ const MatchScoreCard = () => {
                           SCORE
                         </div>
                         <div className="flex justify-center flex-col items-center space-x-4">
-                          <span className={`text-8xl font-bold text-blue-700`}>
+                          <span className={`text-8xl font-bold text-[#17626c]`}>
                             {matchData.team1?.score || 0}
                           </span>
                           <span className="text-gray-500 font-bold text-8xl">
                             -
                           </span>
-                          <span className={`text-8xl font-bold text-blue-700`}>
+                          <span className={`text-8xl font-bold text-[#17626c]`}>
                             {matchData.team2?.score || 0}
                           </span>
                         </div>
@@ -419,7 +419,7 @@ const MatchScoreCard = () => {
                       <div
                         className={`text-4xl font-bold ${
                           matchData.teamA.winner
-                            ? "text-blue-700"
+                            ? "text-[#17626c]"
                             : "text-gray-800"
                         }`}
                       >
@@ -447,16 +447,16 @@ const MatchScoreCard = () => {
             </div>
 
             {/* Footer */}
-            {/* <div className="px-4 py-3 bg-gradient-to-r from-blue-900 to-blue-800 text-white text-xs">
+            {/* <div className="px-4 py-3 bg-gradient-to-r from-[#093337] to-[#17626c] text-white text-xs">
               <div className="flex justify-between items-center">
-                <div className="text-blue-200">Match #{matchData.matchId}</div>
-                <div className="text-blue-200">PADELVERSE CUP 2025</div>
+                <div className="text-green-200">Match #{matchData.matchId}</div>
+                <div className="text-green-200">PADELVERSE CUP 2025</div>
               </div>
             </div> */}
           </div>
           <div className="rounded-lg shadow-lg overflow-hidden mt-5">
             {/* Header */}
-            <div className="relative bg-gradient-to-r from-blue-800 via-blue-600 to-blue-700 px-6 py-4 text-white">
+            <div className="relative bg-gradient-to-r from-[#093337] via-[#17626c] to-[#093337] px-6 py-4 text-white">
               <div className="absolute inset-0 bg-opacity-50"></div>
               <div className="flex justify-between items-center relative z-10">
                 <h2 className="text-4xl font-bold text-center tracking-wider">
@@ -475,7 +475,7 @@ const MatchScoreCard = () => {
                       className="py-4 flex flex-col md:flex-row md:items-center md:justify-between"
                     >
                       <div className="flex flex-col text-3xl md:flex-row md:items-center gap-2">
-                        <span className="font-semibold text-blue-800">
+                        <span className="font-semibold text-[#093337]">
                           Match {match.id}
                         </span>
                         <span className="text-gray-500 hidden md:inline mx-2">
@@ -516,10 +516,10 @@ const MatchScoreCard = () => {
               </ul>
             </div>
             {/* Footer */}
-            <div className="px-4 py-3 bg-gradient-to-r from-blue-900 to-blue-800 text-white text-xs">
+            <div className="px-4 py-3 bg-gradient-to-r from-[#093337] to-[#17626c] text-white text-xs">
               <div className="flex justify-between  text-3xl items-center">
-                <div className="text-blue-200">Live Matches</div>
-                <div className="text-blue-200">TOURNAMENT 2025</div>
+                <div className="text-green-200">Live Matches</div>
+                <div className="text-green-200">TOURNAMENT 2025</div>
               </div>
             </div>
           </div>

@@ -123,7 +123,7 @@ const MatchScoreCard = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
         <div className="text-4xl font-bold text-white">
           Loading tournament courts data...
         </div>
@@ -134,7 +134,7 @@ const MatchScoreCard = () => {
   // Error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">Error</div>
           <div className="text-white text-lg">{error}</div>
@@ -146,7 +146,7 @@ const MatchScoreCard = () => {
   // No tournament data
   if (!tournamentData || !tournamentData.courts) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
         <div className="text-4xl font-bold text-gray-400">
           No tournament courts data available
         </div>

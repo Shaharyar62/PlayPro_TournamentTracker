@@ -14,9 +14,9 @@ const getEnviromentConfig = (config) => {
       };
     case EnviromentTypeEnum.Dev:
       return {
-        baseUrl: "https://dev2playpro.nascentinnovations.com/",
-        serviceUrl: "https://dev2playpro.nascentinnovations.com/api/Service",
-        imgBaseurl: "https://dev2playpro.nascentinnovations.com/img/upload/",
+        baseUrl: "https://dev3playpro.nascentinnovations.com/",
+        serviceUrl: "https://dev3playpro.nascentinnovations.com/api/Service",
+        imgBaseurl: "https://dev3playpro.nascentinnovations.com/img/upload/",
       };
     case EnviromentTypeEnum.Production:
       return {

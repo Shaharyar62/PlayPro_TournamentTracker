@@ -240,7 +240,7 @@ const StreamingLiveCourt = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-4xl font-bold text-blue-700">
+        <div className="text-4xl font-bold text-[#17626c]">
           Loading match data...
         </div>
       </div>
@@ -389,7 +389,7 @@ const StreamingLiveCourt = () => {
                             </div> */}
                           </div>
                           {isServingTeam(1) && (
-                            <div className="flex items-center text-blue-600">
+                            <div className="flex items-center text-[#17626c]">
                               <span className="text-xl">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
