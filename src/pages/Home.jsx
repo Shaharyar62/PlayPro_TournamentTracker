@@ -41,6 +41,11 @@ const Home = () => {
       name: "Infinity -",
       color: "#2e55b9",
     },
+    {
+      path: "/admin",
+      name: "⚙️ Admin Portal",
+      color: "#7c3aed",
+    },
 
     // { path: "/live-score", name: "Live Score", color: "#2e55b9" },
     // { path: "/time-table", name: "Time Table", color: "#2e55b9" },
