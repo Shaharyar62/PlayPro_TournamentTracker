@@ -10,6 +10,7 @@ const mockCourts = [
 const mockMatches = [
   {
     id: 1,
+    tournamentId: "tournament-001", // Added for WebSocket support
     courtId: "COURT001",
     teamA: { name: "Team Alpha", players: ["John Doe", "Jane Smith"] },
     teamB: { name: "Team Beta", players: ["Mike Johnson", "Sarah Wilson"] },
@@ -24,6 +25,7 @@ const mockMatches = [
   },
   {
     id: 2,
+    tournamentId: "tournament-001",
     courtId: "COURT001",
     teamA: { name: "Team Gamma", players: ["Alex Brown", "Lisa Davis"] },
     teamB: { name: "Team Delta", players: ["Tom Wilson", "Emma Taylor"] },
@@ -38,6 +40,7 @@ const mockMatches = [
   },
   {
     id: 3,
+    tournamentId: "tournament-001",
     courtId: "COURT002",
     teamA: { name: "Team Echo", players: ["David Lee", "Anna White"] },
     teamB: { name: "Team Foxtrot", players: ["Chris Green", "Maria Garcia"] },
@@ -52,6 +55,7 @@ const mockMatches = [
   },
   {
     id: 4,
+    tournamentId: "tournament-001",
     courtId: "COURT001",
     teamA: { name: "Team Hotel", players: ["Robert King", "Jennifer Adams"] },
     teamB: { name: "Team India", players: ["Steven Clark", "Michelle Lewis"] },

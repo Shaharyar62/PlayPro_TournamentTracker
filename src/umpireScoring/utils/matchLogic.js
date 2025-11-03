@@ -1,0 +1,218 @@
+/**
+ * Helper functions for match state transformations and validation
+ */
+
+/**
+ * Initialize empty match state
+ * @param {Array} team1Players - Array of Player objects
+ * @param {Array} team2Players - Array of Player objects
+ * @returns {Object} Initial MatchState object
+ */
+export function initializeMatchState(team1Players, team2Players) {
+  return {
+    team1: {
+      score: 0,
+      games: 0,
+      sets: 0,
+      tiebreakScore: 0,
+      advantageCount: 0,
+      players: team1Players || [],
+      warnings: [],
+      servingOrder: 0,
+    },
+    team2: {
+      score: 0,
+      games: 0,
+      sets: 0,
+      tiebreakScore: 0,
+      advantageCount: 0,
+      players: team2Players || [],
+      warnings: [],
+      servingOrder: 0,
+    },
+    sets: {},
+    isInTiebreak: false,
+    isInSuperTiebreak: false,
+    currentServe: {
+      servingPlayer: team1Players?.[0]?.name || "",
+      isServingTeam1: true,
+    },
+    totalGamesPlayed: 0,
+    status: "active",
+  };
+}
+
+/**
+ * Initialize sets data structure
+ * @param {number} numberOfSets - Number of sets in match
+ * @returns {Record<string, SetData>} Empty sets object
+ */
+export function initializeSetsData(numberOfSets) {
+  const sets = {};
+  for (let i = 0; i < numberOfSets; i++) {
+    sets[i.toString()] = {
+      team1Games: 0,
+      team2Games: 0,
+    };
+  }
+  return sets;
+}
+
+/**
+ * Convert legacy score format to MatchState format
+ * @param {Object} legacyScores - Old format: { teamA: {...}, teamB: {...} }
+ * @param {Array} team1Players - Team 1 players
+ * @param {Array} team2Players - Team 2 players
+ * @returns {Object} MatchState format
+ */
+export function convertLegacyScoresToMatchState(legacyScores, team1Players, team2Players) {
+  if (!legacyScores) {
+    return initializeMatchState(team1Players, team2Players);
+  }
+
+  const teamA = legacyScores.teamA || { sets: [0, 0, 0], games: [0, 0, 0], points: 0 };
+  const teamB = legacyScores.teamB || { sets: [0, 0, 0], games: [0, 0, 0], points: 0 };
+
+  // Find current set index (first incomplete set)
+  let currentSetIndex = 0;
+  for (let i = 0; i < 3; i++) {
+    if (teamA.sets[i] < 6 && teamB.sets[i] < 6) {
+      currentSetIndex = i;
+      break;
+    }
+  }
+
+  // Calculate total sets won
+  const setsWonA = teamA.sets.filter(set => set >= 6).length;
+  const setsWonB = teamB.sets.filter(set => set >= 6).length;
+
+  return {
+    team1: {
+      score: teamA.points || 0,
+      games: teamA.games[currentSetIndex] || 0,
+      sets: setsWonA,
+      tiebreakScore: 0, // Legacy format doesn't have tiebreak scores
+      advantageCount: 0,
+      players: team1Players || [],
+      warnings: [],
+      servingOrder: 0,
+    },
+    team2: {
+      score: teamB.points || 0,
+      games: teamB.games[currentSetIndex] || 0,
+      sets: setsWonB,
+      tiebreakScore: 0,
+      advantageCount: 0,
+      players: team2Players || [],
+      warnings: [],
+      servingOrder: 0,
+    },
+    sets: {},
+    isInTiebreak: false,
+    isInSuperTiebreak: false,
+    currentServe: {
+      servingPlayer: team1Players?.[0]?.name || "",
+      isServingTeam1: true,
+    },
+    totalGamesPlayed: 0,
+    status: "active",
+  };
+}
+
+/**
+ * Validate match state structure
+ * @param {Object} matchState - MatchState to validate
+ * @returns {boolean} True if valid
+ */
+export function validateMatchState(matchState) {
+  if (!matchState) return false;
+  if (!matchState.team1 || !matchState.team2) return false;
+  if (typeof matchState.team1.score !== "number") return false;
+  if (typeof matchState.team2.score !== "number") return false;
+  if (typeof matchState.team1.games !== "number") return false;
+  if (typeof matchState.team2.games !== "number") return false;
+  if (typeof matchState.team1.sets !== "number") return false;
+  if (typeof matchState.team2.sets !== "number") return false;
+  return true;
+}
+
+/**
+ * Get current set index based on completed sets
+ * @param {Object} matchState - MatchState
+ * @returns {number} Current set index (0-based)
+ */
+export function getCurrentSetIndex(matchState) {
+  if (!matchState) return 0;
+  const completedSets = Math.max(
+    matchState.team1.sets || 0,
+    matchState.team2.sets || 0
+  );
+  return Math.min(completedSets, 2); // Max 3 sets (0, 1, 2)
+}
+
+/**
+ * Create update data object for WebSocket update_match_state event
+ * @param {Object} matchState - Updated match state
+ * @param {Record<string, SetData>} setsData - Updated sets data
+ * @returns {Record<string, any>} Update data for WebSocket
+ */
+export function createUpdateData(matchState, setsData) {
+  const updateData = {
+    "team1.score": matchState.team1.score,
+    "team2.score": matchState.team2.score,
+    "team1.games": matchState.team1.games,
+    "team2.games": matchState.team2.games,
+    "team1.sets": matchState.team1.sets,
+    "team2.sets": matchState.team2.sets,
+    "team1.tiebreakScore": matchState.team1.tiebreakScore,
+    "team2.tiebreakScore": matchState.team2.tiebreakScore,
+    isInTiebreak: matchState.isInTiebreak,
+    isInSuperTiebreak: matchState.isInSuperTiebreak,
+    sets: setsData,
+  };
+
+  // Always include status and winnerTeam, not just when completed
+  updateData.status = matchState.status || "active";
+  if (matchState.status === "completed" && matchState.winnerTeam) {
+    updateData.winnerTeam = matchState.winnerTeam;
+  } else {
+    // Explicitly clear winnerTeam when status is active
+    updateData.winnerTeam = "";
+  }
+
+  if (matchState.currentServe) {
+    updateData["currentServe.servingPlayer"] = matchState.currentServe.servingPlayer;
+    updateData["currentServe.isServingTeam1"] = matchState.currentServe.isServingTeam1;
+  }
+
+  return updateData;
+}
+
+/**
+ * Merge server state with local state (conflict resolution)
+ * @param {Object} localState - Local match state
+ * @param {Object} serverState - Server match state
+ * @returns {Object} Merged state (server takes precedence)
+ */
+export function mergeMatchStates(localState, serverState) {
+  if (!serverState) return localState;
+  if (!localState) return serverState;
+
+  // Server state takes precedence
+  return {
+    ...localState,
+    ...serverState,
+    team1: {
+      ...localState.team1,
+      ...serverState.team1,
+      advantageCount: serverState.team1?.advantageCount ?? localState.team1?.advantageCount ?? 0,
+    },
+    team2: {
+      ...localState.team2,
+      ...serverState.team2,
+      advantageCount: serverState.team2?.advantageCount ?? localState.team2?.advantageCount ?? 0,
+    },
+    sets: serverState.sets || localState.sets || {},
+  };
+}
+
