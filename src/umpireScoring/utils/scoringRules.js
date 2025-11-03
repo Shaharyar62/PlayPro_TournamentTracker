@@ -26,7 +26,12 @@ export function getScoreString(score, inTiebreak) {
  * @param {Object} settings - MatchSettings object
  * @returns {boolean} True if team has won the game
  */
-export function hasWonGame(teamScore, opponentScore, teamAdvantageCount, settings) {
+export function hasWonGame(
+  teamScore,
+  opponentScore,
+  teamAdvantageCount,
+  settings
+) {
   // Direct win conditions (40-0, 40-15, 40-30)
   if (teamScore === 4 && opponentScore <= 2) {
     return true;
@@ -72,7 +77,12 @@ export function hasWonGame(teamScore, opponentScore, teamAdvantageCount, setting
  * @param {Object} settings - MatchSettings object
  * @returns {boolean} True if team has won the tiebreak
  */
-export function hasWonTiebreak(teamScore, opponentScore, inSuperTieBreak, settings) {
+export function hasWonTiebreak(
+  teamScore,
+  opponentScore,
+  inSuperTieBreak,
+  settings
+) {
   const tiebreakTarget = inSuperTieBreak
     ? settings.superTieBreakPoints
     : settings.pointsInTiebreak;
@@ -98,10 +108,7 @@ export function hasWonTiebreak(teamScore, opponentScore, inSuperTieBreak, settin
  * @returns {boolean} True if team has won the set
  */
 export function hasWonSet(teamGames, opponentGames, settings) {
-  return (
-    teamGames >= settings.numberOfGames &&
-    teamGames >= opponentGames + 2
-  );
+  return teamGames >= settings.numberOfGames && teamGames >= opponentGames + 2;
 }
 
 /**
@@ -116,9 +123,7 @@ export function shouldStartTiebreak(team1Games, team2Games, settings) {
     ? parseInt(settings.gamesToStartTiebreak.split("-")[0].trim())
     : settings.numberOfGames;
 
-  return (
-    team1Games === tiebreakStartGames && team2Games === tiebreakStartGames
-  );
+  return team1Games === tiebreakStartGames && team2Games === tiebreakStartGames;
 }
 
 /**
@@ -131,6 +136,7 @@ export function shouldStartTiebreak(team1Games, team2Games, settings) {
 export function shouldStartSuperTiebreak(team1Sets, team2Sets, settings) {
   return (
     settings.matchFormat === MatchFormat.TWO_SETS_SUPER_TIEBREAK &&
+    settings.numberOfSets === 2 &&
     team1Sets === 1 &&
     team2Sets === 1
   );
@@ -204,4 +210,3 @@ export function getWarningConsequence(currentWarnings) {
     };
   }
 }
-

@@ -19,7 +19,7 @@ export const DEFAULT_MATCH_SETTINGS = {
   changeSideSeconds: 90,
   setTimerMinutes: 0,
   setTimerSeconds: 0,
-  numberOfSets: 3,
+  numberOfSets: 2,
   numberOfGames: 6,
   autoChangeSide: true,
   goldenPoint: false,
