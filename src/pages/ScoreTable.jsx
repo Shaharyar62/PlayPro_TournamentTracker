@@ -822,7 +822,7 @@ const TournamentStandings = () => {
             
           </div> */}
                               </div>
-                              <div className="bg-gradient-to-b from-gray-50 to-white">
+                              <div className="bg-gradient-to-b text-black from-gray-50 to-white">
                                 <table className="w-full">
                                   <thead>
                                     <tr className="bg-gradient-to-r from-[#093337] to-[#17626c] text-white">

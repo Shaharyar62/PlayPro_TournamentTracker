@@ -58,7 +58,7 @@ const MatchScoreCard = () => {
       case TournamentRuleMatchFormatTypeEnum.threeSets:
         return "3 Sets";
       default:
-        return "Happ";
+        return "Happening Now";
     }
   };
 
@@ -401,27 +401,27 @@ const MatchScoreCard = () => {
           <div className="w-full  ">
             {/* Header with logos */}
             <div className="flex justify-between items-center">
-              <div className="text-center">
+              <div className="text-center" style={{ width: "400px" }}>
                 <img
-                  width={200}
-                  className="justify-self-end p-5"
-                  src={ImageConstants.padelVersewhite}
-                  alt="Playpro"
+                  width={400}
+                  className="justify-self-start p-5"
+                  src={ImageConstants.premierwhite}
+                  alt="Premier Club"
                 />
               </div>
 
               <div className="text-center">
+                <img
+                  width={220}
+                  className="justify-self-end p-5"
+                  src={ImageConstants.premiercup}
+                  alt="Playpro"
+                />
+              </div>
+
+              <div className="text-center" style={{ width: "400px" }}>
                 <img
                   width={300}
-                  className="justify-self-end p-5"
-                  src={ImageConstants.padelVerse}
-                  alt="Playpro"
-                />
-              </div>
-
-              <div className="text-center">
-                <img
-                  width={280}
                   className="justify-self-end p-5"
                   src={ImageConstants.playproWhite}
                   alt="Playpro"
@@ -582,7 +582,7 @@ const MatchScoreCard = () => {
                   {/* Dynamic Set Scores */}
                   {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
                     <div key={setIndex} className="text-center">
-                      <div className="space-y-8">
+                      <div className="space-y-8 text-black">
                         <div className="text-6xl font-bold set-score-style">
                           {getSetScore(1, setIndex)}
                         </div>
@@ -619,11 +619,13 @@ const MatchScoreCard = () => {
                 {matchData.court?.name || "LIVE SCOREBOARD"}
               </div>
               <div className="bg-[#17626c] mr-5 col-span-5 ml-auto text-white  px-[20px]  py-1 rounded-lg font-bold text-1xl">
-                {upcomingMatch && (
+                {upcomingMatch ? (
                   <div>
                     UPCOMING: {getTeamName(upcomingMatch.teamA)} VS{" "}
                     {getTeamName(upcomingMatch.teamB)}
                   </div>
+                ) : (
+                  <div>UPCOMING</div>
                 )}
               </div>
             </div>
