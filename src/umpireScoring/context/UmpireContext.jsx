@@ -1,84 +1,46 @@
 import React, { createContext, useContext, useReducer, useEffect } from "react";
+import { umpireAPI } from "../services/umpireAPI";
+import {
+  setUmpireToken,
+  getUmpireToken,
+  clearUmpireToken,
+} from "../helpers/tokenHelper";
+import { transformCourtsScheduleToMatches } from "../helpers/matchDataTransformer";
 
-// Mock data for development
-const mockCourts = [
-  { id: "COURT001", name: "Court 1", location: "Main Arena" },
-  { id: "COURT002", name: "Court 2", location: "Side Arena" },
-  { id: "COURT003", name: "Court 3", location: "Practice Court" },
-];
+// Load initial state from localStorage
+const loadInitialState = () => {
+  const token = getUmpireToken();
+  const umpireData = localStorage.getItem("umpireData");
+  const tournaments = localStorage.getItem("umpireTournaments");
+  const selectedTournamentId = localStorage.getItem("selectedMasterTournamentId");
 
-const mockMatches = [
-  {
-    id: 1,
-    tournamentId: "tournament-001", // Added for WebSocket support
-    courtId: "COURT001",
-    teamA: { name: "Team Alpha", players: ["John Doe", "Jane Smith"] },
-    teamB: { name: "Team Beta", players: ["Mike Johnson", "Sarah Wilson"] },
-    scheduledTime: "2024-10-29T14:00:00",
-    status: "upcoming", // upcoming, live, completed
-    tournament: "Premier Cup 2024",
-    round: "Quarter Final",
-    scores: {
-      teamA: { sets: [0, 0, 0], games: [0, 0, 0], points: 0 },
-      teamB: { sets: [0, 0, 0], games: [0, 0, 0], points: 0 },
-    },
-  },
-  {
-    id: 2,
-    tournamentId: "tournament-001",
-    courtId: "COURT001",
-    teamA: { name: "Team Gamma", players: ["Alex Brown", "Lisa Davis"] },
-    teamB: { name: "Team Delta", players: ["Tom Wilson", "Emma Taylor"] },
-    scheduledTime: "2024-10-29T16:00:00",
-    status: "upcoming",
-    tournament: "Premier Cup 2024",
-    round: "Semi Final",
-    scores: {
-      teamA: { sets: [0, 0, 0], games: [0, 0, 0], points: 0 },
-      teamB: { sets: [0, 0, 0], games: [0, 0, 0], points: 0 },
-    },
-  },
-  {
-    id: 3,
-    tournamentId: "tournament-001",
-    courtId: "COURT002",
-    teamA: { name: "Team Echo", players: ["David Lee", "Anna White"] },
-    teamB: { name: "Team Foxtrot", players: ["Chris Green", "Maria Garcia"] },
-    scheduledTime: "2024-10-29T13:30:00",
-    status: "live",
-    tournament: "Premier Cup 2024",
-    round: "Group Stage",
-    scores: {
-      teamA: { sets: [6, 3, 0], games: [1, 0, 0], points: 30 },
-      teamB: { sets: [4, 2, 0], games: [0, 0, 0], points: 15 },
-    },
-  },
-  {
-    id: 4,
-    tournamentId: "tournament-001",
-    courtId: "COURT001",
-    teamA: { name: "Team Hotel", players: ["Robert King", "Jennifer Adams"] },
-    teamB: { name: "Team India", players: ["Steven Clark", "Michelle Lewis"] },
-    scheduledTime: "2024-10-28T15:00:00",
-    status: "completed",
-    tournament: "Premier Cup 2024",
-    round: "Group Stage",
-    scores: {
-      teamA: { sets: [6, 6, 0], games: [2, 1, 0], points: 0 },
-      teamB: { sets: [4, 3, 0], games: [0, 0, 0], points: 0 },
-    },
-  },
-];
+  let parsedUmpireData = null;
+  let parsedTournaments = [];
+  let parsedSelectedTournamentId = null;
+
+  try {
+    if (umpireData) parsedUmpireData = JSON.parse(umpireData);
+    if (tournaments) parsedTournaments = JSON.parse(tournaments);
+    if (selectedTournamentId)
+      parsedSelectedTournamentId = parseInt(selectedTournamentId);
+  } catch (error) {
+    console.error("Error loading initial state:", error);
+  }
+
+  return {
+    isAuthenticated: !!token,
+    umpireData: parsedUmpireData,
+    masterTournaments: parsedTournaments,
+    masterTournamentId: parsedSelectedTournamentId,
+    matches: [],
+    currentMatch: null,
+    loading: false,
+    error: null,
+  };
+};
 
 // Initial state
-const initialState = {
-  isAuthenticated: false,
-  currentCourt: null,
-  matches: mockMatches,
-  currentMatch: null,
-  loading: false,
-  error: null,
-};
+const initialState = loadInitialState();
 
 // Action types
 const actionTypes = {
@@ -86,7 +48,10 @@ const actionTypes = {
   LOGIN_SUCCESS: "LOGIN_SUCCESS",
   LOGIN_FAILURE: "LOGIN_FAILURE",
   LOGOUT: "LOGOUT",
+  SET_MASTER_TOURNAMENTS: "SET_MASTER_TOURNAMENTS",
+  SET_MASTER_TOURNAMENT_ID: "SET_MASTER_TOURNAMENT_ID",
   SET_CURRENT_MATCH: "SET_CURRENT_MATCH",
+  SET_MATCHES: "SET_MATCHES",
   UPDATE_MATCH_STATUS: "UPDATE_MATCH_STATUS",
   UPDATE_SCORE: "UPDATE_SCORE",
   END_MATCH: "END_MATCH",
@@ -108,7 +73,9 @@ const umpireReducer = (state, action) => {
       return {
         ...state,
         isAuthenticated: true,
-        currentCourt: action.payload.court,
+        umpireData: action.payload.umpireData,
+        masterTournaments: action.payload.tournaments || [],
+        masterTournamentId: action.payload.selectedTournamentId || null,
         loading: false,
         error: null,
       };
@@ -117,7 +84,7 @@ const umpireReducer = (state, action) => {
       return {
         ...state,
         isAuthenticated: false,
-        currentCourt: null,
+        umpireData: null,
         loading: false,
         error: action.payload.error,
       };
@@ -125,7 +92,30 @@ const umpireReducer = (state, action) => {
     case actionTypes.LOGOUT:
       return {
         ...initialState,
-        matches: state.matches, // Keep matches data
+        isAuthenticated: false,
+        umpireData: null,
+        masterTournaments: [],
+        masterTournamentId: null,
+        matches: [],
+        currentMatch: null,
+      };
+
+    case actionTypes.SET_MASTER_TOURNAMENTS:
+      return {
+        ...state,
+        masterTournaments: action.payload,
+      };
+
+    case actionTypes.SET_MASTER_TOURNAMENT_ID:
+      return {
+        ...state,
+        masterTournamentId: action.payload,
+      };
+
+    case actionTypes.SET_MATCHES:
+      return {
+        ...state,
+        matches: action.payload,
       };
 
     case actionTypes.SET_CURRENT_MATCH:
@@ -203,25 +193,78 @@ const UmpireContext = createContext();
 export const UmpireProvider = ({ children }) => {
   const [state, dispatch] = useReducer(umpireReducer, initialState);
 
-  // Actions
-  const login = async (courtId) => {
+  // Login with phone and password
+  const login = async (phone, password) => {
     dispatch({ type: actionTypes.LOGIN_START });
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Call API to sign in
+      const response = await umpireAPI.umpireSignIn(phone, password);
 
-      const court = mockCourts.find((c) => c.id === courtId);
-
-      if (court) {
-        dispatch({
-          type: actionTypes.LOGIN_SUCCESS,
-          payload: { court },
-        });
-        return { success: true };
-      } else {
-        throw new Error("Invalid Court ID");
+      if (!response.success) {
+        throw new Error(response.error || "Login failed");
       }
+
+      // Extract umpire data from response
+      const umpireDataArray = response.data || [];
+      if (umpireDataArray.length === 0) {
+        throw new Error("No umpire data received");
+      }
+
+      const umpireData = umpireDataArray[0];
+      const token = umpireData.token;
+
+      if (!token) {
+        throw new Error("No token received from server");
+      }
+
+      // Encrypt and store token
+      setUmpireToken(token);
+
+      // Store umpire data
+      localStorage.setItem("umpireData", JSON.stringify(umpireData));
+
+      // Delete old tournament data
+      localStorage.removeItem("umpireTournaments");
+      localStorage.removeItem("selectedMasterTournamentId");
+
+      // Fetch tournaments
+      const tournamentsResponse = await umpireAPI.getUmpireMasterTournaments();
+
+      if (!tournamentsResponse.success) {
+        throw new Error(
+          tournamentsResponse.error || "Failed to fetch tournaments"
+        );
+      }
+
+      const tournaments = tournamentsResponse.data || [];
+      let selectedTournamentId = null;
+
+      // Store tournaments
+      if (tournaments.length > 0) {
+        localStorage.setItem("umpireTournaments", JSON.stringify(tournaments));
+        // Select first tournament by default
+        selectedTournamentId = tournaments[0].id;
+        localStorage.setItem(
+          "selectedMasterTournamentId",
+          selectedTournamentId.toString()
+        );
+      }
+
+      dispatch({
+        type: actionTypes.LOGIN_SUCCESS,
+        payload: {
+          umpireData,
+          tournaments,
+          selectedTournamentId,
+          message: response.message,
+        },
+      });
+
+      return {
+        success: true,
+        message: response.message || "Login successful",
+      };
     } catch (error) {
       dispatch({
         type: actionTypes.LOGIN_FAILURE,
@@ -231,8 +274,112 @@ export const UmpireProvider = ({ children }) => {
     }
   };
 
+  // Logout
   const logout = () => {
+    // Clear token
+    clearUmpireToken();
+
+    // Clear localStorage
+    localStorage.removeItem("umpireData");
+    localStorage.removeItem("umpireTournaments");
+    localStorage.removeItem("selectedMasterTournamentId");
+
     dispatch({ type: actionTypes.LOGOUT });
+  };
+
+  // Fetch master tournaments
+  const fetchMasterTournaments = async () => {
+    try {
+      const response = await umpireAPI.getUmpireMasterTournaments();
+
+      if (response.success) {
+        const tournaments = response.data || [];
+        localStorage.setItem("umpireTournaments", JSON.stringify(tournaments));
+        dispatch({
+          type: actionTypes.SET_MASTER_TOURNAMENTS,
+          payload: tournaments,
+        });
+        return tournaments;
+      } else {
+        throw new Error(response.error || "Failed to fetch tournaments");
+      }
+    } catch (error) {
+      console.error("Error fetching tournaments:", error);
+      dispatch({
+        type: actionTypes.SET_ERROR,
+        payload: error.message,
+      });
+      return [];
+    }
+  };
+
+  // Set master tournament ID
+  const setMasterTournamentId = (tournamentId) => {
+    localStorage.setItem("selectedMasterTournamentId", tournamentId.toString());
+    dispatch({
+      type: actionTypes.SET_MASTER_TOURNAMENT_ID,
+      payload: tournamentId,
+    });
+  };
+
+  // Fetch matches for selected tournament
+  const fetchMatches = async (tournamentId = null) => {
+    const targetTournamentId = tournamentId || state.masterTournamentId;
+
+    if (!targetTournamentId) {
+      dispatch({ type: actionTypes.SET_MATCHES, payload: [] });
+      return [];
+    }
+
+    dispatch({ type: actionTypes.SET_LOADING, payload: true });
+
+    try {
+      const response =
+        await umpireAPI.getUmpireMasterTournamentCourtsSchedule(
+          targetTournamentId
+        );
+
+      if (response.success) {
+        // Find tournament object for name
+        const tournament = state.masterTournaments.find(
+          (t) => t.id === targetTournamentId
+        );
+
+        // Transform API data to UI format
+        const matches = transformCourtsScheduleToMatches(
+          response,
+          tournament
+        );
+
+        dispatch({ type: actionTypes.SET_MATCHES, payload: matches });
+        return matches;
+      } else {
+        throw new Error(response.error || "Failed to fetch matches");
+      }
+    } catch (error) {
+      console.error("Error fetching matches:", error);
+      dispatch({
+        type: actionTypes.SET_ERROR,
+        payload: error.message,
+      });
+      dispatch({ type: actionTypes.SET_MATCHES, payload: [] });
+      return [];
+    } finally {
+      dispatch({ type: actionTypes.SET_LOADING, payload: false });
+    }
+  };
+
+  // Get matches for current tournament (filtered by status if provided)
+  const getMatchesForCourt = (status = null) => {
+    let matches = state.matches || [];
+
+    if (status) {
+      matches = matches.filter((match) => match.status === status);
+    }
+
+    return matches.sort(
+      (a, b) => new Date(a.scheduledTime || 0) - new Date(b.scheduledTime || 0)
+    );
   };
 
   const setCurrentMatch = (match) => {
@@ -263,33 +410,25 @@ export const UmpireProvider = ({ children }) => {
     });
   };
 
-  // Get matches for current court
-  const getMatchesForCourt = (status = null) => {
-    if (!state.currentCourt) return [];
-
-    let matches = state.matches.filter(
-      (match) => match.courtId === state.currentCourt.id
-    );
-
-    if (status) {
-      matches = matches.filter((match) => match.status === status);
+  // Fetch matches when tournament changes
+  useEffect(() => {
+    if (state.isAuthenticated && state.masterTournamentId) {
+      fetchMatches();
     }
-
-    return matches.sort(
-      (a, b) => new Date(a.scheduledTime) - new Date(b.scheduledTime)
-    );
-  };
+  }, [state.masterTournamentId, state.isAuthenticated]);
 
   const value = {
     ...state,
     login,
     logout,
+    fetchMasterTournaments,
+    setMasterTournamentId,
+    fetchMatches,
     setCurrentMatch,
     startMatch,
     updateScore,
     endMatch,
     getMatchesForCourt,
-    mockCourts, // For development
   };
 
   return (

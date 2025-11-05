@@ -9,6 +9,8 @@ import {
   MapPin,
   CheckCircle,
   AlertCircle,
+  Award,
+  Target,
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -51,20 +53,47 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
     }
   };
 
-  const getScoreDisplay = (scores) => {
+  const getScoreDisplay = (scores, setsWon) => {
     if (!scores) return null;
+
+    // Use setsWon if available, otherwise calculate from sets
+    if (setsWon) {
+      return `${setsWon.teamA} - ${setsWon.teamB}`;
+    }
 
     const { teamA, teamB } = scores;
 
-    // Show sets won
-    const setsA = teamA.sets.filter(
-      (set) => set > teamB.sets[teamA.sets.indexOf(set)]
-    ).length;
-    const setsB = teamB.sets.filter(
-      (set) => set > teamA.sets[teamB.sets.indexOf(set)]
-    ).length;
+    // Calculate sets won from set scores
+    let setsA = 0;
+    let setsB = 0;
+    
+    for (let i = 0; i < 3; i++) {
+      if (teamA.sets[i] > teamB.sets[i]) {
+        setsA++;
+      } else if (teamB.sets[i] > teamA.sets[i]) {
+        setsB++;
+      }
+    }
 
     return `${setsA} - ${setsB}`;
+  };
+
+  const getSetScoresDisplay = (scores) => {
+    if (!scores) return null;
+    
+    const { teamA, teamB } = scores;
+    const setScores = [];
+    
+    for (let i = 0; i < 3; i++) {
+      const scoreA = teamA.sets[i] || 0;
+      const scoreB = teamB.sets[i] || 0;
+      // Only show sets that have been played (at least one score > 0)
+      if (scoreA > 0 || scoreB > 0) {
+        setScores.push(`${scoreA}-${scoreB}`);
+      }
+    }
+    
+    return setScores.length > 0 ? setScores.join(", ") : null;
   };
 
   if (!matches || matches.length === 0) {
@@ -86,7 +115,8 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
       {matches.map((match, index) => {
         const statusConfig = getStatusConfig(match.status);
         const StatusIcon = statusConfig.icon;
-        const scoreDisplay = getScoreDisplay(match.scores);
+        const scoreDisplay = getScoreDisplay(match.scores, match.setsWon);
+        const setScoresDisplay = getSetScoresDisplay(match.scores);
 
         return (
           <motion.div
@@ -125,16 +155,33 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
                     {match.tournament}
                   </h3>
 
-                  <div className="flex items-center space-x-4 text-sm text-gray-600">
-                    <div className="flex items-center space-x-1">
-                      <Trophy className="w-4 h-4" />
-                      <span>{match.round}</span>
-                    </div>
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mb-2">
+                    {match.courtName && (
+                      <div className="flex items-center space-x-1">
+                        <MapPin className="w-4 h-4" />
+                        <span className="font-medium">{match.courtName}</span>
+                      </div>
+                    )}
+                    {match.stageType && (
+                      <div className="flex items-center space-x-1">
+                        <Target className="w-4 h-4" />
+                        <span>{match.stageType}</span>
+                      </div>
+                    )}
                     <div className="flex items-center space-x-1">
                       <Calendar className="w-4 h-4" />
                       <span>{formatMatchTime(match.scheduledTime)}</span>
                     </div>
                   </div>
+
+                  {match.status === "completed" && match.matchResult && (
+                    <div className="flex items-center space-x-1 text-sm mt-1">
+                      <Award className="w-4 h-4 text-green-600" />
+                      <span className="font-semibold text-green-700">
+                        {match.matchResult}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Score Display */}
@@ -143,7 +190,12 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
                     <div className="text-2xl font-bold text-gray-800 mb-1">
                       {scoreDisplay}
                     </div>
-                    <div className="text-xs text-gray-500">Sets Won</div>
+                    <div className="text-xs text-gray-500 mb-1">Sets Won</div>
+                    {setScoresDisplay && (
+                      <div className="text-xs text-gray-600 font-medium">
+                        Sets: {setScoresDisplay}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -166,11 +218,18 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
                     </div>
                   </div>
 
-                  {match.status !== "upcoming" && (
+                  {match.status !== "upcoming" && match.scores && (
                     <div className="text-right">
-                      <div className="font-mono text-sm text-gray-600">
-                        {match.scores.teamA.sets.join("-")}
+                      <div className="font-mono text-sm text-gray-600 mb-1">
+                        {match.scores.teamA.sets.filter(s => s > 0).length > 0 
+                          ? match.scores.teamA.sets.filter(s => s > 0).join("-")
+                          : "0"}
                       </div>
+                      {match.setsWon && (
+                        <div className="text-xs text-blue-600 font-semibold">
+                          {match.setsWon.teamA} sets
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -198,11 +257,18 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
                     </div>
                   </div>
 
-                  {match.status !== "upcoming" && (
+                  {match.status !== "upcoming" && match.scores && (
                     <div className="text-right">
-                      <div className="font-mono text-sm text-gray-600">
-                        {match.scores.teamB.sets.join("-")}
+                      <div className="font-mono text-sm text-gray-600 mb-1">
+                        {match.scores.teamB.sets.filter(s => s > 0).length > 0 
+                          ? match.scores.teamB.sets.filter(s => s > 0).join("-")
+                          : "0"}
                       </div>
+                      {match.setsWon && (
+                        <div className="text-xs text-red-600 font-semibold">
+                          {match.setsWon.teamB} sets
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { LogOut, RefreshCw, Shield, MapPin } from "lucide-react";
+import { LogOut, RefreshCw, Shield, Trophy, ChevronDown } from "lucide-react";
 import { useUmpire } from "../context/UmpireContext";
 import Filters from "../components/Filters";
 import MatchList from "../components/MatchList";
@@ -9,15 +9,27 @@ import MatchList from "../components/MatchList";
 const MatchListPage = () => {
   const navigate = useNavigate();
   const {
-    currentCourt,
+    isAuthenticated,
+    masterTournaments,
+    masterTournamentId,
     logout,
     getMatchesForCourt,
     setCurrentMatch,
     startMatch,
+    setMasterTournamentId,
+    fetchMatches,
+    loading,
   } = useUmpire();
 
   const [activeFilter, setActiveFilter] = useState("all");
   const [refreshing, setRefreshing] = useState(false);
+  const [showTournamentDropdown, setShowTournamentDropdown] = useState(false);
+
+  // Get selected tournament name
+  const selectedTournament = useMemo(() => {
+    return masterTournaments.find((t) => t.id === masterTournamentId);
+  }, [masterTournaments, masterTournamentId]);
+
 
   // Get matches based on filter
   const filteredMatches = useMemo(() => {
@@ -45,9 +57,13 @@ const MatchListPage = () => {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    // Simulate API refresh
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await fetchMatches();
     setRefreshing(false);
+  };
+
+  const handleTournamentChange = (tournamentId) => {
+    setMasterTournamentId(tournamentId);
+    setShowTournamentDropdown(false);
   };
 
   const handleMatchSelect = (match) => {
@@ -61,8 +77,13 @@ const MatchListPage = () => {
     navigate("../score-upload");
   };
 
-  if (!currentCourt) {
-    navigate("../login");
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("../login");
+    }
+  }, [isAuthenticated, navigate]);
+
+  if (!isAuthenticated) {
     return null;
   }
 
@@ -80,25 +101,56 @@ const MatchListPage = () => {
                 <h1 className="text-2xl font-bold text-gray-800">
                   Umpire Portal
                 </h1>
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <MapPin className="w-4 h-4" />
-                  <span>
-                    {currentCourt.name} • {currentCourt.location}
-                  </span>
-                </div>
               </div>
             </div>
 
             <div className="flex items-center space-x-3">
+              {/* Tournament Dropdown */}
+              {masterTournaments.length > 0 && (
+                <div className="relative">
+                  <motion.button
+                    onClick={() => setShowTournamentDropdown(!showTournamentDropdown)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2 shadow-md border border-blue-700 min-w-[200px] max-w-[300px]"
+                  >
+                    <Trophy className="w-4 h-4 flex-shrink-0" />
+                    <span className="font-medium truncate text-left flex-1">
+                      {selectedTournament?.name || "Select Tournament"}
+                    </span>
+                    <ChevronDown className="w-4 h-4 flex-shrink-0" />
+                  </motion.button>
+
+                  {showTournamentDropdown && (
+                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-300 z-50 max-h-96 overflow-y-auto">
+                      {masterTournaments.map((tournament) => (
+                        <button
+                          key={tournament.id}
+                          onClick={() => handleTournamentChange(tournament.id)}
+                          className={`w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors duration-200 border-b border-gray-100 last:border-b-0 ${tournament.id === masterTournamentId
+                            ? "bg-blue-100 font-semibold text-blue-800 border-l-4 border-l-blue-600"
+                            : "text-gray-800 hover:text-blue-700"
+                            }`}
+                        >
+                          <div className="font-medium text-sm break-words leading-tight">
+                            {tournament.name}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
               <motion.button
                 onClick={handleRefresh}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                disabled={refreshing}
+                disabled={refreshing || loading}
                 className="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-lg transition-colors duration-200"
               >
                 <RefreshCw
-                  className={`w-5 h-5 ${refreshing ? "animate-spin" : ""}`}
+                  className={`w-5 h-5 ${refreshing || loading ? "animate-spin" : ""}`}
                 />
               </motion.button>
 
@@ -129,7 +181,9 @@ const MatchListPage = () => {
               Match Schedule
             </h2>
             <p className="text-gray-600">
-              Manage and score matches for {currentCourt.name}
+              {selectedTournament
+                ? `Manage and score matches for ${selectedTournament.name}`
+                : "Select a tournament to view matches"}
             </p>
           </div>
 
@@ -163,8 +217,8 @@ const MatchListPage = () => {
                 </h3>
                 <p className="text-gray-500 mb-4">
                   {activeFilter === "all"
-                    ? "There are no matches scheduled for this court."
-                    : `There are no ${activeFilter} matches for this court.`}
+                    ? "There are no matches scheduled for this tournament."
+                    : `There are no ${activeFilter} matches for this tournament.`}
                 </p>
                 <motion.button
                   onClick={handleRefresh}
@@ -186,12 +240,20 @@ const MatchListPage = () => {
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="text-center text-sm text-gray-500">
             <p>PlayPro Tournament Tracker - Umpire Portal</p>
-            <p className="mt-1">
-              Court: {currentCourt.id} • {currentCourt.name}
-            </p>
+            {selectedTournament && (
+              <p className="mt-1">Tournament: {selectedTournament.name}</p>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Click outside to close dropdown */}
+      {showTournamentDropdown && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowTournamentDropdown(false)}
+        />
+      )}
     </div>
   );
 };
