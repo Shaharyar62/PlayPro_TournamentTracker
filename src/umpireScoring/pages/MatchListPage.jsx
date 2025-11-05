@@ -7,6 +7,7 @@ import Filters from "../components/Filters";
 import MatchList from "../components/MatchList";
 
 const MatchListPage = () => {
+
   const navigate = useNavigate();
   const {
     isAuthenticated,
