@@ -3,11 +3,12 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { LogOut, RefreshCw, Shield, Trophy, ChevronDown } from "lucide-react";
 import { useUmpire } from "../context/UmpireContext";
+import { umpireAPI } from "../services/umpireAPI";
+import { TournamentMatchPlayStatusEnum } from "../../const/appConstant";
 import Filters from "../components/Filters";
 import MatchList from "../components/MatchList";
 
 const MatchListPage = () => {
-
   const navigate = useNavigate();
   const {
     isAuthenticated,
@@ -30,7 +31,6 @@ const MatchListPage = () => {
   const selectedTournament = useMemo(() => {
     return masterTournaments.find((t) => t.id === masterTournamentId);
   }, [masterTournaments, masterTournamentId]);
-
 
   // Get matches based on filter
   const filteredMatches = useMemo(() => {
@@ -73,9 +73,34 @@ const MatchListPage = () => {
   };
 
   const handleGoLive = async (match) => {
-    await startMatch(match.id);
-    setCurrentMatch(match);
-    navigate("../score-upload");
+    try {
+      // Call API to update match status to In_Progress
+      const response = await umpireAPI.updateTournamentMatchStatus(
+        match.id,
+        TournamentMatchPlayStatusEnum.In_Progress
+      );
+
+      if (response.success) {
+        // Update local state
+        await startMatch(match.id);
+        setCurrentMatch(match);
+        // Navigate to score upload page
+        navigate("../score-upload");
+      } else {
+        // Show error message if API call failed
+        console.error("Failed to update match status:", response.error);
+        alert(
+          response.error || "Failed to update match status. Please try again."
+        );
+      }
+    } catch (error) {
+      // Handle API errors
+      console.error("Error updating match status:", error);
+      alert(
+        error.message ||
+          "An error occurred while updating match status. Please try again."
+      );
+    }
   };
 
   useEffect(() => {
@@ -110,7 +135,9 @@ const MatchListPage = () => {
               {masterTournaments.length > 0 && (
                 <div className="relative">
                   <motion.button
-                    onClick={() => setShowTournamentDropdown(!showTournamentDropdown)}
+                    onClick={() =>
+                      setShowTournamentDropdown(!showTournamentDropdown)
+                    }
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2 shadow-md border border-blue-700 min-w-[200px] max-w-[300px]"
@@ -128,10 +155,11 @@ const MatchListPage = () => {
                         <button
                           key={tournament.id}
                           onClick={() => handleTournamentChange(tournament.id)}
-                          className={`w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors duration-200 border-b border-gray-100 last:border-b-0 ${tournament.id === masterTournamentId
-                            ? "bg-blue-100 font-semibold text-blue-800 border-l-4 border-l-blue-600"
-                            : "text-gray-800 hover:text-blue-700"
-                            }`}
+                          className={`w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors duration-200 border-b border-gray-100 last:border-b-0 ${
+                            tournament.id === masterTournamentId
+                              ? "bg-blue-100 font-semibold text-blue-800 border-l-4 border-l-blue-600"
+                              : "text-gray-800 hover:text-blue-700"
+                          }`}
                         >
                           <div className="font-medium text-sm break-words leading-tight">
                             {tournament.name}
@@ -151,7 +179,9 @@ const MatchListPage = () => {
                 className="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-lg transition-colors duration-200"
               >
                 <RefreshCw
-                  className={`w-5 h-5 ${refreshing || loading ? "animate-spin" : ""}`}
+                  className={`w-5 h-5 ${
+                    refreshing || loading ? "animate-spin" : ""
+                  }`}
                 />
               </motion.button>
 

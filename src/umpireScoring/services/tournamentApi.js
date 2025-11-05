@@ -22,14 +22,17 @@ class TournamentApiService {
       if (tournamentId && stageTypeId) {
         try {
           const response = await Common.ApiService.getInstance().request(
-            `GetMatchSettings?tournamentId=${tournamentId}&stageTypeId=${stageTypeId}`
+            `GetTournamentRules?tournamentId=${tournamentId}&stageTypeId=${stageTypeId}`
           );
-          
+
           if (response?.data) {
-            settings = this.normalizeMatchSettings(response.data);
+            settings = this.normalizeMatchSettings(response.data[0]);
           }
         } catch (error) {
-          console.warn("Failed to load match settings from API, using defaults:", error);
+          console.warn(
+            "Failed to load match settings from API, using defaults:",
+            error
+          );
         }
       }
 
@@ -54,25 +57,48 @@ class TournamentApiService {
    */
   normalizeMatchSettings(apiData) {
     return {
-      autoStartTime: apiData.autoStartTime ?? DEFAULT_MATCH_SETTINGS.autoStartTime,
-      pointTimerMinutes: apiData.pointTimerMinutes ?? DEFAULT_MATCH_SETTINGS.pointTimerMinutes,
-      pointTimerSeconds: apiData.pointTimerSeconds ?? DEFAULT_MATCH_SETTINGS.pointTimerSeconds,
-      changeSide1_Minutes: apiData.changeSide1_Minutes ?? DEFAULT_MATCH_SETTINGS.changeSide1_Minutes,
-      changeSide1_Seconds: apiData.changeSide1_Seconds ?? DEFAULT_MATCH_SETTINGS.changeSide1_Seconds,
-      changeSideMinutes: apiData.changeSideMinutes ?? DEFAULT_MATCH_SETTINGS.changeSideMinutes,
-      changeSideSeconds: apiData.changeSideSeconds ?? DEFAULT_MATCH_SETTINGS.changeSideSeconds,
-      setTimerMinutes: apiData.setTimerMinutes ?? DEFAULT_MATCH_SETTINGS.setTimerMinutes,
-      setTimerSeconds: apiData.setTimerSeconds ?? DEFAULT_MATCH_SETTINGS.setTimerSeconds,
+      autoStartTime:
+        apiData.autoStartTime ?? DEFAULT_MATCH_SETTINGS.autoStartTime,
+      pointTimerMinutes:
+        apiData.pointTimerMinutes ?? DEFAULT_MATCH_SETTINGS.pointTimerMinutes,
+      pointTimerSeconds:
+        apiData.pointTimerSeconds ?? DEFAULT_MATCH_SETTINGS.pointTimerSeconds,
+      changeSide1_Minutes:
+        apiData.changeSide1_Minutes ??
+        DEFAULT_MATCH_SETTINGS.changeSide1_Minutes,
+      changeSide1_Seconds:
+        apiData.changeSide1_Seconds ??
+        DEFAULT_MATCH_SETTINGS.changeSide1_Seconds,
+      changeSideMinutes:
+        apiData.changeSideMinutes ?? DEFAULT_MATCH_SETTINGS.changeSideMinutes,
+      changeSideSeconds:
+        apiData.changeSideSeconds ?? DEFAULT_MATCH_SETTINGS.changeSideSeconds,
+      setTimerMinutes:
+        apiData.setTimerMinutes ?? DEFAULT_MATCH_SETTINGS.setTimerMinutes,
+      setTimerSeconds:
+        apiData.setTimerSeconds ?? DEFAULT_MATCH_SETTINGS.setTimerSeconds,
       numberOfSets: apiData.numberOfSets ?? DEFAULT_MATCH_SETTINGS.numberOfSets,
-      numberOfGames: apiData.numberOfGames ?? DEFAULT_MATCH_SETTINGS.numberOfGames,
-      autoChangeSide: apiData.autoChangeSide ?? DEFAULT_MATCH_SETTINGS.autoChangeSide,
+      numberOfGames:
+        apiData.numberOfGames ?? DEFAULT_MATCH_SETTINGS.numberOfGames,
+      autoChangeSide:
+        apiData.autoChangeSide ?? DEFAULT_MATCH_SETTINGS.autoChangeSide,
       goldenPoint: apiData.goldenPoint ?? DEFAULT_MATCH_SETTINGS.goldenPoint,
-      goldenPointInTiebreak: apiData.goldenPointInTiebreak ?? DEFAULT_MATCH_SETTINGS.goldenPointInTiebreak,
-      advantagesWithGoldenPoint: apiData.advantagesWithGoldenPoint ?? DEFAULT_MATCH_SETTINGS.advantagesWithGoldenPoint,
-      tiebreakOnLastSet: apiData.tiebreakOnLastSet ?? DEFAULT_MATCH_SETTINGS.tiebreakOnLastSet,
-      pointsInTiebreak: apiData.pointsInTiebreak ?? DEFAULT_MATCH_SETTINGS.pointsInTiebreak,
-      superTieBreakPoints: apiData.superTieBreakPoints ?? DEFAULT_MATCH_SETTINGS.superTieBreakPoints,
-      gamesToStartTiebreak: apiData.gamesToStartTiebreak ?? DEFAULT_MATCH_SETTINGS.gamesToStartTiebreak,
+      goldenPointInTiebreak:
+        apiData.goldenPointInTiebreak ??
+        DEFAULT_MATCH_SETTINGS.goldenPointInTiebreak,
+      advantagesWithGoldenPoint:
+        apiData.advantagesWithGoldenPoint ??
+        DEFAULT_MATCH_SETTINGS.advantagesWithGoldenPoint,
+      tiebreakOnLastSet:
+        apiData.tiebreakOnLastSet ?? DEFAULT_MATCH_SETTINGS.tiebreakOnLastSet,
+      pointsInTiebreak:
+        apiData.pointsInTiebreak ?? DEFAULT_MATCH_SETTINGS.pointsInTiebreak,
+      superTieBreakPoints:
+        apiData.superTieBreakPoints ??
+        DEFAULT_MATCH_SETTINGS.superTieBreakPoints,
+      gamesToStartTiebreak:
+        apiData.gamesToStartTiebreak ??
+        DEFAULT_MATCH_SETTINGS.gamesToStartTiebreak,
       matchFormat: apiData.matchFormat ?? DEFAULT_MATCH_SETTINGS.matchFormat,
     };
   }
@@ -82,4 +108,3 @@ class TournamentApiService {
 const tournamentApiService = new TournamentApiService();
 
 export default tournamentApiService;
-

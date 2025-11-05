@@ -76,7 +76,7 @@ const EnviromentTypeEnum = Object.freeze({
   Demo: 5,
 });
 
-const envType = EnviromentTypeEnum.Local;
+const envType = EnviromentTypeEnum.Dev;
 
 export const envIsLive =
   envType == EnviromentTypeEnum.Demo ||

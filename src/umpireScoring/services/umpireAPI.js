@@ -1,5 +1,8 @@
-import AppConstant from "../../const/appConstant";
+import AppConstant, {
+  TournamentMatchPlayStatusEnum,
+} from "../../const/appConstant";
 import { ResultStatus } from "../../const/appConstant";
+import { baseUrl } from "../../const/Constants";
 import { getUmpireToken } from "../helpers/tokenHelper";
 
 /**
@@ -22,7 +25,7 @@ class UmpireAPIService {
 
     // Get JWT token if available
     const token = getUmpireToken();
-    
+
     const defaultOptions = {
       method: "GET",
       headers: {
@@ -389,6 +392,62 @@ class UmpireAPIService {
         timestamp: new Date().toISOString(),
       }),
     });
+  }
+
+  /**
+   * Update Tournament Match Status
+   * POST /UpdateTournamentMatchStatus (general service API, not UmpireTournament)
+   * @param {number|string} tournamentScheduleId - Tournament Schedule ID (match ID)
+   * @param {number} playStatus - Play status enum value (0=Pending, 1=In_Progress, 2=Completed)
+   * @returns {Promise} Response with update status
+   */
+  async updateTournamentMatchStatus(tournamentScheduleId, playStatus) {
+    const url = `${baseUrl}/UpdateTournamentMatchStatus`;
+    const token = getUmpireToken();
+
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        tournamentScheduleId: tournamentScheduleId,
+        playStatus: playStatus,
+      }),
+    };
+
+    // Add Authorization header if token exists
+    if (token) {
+      options.headers.Authorization = `Bearer ${token}`;
+    }
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return this.handleAPIResponse(data);
+    } catch (error) {
+      console.error("UpdateTournamentMatchStatus API Request failed:", error);
+
+      if (error.name === "AbortError") {
+        throw new Error("Request timeout");
+      }
+
+      throw error;
+    }
   }
 }
 

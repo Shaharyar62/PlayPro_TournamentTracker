@@ -5,13 +5,14 @@
 
 /**
  * Map playStatus to UI status
- * @param {number|null} playStatus - API playStatus (1=In_Progress, 2=Completed, null=upcoming)
+ * @param {number|null} playStatus - API playStatus enum (0=Pending, 1=InProgress, 2=Completed, null/undefined=upcoming)
  * @returns {string} UI status ('upcoming', 'live', 'completed')
  */
 const mapPlayStatusToUIStatus = (playStatus) => {
+  if (playStatus === 0) return "upcoming"; // Pending
   if (playStatus === 1) return "live"; // In_Progress
   if (playStatus === 2) return "completed"; // Completed
-  return "upcoming"; // null or not started
+  return "upcoming"; // null or undefined fallback
 };
 
 /**

@@ -21,11 +21,14 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
   const [showEndMatchModal, setShowEndMatchModal] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showChangeServeModal, setShowChangeServeModal] = useState(false);
+  console.log("ScoreUpload match", match);
 
   // Get tournamentId from match or use default
   const tournamentId =
     match?.tournamentId || `tournament-${match?.id || "default"}`;
   const matchId = match?.id?.toString() || "default";
+  console.log("ScoreUpload tournamentId", tournamentId);
+  console.log("ScoreUpload matchId", matchId);
 
   // Use match state hook with WebSocket integration
   const {
@@ -56,8 +59,10 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
     const initialize = async () => {
       try {
         // Load match settings from API first (per guide)
-        const stageTypeId = match.stageTypeId || null;
+        const stageTypeId = match.stageTypeValue || null;
+
         const settings = await loadMatchSettings(stageTypeId);
+        console.log("ScoreUpload settings", settings);
 
         // Then load existing match state
         const existingState = await loadMatchState();
@@ -343,17 +348,25 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
             </div>
             <div className="text-xl sm:text-2xl font-bold text-blue-300">-</div>
             {isInTiebreak ? (
-              <div className="bg-blue-500 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px]">
+              <motion.div
+                whileTap={{ scale: 0.95 }}
+                onClick={() => incrementScore("Team 1")}
+                className="bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors"
+              >
                 <div className="text-xl sm:text-2xl font-bold text-white">
                   {team1Data?.tiebreakScore || 0}
                 </div>
-              </div>
+              </motion.div>
             ) : (
-              <div className="bg-blue-500 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px]">
+              <motion.div
+                whileTap={{ scale: 0.95 }}
+                onClick={() => incrementScore("Team 1")}
+                className="bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors"
+              >
                 <div className="text-xl sm:text-2xl font-bold text-white">
                   {getScoreString(team1Data?.score || 0, false)}
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
         </div>
@@ -405,17 +418,25 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
             </div>
             <div className="text-xl sm:text-2xl font-bold text-red-300">-</div>
             {isInTiebreak ? (
-              <div className="bg-red-500 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px]">
+              <motion.div
+                whileTap={{ scale: 0.95 }}
+                onClick={() => incrementScore("Team 2")}
+                className="bg-red-500 hover:bg-red-600/90 active:bg-red-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors"
+              >
                 <div className="text-xl sm:text-2xl font-bold text-white">
                   {team2Data?.tiebreakScore || 0}
                 </div>
-              </div>
+              </motion.div>
             ) : (
-              <div className="bg-red-500 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px]">
+              <motion.div
+                whileTap={{ scale: 0.95 }}
+                onClick={() => incrementScore("Team 2")}
+                className="bg-red-500 hover:bg-red-600/90 active:bg-red-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors"
+              >
                 <div className="text-xl sm:text-2xl font-bold text-white">
                   {getScoreString(team2Data?.score || 0, false)}
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
         </div>
@@ -568,35 +589,6 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
               {team2Data?.name || "Team 2"}
             </span>
             <span className="text-xs font-medium text-yellow-200">Warning</span>
-          </motion.button>
-        </div>
-
-        {/* Score Buttons */}
-        <div className="mt-8 space-y-4">
-          <motion.button
-            whileTap={{ scale: 0.98 }}
-            onClick={() => incrementScore("Team 1")}
-            className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl p-6 shadow-lg border border-blue-500 transition-all duration-200"
-          >
-            <div className="text-center">
-              <div className="text-2xl font-bold mb-1 text-white">
-                {team1Data?.name || match.teamA?.name || "Team 1"}
-              </div>
-              <div className="text-sm text-blue-100">Tap to add point</div>
-            </div>
-          </motion.button>
-
-          <motion.button
-            whileTap={{ scale: 0.98 }}
-            onClick={() => incrementScore("Team 2")}
-            className="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-xl p-6 shadow-lg border border-red-500 transition-all duration-200"
-          >
-            <div className="text-center">
-              <div className="text-2xl font-bold mb-1 text-white">
-                {team2Data?.name || match.teamB?.name || "Team 2"}
-              </div>
-              <div className="text-sm text-red-100">Tap to add point</div>
-            </div>
           </motion.button>
         </div>
       </div>
