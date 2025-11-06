@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { ImageConstants } from "../assets/images/ImageConstants";
 import Common from "../helper/common";
 import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
+import Header from "../components/layout/header";
 
 const MatchScoreCard = () => {
   const [showDetails, setShowDetails] = useState(false);
@@ -173,38 +174,11 @@ const MatchScoreCard = () => {
         </div>
 
         {/* Main content */}
-        <div className="relative z-10  mt-[-30px] items-center justify-center min-h-screen">
+        <div className="relative z-10    items-center justify-center min-h-screen">
           <div className="w-full">
             {/* Header with logos */}
-            <div className="flex justify-between items-center">
-              <div className="text-center" style={{ width: "280px" }}>
-                <img
-                  width={180}
-                  className="justify-self-start p-5"
-                  src={ImageConstants.padelVersewhite}
-                  alt="Playpro"
-                />
-              </div>
-
-              <div className="text-center">
-                <img
-                  width={220}
-                  className="justify-self-end p-5"
-                  src={ImageConstants.padelVerse}
-                  alt="Playpro"
-                />
-              </div>
-
-              <div className="text-center" style={{ width: "280px" }}>
-                <img
-                  width={230}
-                  className="justify-self-end p-5"
-                  src={ImageConstants.playproWhite}
-                  alt="Playpro"
-                />
-              </div>
-            </div>
-            <div className="p-[50px] pt-[0px] pb-[120px] grid grid-cols-1 gap-6 items-center">
+            <Header />
+            <div className="p-[50px] pt-[20px] pb-[120px] grid grid-cols-1 gap-6 items-center">
               <div className="col-span-1 text-center">
                 <div className="text-4xl text-white font-bold mt-[-20px] mb-2 ">
                   HAPPENING NOW
@@ -242,9 +216,9 @@ const MatchScoreCard = () => {
             </div>
           </div>
           {/* Bottom indicator - Fixed to bottom */}
-          <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
+          {/* <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
             <img src={ImageConstants.sponsor} className="w-full" />
-          </div>
+          </div> */}
 
           {/* Live indicator */}
         </div>
