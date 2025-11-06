@@ -128,7 +128,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
       matchState.team1?.sets || 0,
       matchState.team2?.sets || 0
     );
-    
+
     Object.keys(setsData || {}).forEach((setIndex) => {
       const set = setsData[setIndex];
       const idx = parseInt(setIndex);
@@ -214,10 +214,14 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
       matchState.team2?.sets || 0
     );
     const activeSetKey = activeSetIndex.toString();
-    const activeSet = setsData?.[activeSetKey] || { team1Games: 0, team2Games: 0 };
-    const games = teamKey === "teamA" || teamKey === "team1" 
-      ? activeSet.team1Games || 0
-      : activeSet.team2Games || 0;
+    const activeSet = setsData?.[activeSetKey] || {
+      team1Games: 0,
+      team2Games: 0,
+    };
+    const games =
+      teamKey === "teamA" || teamKey === "team1"
+        ? activeSet.team1Games || 0
+        : activeSet.team2Games || 0;
 
     return {
       name: matchTeam?.name || "Team",
@@ -314,7 +318,9 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
             <div
               className="grid gap-4 items-center px-4"
               style={{
-                gridTemplateColumns: `2fr ${Array(matchSettings?.numberOfSets || 3)
+                gridTemplateColumns: `2fr ${Array(
+                  matchSettings?.numberOfSets || 3
+                )
                   .fill("1fr")
                   .join(" ")} 1fr`,
               }}
@@ -322,11 +328,16 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
               <div className="text-center">
                 <h2 className="text-2xl sm:text-4xl font-bold">PLAYERS</h2>
               </div>
-              {Array.from({ length: matchSettings?.numberOfSets || 3 }, (_, index) => (
-                <div key={index} className="text-center">
-                  <h2 className="text-2xl sm:text-4xl font-bold">SET {index + 1}</h2>
-                </div>
-              ))}
+              {Array.from(
+                { length: matchSettings?.numberOfSets || 3 },
+                (_, index) => (
+                  <div key={index} className="text-center">
+                    <h2 className="text-2xl sm:text-4xl font-bold">
+                      SET {index + 1}
+                    </h2>
+                  </div>
+                )
+              )}
               <div className="text-center">
                 <h2 className="text-2xl sm:text-4xl font-bold">
                   {isInSuperTiebreak
@@ -345,7 +356,9 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
             <div
               className="grid gap-4 items-center border-b border-gray-200 px-4 py-6"
               style={{
-                gridTemplateColumns: `2fr ${Array(matchSettings?.numberOfSets || 3)
+                gridTemplateColumns: `2fr ${Array(
+                  matchSettings?.numberOfSets || 3
+                )
                   .fill("1fr")
                   .join(" ")} 1fr`,
               }}
@@ -385,23 +398,32 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                     match.teamA?.players?.[0] ||
                     "Player 1"}
                   {team1Data?.players?.length > 1 && (
-                    <> / {team1Data.players[1].name || match.teamA?.players?.[1]}</>
+                    <>
+                      {" "}
+                      / {team1Data.players[1].name || match.teamA?.players?.[1]}
+                    </>
                   )}
                 </p>
               </div>
 
               {/* SET Columns - Team 1 */}
-              {Array.from({ length: matchSettings?.numberOfSets || 3 }, (_, index) => {
-                const setKey = index.toString();
-                const setData = setsData?.[setKey] || { team1Games: 0, team2Games: 0 };
-                return (
-                  <div key={index} className="text-center">
-                    <div className="text-3xl sm:text-4xl font-bold text-gray-800">
-                      {setData.team1Games || 0}
+              {Array.from(
+                { length: matchSettings?.numberOfSets || 3 },
+                (_, index) => {
+                  const setKey = index.toString();
+                  const setData = setsData?.[setKey] || {
+                    team1Games: 0,
+                    team2Games: 0,
+                  };
+                  return (
+                    <div key={index} className="text-center">
+                      <div className="text-3xl sm:text-4xl font-bold text-gray-800">
+                        {setData.team1Games || 0}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                }
+              )}
 
               {/* SCORE Column - Team 1 */}
               <div className="text-center">
@@ -433,7 +455,9 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
             <div
               className="grid gap-4 items-center px-4 py-6"
               style={{
-                gridTemplateColumns: `2fr ${Array(matchSettings?.numberOfSets || 3)
+                gridTemplateColumns: `2fr ${Array(
+                  matchSettings?.numberOfSets || 3
+                )
                   .fill("1fr")
                   .join(" ")} 1fr`,
               }}
@@ -473,23 +497,32 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                     match.teamB?.players?.[0] ||
                     "Player 2"}
                   {team2Data?.players?.length > 1 && (
-                    <> / {team2Data.players[1].name || match.teamB?.players?.[1]}</>
+                    <>
+                      {" "}
+                      / {team2Data.players[1].name || match.teamB?.players?.[1]}
+                    </>
                   )}
                 </p>
               </div>
 
               {/* SET Columns - Team 2 */}
-              {Array.from({ length: matchSettings?.numberOfSets || 3 }, (_, index) => {
-                const setKey = index.toString();
-                const setData = setsData?.[setKey] || { team1Games: 0, team2Games: 0 };
-                return (
-                  <div key={index} className="text-center">
-                    <div className="text-3xl sm:text-4xl font-bold text-gray-800">
-                      {setData.team2Games || 0}
+              {Array.from(
+                { length: matchSettings?.numberOfSets || 3 },
+                (_, index) => {
+                  const setKey = index.toString();
+                  const setData = setsData?.[setKey] || {
+                    team1Games: 0,
+                    team2Games: 0,
+                  };
+                  return (
+                    <div key={index} className="text-center">
+                      <div className="text-3xl sm:text-4xl font-bold text-gray-800">
+                        {setData.team2Games || 0}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                }
+              )}
 
               {/* SCORE Column - Team 2 */}
               <div className="text-center">
@@ -644,7 +677,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
         </div>
 
         {/* Warning Buttons */}
-        <div className="grid grid-cols-2 gap-4 mt-6 px-2">
+        {/* <div className="grid grid-cols-2 gap-4 mt-6 px-2">
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => handleWarning("team1")}
@@ -668,7 +701,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
             </span>
             <span className="text-xs font-medium text-yellow-200">Warning</span>
           </motion.button>
-        </div>
+        </div> */}
       </div>
 
       {/* Match Complete Notification */}
