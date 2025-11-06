@@ -38,6 +38,7 @@ When installed as a PWA, your app provides:
 6. Tap the icon to launch the app
 
 **Alternative method:**
+
 1. Tap the **three-dot menu** (⋮) in Chrome
 2. Tap **"Install app"** or **"Add to home screen"**
 3. Follow the prompts
@@ -55,34 +56,40 @@ When installed as a PWA, your app provides:
 ### Files Added/Modified
 
 1. **`index.html`** - Added PWA meta tags and manifest link
+
    - iOS web app capable meta tags
    - Theme color definitions
    - Viewport settings for mobile
    - Apple touch icon links
 
 2. **`public/manifest.json`** - PWA configuration
+
    - App name and description
    - Icons and theme colors
    - Display mode (standalone)
    - Shortcuts for quick actions
 
 3. **`public/service-worker.js`** - Offline functionality
+
    - Caching strategy
    - Background sync
    - Push notifications support
 
 4. **`src/main.jsx`** - Service worker registration
+
    - Auto-update functionality
    - Install prompt handling
    - Standalone mode detection
 
 5. **`src/index.css`** - Mobile app enhancements
+
    - Safe area insets for notched devices
    - Prevent text selection and zoom
    - Touch-friendly interactions
    - Smooth scrolling
 
 6. **`src/umpireScoring/components/InstallPrompt.jsx`** - Install prompt UI
+
    - Platform-specific instructions
    - Dismissible prompt
    - localStorage persistence
@@ -101,6 +108,7 @@ yarn dev
 ```
 
 Then access from your mobile device using your computer's IP address:
+
 ```
 http://YOUR_IP_ADDRESS:5173
 ```
@@ -145,7 +153,7 @@ Edit `manifest.json` and `index.html`:
 
 ```json
 {
-  "theme_color": "#1e40af",  // Change to your brand color
+  "theme_color": "#1e40af", // Change to your brand color
   "background_color": "#ffffff"
 }
 ```
@@ -157,6 +165,7 @@ Edit `manifest.json` and `index.html`:
 ### Update App Icons
 
 Replace icons in `public/` folder with your own:
+
 - Minimum size: 192x192px
 - Recommended: 512x512px
 - Format: PNG with transparency
@@ -165,6 +174,7 @@ Replace icons in `public/` folder with your own:
 ### Modify Caching Strategy
 
 Edit `public/service-worker.js`:
+
 - Change `CACHE_NAME` when you want to force update
 - Modify `urlsToCache` array for different caching
 - Adjust network/cache priority in fetch handler
@@ -201,6 +211,7 @@ Edit `public/service-worker.js`:
 Check PWA health in browser DevTools:
 
 ### Chrome DevTools
+
 1. Open DevTools (F12)
 2. Go to **Application** tab
 3. Check:
@@ -210,6 +221,7 @@ Check PWA health in browser DevTools:
    - Background Sync
 
 ### Lighthouse Audit
+
 1. Open DevTools (F12)
 2. Go to **Lighthouse** tab
 3. Select **Progressive Web App** category
@@ -233,4 +245,3 @@ When you deploy a new version:
 ---
 
 **Note:** This PWA implementation provides a full mobile app experience without requiring App Store or Play Store deployment!
-

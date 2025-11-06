@@ -6,7 +6,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleLoginSuccess = () => {
-    navigate("../matches");
+    navigate("/matches");
   };
 
   return <LoginForm onLoginSuccess={handleLoginSuccess} />;
