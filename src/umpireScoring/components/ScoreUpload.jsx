@@ -307,143 +307,215 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
 
       {/* Main Score Display */}
       <div className="px-4 py-6">
-        {/* Team 1 / Team A */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex-1">
-            <div className="flex items-center space-x-2 mb-1">
-              <h2 className="text-xl font-semibold text-blue-300">
-                {team1Data?.name?.split(" ")[0] ||
-                  match.teamA?.name?.split(" ")[0] ||
-                  "Team 1"}
-              </h2>
-              {matchState.currentServe?.isServingTeam1 && (
-                <div className="w-6 h-6 bg-blue-400 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-blue-900">S</span>
+        {/* Scoreboard Table */}
+        <div className="bg-white rounded-lg shadow-2xl overflow-hidden mb-6">
+          {/* Header Row */}
+          <div className="bg-[#17626c] text-white py-4">
+            <div
+              className="grid gap-4 items-center px-4"
+              style={{
+                gridTemplateColumns: `2fr ${Array(matchSettings?.numberOfSets || 3)
+                  .fill("1fr")
+                  .join(" ")} 1fr`,
+              }}
+            >
+              <div className="text-center">
+                <h2 className="text-2xl sm:text-4xl font-bold">PLAYERS</h2>
+              </div>
+              {Array.from({ length: matchSettings?.numberOfSets || 3 }, (_, index) => (
+                <div key={index} className="text-center">
+                  <h2 className="text-2xl sm:text-4xl font-bold">SET {index + 1}</h2>
                 </div>
-              )}
-              {(matchState?.team1?.warnings?.length > 0 ||
-                team1Data?.warnings?.length > 0) && (
-                <div className="flex gap-1">
-                  {(
-                    matchState?.team1?.warnings ||
-                    team1Data?.warnings ||
-                    []
-                  ).map((w, i) => (
-                    <AlertTriangle
-                      key={i}
-                      className="w-4 h-4 text-yellow-400"
-                      title={w.level || `W${i + 1}`}
-                    />
-                  ))}
-                </div>
-              )}
+              ))}
+              <div className="text-center">
+                <h2 className="text-2xl sm:text-4xl font-bold">
+                  {isInSuperTiebreak
+                    ? "SUPER TIEBREAK"
+                    : isInTiebreak
+                    ? "TIEBREAK"
+                    : "SCORE"}
+                </h2>
+              </div>
             </div>
-            <p className="text-blue-200 text-sm">
-              {team1Data?.players?.[0]?.name ||
-                match.teamA?.players?.[0] ||
-                "Player 1"}
-              {team1Data?.players?.length > 1 && (
-                <> / {team1Data.players[1].name || match.teamA?.players?.[1]}</>
-              )}
-            </p>
           </div>
 
-          <div className="flex items-center space-x-4 sm:space-x-8 text-center">
-            <div className="text-3xl sm:text-4xl font-bold text-blue-300">
-              {team1Data?.sets || 0}
-            </div>
-            <div className="text-xl sm:text-2xl font-bold text-blue-300">-</div>
-            {isInTiebreak ? (
-              <motion.div
-                whileTap={{ scale: 0.95 }}
-                onClick={() => incrementScore("Team 1")}
-                className="bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors"
-              >
-                <div className="text-xl sm:text-2xl font-bold text-white">
-                  {team1Data?.tiebreakScore || 0}
+          {/* Score Content Rows */}
+          <div className="p-0">
+            {/* Team 1 Row */}
+            <div
+              className="grid gap-4 items-center border-b border-gray-200 px-4 py-6"
+              style={{
+                gridTemplateColumns: `2fr ${Array(matchSettings?.numberOfSets || 3)
+                  .fill("1fr")
+                  .join(" ")} 1fr`,
+              }}
+            >
+              {/* PLAYERS Column - Team 1 */}
+              <div>
+                <div className="flex items-center space-x-2 mb-1">
+                  <h2 className="text-xl font-semibold text-blue-300">
+                    {team1Data?.name?.split(" ")[0] ||
+                      match.teamA?.name?.split(" ")[0] ||
+                      "Team 1"}
+                  </h2>
+                  {matchState.currentServe?.isServingTeam1 && (
+                    <div className="w-6 h-6 bg-blue-400 rounded-full flex items-center justify-center">
+                      <span className="text-xs font-bold text-blue-900">S</span>
+                    </div>
+                  )}
+                  {(matchState?.team1?.warnings?.length > 0 ||
+                    team1Data?.warnings?.length > 0) && (
+                    <div className="flex gap-1">
+                      {(
+                        matchState?.team1?.warnings ||
+                        team1Data?.warnings ||
+                        []
+                      ).map((w, i) => (
+                        <AlertTriangle
+                          key={i}
+                          className="w-4 h-4 text-yellow-400"
+                          title={w.level || `W${i + 1}`}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                whileTap={{ scale: 0.95 }}
-                onClick={() => incrementScore("Team 1")}
-                className="bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors"
-              >
-                <div className="text-xl sm:text-2xl font-bold text-white">
-                  {getScoreString(team1Data?.score || 0, false)}
-                </div>
-              </motion.div>
-            )}
-          </div>
-        </div>
+                <p className="text-gray-700 text-sm">
+                  {team1Data?.players?.[0]?.name ||
+                    match.teamA?.players?.[0] ||
+                    "Player 1"}
+                  {team1Data?.players?.length > 1 && (
+                    <> / {team1Data.players[1].name || match.teamA?.players?.[1]}</>
+                  )}
+                </p>
+              </div>
 
-        {/* Team 2 / Team B */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex-1">
-            <div className="flex items-center space-x-2 mb-1">
-              <h2 className="text-xl font-semibold text-red-300">
-                {team2Data?.name?.split(" ")[0] ||
-                  match.teamB?.name?.split(" ")[0] ||
-                  "Team 2"}
-              </h2>
-              {!matchState.currentServe?.isServingTeam1 && (
-                <div className="w-6 h-6 bg-red-400 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-red-900">S</span>
-                </div>
-              )}
-              {(matchState?.team2?.warnings?.length > 0 ||
-                team2Data?.warnings?.length > 0) && (
-                <div className="flex gap-1">
-                  {(
-                    matchState?.team2?.warnings ||
-                    team2Data?.warnings ||
-                    []
-                  ).map((w, i) => (
-                    <AlertTriangle
-                      key={i}
-                      className="w-4 h-4 text-yellow-400"
-                      title={w.level || `W${i + 1}`}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-            <p className="text-red-200 text-sm">
-              {team2Data?.players?.[0]?.name ||
-                match.teamB?.players?.[0] ||
-                "Player 2"}
-              {team2Data?.players?.length > 1 && (
-                <> / {team2Data.players[1].name || match.teamB?.players?.[1]}</>
-              )}
-            </p>
-          </div>
+              {/* SET Columns - Team 1 */}
+              {Array.from({ length: matchSettings?.numberOfSets || 3 }, (_, index) => {
+                const setKey = index.toString();
+                const setData = setsData?.[setKey] || { team1Games: 0, team2Games: 0 };
+                return (
+                  <div key={index} className="text-center">
+                    <div className="text-3xl sm:text-4xl font-bold text-gray-800">
+                      {setData.team1Games || 0}
+                    </div>
+                  </div>
+                );
+              })}
 
-          <div className="flex items-center space-x-4 sm:space-x-8 text-center">
-            <div className="text-3xl sm:text-4xl font-bold text-red-300">
-              {team2Data?.sets || 0}
+              {/* SCORE Column - Team 1 */}
+              <div className="text-center">
+                {isInTiebreak ? (
+                  <motion.div
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => incrementScore("Team 1")}
+                    className="bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block"
+                  >
+                    <div className="text-xl sm:text-2xl font-bold text-white">
+                      {team1Data?.tiebreakScore || 0}
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => incrementScore("Team 1")}
+                    className="bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block"
+                  >
+                    <div className="text-xl sm:text-2xl font-bold text-white">
+                      {getScoreString(team1Data?.score || 0, false)}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
             </div>
-            <div className="text-xl sm:text-2xl font-bold text-red-300">-</div>
-            {isInTiebreak ? (
-              <motion.div
-                whileTap={{ scale: 0.95 }}
-                onClick={() => incrementScore("Team 2")}
-                className="bg-red-500 hover:bg-red-600/90 active:bg-red-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors"
-              >
-                <div className="text-xl sm:text-2xl font-bold text-white">
-                  {team2Data?.tiebreakScore || 0}
+
+            {/* Team 2 Row */}
+            <div
+              className="grid gap-4 items-center px-4 py-6"
+              style={{
+                gridTemplateColumns: `2fr ${Array(matchSettings?.numberOfSets || 3)
+                  .fill("1fr")
+                  .join(" ")} 1fr`,
+              }}
+            >
+              {/* PLAYERS Column - Team 2 */}
+              <div>
+                <div className="flex items-center space-x-2 mb-1">
+                  <h2 className="text-xl font-semibold text-red-300">
+                    {team2Data?.name?.split(" ")[0] ||
+                      match.teamB?.name?.split(" ")[0] ||
+                      "Team 2"}
+                  </h2>
+                  {!matchState.currentServe?.isServingTeam1 && (
+                    <div className="w-6 h-6 bg-red-400 rounded-full flex items-center justify-center">
+                      <span className="text-xs font-bold text-red-900">S</span>
+                    </div>
+                  )}
+                  {(matchState?.team2?.warnings?.length > 0 ||
+                    team2Data?.warnings?.length > 0) && (
+                    <div className="flex gap-1">
+                      {(
+                        matchState?.team2?.warnings ||
+                        team2Data?.warnings ||
+                        []
+                      ).map((w, i) => (
+                        <AlertTriangle
+                          key={i}
+                          className="w-4 h-4 text-yellow-400"
+                          title={w.level || `W${i + 1}`}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                whileTap={{ scale: 0.95 }}
-                onClick={() => incrementScore("Team 2")}
-                className="bg-red-500 hover:bg-red-600/90 active:bg-red-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors"
-              >
-                <div className="text-xl sm:text-2xl font-bold text-white">
-                  {getScoreString(team2Data?.score || 0, false)}
-                </div>
-              </motion.div>
-            )}
+                <p className="text-gray-700 text-sm">
+                  {team2Data?.players?.[0]?.name ||
+                    match.teamB?.players?.[0] ||
+                    "Player 2"}
+                  {team2Data?.players?.length > 1 && (
+                    <> / {team2Data.players[1].name || match.teamB?.players?.[1]}</>
+                  )}
+                </p>
+              </div>
+
+              {/* SET Columns - Team 2 */}
+              {Array.from({ length: matchSettings?.numberOfSets || 3 }, (_, index) => {
+                const setKey = index.toString();
+                const setData = setsData?.[setKey] || { team1Games: 0, team2Games: 0 };
+                return (
+                  <div key={index} className="text-center">
+                    <div className="text-3xl sm:text-4xl font-bold text-gray-800">
+                      {setData.team2Games || 0}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* SCORE Column - Team 2 */}
+              <div className="text-center">
+                {isInTiebreak ? (
+                  <motion.div
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => incrementScore("Team 2")}
+                    className="bg-red-500 hover:bg-red-600/90 active:bg-red-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block"
+                  >
+                    <div className="text-xl sm:text-2xl font-bold text-white">
+                      {team2Data?.tiebreakScore || 0}
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => incrementScore("Team 2")}
+                    className="bg-red-500 hover:bg-red-600/90 active:bg-red-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block"
+                  >
+                    <div className="text-xl sm:text-2xl font-bold text-white">
+                      {getScoreString(team2Data?.score || 0, false)}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
