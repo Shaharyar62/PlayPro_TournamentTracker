@@ -21,6 +21,8 @@ import {
   mergeMatchStates,
 } from "../utils/matchLogic.js";
 import tournamentApiService from "../services/tournamentApi.js";
+import { prepareMatchResults } from "../utils/matchResultsHelper.js";
+import { umpireAPI } from "../services/umpireAPI.js";
 
 /**
  * Custom hook for managing match state with WebSocket integration
@@ -37,6 +39,7 @@ export function useMatchState(tournamentId, matchId) {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
   const isInitializedRef = useRef(false);
+  const originalMatchRef = useRef(null);
 
   // Initialize sets data structure
   const initializeSets = useCallback((settings) => {
@@ -163,6 +166,9 @@ export function useMatchState(tournamentId, matchId) {
 
       setMatchState(initialState);
       setSetsData(initialSets);
+
+      // Store original match for later use (e.g., getting player IDs)
+      originalMatchRef.current = match;
 
       try {
         await socketService.createMatch({
@@ -663,6 +669,7 @@ export function useMatchState(tournamentId, matchId) {
       if (!tournamentId || !matchId) return;
 
       try {
+        // Complete match via socket service
         await socketService.completeMatch({
           tournamentId,
           matchId,
@@ -672,6 +679,7 @@ export function useMatchState(tournamentId, matchId) {
               : "Team 2",
         });
 
+        // Update local state
         setMatchState((prev) => ({
           ...prev,
           status: "completed",
@@ -680,11 +688,141 @@ export function useMatchState(tournamentId, matchId) {
               ? "Team 1"
               : "Team 2",
         }));
+
+        // Upload match results to API (non-blocking, graceful degradation)
+        try {
+          if (matchState && setsData) {
+            // Try to get original match for player IDs, fallback to matchState
+            const originalMatch = originalMatchRef.current;
+
+            // Prepare match data for API upload
+            // Prefer original match data for player IDs if available
+            let team1Players = matchState.team1?.players || [];
+            let team2Players = matchState.team2?.players || [];
+
+            // If original match has teamA/teamB with players that have IDs, use those
+            if (originalMatch) {
+              const originalTeam1Players =
+                originalMatch.team1?.players ||
+                originalMatch.teamA?.players ||
+                [];
+              const originalTeam2Players =
+                originalMatch.team2?.players ||
+                originalMatch.teamB?.players ||
+                [];
+
+              // Merge: use IDs from original if available, otherwise use from matchState
+              if (originalTeam1Players.length > 0) {
+                team1Players = originalTeam1Players.map((origPlayer, idx) => {
+                  const statePlayer = team1Players[idx];
+                  // If original has ID, use it; otherwise use state player
+                  if (
+                    typeof origPlayer === "object" &&
+                    origPlayer !== null &&
+                    origPlayer.id
+                  ) {
+                    return {
+                      id: origPlayer.id,
+                      name:
+                        statePlayer?.name ||
+                        origPlayer.name ||
+                        origPlayer.playerName ||
+                        `Player ${idx + 1}`,
+                    };
+                  }
+                  return (
+                    statePlayer || {
+                      id: idx + 1,
+                      name:
+                        typeof origPlayer === "string"
+                          ? origPlayer
+                          : origPlayer.name || `Player ${idx + 1}`,
+                    }
+                  );
+                });
+              }
+
+              if (originalTeam2Players.length > 0) {
+                team2Players = originalTeam2Players.map((origPlayer, idx) => {
+                  const statePlayer = team2Players[idx];
+                  // If original has ID, use it; otherwise use state player
+                  if (
+                    typeof origPlayer === "object" &&
+                    origPlayer !== null &&
+                    origPlayer.id
+                  ) {
+                    return {
+                      id: origPlayer.id,
+                      name:
+                        statePlayer?.name ||
+                        origPlayer.name ||
+                        origPlayer.playerName ||
+                        `Player ${idx + 1}`,
+                    };
+                  }
+                  return (
+                    statePlayer || {
+                      id: idx + 1,
+                      name:
+                        typeof origPlayer === "string"
+                          ? origPlayer
+                          : origPlayer.name || `Player ${idx + 1}`,
+                    }
+                  );
+                });
+              }
+            }
+
+            const matchDataForUpload = {
+              id: matchId,
+              tournamentScheduleId: matchId,
+              team1: {
+                players: team1Players,
+              },
+              team2: {
+                players: team2Players,
+              },
+            };
+
+            // Prepare results payload
+            const resultsPayload = prepareMatchResults(
+              matchDataForUpload,
+              winnerTeam === "Team 1" || winnerTeam === "team1"
+                ? "Team 1"
+                : "Team 2",
+              setsData
+            );
+
+            // Upload to API
+            const uploadResponse = await umpireAPI.updateTournamentMatchResult(
+              resultsPayload
+            );
+
+            if (uploadResponse.success) {
+              console.log(
+                "Match results uploaded successfully:",
+                uploadResponse.message
+              );
+            } else {
+              console.warn(
+                "Match results upload failed:",
+                uploadResponse.error || uploadResponse.message
+              );
+            }
+          } else {
+            console.warn(
+              "Cannot upload match results: matchState or setsData is missing"
+            );
+          }
+        } catch (uploadError) {
+          // Log error but don't block match completion
+          console.error("Error uploading match results to API:", uploadError);
+        }
       } catch (error) {
         console.error("Error completing match:", error);
       }
     },
-    [tournamentId, matchId, socketService]
+    [tournamentId, matchId, socketService, matchState, setsData]
   );
 
   // Reset match

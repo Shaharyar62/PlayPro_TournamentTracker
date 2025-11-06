@@ -449,6 +449,64 @@ class UmpireAPIService {
       throw error;
     }
   }
+
+  /**
+   * Update Tournament Match Result
+   * POST /UpdateTournamentMatchResult (general service API, not UmpireTournament)
+   * @param {Object} payload - Match result payload from prepareMatchResults()
+   * @param {string} payload.results - JSON stringified array of result objects
+   * @param {number} payload.matchResult - Match result (1=Team A won, 2=Team B won)
+   * @param {string} payload.tiebreak_results - JSON stringified tiebreak results (optional)
+   * @param {number} payload.tournamentScheduleId - Tournament Schedule ID (match ID)
+   * @param {number} payload.playStatus - Play status (2=Completed)
+   * @param {boolean} payload.isReUploadResult - Whether this is a re-upload
+   * @returns {Promise} Response with update status
+   */
+  async updateTournamentMatchResult(payload) {
+    const url = `${baseUrl}/UpdateTournamentMatchResult`;
+    const token = getUmpireToken();
+
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+    };
+
+    // Add Authorization header if token exists
+    if (token) {
+      options.headers.Authorization = `Bearer ${token}`;
+    }
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return this.handleAPIResponse(data);
+    } catch (error) {
+      console.error("UpdateTournamentMatchResult API Request failed:", error);
+
+      if (error.name === "AbortError") {
+        throw new Error("Request timeout");
+      }
+
+      throw error;
+    }
+  }
 }
 
 // Create singleton instance
