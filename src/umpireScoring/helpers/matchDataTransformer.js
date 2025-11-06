@@ -52,7 +52,9 @@ const mapMatchResult = (matchResult) => {
  */
 const extractPlayerNames = (players) => {
   if (!players || !Array.isArray(players)) return [];
-  return players.map((player) => player.playerName || player.name || "").filter(Boolean);
+  return players
+    .map((player) => player.playerName || player.name || "")
+    .filter(Boolean);
 };
 
 /**
@@ -65,14 +67,15 @@ const transformMatch = (apiMatch, tournament = null) => {
   if (!apiMatch) return null;
 
   const status = mapPlayStatusToUIStatus(apiMatch.playStatus);
-  
+
   // Extract team data
   const teamA = apiMatch.teamA || {};
   const teamB = apiMatch.teamB || {};
 
   // Get tournament name from match or tournament object
-  const tournamentName = tournament?.name || apiMatch.tournament?.name || "Tournament";
-  
+  const tournamentName =
+    tournament?.name || apiMatch.tournament?.name || "Tournament";
+
   // Extract round/group information
   const round = apiMatch.group || mapStageType(apiMatch.stageType) || "Match";
   const stageType = mapStageType(apiMatch.stageType);
@@ -88,17 +91,22 @@ const transformMatch = (apiMatch, tournament = null) => {
 
   if (apiMatch.results) {
     try {
-      const results = typeof apiMatch.results === 'string' 
-        ? JSON.parse(apiMatch.results) 
-        : apiMatch.results;
+      const results =
+        typeof apiMatch.results === "string"
+          ? JSON.parse(apiMatch.results)
+          : apiMatch.results;
 
       if (Array.isArray(results)) {
         // Group results by round (set) and side
         // Each round has multiple entries (one per player), so we need to get the unique points value
         const setData = {};
-        
+
         results.forEach((result) => {
-          if (result.side && result.round && typeof result.points === 'number') {
+          if (
+            result.side &&
+            result.round &&
+            typeof result.points === "number"
+          ) {
             const roundKey = result.round;
             if (!setData[roundKey]) {
               setData[roundKey] = { A: new Set(), B: new Set() };
@@ -113,13 +121,15 @@ const transformMatch = (apiMatch, tournament = null) => {
           const roundIndex = parseInt(roundKey) - 1; // round is 1-based, array is 0-based
           if (roundIndex >= 0 && roundIndex < 3) {
             // Get the maximum points value for each side (should be same for all players in a team)
-            const gamesA = setData[roundKey].A.size > 0 
-              ? Math.max(...Array.from(setData[roundKey].A)) 
-              : 0;
-            const gamesB = setData[roundKey].B.size > 0 
-              ? Math.max(...Array.from(setData[roundKey].B)) 
-              : 0;
-            
+            const gamesA =
+              setData[roundKey].A.size > 0
+                ? Math.max(...Array.from(setData[roundKey].A))
+                : 0;
+            const gamesB =
+              setData[roundKey].B.size > 0
+                ? Math.max(...Array.from(setData[roundKey].B))
+                : 0;
+
             setScores.teamA.games[roundIndex] = gamesA;
             setScores.teamB.games[roundIndex] = gamesB;
             setScores.teamA.sets[roundIndex] = gamesA;
@@ -190,7 +200,10 @@ const transformMatch = (apiMatch, tournament = null) => {
  * @param {Object} tournament - Tournament object (optional, for name)
  * @returns {Array} Array of transformed match objects
  */
-export const transformCourtsScheduleToMatches = (apiResponse, tournament = null) => {
+export const transformCourtsScheduleToMatches = (
+  apiResponse,
+  tournament = null
+) => {
   if (!apiResponse || !apiResponse.data || !apiResponse.data.courts) {
     return [];
   }
@@ -251,4 +264,3 @@ export default {
   mapStageType,
   mapMatchResult,
 };
-
