@@ -1,4 +1,5 @@
-import Common from "../../helper/common.js";
+import Cookies from "js-cookie";
+import AppConstant from "../../const/appConstant.js";
 import { DEFAULT_MATCH_SETTINGS } from "../utils/constants.js";
 
 /**
@@ -21,12 +22,26 @@ class TournamentApiService {
 
       if (tournamentId && stageTypeId) {
         try {
-          const response = await Common.ApiService.getInstance().request(
-            `GetTournamentRules?tournamentId=${tournamentId}&stageTypeId=${stageTypeId}`
-          );
+          const token =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjciLCJqdGkiOiIwMWMzMjQ2NC1jZmRhLTRiNTAtODYxMi03YWQ1NWFkY2M5OWUiLCJleHAiOjQ5MjA2Nzk0NDAsImlzcyI6Imh0dHA6Ly9uYXNjZW50aW5vdm8uY28uemEiLCJhdWQiOiJodHRwOi8vbmFzY2VudGlub3ZvLmNvLnphIn0.Uvifvw9MxBI4pPaE_UXeRn7P5f_l0ftR18akdEk-QTo";
+          const url = `${AppConstant.serviceUrl}/GetTournamentRules?tournamentId=${tournamentId}&stageTypeId=${stageTypeId}`;
 
-          if (response?.data) {
-            settings = this.normalizeMatchSettings(response.data[0]);
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const responseData = await response.json();
+
+          if (responseData?.data) {
+            settings = this.normalizeMatchSettings(responseData.data[0]);
           }
         } catch (error) {
           console.warn(
