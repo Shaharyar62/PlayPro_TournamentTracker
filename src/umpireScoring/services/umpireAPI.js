@@ -1,5 +1,9 @@
-import AppConstant from "../../const/appConstant";
+import AppConstant, {
+  TournamentMatchPlayStatusEnum,
+} from "../../const/appConstant";
 import { ResultStatus } from "../../const/appConstant";
+import { baseUrl } from "../../const/Constants";
+import { getUmpireToken } from "../helpers/tokenHelper";
 
 /**
  * API service for umpire scoring operations
@@ -7,8 +11,10 @@ import { ResultStatus } from "../../const/appConstant";
  */
 class UmpireAPIService {
   constructor() {
-    this.baseUrl = AppConstant.serviceUrl;
-    this.timeout = 10000; // 10 seconds timeout
+    // Use UmpireTournament base URL
+    // AppConstant.baseUrl already includes trailing slash (https://localhost:7094/)
+    this.baseUrl = `${AppConstant.baseUrl}api/UmpireTournament`;
+    this.timeout = 30000; // 30 seconds timeout
   }
 
   /**
@@ -16,6 +22,9 @@ class UmpireAPIService {
    */
   async makeRequest(endpoint, options = {}) {
     const url = `${this.baseUrl}/${endpoint}`;
+
+    // Get JWT token if available
+    const token = getUmpireToken();
 
     const defaultOptions = {
       method: "GET",
@@ -26,14 +35,14 @@ class UmpireAPIService {
       timeout: this.timeout,
     };
 
+    // Add Authorization header if token exists
+    if (token) {
+      defaultOptions.headers.Authorization = `Bearer ${token}`;
+    }
+
     const requestOptions = { ...defaultOptions, ...options };
 
     try {
-      // For development, simulate API responses
-      if (process.env.NODE_ENV === "development") {
-        return await this.simulateAPIResponse(endpoint, requestOptions);
-      }
-
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
@@ -63,19 +72,24 @@ class UmpireAPIService {
 
   /**
    * Handle API response format
+   * API returns: {status: 0|1|2, message: string, data: any}
+   * status: 0=Unauthorized, 1=Success, 2=Error
    */
   handleAPIResponse(data) {
-    if (data.status === ResultStatus.Success) {
+    if (data.status === 1) {
+      // Success
       return {
         success: true,
         data: data.data,
         message: data.message,
+        status: data.status,
       };
     } else {
+      // Error or Unauthorized
       return {
         success: false,
         error: data.message || "Unknown error occurred",
-        status: data.status,
+        status: data.status, // 0=Unauthorized, 2=Error
       };
     }
   }
@@ -144,7 +158,81 @@ class UmpireAPIService {
   }
 
   /**
-   * Authenticate court umpire
+   * Umpire Sign In
+   * POST /UmpireSignIn
+   * @param {string} phone - Phone number
+   * @param {string} password - Password
+   * @returns {Promise} Response with token and umpire data
+   */
+  async umpireSignIn(phone, password) {
+    return await this.makeRequest("UmpireSignIn", {
+      method: "POST",
+      body: JSON.stringify({
+        emailorphone: phone,
+        password: password,
+        signupType: 0, // EmailorPhone
+      }),
+    });
+  }
+
+  /**
+   * Get Umpire Master Tournaments
+   * GET /GetUmpireMasterTournaments
+   * Requires JWT token
+   * @returns {Promise} Response with tournaments array
+   */
+  async getUmpireMasterTournaments() {
+    return await this.makeRequest("GetUmpireMasterTournaments", {
+      method: "GET",
+    });
+  }
+
+  /**
+   * Get Umpire Master Tournament Courts Schedule
+   * GET /GetUmpireMasterTournamentCourtsSchedule?masterTournamentId={id}
+   * @param {number} masterTournamentId - Master Tournament ID
+   * @returns {Promise} Response with courts schedule data
+   */
+  async getUmpireMasterTournamentCourtsSchedule(masterTournamentId) {
+    return await this.makeRequest(
+      `GetUmpireMasterTournamentCourtsSchedule?masterTournamentId=${masterTournamentId}`,
+      {
+        method: "GET",
+      }
+    );
+  }
+
+  /**
+   * Get Umpire Courts
+   * GET /GetUmpireCourts?masterTournamentId={id}
+   * @param {number} masterTournamentId - Optional Master Tournament ID
+   * @returns {Promise} Response with courts array
+   */
+  async getUmpireCourts(masterTournamentId = null) {
+    let endpoint = "GetUmpireCourts";
+    if (masterTournamentId) {
+      endpoint += `?masterTournamentId=${masterTournamentId}`;
+    }
+    return await this.makeRequest(endpoint, {
+      method: "GET",
+    });
+  }
+
+  /**
+   * Update Umpire Tournament Match Result
+   * POST /UpdateUmpireTournamentMatchResult
+   * @param {Object} matchData - Match result data
+   * @returns {Promise} Response with update status
+   */
+  async updateUmpireTournamentMatchResult(matchData) {
+    return await this.makeRequest("UpdateUmpireTournamentMatchResult", {
+      method: "POST",
+      body: JSON.stringify(matchData),
+    });
+  }
+
+  /**
+   * Authenticate court umpire (legacy - kept for backward compatibility)
    */
   async authenticateCourt(courtId) {
     return await this.makeRequest("umpire/authenticate-court", {
@@ -304,6 +392,62 @@ class UmpireAPIService {
         timestamp: new Date().toISOString(),
       }),
     });
+  }
+
+  /**
+   * Update Tournament Match Status
+   * POST /UpdateTournamentMatchStatus (general service API, not UmpireTournament)
+   * @param {number|string} tournamentScheduleId - Tournament Schedule ID (match ID)
+   * @param {number} playStatus - Play status enum value (0=Pending, 1=In_Progress, 2=Completed)
+   * @returns {Promise} Response with update status
+   */
+  async updateTournamentMatchStatus(tournamentScheduleId, playStatus) {
+    const url = `${baseUrl}/UpdateTournamentMatchStatus`;
+    const token = getUmpireToken();
+
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        tournamentScheduleId: tournamentScheduleId,
+        playStatus: playStatus,
+      }),
+    };
+
+    // Add Authorization header if token exists
+    if (token) {
+      options.headers.Authorization = `Bearer ${token}`;
+    }
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return this.handleAPIResponse(data);
+    } catch (error) {
+      console.error("UpdateTournamentMatchStatus API Request failed:", error);
+
+      if (error.name === "AbortError") {
+        throw new Error("Request timeout");
+      }
+
+      throw error;
+    }
   }
 }
 

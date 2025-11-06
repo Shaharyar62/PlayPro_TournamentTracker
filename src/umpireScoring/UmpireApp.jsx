@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useUmpire();
 
   if (!isAuthenticated) {
-    return <Navigate to="/umpire/login" replace />;
+    return <Navigate to="/umpire-scoring/login" replace />;
   }
 
   return children;

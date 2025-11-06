@@ -1,13 +1,25 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, LogOut, Shield } from "lucide-react";
 import { useUmpire } from "../context/UmpireContext";
 import ScoreUpload from "../components/ScoreUpload";
 
 const ScoreUploadPage = () => {
   const navigate = useNavigate();
-  const { currentMatch, currentCourt, logout, endMatch } = useUmpire();
+  const { currentMatch, logout, endMatch, isAuthenticated } = useUmpire();
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("../login", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Redirect if no match is selected
+  useEffect(() => {
+    if (isAuthenticated && !currentMatch) {
+      navigate("../matches", { replace: true });
+    }
+  }, [isAuthenticated, currentMatch, navigate]);
 
   const handleBack = () => {
     navigate("../matches");
@@ -28,14 +40,16 @@ const ScoreUploadPage = () => {
     navigate("../matches");
   };
 
-  if (!currentCourt) {
-    navigate("../login");
-    return null;
-  }
-
-  if (!currentMatch) {
-    navigate("../matches");
-    return null;
+  // Show loading state while checking authentication or waiting for match
+  if (!isAuthenticated || !currentMatch) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading match...</p>
+        </div>
+      </div>
+    );
   }
 
   return (

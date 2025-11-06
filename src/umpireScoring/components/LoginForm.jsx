@@ -1,34 +1,39 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Shield, LogIn, AlertCircle } from "lucide-react";
+import { Shield, LogIn, AlertCircle, CheckCircle } from "lucide-react";
 import { useUmpire } from "../context/UmpireContext";
 
 const LoginForm = ({ onLoginSuccess }) => {
-  const [courtId, setCourtId] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
   const [showError, setShowError] = useState(false);
-  const { login, loading, error, mockCourts } = useUmpire();
+  const [successMessage, setSuccessMessage] = useState("");
+  const { login, loading, error } = useUmpire();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowError(false);
+    setSuccessMessage("");
 
-    if (!courtId.trim()) {
+    if (!phone.trim() || !password.trim()) {
       setShowError(true);
       return;
     }
 
-    const result = await login(courtId.trim().toUpperCase());
+    const result = await login(phone.trim(), password.trim());
 
     if (result.success) {
-      onLoginSuccess?.();
+      // Show success message from API
+      if (result.message) {
+        setSuccessMessage(result.message);
+      }
+      // Small delay to show success message before redirect
+      setTimeout(() => {
+        onLoginSuccess?.();
+      }, 500);
     } else {
       setShowError(true);
     }
-  };
-
-  const handleCourtSelect = (selectedCourtId) => {
-    setCourtId(selectedCourtId);
-    setShowError(false);
   };
 
   return (
@@ -53,7 +58,7 @@ const LoginForm = ({ onLoginSuccess }) => {
             Umpire Login
           </h1>
           <p className="text-gray-600">
-            Enter your assigned Court ID to access scoring
+            Enter your phone number and password to access scoring
           </p>
         </div>
 
@@ -61,41 +66,53 @@ const LoginForm = ({ onLoginSuccess }) => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
-              htmlFor="courtId"
+              htmlFor="phone"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Court ID
+              Phone Number
             </label>
             <input
-              type="text"
-              id="courtId"
-              value={courtId}
-              onChange={(e) => setCourtId(e.target.value.toUpperCase())}
-              placeholder="Enter Court ID (e.g., COURT001)"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-center font-mono text-lg"
+              type="tel"
+              id="phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Enter your phone number"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 disabled:bg-gray-100 disabled:text-gray-500 disabled:border-gray-200 disabled:cursor-not-allowed transition-all duration-200"
               disabled={loading}
+              required
             />
           </div>
 
-          {/* Quick Select Buttons for Development */}
-          <div className="space-y-2">
-            <p className="text-xs text-gray-500 text-center">
-              Quick Select (Development)
-            </p>
-            <div className="grid grid-cols-1 gap-2">
-              {mockCourts.map((court) => (
-                <button
-                  key={court.id}
-                  type="button"
-                  onClick={() => handleCourtSelect(court.id)}
-                  className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200 text-left"
-                >
-                  <span className="font-mono font-semibold">{court.id}</span>
-                  <span className="text-gray-600 ml-2">- {court.name}</span>
-                </button>
-              ))}
-            </div>
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 disabled:bg-gray-100 disabled:text-gray-500 disabled:border-gray-200 disabled:cursor-not-allowed transition-all duration-200"
+              disabled={loading}
+              required
+            />
           </div>
+
+          {/* Success Message */}
+          {successMessage && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              className="bg-green-50 border border-green-200 rounded-lg p-3 flex items-center space-x-2"
+            >
+              <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+              <span className="text-green-700 text-sm">{successMessage}</span>
+            </motion.div>
+          )}
 
           {/* Error Message */}
           {(showError || error) && (
@@ -106,7 +123,7 @@ const LoginForm = ({ onLoginSuccess }) => {
             >
               <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
               <span className="text-red-700 text-sm">
-                {error || "Please enter a valid Court ID"}
+                {error || "Please enter valid phone number and password"}
               </span>
             </motion.div>
           )}
