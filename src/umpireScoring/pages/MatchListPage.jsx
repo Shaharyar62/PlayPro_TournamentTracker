@@ -53,7 +53,7 @@ const MatchListPage = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("../login");
+    navigate("/");
   };
 
   const handleRefresh = async () => {
@@ -69,7 +69,7 @@ const MatchListPage = () => {
 
   const handleMatchSelect = (match) => {
     setCurrentMatch(match);
-    navigate("../score-upload");
+    navigate("/score-upload");
   };
 
   const handleGoLive = async (match) => {
@@ -85,7 +85,7 @@ const MatchListPage = () => {
         await startMatch(match.id);
         setCurrentMatch(match);
         // Navigate to score upload page
-        navigate("../score-upload");
+        navigate("/score-upload");
       } else {
         // Show error message if API call failed
         console.error("Failed to update match status:", response.error);
@@ -105,7 +105,7 @@ const MatchListPage = () => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate("../login");
+      navigate("/");
     }
   }, [isAuthenticated, navigate]);
 

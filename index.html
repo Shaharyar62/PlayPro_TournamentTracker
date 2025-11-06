@@ -2,10 +2,40 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- <link rel="icon" type="image/svg+xml" href="/vite.svg" /> -->
     <link rel="shortcut icon" href="/playpro.png" type="image/x-icon">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PlayPro | Live </title>
+    
+    <!-- Mobile App Meta Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#1e40af" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#1e40af" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1e293b" />
+    
+    <!-- iOS Specific Meta Tags for Web App Mode -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="PlayPro Umpire" />
+    <link rel="apple-touch-icon" href="/playpro.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/playpro.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/playpro.png" />
+    <link rel="apple-touch-icon" sizes="167x167" href="/playpro.png" />
+    
+    <!-- Android/Chrome Specific -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="PlayPro Umpire" />
+    
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileColor" content="#1e40af" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    
+    <!-- Disable browser UI elements -->
+    <meta name="format-detection" content="telephone=no" />
+    
+    <title>PlayPro | Umpire Score</title>
   </head>
   <body>
     <div id="root"></div>

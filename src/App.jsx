@@ -21,6 +21,10 @@ import ScorePage from "./pages/ScoreViewer/ScorePage";
 import StreamingHome from "./pages/streaming/SteamingHome";
 import StreamingLiveCourt from "./pages/streaming/StreamingLiveCourt";
 import AdminNavigation from "./pages/AdminNavigation";
+import LoginPage from "./umpireScoring/pages/LoginPage";
+import MatchListPage from "./umpireScoring/pages/MatchListPage";
+import ScoreUploadPage from "./umpireScoring/pages/ScoreUploadPage";
+import { UmpireProvider } from "./umpireScoring/context/UmpireContext";
 
 function App() {
   const isLoaded = useRef(false);
@@ -33,43 +37,53 @@ function App() {
   }, []);
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
+      <UmpireProvider>
+        <Routes>
+          {/* Root route - Login Page First */}
+          <Route path="/" element={<NullLayout />}>
+            <Route index element={<LoginPage />} />
+            <Route path="matches" element={<MatchListPage />} />
+            <Route path="score-upload" element={<ScoreUploadPage />} />
+            <Route path="scorebar" element={<Scoreboard />} />
+            <Route path="streaming-home" element={<StreamingHome />} />
+            <Route
+              path="streaming-live-court"
+              element={<StreamingLiveCourt />}
+            />
+            <Route
+              path="scorebar/:tournamentId/:matchId"
+              element={<Scoreboard />}
+            />
+          </Route>
 
-          <Route path="live-court" element={<LiveCourt />} />
-          <Route
-            path="live-court/:tournamentId/:matchId"
-            element={<LiveCourt />}
-          />
-          <Route path="live-score" element={<LiveScore />} />
-          <Route path="time-table" element={<TimeTable />} />
-          <Route path="score-table" element={<ScoreTable />} />
-          <Route path="score-card" element={<ScoreCard />} />
-          <Route path="today-match" element={<TodayMatch />} />
-          <Route path="umpire" element={<UmpirePage />} />
-          <Route path="viewer" element={<UserPage />} />
-          <Route path="score-page" element={<ScorePage />} />
-          <Route path="admin" element={<AdminNavigation />} />
+          {/* Main Application Routes with Layout */}
+          <Route path="/home" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="live-court" element={<LiveCourt />} />
+            <Route
+              path="live-court/:tournamentId/:matchId"
+              element={<LiveCourt />}
+            />
+            <Route path="live-score" element={<LiveScore />} />
+            <Route path="time-table" element={<TimeTable />} />
+            <Route path="score-table" element={<ScoreTable />} />
+            <Route path="score-card" element={<ScoreCard />} />
+            <Route path="today-match" element={<TodayMatch />} />
+            <Route path="umpire" element={<UmpirePage />} />
+            <Route path="viewer" element={<UserPage />} />
+            <Route path="score-page" element={<ScorePage />} />
+            <Route path="admin" element={<AdminNavigation />} />
 
-          {/* <Route
+            {/* <Route
             path="matches-timetable"
             element={<MatchesTimetableScreen />}
           /> */}
-        </Route>
-        <Route path="/" element={<NullLayout />}>
-          {/* Umpire Scoring Routes - Standalone App */}
-          <Route path="umpire-scoring/*" element={<UmpireApp />} />
+          </Route>
 
-          <Route path="scorebar" element={<Scoreboard />} />
-          <Route path="streaming-home" element={<StreamingHome />} />
-          <Route path="streaming-live-court" element={<StreamingLiveCourt />} />
-          <Route
-            path="scorebar/:tournamentId/:matchId"
-            element={<Scoreboard />}
-          />
-        </Route>
-      </Routes>
+          {/* Umpire Scoring Routes - Standalone App */}
+          {/* <Route path="umpire-scoring/*" element={<UmpireApp />} /> */}
+        </Routes>
+      </UmpireProvider>
     </Router>
   );
 }

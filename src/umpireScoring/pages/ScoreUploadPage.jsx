@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUmpire } from "../context/UmpireContext";
 import ScoreUpload from "../components/ScoreUpload";
+import InstallPrompt from "../components/InstallPrompt";
 
 const ScoreUploadPage = () => {
   const navigate = useNavigate();
@@ -10,24 +11,24 @@ const ScoreUploadPage = () => {
   // Redirect if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate("../login", { replace: true });
+      navigate("/", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
   // Redirect if no match is selected
   useEffect(() => {
     if (isAuthenticated && !currentMatch) {
-      navigate("../matches", { replace: true });
+      navigate("/matches", { replace: true });
     }
   }, [isAuthenticated, currentMatch, navigate]);
 
   const handleBack = () => {
-    navigate("../matches");
+    navigate("/matches");
   };
 
   const handleLogout = () => {
     logout();
-    navigate("../login");
+    navigate("/");
   };
 
   const handleSave = (scores) => {
@@ -37,7 +38,7 @@ const ScoreUploadPage = () => {
 
   const handleEndMatch = (matchId, finalScores) => {
     endMatch(matchId, finalScores);
-    navigate("../matches");
+    navigate("/matches");
   };
 
   // Show loading state while checking authentication or waiting for match
@@ -53,12 +54,15 @@ const ScoreUploadPage = () => {
   }
 
   return (
-    <ScoreUpload
-      match={currentMatch}
-      onSave={handleSave}
-      onEndMatch={handleEndMatch}
-      onBack={handleBack}
-    />
+    <>
+      <ScoreUpload
+        match={currentMatch}
+        onSave={handleSave}
+        onEndMatch={handleEndMatch}
+        onBack={handleBack}
+      />
+      <InstallPrompt />
+    </>
   );
 };
 
