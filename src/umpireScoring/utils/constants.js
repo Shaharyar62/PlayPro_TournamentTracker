@@ -19,17 +19,17 @@ export const DEFAULT_MATCH_SETTINGS = {
   changeSideSeconds: 90,
   setTimerMinutes: 0,
   setTimerSeconds: 0,
-  numberOfSets: 2,
+  numberOfSets: 3,
   numberOfGames: 6,
   autoChangeSide: true,
   goldenPoint: false,
   goldenPointInTiebreak: false,
-  advantagesWithGoldenPoint: 0,
+  advantagesWithGoldenPoint: 2,
   tiebreakOnLastSet: true,
   pointsInTiebreak: 7,
   superTieBreakPoints: 10,
   gamesToStartTiebreak: "6 - 6",
-  matchFormat: MatchFormat.TWO_SETS_SUPER_TIEBREAK,
+  matchFormat: MatchFormat.THREE_SETS,
 };
 
 /**

@@ -51,35 +51,6 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
     isMatchComplete,
   } = useMatchState(tournamentId, matchId);
 
-  // Lock screen orientation to landscape on mount
-  useEffect(() => {
-    const lockOrientation = async () => {
-      try {
-        // Check if screen orientation API is available
-        if (screen.orientation && screen.orientation.lock) {
-          await screen.orientation.lock("landscape").catch((err) => {
-            console.log("Orientation lock not supported or failed:", err);
-          });
-        }
-      } catch (error) {
-        console.log("Screen orientation lock error:", error);
-      }
-    };
-
-    lockOrientation();
-
-    // Unlock orientation when component unmounts
-    return () => {
-      try {
-        if (screen.orientation && screen.orientation.unlock) {
-          screen.orientation.unlock();
-        }
-      } catch (error) {
-        console.log("Screen orientation unlock error:", error);
-      }
-    };
-  }, []);
-
   // Initialize match on mount - following guide's initialization flow
   useEffect(() => {
     if (!match) return;
