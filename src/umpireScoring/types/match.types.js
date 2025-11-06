@@ -52,7 +52,6 @@ export const MatchFormat = {
 /**
  * @typedef {Object} TeamData
  * @property {number} score - Current game points (0-4+)
- * @property {number} games - Current set games
  * @property {number} sets - Number of sets won
  * @property {number} tiebreakScore - Current tiebreak points
  * @property {number} advantageCount - Number of advantages the team has had in current game

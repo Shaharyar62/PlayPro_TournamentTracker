@@ -12,7 +12,6 @@ export function initializeMatchState(team1Players, team2Players) {
   return {
     team1: {
       score: 0,
-      games: 0,
       sets: 0,
       tiebreakScore: 0,
       advantageCount: 0,
@@ -22,7 +21,6 @@ export function initializeMatchState(team1Players, team2Players) {
     },
     team2: {
       score: 0,
-      games: 0,
       sets: 0,
       tiebreakScore: 0,
       advantageCount: 0,
@@ -73,6 +71,10 @@ export function convertLegacyScoresToMatchState(legacyScores, team1Players, team
   const teamA = legacyScores.teamA || { sets: [0, 0, 0], games: [0, 0, 0], points: 0 };
   const teamB = legacyScores.teamB || { sets: [0, 0, 0], games: [0, 0, 0], points: 0 };
 
+  // Calculate total sets won
+  const setsWonA = teamA.sets.filter(set => set >= 6).length;
+  const setsWonB = teamB.sets.filter(set => set >= 6).length;
+
   // Find current set index (first incomplete set)
   let currentSetIndex = 0;
   for (let i = 0; i < 3; i++) {
@@ -82,14 +84,18 @@ export function convertLegacyScoresToMatchState(legacyScores, team1Players, team
     }
   }
 
-  // Calculate total sets won
-  const setsWonA = teamA.sets.filter(set => set >= 6).length;
-  const setsWonB = teamB.sets.filter(set => set >= 6).length;
+  // Populate sets object from legacy format
+  const sets = {};
+  for (let i = 0; i < 3; i++) {
+    sets[i.toString()] = {
+      team1Games: teamA.games[i] || 0,
+      team2Games: teamB.games[i] || 0,
+    };
+  }
 
   return {
     team1: {
       score: teamA.points || 0,
-      games: teamA.games[currentSetIndex] || 0,
       sets: setsWonA,
       tiebreakScore: 0, // Legacy format doesn't have tiebreak scores
       advantageCount: 0,
@@ -99,7 +105,6 @@ export function convertLegacyScoresToMatchState(legacyScores, team1Players, team
     },
     team2: {
       score: teamB.points || 0,
-      games: teamB.games[currentSetIndex] || 0,
       sets: setsWonB,
       tiebreakScore: 0,
       advantageCount: 0,
@@ -107,7 +112,7 @@ export function convertLegacyScoresToMatchState(legacyScores, team1Players, team
       warnings: [],
       servingOrder: 0,
     },
-    sets: {},
+    sets: sets,
     isInTiebreak: false,
     isInSuperTiebreak: false,
     currentServe: {
@@ -129,25 +134,9 @@ export function validateMatchState(matchState) {
   if (!matchState.team1 || !matchState.team2) return false;
   if (typeof matchState.team1.score !== "number") return false;
   if (typeof matchState.team2.score !== "number") return false;
-  if (typeof matchState.team1.games !== "number") return false;
-  if (typeof matchState.team2.games !== "number") return false;
   if (typeof matchState.team1.sets !== "number") return false;
   if (typeof matchState.team2.sets !== "number") return false;
   return true;
-}
-
-/**
- * Get current set index based on completed sets
- * @param {Object} matchState - MatchState
- * @returns {number} Current set index (0-based)
- */
-export function getCurrentSetIndex(matchState) {
-  if (!matchState) return 0;
-  const completedSets = Math.max(
-    matchState.team1.sets || 0,
-    matchState.team2.sets || 0
-  );
-  return Math.min(completedSets, 2); // Max 3 sets (0, 1, 2)
 }
 
 /**
@@ -160,8 +149,6 @@ export function createUpdateData(matchState, setsData) {
   const updateData = {
     "team1.score": matchState.team1.score,
     "team2.score": matchState.team2.score,
-    "team1.games": matchState.team1.games,
-    "team2.games": matchState.team2.games,
     "team1.sets": matchState.team1.sets,
     "team2.sets": matchState.team2.sets,
     "team1.tiebreakScore": matchState.team1.tiebreakScore,

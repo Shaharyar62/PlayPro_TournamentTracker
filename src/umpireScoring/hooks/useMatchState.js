@@ -248,6 +248,21 @@ export function useMatchState(tournamentId, matchId) {
       const previousState = JSON.parse(JSON.stringify(matchState));
       const previousSetsData = JSON.parse(JSON.stringify(setsData));
 
+      // Calculate active set index based on completed sets
+      const activeSetIndex = Math.max(
+        matchState.team1.sets || 0,
+        matchState.team2.sets || 0
+      );
+      const activeSetKey = activeSetIndex.toString();
+
+      // Ensure active set exists in sets data
+      if (!newSetsData[activeSetKey]) {
+        newSetsData[activeSetKey] = {
+          team1Games: 0,
+          team2Games: 0,
+        };
+      }
+
       if (matchState.isInTiebreak) {
         // Handle tiebreak scoring
         const newTiebreakScore = isTeam1
@@ -278,11 +293,9 @@ export function useMatchState(tournamentId, matchId) {
             newState.team2.sets += 1;
           }
 
-          // Save completed set
-          const currentSetIndex = newState.team1.sets + newState.team2.sets - 1;
-          newSetsData[currentSetIndex.toString()] = {
-            team1Games: newState.team1.games,
-            team2Games: newState.team2.games,
+          // Update completed set with tiebreak data
+          newSetsData[activeSetKey] = {
+            ...newSetsData[activeSetKey],
             isTiebreak: true,
             isSuperTiebreak: newState.isInSuperTiebreak,
             superTieBreakScore1: newState.isInSuperTiebreak
@@ -300,8 +313,6 @@ export function useMatchState(tournamentId, matchId) {
           };
 
           // Reset for next set
-          newState.team1.games = 0;
-          newState.team2.games = 0;
           newState.team1.score = 0;
           newState.team2.score = 0;
           newState.team1.tiebreakScore = 0;
@@ -310,6 +321,19 @@ export function useMatchState(tournamentId, matchId) {
           newState.team2.advantageCount = 0;
           newState.isInTiebreak = false;
           newState.isInSuperTiebreak = false;
+
+          // Initialize next set if match continues
+          const nextSetIndex = Math.max(
+            newState.team1.sets || 0,
+            newState.team2.sets || 0
+          );
+          const nextSetKey = nextSetIndex.toString();
+          if (!newSetsData[nextSetKey]) {
+            newSetsData[nextSetKey] = {
+              team1Games: 0,
+              team2Games: 0,
+            };
+          }
 
           // Check match win
           const matchWin = hasWonMatch(
@@ -401,11 +425,11 @@ export function useMatchState(tournamentId, matchId) {
         );
 
         if (won) {
-          // Team won the game
+          // Team won the game - update active set's games count
           if (isTeam1) {
-            newState.team1.games += 1;
+            newSetsData[activeSetKey].team1Games += 1;
           } else {
-            newState.team2.games += 1;
+            newSetsData[activeSetKey].team2Games += 1;
           }
 
           // Reset scores and advantage counts for next game
@@ -414,10 +438,12 @@ export function useMatchState(tournamentId, matchId) {
           newState.team1.advantageCount = 0;
           newState.team2.advantageCount = 0;
 
-          // Check set win or tiebreak
+          // Check set win or tiebreak using games from active set
+          const team1Games = newSetsData[activeSetKey].team1Games;
+          const team2Games = newSetsData[activeSetKey].team2Games;
           const setWin = hasWonSet(
-            isTeam1 ? newState.team1.games : newState.team2.games,
-            isTeam1 ? newState.team2.games : newState.team1.games,
+            isTeam1 ? team1Games : team2Games,
+            isTeam1 ? team2Games : team1Games,
             matchSettings
           );
 
@@ -429,19 +455,22 @@ export function useMatchState(tournamentId, matchId) {
               newState.team2.sets += 1;
             }
 
-            // Save completed set
-            const completedSetIndex =
-              newState.team1.sets + newState.team2.sets - 1;
-            newSetsData[completedSetIndex.toString()] = {
-              team1Games: newState.team1.games,
-              team2Games: newState.team2.games,
-            };
-
-            // Reset games and advantage counts
-            newState.team1.games = 0;
-            newState.team2.games = 0;
+            // Reset advantage counts
             newState.team1.advantageCount = 0;
             newState.team2.advantageCount = 0;
+
+            // Initialize next set if match continues
+            const nextSetIndex = Math.max(
+              newState.team1.sets || 0,
+              newState.team2.sets || 0
+            );
+            const nextSetKey = nextSetIndex.toString();
+            if (!newSetsData[nextSetKey]) {
+              newSetsData[nextSetKey] = {
+                team1Games: 0,
+                team2Games: 0,
+              };
+            }
 
             // Check match win
             const matchWin = hasWonMatch(
@@ -466,11 +495,7 @@ export function useMatchState(tournamentId, matchId) {
               newState.isInSuperTiebreak = true;
             }
           } else if (
-            shouldStartTiebreak(
-              newState.team1.games,
-              newState.team2.games,
-              matchSettings
-            )
+            shouldStartTiebreak(team1Games, team2Games, matchSettings)
           ) {
             // Start tiebreak
             newState.isInTiebreak = true;
@@ -833,8 +858,6 @@ export function useMatchState(tournamentId, matchId) {
       const resetData = {
         "team1.score": 0,
         "team2.score": 0,
-        "team1.games": 0,
-        "team2.games": 0,
         "team1.sets": 0,
         "team2.sets": 0,
         "team1.tiebreakScore": 0,

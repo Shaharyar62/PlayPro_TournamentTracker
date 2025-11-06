@@ -12,7 +12,6 @@ import {
 import { useUmpire } from "../context/UmpireContext";
 import { useMatchState } from "../hooks/useMatchState.js";
 import { getScoreString } from "../utils/scoringRules.js";
-import { getCurrentSetIndex } from "../utils/matchLogic.js";
 import TimerHeader from "./TimerHeader.jsx";
 import SettingsPanel from "./SettingsPanel.jsx";
 
@@ -101,8 +100,6 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
       !prevMatchStateRef.current ||
       prevMatchStateRef.current?.team1?.score !== matchState.team1?.score ||
       prevMatchStateRef.current?.team2?.score !== matchState.team2?.score ||
-      prevMatchStateRef.current?.team1?.games !== matchState.team1?.games ||
-      prevMatchStateRef.current?.team2?.games !== matchState.team2?.games ||
       prevMatchStateRef.current?.team1?.sets !== matchState.team1?.sets ||
       prevMatchStateRef.current?.team2?.sets !== matchState.team2?.sets ||
       JSON.stringify(prevSetsDataRef.current) !== JSON.stringify(setsData);
@@ -125,7 +122,13 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
       },
     };
 
-    // Update sets based on completed sets
+    // Update sets and games from setsData
+    // Calculate active set index based on completed sets
+    const activeSetIndex = Math.max(
+      matchState.team1?.sets || 0,
+      matchState.team2?.sets || 0
+    );
+    
     Object.keys(setsData || {}).forEach((setIndex) => {
       const set = setsData[setIndex];
       const idx = parseInt(setIndex);
@@ -136,13 +139,6 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
         legacyScores.teamB.games[idx] = set.team2Games || 0;
       }
     });
-
-    // Update current set games
-    const currentSetIndex = getCurrentSetIndex(matchState);
-    if (currentSetIndex < 3) {
-      legacyScores.teamA.games[currentSetIndex] = matchState.team1?.games || 0;
-      legacyScores.teamB.games[currentSetIndex] = matchState.team2?.games || 0;
-    }
 
     // Update refs before dispatching to prevent re-triggering
     prevMatchStateRef.current = {
@@ -212,11 +208,22 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
     const matchTeam =
       teamKey === "teamA" || teamKey === "team1" ? match.teamA : match.teamB;
 
+    // Calculate active set index and get games from sets
+    const activeSetIndex = Math.max(
+      matchState.team1?.sets || 0,
+      matchState.team2?.sets || 0
+    );
+    const activeSetKey = activeSetIndex.toString();
+    const activeSet = setsData?.[activeSetKey] || { team1Games: 0, team2Games: 0 };
+    const games = teamKey === "teamA" || teamKey === "team1" 
+      ? activeSet.team1Games || 0
+      : activeSet.team2Games || 0;
+
     return {
       name: matchTeam?.name || "Team",
       players: team?.players || matchTeam?.players || [],
       score: team?.score || 0,
-      games: team?.games || 0,
+      games: games,
       sets: team?.sets || 0,
       tiebreakScore: team?.tiebreakScore || 0,
       warnings: team?.warnings || [],
@@ -284,7 +291,6 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
     );
   }
 
-  const currentSetIndex = getCurrentSetIndex(matchState);
   const isInTiebreak = matchState.isInTiebreak || false;
   const isInSuperTiebreak = matchState.isInSuperTiebreak || false;
 

@@ -23,6 +23,13 @@ const TimerHeader = ({ matchSettings, matchState, setsData, onBack, onEndMatch }
 
   const displayTime = formattedTime || "00:00";
 
+  // Calculate active set for current games display
+  const activeSetIndex = matchState && setsData
+    ? Math.max(matchState.team1?.sets || 0, matchState.team2?.sets || 0)
+    : 0;
+  const activeSetKey = activeSetIndex.toString();
+  const activeSet = setsData?.[activeSetKey] || { team1Games: 0, team2Games: 0 };
+
   return (
     <div className="flex items-center justify-between p-4 bg-blue-900/50 backdrop-blur-sm">
       {/* Left side: Back button, Timer, Logo */}
@@ -93,10 +100,10 @@ const TimerHeader = ({ matchSettings, matchState, setsData, onBack, onEndMatch }
             {setsData?.["2"]?.team2Games || 0}
           </span>
         )}
-        {matchState && (
+        {matchState && setsData && (
           <span>
-            Current: {matchState.team1?.games || 0}-
-            {matchState.team2?.games || 0}
+            Current: {activeSet.team1Games || 0}-
+            {activeSet.team2Games || 0}
           </span>
         )}
       </div>
