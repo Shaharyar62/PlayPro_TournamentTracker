@@ -21,6 +21,7 @@ import ScorePage from "./pages/ScoreViewer/ScorePage";
 import StreamingHome from "./pages/streaming/SteamingHome";
 import StreamingLiveCourt from "./pages/streaming/StreamingLiveCourt";
 import AdminNavigation from "./pages/AdminNavigation";
+import LoginPage from "./umpireScoring/pages/LoginPage";
 
 function App() {
   const isLoaded = useRef(false);
@@ -35,7 +36,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
+          <Route path="/" element={<Home />} />
 
           <Route path="live-court" element={<LiveCourt />} />
           <Route
@@ -59,8 +60,8 @@ function App() {
         </Route>
         <Route path="/" element={<NullLayout />}>
           {/* Umpire Scoring Routes - Standalone App */}
-          <Route path="umpire-scoring/*" element={<UmpireApp />} />
-
+          {/* <Route path="umpire-scoring/*" element={<UmpireApp />} /> */}
+          <Route index element={<LoginPage />} />
           <Route path="scorebar" element={<Scoreboard />} />
           <Route path="streaming-home" element={<StreamingHome />} />
           <Route path="streaming-live-court" element={<StreamingLiveCourt />} />

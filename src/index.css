@@ -70,3 +70,180 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 } */
+
+/* ============================================
+   PWA Mobile App Enhancements
+   ============================================ */
+
+/* Safe area insets for notched devices (iOS) */
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Prevent text selection and long-press menu for app-like feel */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Allow text selection only for input fields and content */
+input,
+textarea,
+[contenteditable="true"],
+.selectable {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Prevent pull-to-refresh on mobile */
+body {
+  overscroll-behavior-y: contain;
+}
+
+/* Smooth scrolling for better mobile experience */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar for cleaner app look */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Prevent zoom on input focus (iOS) */
+input,
+select,
+textarea {
+  font-size: 16px !important;
+}
+
+/* Better touch targets (minimum 44x44px for iOS) */
+button,
+a,
+[role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Prevent text size adjustment on orientation change */
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Disable callout (long-press menu) on iOS */
+* {
+  -webkit-touch-callout: none;
+}
+
+/* Enable callout for images and links where needed */
+a,
+img {
+  -webkit-touch-callout: default;
+}
+
+/* Smooth momentum scrolling for iOS */
+.scrollable,
+.overflow-auto,
+.overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent accidental zoom on double-tap */
+button,
+a,
+input,
+textarea {
+  touch-action: manipulation;
+}
+
+/* Full viewport height accounting for mobile browser chrome */
+.min-h-screen,
+.h-screen {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+html {
+  height: -webkit-fill-available;
+}
+
+/* Animation for install prompt */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+/* Fullscreen mode for standalone app */
+@media (display-mode: standalone) {
+  body {
+    background-color: #ffffff;
+  }
+  
+  /* Add status bar background for iOS notch */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top);
+    background-color: #1e40af;
+    z-index: 9999;
+  }
+}
+
+/* iOS standalone mode specific styles */
+@media (display-mode: standalone) and (-webkit-touch-callout: none) {
+  /* Adjust for iOS home indicator */
+  body {
+    padding-bottom: max(env(safe-area-inset-bottom), 20px);
+  }
+}
+
+/* Active/pressed state for better touch feedback */
+button:active,
+a:active,
+[role="button"]:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Prevent context menu on long press for app-like behavior */
+img,
+video {
+  pointer-events: none;
+}
+
+/* Re-enable pointer events for interactive elements */
+button,
+a,
+input,
+textarea,
+select {
+  pointer-events: auto;
+}

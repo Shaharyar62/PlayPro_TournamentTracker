@@ -8,4 +8,5 @@ export default defineConfig({
   build: {
     outDir: "build", // This specifies the output directory
   },
+  publicDir: "public", // Ensures public folder assets are copied to build
 });

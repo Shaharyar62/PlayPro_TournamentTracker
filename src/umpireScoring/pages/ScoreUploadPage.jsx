@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUmpire } from "../context/UmpireContext";
 import ScoreUpload from "../components/ScoreUpload";
+import InstallPrompt from "../components/InstallPrompt";
 
 const ScoreUploadPage = () => {
   const navigate = useNavigate();
@@ -53,12 +54,15 @@ const ScoreUploadPage = () => {
   }
 
   return (
-    <ScoreUpload
-      match={currentMatch}
-      onSave={handleSave}
-      onEndMatch={handleEndMatch}
-      onBack={handleBack}
-    />
+    <>
+      <ScoreUpload
+        match={currentMatch}
+        onSave={handleSave}
+        onEndMatch={handleEndMatch}
+        onBack={handleBack}
+      />
+      <InstallPrompt />
+    </>
   );
 };
 
