@@ -397,7 +397,7 @@ const MatchScoreCard = () => {
         )}
 
         {/* Main content */}
-        <div className="relative z-10 flex  mt-[-30px] items-center justify-center min-h-screen">
+        <div className="relative z-10 flex  mt-[-20px] items-center justify-center min-h-screen">
           <div className="w-full  ">
             {/* Header with logos */}
             <div className="flex justify-between items-center">
@@ -430,7 +430,7 @@ const MatchScoreCard = () => {
             </div>
 
             {/* Main scoreboard */}
-            <div className="bg-white rounded-lg ml-[100px] mr-[100px] mt-0 mb-[60px] shadow-2xl overflow-hidden">
+            <div className="bg-white rounded-lg ml-[100px] mr-[100px] mt-[100px] mb-[60px] shadow-2xl overflow-hidden">
               {/* Header row - Dynamic based on number of sets */}
               <div className="bg-[#17626c] text-white py-4">
                 <div
@@ -609,7 +609,7 @@ const MatchScoreCard = () => {
             </div>
 
             {/* Bottom indicator and Upcoming Match */}
-            <div className="grid grid-cols-12 gap-4 items-center mt-[-10px]">
+            <div className="grid grid-cols-12 gap-4 items-center mt-[120px] ">
               <div className="bg-[#17626c] col-span-5 ml-5 text-white w-min px-[50px] whitespace-nowrap py-1 rounded-lg font-bold text-3xl">
                 {matchStatus.current == "completed"
                   ? "COMPLETED"
