@@ -121,7 +121,11 @@ body{
   background-repeat: repeat !important;}
 
 
-
+@media screen and (width < 768px) {
+  .text-2xl {
+    font-size: 28px !important;
+  }
+}
 
 
 

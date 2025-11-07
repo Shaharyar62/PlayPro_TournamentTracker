@@ -69,7 +69,7 @@ const Filters = ({ activeFilter, onFilterChange, matchCounts }) => {
                 px-2 py-1 rounded-full text-xs font-bold
                 ${
                   isActive
-                    ? "bg-gray-700 bg-opacity-20 text-white"
+                    ? "bg-gray-700 bg-opacity-20 text-black"
                     : "bg-gray-700 text-white"
                 }
               `}
@@ -106,7 +106,7 @@ const Filters = ({ activeFilter, onFilterChange, matchCounts }) => {
                     px-2 py-1 rounded-full text-xs font-bold
                     ${
                       isActive
-                        ? "bg-white bg-opacity-20 text-white"
+                        ? "bg-white bg-opacity-20 text-black"
                         : "bg-gray-200 text-gray-700"
                     }
                   `}

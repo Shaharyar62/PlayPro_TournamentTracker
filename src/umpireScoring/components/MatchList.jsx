@@ -66,7 +66,7 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
     // Calculate sets won from set scores
     let setsA = 0;
     let setsB = 0;
-    
+
     for (let i = 0; i < 3; i++) {
       if (teamA.sets[i] > teamB.sets[i]) {
         setsA++;
@@ -80,10 +80,10 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
 
   const getSetScoresDisplay = (scores) => {
     if (!scores) return null;
-    
+
     const { teamA, teamB } = scores;
     const setScores = [];
-    
+
     for (let i = 0; i < 3; i++) {
       const scoreA = teamA.sets[i] || 0;
       const scoreB = teamB.sets[i] || 0;
@@ -92,7 +92,7 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
         setScores.push(`${scoreA}-${scoreB}`);
       }
     }
-    
+
     return setScores.length > 0 ? setScores.join(", ") : null;
   };
 
@@ -149,19 +149,21 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
                         </span>
                       </div>
                     )}
-                  </div>
-
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                    {match.tournament}
-                  </h3>
-
-                  <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mb-2">
                     {match.courtName && (
                       <div className="flex items-center space-x-1">
-                        <MapPin className="w-4 h-4" />
-                        <span className="font-medium">{match.courtName}</span>
+                        <MapPin className="w-4 text-black h-4" />
+                        <span className="font-medium text-black">
+                          {match.courtName}
+                        </span>
                       </div>
                     )}
+                  </div>
+
+                  {/* <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                    {match.tournament}
+                  </h3> */}
+
+                  <div className="flex flex-row items-center gap-3 text-sm text-gray-600 mb-2">
                     {match.stageType && (
                       <div className="flex items-center space-x-1">
                         <Target className="w-4 h-4" />
@@ -221,8 +223,10 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
                   {match.status !== "upcoming" && match.scores && (
                     <div className="text-right">
                       <div className="font-mono text-sm text-gray-600 mb-1">
-                        {match.scores.teamA.sets.filter(s => s > 0).length > 0 
-                          ? match.scores.teamA.sets.filter(s => s > 0).join("-")
+                        {match.scores.teamA.sets.filter((s) => s > 0).length > 0
+                          ? match.scores.teamA.sets
+                              .filter((s) => s > 0)
+                              .join("-")
                           : "0"}
                       </div>
                       {match.setsWon && (
@@ -235,11 +239,11 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
                 </div>
 
                 {/* VS Divider */}
-                <div className="text-center">
+                {/* <div className="text-center">
                   <span className="bg-gray-200 text-gray-600 px-3 py-1 rounded-full text-sm font-semibold">
                     VS
                   </span>
-                </div>
+                </div> */}
 
                 {/* Team B */}
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -260,8 +264,10 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
                   {match.status !== "upcoming" && match.scores && (
                     <div className="text-right">
                       <div className="font-mono text-sm text-gray-600 mb-1">
-                        {match.scores.teamB.sets.filter(s => s > 0).length > 0 
-                          ? match.scores.teamB.sets.filter(s => s > 0).join("-")
+                        {match.scores.teamB.sets.filter((s) => s > 0).length > 0
+                          ? match.scores.teamB.sets
+                              .filter((s) => s > 0)
+                              .join("-")
                           : "0"}
                       </div>
                       {match.setsWon && (

@@ -1,12 +1,12 @@
 // Integration Example: How to add Umpire Scoring to your main App.jsx
 
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { UmpireApp } from './umpireScoring';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { UmpireApp } from "./umpireScoring";
 
 // Your existing components
-import Home from './pages/Home';
-import ScoreTable from './pages/ScoreTable';
+import Home from "./pages/Home";
+import ScoreTable from "./pages/ScoreTable";
 // ... other imports
 
 function App() {
@@ -16,10 +16,10 @@ function App() {
         {/* Existing routes */}
         <Route path="/" element={<Home />} />
         <Route path="/score-table" element={<ScoreTable />} />
-        
+
         {/* NEW: Umpire Scoring Routes */}
         <Route path="/umpire-scoring/*" element={<UmpireApp />} />
-        
+
         {/* Other existing routes */}
       </Routes>
     </Router>
@@ -58,7 +58,7 @@ function NavigationMenu() {
     <nav>
       <Link to="/">Home</Link>
       <Link to="/score-table">Score Table</Link>
-      <Link to="/umpire-scoring">Umpire Portal</Link> {/* NEW */}
+      <Link to="/umpire-scoring">Umpire Portal</Link>  
     </nav>
   );
 }

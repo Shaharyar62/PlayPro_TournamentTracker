@@ -118,8 +118,8 @@ const MatchListPage = () => {
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-center flex-col">
+            {/* <div className="flex items-center space-x-4">
               <div className="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center">
                 <Shield className="w-6 h-6 text-blue-600" />
               </div>
@@ -128,7 +128,7 @@ const MatchListPage = () => {
                   Umpire Portal
                 </h1>
               </div>
-            </div>
+            </div> */}
 
             <div className="flex items-center space-x-3">
               {/* Tournament Dropdown */}
@@ -176,7 +176,7 @@ const MatchListPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={refreshing || loading}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-lg transition-colors duration-200"
+                className="text-white hover:bg-gray-200 text-gray-700 p-2 rounded-lg transition-colors duration-200"
               >
                 <RefreshCw
                   className={`w-5 h-5 ${
@@ -189,9 +189,9 @@ const MatchListPage = () => {
                 onClick={handleLogout}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-red-100 hover:bg-red-200 text-red-700 p-2 rounded-lg transition-colors duration-200 flex items-center space-x-2"
+                className="text-white p-2 rounded-lg transition-colors duration-200 flex items-center space-x-2"
               >
-                <LogOut className="w-5 h-5" />
+                <LogOut className="w-5 h-5 text-white" />
                 <span className="hidden md:inline">Logout</span>
               </motion.button>
             </div>
@@ -207,7 +207,7 @@ const MatchListPage = () => {
           transition={{ duration: 0.6 }}
         >
           {/* Page Title */}
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <h2 className="text-3xl font-bold text-gray-800 mb-2">
               Match Schedule
             </h2>
@@ -216,7 +216,7 @@ const MatchListPage = () => {
                 ? `Manage and score matches for ${selectedTournament.name}`
                 : "Select a tournament to view matches"}
             </p>
-          </div>
+          </div> */}
 
           {/* Filters */}
           <Filters
