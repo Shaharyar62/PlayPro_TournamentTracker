@@ -1,5 +1,6 @@
 import { io } from "socket.io-client";
 import { SERVER_URL, SOCKET_PATH, MATCH_STATE_TIMEOUT } from "../utils/constants.js";
+import MatchIdHelper from "../utils/matchIdHelper.js";
 
 /**
  * Socket Match Service
@@ -70,8 +71,8 @@ class SocketMatchService {
     await this.connect();
 
     this.socket.emit("create_match", {
-      tournamentId: params.tournamentId,
-      matchId: params.matchId,
+      tournamentId: MatchIdHelper.prefixTournamentId(params.tournamentId),
+      matchId: MatchIdHelper.prefixMatchId(params.matchId),
       team1: params.team1Players,
       team2: params.team2Players,
       groupTitle: params.groupTitle || "",
@@ -105,8 +106,8 @@ class SocketMatchService {
       });
 
       this.socket.emit("get_match_state", {
-        tournamentId: params.tournamentId,
-        matchId: params.matchId,
+        tournamentId: MatchIdHelper.prefixTournamentId(params.tournamentId),
+        matchId: MatchIdHelper.prefixMatchId(params.matchId),
       });
     });
   }
@@ -124,8 +125,8 @@ class SocketMatchService {
     await this.connect();
 
     this.socket.emit("update_match_state", {
-      tournamentId: params.tournamentId,
-      matchId: params.matchId,
+      tournamentId: MatchIdHelper.prefixTournamentId(params.tournamentId),
+      matchId: MatchIdHelper.prefixMatchId(params.matchId),
       callBy: params.callBy,
       updateData: params.updateData,
       historyEntry: {
@@ -148,8 +149,8 @@ class SocketMatchService {
     await this.connect();
 
     this.socket.emit("add_warning", {
-      tournamentId: params.tournamentId,
-      matchId: params.matchId,
+      tournamentId: MatchIdHelper.prefixTournamentId(params.tournamentId),
+      matchId: MatchIdHelper.prefixMatchId(params.matchId),
       team: params.team,
       warningLevel: params.warningLevel,
       previousState: params.previousState,
@@ -169,8 +170,8 @@ class SocketMatchService {
     await this.connect();
 
     this.socket.emit("update_serve", {
-      tournamentId: params.tournamentId,
-      matchId: params.matchId,
+      tournamentId: MatchIdHelper.prefixTournamentId(params.tournamentId),
+      matchId: MatchIdHelper.prefixMatchId(params.matchId),
       newServingPlayer: params.newServingPlayer,
       isServingTeam1: params.isServingTeam1,
       timestamp: Date.now(),
@@ -188,8 +189,8 @@ class SocketMatchService {
     await this.connect();
 
     this.socket.emit("complete_match", {
-      tournamentId: params.tournamentId,
-      matchId: params.matchId,
+      tournamentId: MatchIdHelper.prefixTournamentId(params.tournamentId),
+      matchId: MatchIdHelper.prefixMatchId(params.matchId),
       winnerTeam: params.winnerTeam,
       timestamp: Date.now(),
     });
@@ -206,8 +207,8 @@ class SocketMatchService {
     await this.connect();
 
     this.socket.emit("reset_match", {
-      tournamentId: params.tournamentId,
-      matchId: params.matchId,
+      tournamentId: MatchIdHelper.prefixTournamentId(params.tournamentId),
+      matchId: MatchIdHelper.prefixMatchId(params.matchId),
       resetData: params.resetData,
       timestamp: Date.now(),
     });
@@ -223,8 +224,8 @@ class SocketMatchService {
     await this.connect();
 
     this.socket.emit("delete_match", {
-      tournamentId: params.tournamentId,
-      matchId: params.matchId,
+      tournamentId: MatchIdHelper.prefixTournamentId(params.tournamentId),
+      matchId: MatchIdHelper.prefixMatchId(params.matchId),
       timestamp: Date.now(),
     });
   }
@@ -239,10 +240,15 @@ class SocketMatchService {
   async listenToMatchUpdates(params) {
     await this.connect();
 
-    const eventName = `match_update_${params.matchId}`;
+    const prefixedMatchId = MatchIdHelper.prefixMatchId(params.matchId);
+    const eventName = `match_update_${prefixedMatchId}`;
 
     this.socket.on(eventName, (data) => {
       console.log("Received match update:", data);
+      // Filter by environment - ignore matches from other environments
+      if (data.matchId && !MatchIdHelper.isMatchForCurrentEnv(data.matchId)) {
+        return; // Ignore matches from other environment
+      }
       params.onUpdate(data);
     });
   }
@@ -253,7 +259,8 @@ class SocketMatchService {
    */
   stopListeningToMatchUpdates(matchId) {
     if (this.socket) {
-      const eventName = `match_update_${matchId}`;
+      const prefixedMatchId = MatchIdHelper.prefixMatchId(matchId);
+      const eventName = `match_update_${prefixedMatchId}`;
       this.socket.off(eventName);
     }
   }
@@ -267,10 +274,15 @@ class SocketMatchService {
   async listenToTournamentUpdates(params) {
     await this.connect();
 
-    const eventName = `tournament_update_${params.tournamentId}`;
+    const prefixedTournamentId = MatchIdHelper.prefixTournamentId(params.tournamentId);
+    const eventName = `tournament_update_${prefixedTournamentId}`;
 
     this.socket.on(eventName, (data) => {
       console.log("Received tournament update:", data);
+      // Filter by environment - ignore tournaments from other environments
+      if (data.tournamentId && !MatchIdHelper.isMatchForCurrentEnv(data.tournamentId)) {
+        return; // Ignore tournaments from other environment
+      }
       params.onUpdate(data);
     });
   }
@@ -281,7 +293,8 @@ class SocketMatchService {
    */
   stopListeningToTournamentUpdates(tournamentId) {
     if (this.socket) {
-      const eventName = `tournament_update_${tournamentId}`;
+      const prefixedTournamentId = MatchIdHelper.prefixTournamentId(tournamentId);
+      const eventName = `tournament_update_${prefixedTournamentId}`;
       this.socket.off(eventName);
     }
   }
