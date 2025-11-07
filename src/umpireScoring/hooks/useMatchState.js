@@ -23,6 +23,7 @@ import {
 import tournamentApiService from "../services/tournamentApi.js";
 import { prepareMatchResults } from "../utils/matchResultsHelper.js";
 import { umpireAPI } from "../services/umpireAPI.js";
+import MatchIdHelper from "../utils/matchIdHelper.js";
 
 /**
  * Custom hook for managing match state with WebSocket integration
@@ -172,8 +173,8 @@ export function useMatchState(tournamentId, matchId) {
 
       try {
         await socketService.createMatch({
-          tournamentId,
-          matchId,
+          tournamentId: MatchIdHelper.prefixTournamentId(tournamentId),
+          matchId: MatchIdHelper.prefixMatchId(matchId),
           team1Players,
           team2Players,
           groupTitle: match.groupTitle || match.round || "",
@@ -190,10 +191,19 @@ export function useMatchState(tournamentId, matchId) {
   useEffect(() => {
     if (!tournamentId || !matchId || !socketService) return;
 
+    // Prefix IDs for socket listeners
+    const prefixedTournamentId = MatchIdHelper.prefixTournamentId(tournamentId);
+    const prefixedMatchId = MatchIdHelper.prefixMatchId(matchId);
+
     socketService.listenToMatchUpdates({
-      tournamentId,
-      matchId,
+      tournamentId: prefixedTournamentId,
+      matchId: prefixedMatchId,
       onUpdate: (data) => {
+        // Filter by environment - ignore matches from other environments
+        if (data.matchId && !MatchIdHelper.isMatchForCurrentEnv(data.matchId)) {
+          return; // Ignore matches from other environment
+        }
+
         // Ensure sets property exists
         if (!data.sets) {
           data.sets = {};
@@ -215,8 +225,15 @@ export function useMatchState(tournamentId, matchId) {
     });
 
     socketService.listenToTournamentUpdates({
-      tournamentId,
+      tournamentId: prefixedTournamentId,
       onUpdate: (data) => {
+        // Filter by environment - ignore tournaments from other environments
+        if (
+          data.tournamentId &&
+          !MatchIdHelper.isMatchForCurrentEnv(data.tournamentId)
+        ) {
+          return; // Ignore tournaments from other environment
+        }
         console.log("Tournament update:", data);
       },
     });
@@ -289,8 +306,12 @@ export function useMatchState(tournamentId, matchId) {
           // Team won the tiebreak set
           if (isTeam1) {
             newState.team1.sets += 1;
+            // Increment games count to 7 for the winning team (6-6 -> 7-6)
+            newSetsData[activeSetKey].team1Games += 1;
           } else {
             newState.team2.sets += 1;
+            // Increment games count to 7 for the winning team (6-6 -> 6-7)
+            newSetsData[activeSetKey].team2Games += 1;
           }
 
           // Update completed set with tiebreak data
@@ -959,6 +980,126 @@ export function useMatchState(tournamentId, matchId) {
     }
   }, [matchState, matchSettings, tournamentId, matchId, socketService]);
 
+  // Increment set score directly
+  const incrementSetScore = useCallback(
+    async (setIndex, team) => {
+      if (!matchState || !matchSettings || !tournamentId || !matchId) return;
+
+      // Save state for undo - ensure sets property is included
+      const stateForUndo = JSON.parse(JSON.stringify(matchState));
+      stateForUndo.sets = JSON.parse(JSON.stringify(setsData)); // Ensure sets data is included
+      setUndoStack((prev) => {
+        const newStack = [...prev, stateForUndo];
+        return newStack.slice(-MAX_UNDO_STACK_SIZE);
+      });
+
+      const isTeam1 = team === "Team 1" || team === "team1" || team === "teamA";
+      let newState = JSON.parse(JSON.stringify(matchState)); // Deep clone
+      let newSetsData = JSON.parse(JSON.stringify(setsData)); // Deep clone
+
+      // Store previous state for potential rollback
+      const previousState = JSON.parse(JSON.stringify(matchState));
+      const previousSetsData = JSON.parse(JSON.stringify(setsData));
+
+      const setKey = setIndex.toString();
+
+      // Ensure set exists in sets data
+      if (!newSetsData[setKey]) {
+        newSetsData[setKey] = {
+          team1Games: 0,
+          team2Games: 0,
+        };
+      }
+
+      // Increment the appropriate team's games in the specified set
+      if (isTeam1) {
+        newSetsData[setKey].team1Games =
+          (newSetsData[setKey].team1Games || 0) + 1;
+      } else {
+        newSetsData[setKey].team2Games =
+          (newSetsData[setKey].team2Games || 0) + 1;
+      }
+
+      // Check if this increment completes a set
+      const team1Games = newSetsData[setKey].team1Games || 0;
+      const team2Games = newSetsData[setKey].team2Games || 0;
+
+      // Check if the incrementing team won the set
+      const setWin = isTeam1
+        ? hasWonSet(team1Games, team2Games, matchSettings)
+        : hasWonSet(team2Games, team1Games, matchSettings);
+
+      if (setWin) {
+        // Team won the set - update set wins
+        if (isTeam1) {
+          newState.team1.sets = (newState.team1.sets || 0) + 1;
+        } else {
+          newState.team2.sets = (newState.team2.sets || 0) + 1;
+        }
+
+        // Check match win
+        const matchWin = hasWonMatch(
+          newState.team1.sets,
+          newState.team2.sets,
+          matchSettings,
+          false
+        );
+
+        if (matchWin.won) {
+          newState.status = "completed";
+          newState.winnerTeam = matchWin.winner;
+        } else if (
+          shouldStartSuperTiebreak(
+            newState.team1.sets,
+            newState.team2.sets,
+            matchSettings
+          )
+        ) {
+          // Start super tiebreak
+          newState.isInTiebreak = true;
+          newState.isInSuperTiebreak = true;
+          newState.team1.tiebreakScore = 0;
+          newState.team2.tiebreakScore = 0;
+        }
+      }
+
+      // Sync sets property with setsData
+      newState.sets = newSetsData;
+
+      // Update state optimistically
+      setMatchState(newState);
+      setSetsData(newSetsData);
+
+      // Update via WebSocket with rollback on error
+      const updateData = createUpdateData(newState, newSetsData);
+
+      try {
+        await socketService.updateMatchState({
+          tournamentId,
+          matchId,
+          callBy: "set_score",
+          updateData,
+          historyEntry: {
+            type: "set_score",
+            team: isTeam1 ? "Team 1" : "Team 2",
+            setIndex: setIndex,
+            action: "increment",
+          },
+        });
+      } catch (error) {
+        console.error("Error updating set score, rolling back:", error);
+        // Rollback to previous state on error
+        setMatchState(previousState);
+        setSetsData(previousSetsData);
+        // Remove the failed state from undo stack
+        setUndoStack((prev) => prev.slice(0, -1));
+        // Optionally show error to user
+        throw error; // Re-throw to allow caller to handle if needed
+      }
+    },
+    [matchState, matchSettings, setsData, tournamentId, matchId, socketService]
+  );
+
   // Update match settings
   const updateMatchSettings = useCallback(
     async (newSettings) => {
@@ -987,6 +1128,7 @@ export function useMatchState(tournamentId, matchId) {
     loadError,
     incrementScore,
     incrementTiebreakScore,
+    incrementSetScore,
     addWarning,
     updateServe,
     undo,

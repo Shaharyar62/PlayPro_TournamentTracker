@@ -68,7 +68,7 @@ export const duration = [
   { id: 180, name: "3 hr" },
 ];
 
-const EnviromentTypeEnum = Object.freeze({
+export const EnviromentTypeEnum = Object.freeze({
   Local: 1,
   QA: 2,
   Dev: 3,
@@ -76,7 +76,7 @@ const EnviromentTypeEnum = Object.freeze({
   Demo: 5,
 });
 
-const envType = EnviromentTypeEnum.Production;
+export const envType = EnviromentTypeEnum.Production;
 
 export const envIsLive =
   envType == EnviromentTypeEnum.Demo ||

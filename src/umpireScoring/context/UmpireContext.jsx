@@ -6,6 +6,7 @@ import {
   clearUmpireToken,
 } from "../helpers/tokenHelper";
 import { transformCourtsScheduleToMatches } from "../helpers/matchDataTransformer";
+import MatchIdHelper from "../utils/matchIdHelper.js";
 
 // Load initial state from localStorage
 const loadInitialState = () => {
@@ -237,7 +238,9 @@ export const UmpireProvider = ({ children }) => {
         );
       }
 
-      const tournaments = tournamentsResponse.data || [];
+      const allTournaments = tournamentsResponse.data || [];
+      // Filter tournaments by environment
+      const tournaments = MatchIdHelper.filterMatchesByEnv(allTournaments);
       let selectedTournamentId = null;
 
       // Store tournaments
@@ -293,7 +296,9 @@ export const UmpireProvider = ({ children }) => {
       const response = await umpireAPI.getUmpireMasterTournaments();
 
       if (response.success) {
-        const tournaments = response.data || [];
+        const allTournaments = response.data || [];
+        // Filter tournaments by environment
+        const tournaments = MatchIdHelper.filterMatchesByEnv(allTournaments);
         localStorage.setItem("umpireTournaments", JSON.stringify(tournaments));
         dispatch({
           type: actionTypes.SET_MASTER_TOURNAMENTS,
@@ -346,10 +351,13 @@ export const UmpireProvider = ({ children }) => {
         );
 
         // Transform API data to UI format
-        const matches = transformCourtsScheduleToMatches(
+        const allMatches = transformCourtsScheduleToMatches(
           response,
           tournament
         );
+
+        // Filter matches by environment
+        const matches = MatchIdHelper.filterMatchesByEnv(allMatches);
 
         dispatch({ type: actionTypes.SET_MATCHES, payload: matches });
         return matches;

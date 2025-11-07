@@ -20,6 +20,10 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
   const [showEndMatchModal, setShowEndMatchModal] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showChangeServeModal, setShowChangeServeModal] = useState(false);
+  const [isSetScoreEditingMode, setIsSetScoreEditingMode] = useState(false);
+  const [showSetScoreConfirmation, setShowSetScoreConfirmation] =
+    useState(false);
+  const [pendingSetScoreEdit, setPendingSetScoreEdit] = useState(null);
   console.log("ScoreUpload match", match);
 
   // Get tournamentId from match or use default
@@ -37,6 +41,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
     isLoading,
     loadError,
     incrementScore,
+    incrementSetScore,
     addWarning,
     updateServe,
     undo,
@@ -194,6 +199,36 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
   const handleWarning = async (team) => {
     const teamName = team === "teamA" || team === "team1" ? "Team 1" : "Team 2";
     await addWarning(teamName);
+  };
+
+  const handleSetScoreClick = (setIndex, team) => {
+    if (isSetScoreEditingMode) {
+      // In editing mode, directly increment
+      incrementSetScore(setIndex, team);
+    } else {
+      // Not in editing mode, show confirmation
+      setPendingSetScoreEdit({ setIndex, team });
+      setShowSetScoreConfirmation(true);
+    }
+  };
+
+  const handleConfirmSetScoreEditing = () => {
+    setIsSetScoreEditingMode(true);
+    setShowSetScoreConfirmation(false);
+    // Optionally increment the score that was tapped
+    if (pendingSetScoreEdit) {
+      incrementSetScore(pendingSetScoreEdit.setIndex, pendingSetScoreEdit.team);
+      setPendingSetScoreEdit(null);
+    }
+  };
+
+  const handleCancelSetScoreEditing = () => {
+    setShowSetScoreConfirmation(false);
+    setPendingSetScoreEdit(null);
+  };
+
+  const handleDoneEditing = () => {
+    setIsSetScoreEditingMode(false);
   };
 
   // Get team display data
@@ -417,9 +452,19 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                   };
                   return (
                     <div key={index} className="text-center">
-                      <div className="text-3xl sm:text-4xl font-bold text-gray-800">
-                        {setData.team1Games || 0}
-                      </div>
+                      <motion.div
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleSetScoreClick(index, "Team 1")}
+                        className={`rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block ${
+                          isSetScoreEditingMode
+                            ? "bg-blue-600 hover:bg-blue-700/90 active:bg-blue-800 border-2 border-blue-300"
+                            : "bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700"
+                        }`}
+                      >
+                        <div className="text-3xl sm:text-4xl font-bold text-white">
+                          {setData.team1Games || 0}
+                        </div>
+                      </motion.div>
                     </div>
                   );
                 }
@@ -516,9 +561,19 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                   };
                   return (
                     <div key={index} className="text-center">
-                      <div className="text-3xl sm:text-4xl font-bold text-gray-800">
-                        {setData.team2Games || 0}
-                      </div>
+                      <motion.div
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleSetScoreClick(index, "Team 2")}
+                        className={`rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block ${
+                          isSetScoreEditingMode
+                            ? "bg-red-600 hover:bg-red-700/90 active:bg-red-800 border-2 border-red-300"
+                            : "bg-red-500 hover:bg-red-600/90 active:bg-red-700"
+                        }`}
+                      >
+                        <div className="text-3xl sm:text-4xl font-bold text-white">
+                          {setData.team2Games || 0}
+                        </div>
+                      </motion.div>
                     </div>
                   );
                 }
@@ -551,6 +606,27 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
             </div>
           </div>
         </div>
+
+        {/* Set Score Editing Mode Banner */}
+        {isSetScoreEditingMode && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 mx-4"
+          >
+            <div className="bg-yellow-500 text-yellow-900 border-2 border-yellow-400 rounded-xl px-4 py-3 text-center shadow-lg">
+              <div className="flex items-center justify-center space-x-2">
+                <AlertTriangle className="w-5 h-5" />
+                <span className="font-bold text-base">
+                  Set Score Editing Mode Active
+                </span>
+              </div>
+              <p className="text-xs mt-1 text-yellow-800">
+                Tap set scores to modify them. Tap "Done" when finished.
+              </p>
+            </div>
+          </motion.div>
+        )}
 
         {/* Tiebreak Indicator - More Prominent */}
         {isInTiebreak && (
@@ -672,8 +748,23 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
             </span>
           </motion.button>
 
-          {/* Placeholder for 6th button */}
-          <div className="bg-transparent"></div>
+          {/* Done Button (when in editing mode) or Placeholder */}
+          {isSetScoreEditingMode ? (
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={handleDoneEditing}
+              className="bg-green-600 hover:bg-green-700 active:bg-green-800 border-2 border-green-400 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center space-y-1 sm:space-y-2 transition-colors"
+            >
+              <div className="w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center">
+                <span className="text-white font-bold text-lg">✓</span>
+              </div>
+              <span className="text-xs font-medium text-center leading-tight text-white">
+                Done
+              </span>
+            </motion.button>
+          ) : (
+            <div className="bg-transparent"></div>
+          )}
         </div>
 
         {/* Warning Buttons */}
@@ -797,6 +888,40 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
             >
               Cancel
             </button>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Set Score Editing Confirmation Modal */}
+      {showSetScoreConfirmation && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-xl p-6 max-w-sm w-full"
+          >
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Enter Set Score Editing Mode?
+            </h3>
+            <p className="text-gray-600 mb-6">
+              This will allow you to directly modify set scores. Tap "Done" when
+              finished editing.
+            </p>
+
+            <div className="flex space-x-3">
+              <button
+                onClick={handleCancelSetScoreEditing}
+                className="flex-1 bg-gray-500 hover:bg-gray-600 active:bg-gray-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 shadow-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmSetScoreEditing}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 shadow-md"
+              >
+                Enter Editing Mode
+              </button>
+            </div>
           </motion.div>
         </div>
       )}
