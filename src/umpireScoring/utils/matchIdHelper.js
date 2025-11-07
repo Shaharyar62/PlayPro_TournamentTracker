@@ -71,25 +71,6 @@ class MatchIdHelper {
       return !matchIdStr.startsWith("dev_");
     }
   }
-
-  /**
-   * Filter array of matches/tournaments by current environment
-   * @param {Array} matches - Array of match or tournament objects
-   * @returns {Array} Filtered array containing only matches for current environment
-   */
-  static filterMatchesByEnv(matches) {
-    if (!Array.isArray(matches)) return [];
-
-    return matches.filter((match) => {
-      // Try to find match ID from various possible properties
-      const matchId =
-        match.id ||
-        match.matchId ||
-        match.tournamentId ||
-        match.tournamentScheduleId;
-      return this.isMatchForCurrentEnv(matchId);
-    });
-  }
 }
 
 export default MatchIdHelper;
