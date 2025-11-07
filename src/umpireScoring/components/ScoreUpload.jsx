@@ -336,22 +336,22 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white">
       {/* Header with Timer */}
-      <TimerHeader
+      {/* <TimerHeader
         matchSettings={matchSettings}
         matchState={matchState}
         setsData={setsData}
         onBack={onBack}
         onEndMatch={() => setShowEndMatchModal(true)}
-      />
+      /> */}
 
       {/* Main Score Display */}
-      <div className="px-4 py-6">
+      <div className="px-4 py-2">
         {/* Scoreboard Table */}
-        <div className="bg-white rounded-lg shadow-2xl overflow-hidden mb-6">
+        <div className="text-white  overflow-hidden mb-6">
           {/* Header Row */}
-          <div className="bg-[#17626c] text-white py-4">
+          <div className="  text-white py-2">
             <div
-              className="grid gap-4 items-center px-4"
+              className="grid gap-2 items-center px-2"
               style={{
                 gridTemplateColumns: `2fr ${Array(
                   matchSettings?.numberOfSets || 3
@@ -361,20 +361,18 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
               }}
             >
               <div className="text-center">
-                <h2 className="text-2xl sm:text-4xl font-bold">PLAYERS</h2>
+                <h2 className="font-bold">PLAYERS</h2>
               </div>
               {Array.from(
                 { length: matchSettings?.numberOfSets || 3 },
                 (_, index) => (
                   <div key={index} className="text-center">
-                    <h2 className="text-2xl sm:text-4xl font-bold">
-                      SET {index + 1}
-                    </h2>
+                    <h2 className=" font-bold">SET {index + 1}</h2>
                   </div>
                 )
               )}
               <div className="text-center">
-                <h2 className="text-2xl sm:text-4xl font-bold">
+                <h2 className="  font-bold">
                   {isInSuperTiebreak
                     ? "SUPER TIEBREAK"
                     : isInTiebreak
@@ -389,7 +387,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
           <div className="p-0">
             {/* Team 1 Row */}
             <div
-              className="grid gap-4 items-center border-b border-gray-200 px-4 py-6"
+              className="grid gap-2 items-center   px-2 py-3"
               style={{
                 gridTemplateColumns: `2fr ${Array(
                   matchSettings?.numberOfSets || 3
@@ -401,13 +399,13 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
               {/* PLAYERS Column - Team 1 */}
               <div>
                 <div className="flex items-center space-x-2 mb-1">
-                  <h2 className="text-xl font-semibold text-blue-300">
+                  {/* <h2 className="text-xl font-semibold text-blue-300">
                     {team1Data?.name?.split(" ")[0] ||
                       match.teamA?.name?.split(" ")[0] ||
                       "Team 1"}
-                  </h2>
+                  </h2> */}
                   {matchState.currentServe?.isServingTeam1 && (
-                    <div className="w-6 h-6 bg-blue-400 rounded-full flex items-center justify-center">
+                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
                       <span className="text-xs font-bold text-blue-900">S</span>
                     </div>
                   )}
@@ -428,7 +426,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                     </div>
                   )}
                 </div>
-                <p className="text-gray-700 text-sm">
+                <p className="text-white text-lg">
                   {team1Data?.players?.[0]?.name ||
                     match.teamA?.players?.[0] ||
                     "Player 1"}
@@ -461,7 +459,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                             : "bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700"
                         }`}
                       >
-                        <div className="text-3xl sm:text-4xl font-bold text-white">
+                        <div className="text-2xl sm:text-2xl font-bold text-white">
                           {setData.team1Games || 0}
                         </div>
                       </motion.div>
@@ -498,7 +496,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
 
             {/* Team 2 Row */}
             <div
-              className="grid gap-4 items-center px-4 py-6"
+              className="grid gap-2 items-center border-b border-gray-200 px-2 py-3"
               style={{
                 gridTemplateColumns: `2fr ${Array(
                   matchSettings?.numberOfSets || 3
@@ -510,14 +508,14 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
               {/* PLAYERS Column - Team 2 */}
               <div>
                 <div className="flex items-center space-x-2 mb-1">
-                  <h2 className="text-xl font-semibold text-red-300">
+                  {/* <h2 className="text-xl font-semibold text-red-300">
                     {team2Data?.name?.split(" ")[0] ||
                       match.teamB?.name?.split(" ")[0] ||
                       "Team 2"}
-                  </h2>
+                  </h2> */}
                   {!matchState.currentServe?.isServingTeam1 && (
                     <div className="w-6 h-6 bg-red-400 rounded-full flex items-center justify-center">
-                      <span className="text-xs font-bold text-red-900">S</span>
+                      <span className="text-xs font-bold text-white">S</span>
                     </div>
                   )}
                   {(matchState?.team2?.warnings?.length > 0 ||
@@ -537,7 +535,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                     </div>
                   )}
                 </div>
-                <p className="text-gray-700 text-sm">
+                <p className="text-white text-lg">
                   {team2Data?.players?.[0]?.name ||
                     match.teamB?.players?.[0] ||
                     "Player 2"}
@@ -570,7 +568,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                             : "bg-red-500 hover:bg-red-600/90 active:bg-red-700"
                         }`}
                       >
-                        <div className="text-3xl sm:text-4xl font-bold text-white">
+                        <div className="text-2xl sm:text-2xl font-bold text-white">
                           {setData.team2Games || 0}
                         </div>
                       </motion.div>
