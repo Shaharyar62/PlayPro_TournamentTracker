@@ -24,6 +24,7 @@ import tournamentApiService from "../services/tournamentApi.js";
 import { prepareMatchResults } from "../utils/matchResultsHelper.js";
 import { umpireAPI } from "../services/umpireAPI.js";
 import MatchIdHelper from "../utils/matchIdHelper.js";
+import { useUmpire } from "../context/UmpireContext.jsx";
 
 /**
  * Custom hook for managing match state with WebSocket integration
@@ -41,6 +42,7 @@ export function useMatchState(tournamentId, matchId) {
   const [loadError, setLoadError] = useState(null);
   const isInitializedRef = useRef(false);
   const originalMatchRef = useRef(null);
+  const { currentMatch } = useUmpire();
 
   // Initialize sets data structure
   const initializeSets = useCallback((settings) => {
@@ -125,29 +127,60 @@ export function useMatchState(tournamentId, matchId) {
       setMatchSettings(settings);
       const initialSets = initializeSets(settings);
 
-      const team1Players = (
-        match.team1?.players ||
-        match.teamA?.players ||
-        []
-      ).map((player, index) => ({
-        id: typeof player === "string" ? index : player.id || index,
-        name:
-          typeof player === "string"
-            ? player
-            : player.name || `Player ${index + 1}`,
-      }));
+      // Try to get players with IDs first (from transformer), then fallback to regular players
+      const team1Players = match.team1?.players || match.teamA?.players || [];
+      // const team1Players = team1PlayersRaw.map((player, index) => {
+      //   if (typeof player === "string") {
+      //     return {
+      //       id: index + 1,
+      //       playerId: index + 1,
+      //       name: player,
+      //     };
+      //   }
+      //   const playerId = player.playerId || player.id;
+      //   return {
+      //     id:
+      //       playerId !== undefined && playerId !== null
+      //         ? typeof playerId === "number"
+      //           ? playerId
+      //           : parseInt(playerId)
+      //         : index + 1,
+      //     playerId:
+      //       playerId !== undefined && playerId !== null
+      //         ? typeof playerId === "number"
+      //           ? playerId
+      //           : parseInt(playerId)
+      //         : index + 1,
+      //     name: player.name || player.playerName || `Player ${index + 1}`,
+      //   };
+      // });
 
-      const team2Players = (
-        match.team2?.players ||
-        match.teamB?.players ||
-        []
-      ).map((player, index) => ({
-        id: typeof player === "string" ? index : player.id || index,
-        name:
-          typeof player === "string"
-            ? player
-            : player.name || `Player ${index + 1}`,
-      }));
+      const team2Players = match.team2?.players || match.teamB?.players || [];
+      // const team2Players = team2PlayersRaw.map((player, index) => {
+      //   if (typeof player === "string") {
+      //     return {
+      //       id: index + 1,
+      //       playerId: index + 1,
+      //       name: player,
+      //     };
+      //   }
+      //   const playerId = player.playerId || player.id;
+      //   return {
+      //     id:
+      //       playerId !== undefined && playerId !== null
+      //         ? typeof playerId === "number"
+      //           ? playerId
+      //           : parseInt(playerId)
+      //         : index + 1,
+      //     playerId:
+      //       playerId !== undefined && playerId !== null
+      //         ? typeof playerId === "number"
+      //           ? playerId
+      //           : parseInt(playerId)
+      //         : index + 1,
+      //     name: player.name || player.playerName || `Player ${index + 1}`,
+      //   };
+      // });
 
       const initialState = initializeMatchState(team1Players, team2Players);
 
@@ -266,9 +299,13 @@ export function useMatchState(tournamentId, matchId) {
       const previousSetsData = JSON.parse(JSON.stringify(setsData));
 
       // Calculate active set index based on completed sets
-      const activeSetIndex = Math.max(
-        matchState.team1.sets || 0,
-        matchState.team2.sets || 0
+      // Total completed sets = active set index (sets are 0-indexed)
+      const totalCompletedSets =
+        (matchState.team1.sets || 0) + (matchState.team2.sets || 0);
+      // Ensure we don't exceed the number of sets in the match
+      const activeSetIndex = Math.min(
+        totalCompletedSets,
+        (matchSettings.numberOfSets || 3) - 1
       );
       const activeSetKey = activeSetIndex.toString();
 
@@ -344,9 +381,13 @@ export function useMatchState(tournamentId, matchId) {
           newState.isInSuperTiebreak = false;
 
           // Initialize next set if match continues
-          const nextSetIndex = Math.max(
-            newState.team1.sets || 0,
-            newState.team2.sets || 0
+          // Total completed sets = next set index (sets are 0-indexed)
+          const totalCompletedSets =
+            (newState.team1.sets || 0) + (newState.team2.sets || 0);
+          // Ensure we don't exceed the number of sets in the match
+          const nextSetIndex = Math.min(
+            totalCompletedSets,
+            (matchSettings.numberOfSets || 3) - 1
           );
           const nextSetKey = nextSetIndex.toString();
           if (!newSetsData[nextSetKey]) {
@@ -481,9 +522,13 @@ export function useMatchState(tournamentId, matchId) {
             newState.team2.advantageCount = 0;
 
             // Initialize next set if match continues
-            const nextSetIndex = Math.max(
-              newState.team1.sets || 0,
-              newState.team2.sets || 0
+            // Total completed sets = next set index (sets are 0-indexed)
+            const totalCompletedSets =
+              (newState.team1.sets || 0) + (newState.team2.sets || 0);
+            // Ensure we don't exceed the number of sets in the match
+            const nextSetIndex = Math.min(
+              totalCompletedSets,
+              (matchSettings.numberOfSets || 3) - 1
             );
             const nextSetKey = nextSetIndex.toString();
             if (!newSetsData[nextSetKey]) {
@@ -739,85 +784,14 @@ export function useMatchState(tournamentId, matchId) {
         try {
           if (matchState && setsData) {
             // Try to get original match for player IDs, fallback to matchState
-            const originalMatch = originalMatchRef.current;
+            // const originalMatch = originalMatchRef.current;
 
             // Prepare match data for API upload
             // Prefer original match data for player IDs if available
-            let team1Players = matchState.team1?.players || [];
-            let team2Players = matchState.team2?.players || [];
-
-            // If original match has teamA/teamB with players that have IDs, use those
-            if (originalMatch) {
-              const originalTeam1Players =
-                originalMatch.team1?.players ||
-                originalMatch.teamA?.players ||
-                [];
-              const originalTeam2Players =
-                originalMatch.team2?.players ||
-                originalMatch.teamB?.players ||
-                [];
-
-              // Merge: use IDs from original if available, otherwise use from matchState
-              if (originalTeam1Players.length > 0) {
-                team1Players = originalTeam1Players.map((origPlayer, idx) => {
-                  const statePlayer = team1Players[idx];
-                  // If original has ID, use it; otherwise use state player
-                  if (
-                    typeof origPlayer === "object" &&
-                    origPlayer !== null &&
-                    origPlayer.id
-                  ) {
-                    return {
-                      id: origPlayer.id,
-                      name:
-                        statePlayer?.name ||
-                        origPlayer.name ||
-                        origPlayer.playerName ||
-                        `Player ${idx + 1}`,
-                    };
-                  }
-                  return (
-                    statePlayer || {
-                      id: idx + 1,
-                      name:
-                        typeof origPlayer === "string"
-                          ? origPlayer
-                          : origPlayer.name || `Player ${idx + 1}`,
-                    }
-                  );
-                });
-              }
-
-              if (originalTeam2Players.length > 0) {
-                team2Players = originalTeam2Players.map((origPlayer, idx) => {
-                  const statePlayer = team2Players[idx];
-                  // If original has ID, use it; otherwise use state player
-                  if (
-                    typeof origPlayer === "object" &&
-                    origPlayer !== null &&
-                    origPlayer.id
-                  ) {
-                    return {
-                      id: origPlayer.id,
-                      name:
-                        statePlayer?.name ||
-                        origPlayer.name ||
-                        origPlayer.playerName ||
-                        `Player ${idx + 1}`,
-                    };
-                  }
-                  return (
-                    statePlayer || {
-                      id: idx + 1,
-                      name:
-                        typeof origPlayer === "string"
-                          ? origPlayer
-                          : origPlayer.name || `Player ${idx + 1}`,
-                    }
-                  );
-                });
-              }
-            }
+            console.log("matchState", originalMatchRef.current);
+            let team1Players = currentMatch.teamA?.players || [];
+            let team2Players = currentMatch.teamB?.players || [];
+            console.log("team1Players", team1Players);
 
             const matchDataForUpload = {
               id: matchId,

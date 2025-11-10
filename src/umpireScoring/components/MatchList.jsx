@@ -215,7 +215,11 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
                         {match.teamA.name}
                       </div>
                       <div className="text-sm text-gray-600">
-                        {match.teamA.players.join(" • ")}
+                        {match.teamA.players
+                          ?.map((p) =>
+                            typeof p === "string" ? p : p.name || p.playerName
+                          )
+                          .join(" • ") || "No players"}
                       </div>
                     </div>
                   </div>
@@ -256,7 +260,11 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
                         {match.teamB.name}
                       </div>
                       <div className="text-sm text-gray-600">
-                        {match.teamB.players.join(" • ")}
+                        {match.teamB.players
+                          ?.map((p) =>
+                            typeof p === "string" ? p : p.name || p.playerName
+                          )
+                          .join(" • ") || "No players"}
                       </div>
                     </div>
                   </div>

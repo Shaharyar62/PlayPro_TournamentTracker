@@ -24,6 +24,9 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
   const [showSetScoreConfirmation, setShowSetScoreConfirmation] =
     useState(false);
   const [pendingSetScoreEdit, setPendingSetScoreEdit] = useState(null);
+  const [showSubmitResultsModal, setShowSubmitResultsModal] = useState(false);
+  const [hasShownSubmitModal, setHasShownSubmitModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   console.log("ScoreUpload match", match);
 
   // Get tournamentId from match or use default
@@ -129,10 +132,10 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
 
     // Update sets and games from setsData
     // Calculate active set index based on completed sets
-    const activeSetIndex = Math.max(
-      matchState.team1?.sets || 0,
-      matchState.team2?.sets || 0
-    );
+    // Total completed sets = active set index (sets are 0-indexed)
+    const totalCompletedSets =
+      (matchState.team1?.sets || 0) + (matchState.team2?.sets || 0);
+    const activeSetIndex = totalCompletedSets;
 
     Object.keys(setsData || {}).forEach((setIndex) => {
       const set = setsData[setIndex];
@@ -156,6 +159,55 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
     updateScoreRef.current(match.id, legacyScores);
     onSaveRef.current?.(legacyScores);
   }, [matchState, setsData, match?.id]);
+
+  // Detect when match completes and show submission confirmation modal
+  useEffect(() => {
+    if (
+      matchState &&
+      isMatchComplete() &&
+      !hasShownSubmitModal &&
+      matchState?.winnerTeam
+    ) {
+      setShowSubmitResultsModal(true);
+      setHasShownSubmitModal(true);
+    }
+  }, [matchState, isMatchComplete, hasShownSubmitModal]);
+
+  const handleSubmitResults = async () => {
+    if (!isMatchComplete() || !matchState) return;
+
+    setIsSubmitting(true);
+    try {
+      const winner = getMatchWinner();
+      if (winner) {
+        await completeMatch(winner);
+        // Convert to legacy format for onEndMatch callback
+        const legacyScores = {
+          teamA: {
+            sets: [0, 0, 0],
+            games: [0, 0, 0],
+            points: matchState.team1?.score || 0,
+          },
+          teamB: {
+            sets: [0, 0, 0],
+            games: [0, 0, 0],
+            points: matchState.team2?.score || 0,
+          },
+        };
+        onEndMatch?.(match.id, legacyScores);
+      }
+      setShowSubmitResultsModal(false);
+    } catch (error) {
+      console.error("Error submitting match results:", error);
+      // Keep modal open on error so user can retry
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCancelSubmit = () => {
+    setShowSubmitResultsModal(false);
+  };
 
   const handleEndMatch = async () => {
     if (isMatchComplete() && matchState) {
@@ -244,10 +296,10 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
       teamKey === "teamA" || teamKey === "team1" ? match.teamA : match.teamB;
 
     // Calculate active set index and get games from sets
-    const activeSetIndex = Math.max(
-      matchState.team1?.sets || 0,
-      matchState.team2?.sets || 0
-    );
+    // Total completed sets = active set index (sets are 0-indexed)
+    const totalCompletedSets =
+      (matchState.team1?.sets || 0) + (matchState.team2?.sets || 0);
+    const activeSetIndex = totalCompletedSets;
     const activeSetKey = activeSetIndex.toString();
     const activeSet = setsData?.[activeSetKey] || {
       team1Games: 0,
@@ -260,7 +312,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
 
     return {
       name: matchTeam?.name || "Team",
-      players: team?.players || matchTeam?.players || [],
+      players: team?.players,
       score: team?.score || 0,
       games: games,
       sets: team?.sets || 0,
@@ -428,13 +480,10 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                 </div>
                 <p className="text-white text-lg">
                   {team1Data?.players?.[0]?.name ||
-                    match.teamA?.players?.[0] ||
+                    match.teamA?.players?.[0]?.name ||
                     "Player 1"}
                   {team1Data?.players?.length > 1 && (
-                    <>
-                      {" "}
-                      / {team1Data.players[1].name || match.teamA?.players?.[1]}
-                    </>
+                    <> / {team1Data.players[1].name}</>
                   )}
                 </p>
               </div>
@@ -537,7 +586,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                 </div>
                 <p className="text-white text-lg">
                   {team2Data?.players?.[0]?.name ||
-                    match.teamB?.players?.[0] ||
+                    match.teamB?.players?.[0]?.name ||
                     "Player 2"}
                   {team2Data?.players?.length > 1 && (
                     <>
@@ -793,25 +842,69 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
         </div> */}
       </div>
 
-      {/* Match Complete Notification */}
-      {isMatchComplete() && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed inset-x-4 top-20 bg-green-600 rounded-xl p-4 z-50"
-        >
-          <div className="text-center">
-            <h3 className="text-lg font-bold text-white mb-1">
-              Match Complete!
-            </h3>
-            <p className="text-green-100">
-              {getMatchWinner() === "Team 1"
-                ? team1Data?.name || match.teamA?.name
-                : team2Data?.name || match.teamB?.name}{" "}
-              wins!
+      {/* Submit Results Confirmation Modal */}
+      {showSubmitResultsModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-xl p-6 max-w-sm w-full"
+          >
+            <div className="text-center mb-4">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg
+                  className="w-8 h-8 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                Match Complete!
+              </h3>
+              <p className="text-gray-600 mb-1">
+                {getMatchWinner() === "Team 1"
+                  ? team1Data?.name || match.teamA?.name
+                  : team2Data?.name || match.teamB?.name}{" "}
+                wins!
+              </p>
+            </div>
+            <p className="text-gray-700 mb-6 text-center">
+              Would you like to submit the match results now?
             </p>
-          </div>
-        </motion.div>
+
+            <div className="flex space-x-3">
+              <button
+                onClick={handleCancelSubmit}
+                disabled={isSubmitting}
+                className="flex-1 bg-gray-500 hover:bg-gray-600 active:bg-gray-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 shadow-md"
+              >
+                Not Now
+              </button>
+              <button
+                onClick={handleSubmitResults}
+                disabled={isSubmitting}
+                className="flex-1 bg-green-600 hover:bg-green-700 active:bg-green-800 disabled:bg-green-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 shadow-md flex items-center justify-center"
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    Submitting...
+                  </>
+                ) : (
+                  "Submit Results"
+                )}
+              </button>
+            </div>
+          </motion.div>
+        </div>
       )}
 
       {/* End Match Modal */}

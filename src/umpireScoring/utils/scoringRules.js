@@ -108,7 +108,17 @@ export function hasWonTiebreak(
  * @returns {boolean} True if team has won the set
  */
 export function hasWonSet(teamGames, opponentGames, settings) {
-  return teamGames >= settings.numberOfGames && teamGames >= opponentGames + 2;
+  // Validate inputs
+  if (!settings || typeof settings.numberOfGames !== "number") {
+    return false;
+  }
+  if (typeof teamGames !== "number" || typeof opponentGames !== "number") {
+    return false;
+  }
+
+  const minGames = settings.numberOfGames;
+  // Must reach minimum games AND win by 2
+  return teamGames >= minGames && teamGames >= opponentGames + 2;
 }
 
 /**

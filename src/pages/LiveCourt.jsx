@@ -8,6 +8,7 @@ import Common from "../helper/common";
 import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
 import moment from "moment-timezone";
 import { TournamentRuleMatchFormatTypeEnum } from "../const/Constants";
+import MatchIdHelper from "../umpireScoring/utils/matchIdHelper.js";
 
 const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
@@ -157,16 +158,30 @@ const MatchScoreCard = () => {
       setIsConnected(false);
     });
 
+    // Prefix match and tournament IDs for environment separation
+    const prefixedMatchId = MatchIdHelper.prefixMatchId(currentMatch.id);
+    const prefixedTournamentId = MatchIdHelper.prefixTournamentId(tournamentId);
+
     // Listen for match updates
-    socket.on(`match_update_${currentMatch.id}`, (data) => {
+    socket.on(`match_update_${prefixedMatchId}`, (data) => {
       console.log("Match update received:", data);
+      // Filter by environment - ignore matches from other environments
+      if (data.matchId && !MatchIdHelper.isMatchForCurrentEnv(data.matchId)) {
+        console.log("Ignoring match update from different environment");
+        return; // Ignore matches from other environment
+      }
       matchStatus.current = data.status;
       setLiveMatchData(data);
     });
 
     // Listen for reset events
-    socket.on(`match_reset_${currentMatch.id}`, (data) => {
+    socket.on(`match_reset_${prefixedMatchId}`, (data) => {
       console.log("Match reset received:", data);
+      // Filter by environment - ignore matches from other environments
+      if (data.matchId && !MatchIdHelper.isMatchForCurrentEnv(data.matchId)) {
+        console.log("Ignoring match reset from different environment");
+        return; // Ignore matches from other environment
+      }
       setLiveMatchData(data);
       setShowResetNotification(true);
       // Hide notification after 3 seconds
@@ -174,14 +189,22 @@ const MatchScoreCard = () => {
     });
 
     // Listen for tournament updates
-    socket.on(`tournament_update_${tournamentId}`, (data) => {
+    socket.on(`tournament_update_${prefixedTournamentId}`, (data) => {
       console.log("Tournament update received:", data);
+      // Filter by environment - ignore tournaments from other environments
+      if (
+        data.tournamentId &&
+        !MatchIdHelper.isMatchForCurrentEnv(data.tournamentId)
+      ) {
+        console.log("Ignoring tournament update from different environment");
+        return; // Ignore tournaments from other environment
+      }
     });
 
     // Request initial match state
     const matchStateRequest = {
-      tournamentId: tournamentId.toString(),
-      matchId: currentMatch.id.toString(),
+      tournamentId: prefixedTournamentId,
+      matchId: prefixedMatchId,
     };
     console.log("Requesting match state with:", matchStateRequest);
     socket.emit("get_match_state", matchStateRequest);
@@ -198,6 +221,15 @@ const MatchScoreCard = () => {
       clearTimeout(fallbackTimeout); // Clear timeout since we got a response
 
       if (data) {
+        // Filter by environment - ignore matches from other environments
+        if (data.matchId && !MatchIdHelper.isMatchForCurrentEnv(data.matchId)) {
+          console.log(
+            "Ignoring match state response from different environment"
+          );
+          // Use API data as fallback when response is from different environment
+          setLiveMatchData(currentMatch);
+          return;
+        }
         matchStatus.current = data.status;
         setLiveMatchData(data);
       } else {

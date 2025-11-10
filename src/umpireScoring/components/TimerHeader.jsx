@@ -8,7 +8,13 @@ import { useTimer } from "../hooks/useTimer.js";
  * Displays timer, logo, and set labels in the header
  * Following REACT_IMPLEMENTATION_GUIDE.md specification
  */
-const TimerHeader = ({ matchSettings, matchState, setsData, onBack, onEndMatch }) => {
+const TimerHeader = ({
+  matchSettings,
+  matchState,
+  setsData,
+  onBack,
+  onEndMatch,
+}) => {
   const {
     activeTimer,
     formattedTime,
@@ -24,11 +30,16 @@ const TimerHeader = ({ matchSettings, matchState, setsData, onBack, onEndMatch }
   const displayTime = formattedTime || "00:00";
 
   // Calculate active set for current games display
-  const activeSetIndex = matchState && setsData
-    ? Math.max(matchState.team1?.sets || 0, matchState.team2?.sets || 0)
-    : 0;
+  // Total completed sets = active set index (sets are 0-indexed)
+  const activeSetIndex =
+    matchState && setsData
+      ? (matchState.team1?.sets || 0) + (matchState.team2?.sets || 0)
+      : 0;
   const activeSetKey = activeSetIndex.toString();
-  const activeSet = setsData?.[activeSetKey] || { team1Games: 0, team2Games: 0 };
+  const activeSet = setsData?.[activeSetKey] || {
+    team1Games: 0,
+    team2Games: 0,
+  };
 
   return (
     <div className="flex items-center justify-between p-4 bg-blue-900/50 backdrop-blur-sm">
@@ -102,8 +113,7 @@ const TimerHeader = ({ matchSettings, matchState, setsData, onBack, onEndMatch }
         )}
         {matchState && setsData && (
           <span>
-            Current: {activeSet.team1Games || 0}-
-            {activeSet.team2Games || 0}
+            Current: {activeSet.team1Games || 0}-{activeSet.team2Games || 0}
           </span>
         )}
       </div>
@@ -125,4 +135,3 @@ const TimerHeader = ({ matchSettings, matchState, setsData, onBack, onEndMatch }
 };
 
 export default TimerHeader;
-

@@ -58,6 +58,23 @@ const extractPlayerNames = (players) => {
 };
 
 /**
+ * Extract full player objects with IDs from players array
+ * @param {Array} players - Array of player objects with playerId/playerName
+ * @returns {Array} Array of player objects with id, playerId, and name
+ */
+const extractPlayerObjects = (players) => {
+  if (!players || !Array.isArray(players)) return [];
+  return players.map((player, index) => {
+    console.log("extractPlayerObjects", players);
+    const playerId = player.playerId || player.id;
+    return {
+      playerId,
+      name: player.playerName || player.name || `Player ${index + 1}`,
+    };
+  });
+};
+
+/**
  * Transform a single match from API format to UI format
  * @param {Object} apiMatch - Match object from API
  * @param {Object} tournament - Tournament object with name
@@ -166,13 +183,13 @@ const transformMatch = (apiMatch, tournament = null) => {
     teamA: {
       id: teamA.id,
       name: teamA.teamName || teamA.name || "Team A",
-      players: extractPlayerNames(teamA.players),
+      players: extractPlayerObjects(teamA.players), // For API submission
       logo: teamA.logo,
     },
     teamB: {
       id: teamB.id,
       name: teamB.teamName || teamB.name || "Team B",
-      players: extractPlayerNames(teamB.players),
+      players: extractPlayerObjects(teamB.players), // For API submission
       logo: teamB.logo,
     },
     scores: setScores,

@@ -18,26 +18,36 @@ export const TOURNAMENT_MATCH_PLAY_STATUS = {
   COMPLETED: 2,
 };
 
-/**
- * Extract player ID from player object or string
- * @param {Object|string} player - Player object with id/name or string name
- * @param {number} index - Fallback index if no ID found
- * @returns {number} Player ID
- */
-function extractPlayerId(player, index) {
-  if (typeof player === "object" && player !== null) {
-    // If player has an id property, use it
-    if (typeof player.id === "number") {
-      return player.id;
-    }
-    // If player has an id as string, convert to number
-    if (typeof player.id === "string" && !isNaN(parseInt(player.id))) {
-      return parseInt(player.id);
-    }
-  }
-  // Fallback to index (0-based, but we'll use 1-based for safety)
-  return index + 1;
-}
+// /**
+//  * Extract player ID from player object or string
+//  * @param {Object|string} player - Player object with id/playerId/name or string name
+//  * @param {number} index - Fallback index if no ID found
+//  * @returns {number} Player ID
+//  */
+// function extractPlayerId(player, index) {
+//   if (typeof player === "object" && player !== null) {
+//     // Priority 1: Check for playerId property (most common)
+//     if (typeof player.playerId === "number") {
+//       return player.playerId;
+//     }
+//     if (
+//       typeof player.playerId === "string" &&
+//       !isNaN(parseInt(player.playerId))
+//     ) {
+//       return parseInt(player.playerId);
+//     }
+
+//     // Priority 2: Check for id property
+//     if (typeof player.id === "number") {
+//       return player.id;
+//     }
+//     if (typeof player.id === "string" && !isNaN(parseInt(player.id))) {
+//       return parseInt(player.id);
+//     }
+//   }
+//   // Fallback to index (0-based, but we'll use 1-based for safety)
+//   return index + 1;
+// }
 
 /**
  * Get team players from match data (handles both teamA/teamB and team1/team2 formats)
@@ -137,8 +147,10 @@ export function prepareMatchResults(matchData, winnerTeam, sets) {
   validateInputs(matchData, winnerTeam, sets);
 
   const results = [];
-  const team1Players = getTeamPlayers(matchData, "team1");
-  const team2Players = getTeamPlayers(matchData, "team2");
+  const team1Players = matchData.team1?.players || [];
+  const team2Players = matchData.team2?.players || [];
+  console.log("team1Players", team1Players);
+  console.log("team2Players", team2Players);
 
   const isTeam1Winner = winnerTeam === "Team 1";
   const resultType = isTeam1Winner
@@ -146,7 +158,8 @@ export function prepareMatchResults(matchData, winnerTeam, sets) {
     : TOURNAMENT_MATCH_RESULT.TEAM_B_WON;
 
   // Process Team 1 players (Side A)
-  team1Players.forEach((player, playerIndex) => {
+  team1Players.forEach((player) => {
+    console.log("player", player);
     // For each set (round 1, 2, 3)
     for (let round = 0; round <= 2; round++) {
       const setsData = getSetData(sets, round);
@@ -159,13 +172,14 @@ export function prepareMatchResults(matchData, winnerTeam, sets) {
 
       results.push({
         bookingResultTmpId: 0,
-        playerId: extractPlayerId(player, playerIndex),
+        playerId: player.playerId,
         side: "A",
         round: round + 1,
         points: team1Points,
         gameType: 1,
         resultType: resultType,
       });
+      console.log("results", results);
     }
   });
 
@@ -183,7 +197,7 @@ export function prepareMatchResults(matchData, winnerTeam, sets) {
 
       results.push({
         bookingResultTmpId: 0,
-        playerId: extractPlayerId(player, playerIndex),
+        playerId: player.playerId,
         side: "B",
         round: round + 1,
         points: team2Points,

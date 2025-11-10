@@ -463,7 +463,7 @@ class UmpireAPIService {
    * @returns {Promise} Response with update status
    */
   async updateTournamentMatchResult(payload) {
-    const url = `${baseUrl}/UpdateTournamentMatchResult`;
+    const url = `${this.baseUrl}/UpdateUmpireTournamentMatchResult`;
     const token = getUmpireToken();
 
     const options = {

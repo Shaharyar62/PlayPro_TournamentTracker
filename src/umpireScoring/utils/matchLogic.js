@@ -63,17 +63,29 @@ export function initializeSetsData(numberOfSets) {
  * @param {Array} team2Players - Team 2 players
  * @returns {Object} MatchState format
  */
-export function convertLegacyScoresToMatchState(legacyScores, team1Players, team2Players) {
+export function convertLegacyScoresToMatchState(
+  legacyScores,
+  team1Players,
+  team2Players
+) {
   if (!legacyScores) {
     return initializeMatchState(team1Players, team2Players);
   }
 
-  const teamA = legacyScores.teamA || { sets: [0, 0, 0], games: [0, 0, 0], points: 0 };
-  const teamB = legacyScores.teamB || { sets: [0, 0, 0], games: [0, 0, 0], points: 0 };
+  const teamA = legacyScores.teamA || {
+    sets: [0, 0, 0],
+    games: [0, 0, 0],
+    points: 0,
+  };
+  const teamB = legacyScores.teamB || {
+    sets: [0, 0, 0],
+    games: [0, 0, 0],
+    points: 0,
+  };
 
   // Calculate total sets won
-  const setsWonA = teamA.sets.filter(set => set >= 6).length;
-  const setsWonB = teamB.sets.filter(set => set >= 6).length;
+  const setsWonA = teamA.sets.filter((set) => set >= 6).length;
+  const setsWonB = teamB.sets.filter((set) => set >= 6).length;
 
   // Find current set index (first incomplete set)
   let currentSetIndex = 0;
@@ -168,8 +180,10 @@ export function createUpdateData(matchState, setsData) {
   }
 
   if (matchState.currentServe) {
-    updateData["currentServe.servingPlayer"] = matchState.currentServe.servingPlayer;
-    updateData["currentServe.isServingTeam1"] = matchState.currentServe.isServingTeam1;
+    updateData["currentServe.servingPlayer"] =
+      matchState.currentServe.servingPlayer;
+    updateData["currentServe.isServingTeam1"] =
+      matchState.currentServe.isServingTeam1;
   }
 
   return updateData;
@@ -192,14 +206,19 @@ export function mergeMatchStates(localState, serverState) {
     team1: {
       ...localState.team1,
       ...serverState.team1,
-      advantageCount: serverState.team1?.advantageCount ?? localState.team1?.advantageCount ?? 0,
+      advantageCount:
+        serverState.team1?.advantageCount ??
+        localState.team1?.advantageCount ??
+        0,
     },
     team2: {
       ...localState.team2,
       ...serverState.team2,
-      advantageCount: serverState.team2?.advantageCount ?? localState.team2?.advantageCount ?? 0,
+      advantageCount:
+        serverState.team2?.advantageCount ??
+        localState.team2?.advantageCount ??
+        0,
     },
     sets: serverState.sets || localState.sets || {},
   };
 }
-
