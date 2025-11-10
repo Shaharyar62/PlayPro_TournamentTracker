@@ -51,7 +51,7 @@ function App() {
               path="streaming-live-court"
               element={<StreamingLiveCourt />}
             />
-            <Route path="multi-court-live" element={<MultiCourtLive />} />
+            {/* <Route path="multi-court-live" element={<MultiCourtLive />} /> */}
             <Route
               path="scorebar/:tournamentId/:matchId"
               element={<Scoreboard />}
