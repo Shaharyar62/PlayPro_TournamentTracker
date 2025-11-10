@@ -478,6 +478,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                     </div>
                   )}
                 </div>
+                <p className="text-green-500 text-sm">{team1Data?.name}</p>
                 <p className="text-white text-lg">
                   {team1Data?.players?.[0]?.name ||
                     match.teamA?.players?.[0]?.name ||
@@ -584,6 +585,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                     </div>
                   )}
                 </div>
+                <p className="text-red-500 text-sm">{team2Data?.name}</p>
                 <p className="text-white text-lg">
                   {team2Data?.players?.[0]?.name ||
                     match.teamB?.players?.[0]?.name ||
