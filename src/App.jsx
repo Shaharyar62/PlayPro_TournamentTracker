@@ -11,6 +11,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ScoreCard from "./pages/ScoringCard";
 import TodayMatch from "./pages/TodayMatch";
 import LiveCourt from "./pages/LiveCourt";
+import MultiCourtLive from "./pages/MultiCourtLive";
 import Common from "./helper/common";
 import Scoreboard from "./live/overlays/scorebar";
 import NullLayout from "./components/NullLayout";
@@ -50,6 +51,7 @@ function App() {
               path="streaming-live-court"
               element={<StreamingLiveCourt />}
             />
+            <Route path="multi-court-live" element={<MultiCourtLive />} />
             <Route
               path="scorebar/:tournamentId/:matchId"
               element={<Scoreboard />}
@@ -64,6 +66,7 @@ function App() {
               path="live-court/:tournamentId/:matchId"
               element={<LiveCourt />}
             />
+            <Route path="multi-court-live" element={<MultiCourtLive />} />
             <Route path="live-score" element={<LiveScore />} />
             <Route path="time-table" element={<TimeTable />} />
             <Route path="score-table" element={<ScoreTable />} />
