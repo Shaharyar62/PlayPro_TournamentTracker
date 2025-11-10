@@ -12,6 +12,7 @@ export function initializeMatchState(team1Players, team2Players) {
   return {
     team1: {
       score: 0,
+      games: 0,
       sets: 0,
       tiebreakScore: 0,
       advantageCount: 0,
@@ -21,6 +22,7 @@ export function initializeMatchState(team1Players, team2Players) {
     },
     team2: {
       score: 0,
+      games: 0,
       sets: 0,
       tiebreakScore: 0,
       advantageCount: 0,
@@ -105,9 +107,16 @@ export function convertLegacyScoresToMatchState(
     };
   }
 
+  // Get current set games from the active set
+  const currentSetGames = sets[currentSetIndex.toString()] || {
+    team1Games: 0,
+    team2Games: 0,
+  };
+
   return {
     team1: {
       score: teamA.points || 0,
+      games: currentSetGames.team1Games || 0,
       sets: setsWonA,
       tiebreakScore: 0, // Legacy format doesn't have tiebreak scores
       advantageCount: 0,
@@ -117,6 +126,7 @@ export function convertLegacyScoresToMatchState(
     },
     team2: {
       score: teamB.points || 0,
+      games: currentSetGames.team2Games || 0,
       sets: setsWonB,
       tiebreakScore: 0,
       advantageCount: 0,
@@ -161,6 +171,8 @@ export function createUpdateData(matchState, setsData) {
   const updateData = {
     "team1.score": matchState.team1.score,
     "team2.score": matchState.team2.score,
+    "team1.games": matchState.team1.games || 0,
+    "team2.games": matchState.team2.games || 0,
     "team1.sets": matchState.team1.sets,
     "team2.sets": matchState.team2.sets,
     "team1.tiebreakScore": matchState.team1.tiebreakScore,
@@ -200,7 +212,7 @@ export function mergeMatchStates(localState, serverState) {
   if (!localState) return serverState;
 
   // Server state takes precedence
-  return {
+  const merged = {
     ...localState,
     ...serverState,
     team1: {
@@ -210,6 +222,10 @@ export function mergeMatchStates(localState, serverState) {
         serverState.team1?.advantageCount ??
         localState.team1?.advantageCount ??
         0,
+      games:
+        serverState.team1?.games ??
+        localState.team1?.games ??
+        0,
     },
     team2: {
       ...localState.team2,
@@ -218,7 +234,12 @@ export function mergeMatchStates(localState, serverState) {
         serverState.team2?.advantageCount ??
         localState.team2?.advantageCount ??
         0,
+      games:
+        serverState.team2?.games ??
+        localState.team2?.games ??
+        0,
     },
     sets: serverState.sets || localState.sets || {},
   };
+  return merged;
 }

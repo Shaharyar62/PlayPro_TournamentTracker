@@ -100,6 +100,24 @@ export function useMatchState(tournamentId, matchId) {
         if (typeof state.team2?.advantageCount !== "number") {
           state.team2.advantageCount = 0;
         }
+        // Ensure games property is initialized from current set
+        const totalCompletedSets =
+          (state.team1?.sets || 0) + (state.team2?.sets || 0);
+        const activeSetIndex = Math.min(
+          totalCompletedSets,
+          (matchSettings?.numberOfSets || 3) - 1
+        );
+        const activeSetKey = activeSetIndex.toString();
+        const activeSet = state.sets[activeSetKey] || {
+          team1Games: 0,
+          team2Games: 0,
+        };
+        if (typeof state.team1?.games !== "number") {
+          state.team1.games = activeSet.team1Games || 0;
+        }
+        if (typeof state.team2?.games !== "number") {
+          state.team2.games = activeSet.team2Games || 0;
+        }
         setMatchState(state);
         setSetsData(state.sets);
       }
@@ -247,7 +265,48 @@ export function useMatchState(tournamentId, matchId) {
             const merged = mergeMatchStates(prevState, data);
             // Ensure sets property is synced
             merged.sets = data.sets || prevState.sets || {};
+            // Always sync games property from current set (not just when missing)
+            // This handles cases where backend sends stale games values
+            const totalCompletedSets =
+              (merged.team1?.sets || 0) + (merged.team2?.sets || 0);
+            const activeSetIndex = Math.min(
+              totalCompletedSets,
+              (matchSettings?.numberOfSets || 3) - 1
+            );
+            const activeSetKey = activeSetIndex.toString();
+            const activeSet = merged.sets[activeSetKey] || {
+              team1Games: 0,
+              team2Games: 0,
+            };
+            // Always sync from current set to ensure consistency
+            if (merged.team1) {
+              merged.team1.games = activeSet.team1Games || 0;
+            }
+            if (merged.team2) {
+              merged.team2.games = activeSet.team2Games || 0;
+            }
             return merged;
+          }
+          // For new state, always sync games property from current set
+          if (data) {
+            const totalCompletedSets =
+              (data.team1?.sets || 0) + (data.team2?.sets || 0);
+            const activeSetIndex = Math.min(
+              totalCompletedSets,
+              (matchSettings?.numberOfSets || 3) - 1
+            );
+            const activeSetKey = activeSetIndex.toString();
+            const activeSet = data.sets?.[activeSetKey] || {
+              team1Games: 0,
+              team2Games: 0,
+            };
+            // Always sync from current set to ensure consistency
+            if (data.team1) {
+              data.team1.games = activeSet.team1Games || 0;
+            }
+            if (data.team2) {
+              data.team2.games = activeSet.team2Games || 0;
+            }
           }
           return data;
         });
@@ -342,18 +401,22 @@ export function useMatchState(tournamentId, matchId) {
         if (won) {
           // Team won the tiebreak set
           if (isTeam1) {
-            newState.team1.sets += 1;
             // Increment games count to 7 for the winning team (6-6 -> 7-6)
             newSetsData[activeSetKey].team1Games += 1;
+            newState.team1.games = newSetsData[activeSetKey].team1Games;
+            newState.team1.sets += 1;
           } else {
-            newState.team2.sets += 1;
             // Increment games count to 7 for the winning team (6-6 -> 6-7)
             newSetsData[activeSetKey].team2Games += 1;
+            newState.team2.games = newSetsData[activeSetKey].team2Games;
+            newState.team2.sets += 1;
           }
 
-          // Update completed set with tiebreak data
+          // Finalize the completed set with tiebreak data
           newSetsData[activeSetKey] = {
             ...newSetsData[activeSetKey],
+            team1Games: newState.team1.games, // Final score
+            team2Games: newState.team2.games, // Final score
             isTiebreak: true,
             isSuperTiebreak: newState.isInSuperTiebreak,
             superTieBreakScore1: newState.isInSuperTiebreak
@@ -369,6 +432,10 @@ export function useMatchState(tournamentId, matchId) {
               ? newState.team2.tiebreakScore
               : 0,
           };
+
+          // Reset games for next set
+          newState.team1.games = 0;
+          newState.team2.games = 0;
 
           // Reset for next set
           newState.team1.score = 0;
@@ -490,8 +557,10 @@ export function useMatchState(tournamentId, matchId) {
           // Team won the game - update active set's games count
           if (isTeam1) {
             newSetsData[activeSetKey].team1Games += 1;
+            newState.team1.games = newSetsData[activeSetKey].team1Games;
           } else {
             newSetsData[activeSetKey].team2Games += 1;
+            newState.team2.games = newSetsData[activeSetKey].team2Games;
           }
 
           // Reset scores and advantage counts for next game
@@ -510,12 +579,23 @@ export function useMatchState(tournamentId, matchId) {
           );
 
           if (setWin) {
+            // Finalize the completed set
+            newSetsData[activeSetKey] = {
+              ...newSetsData[activeSetKey],
+              team1Games: newState.team1.games, // Final score
+              team2Games: newState.team2.games, // Final score
+            };
+
             // Team won the set
             if (isTeam1) {
               newState.team1.sets += 1;
             } else {
               newState.team2.sets += 1;
             }
+
+            // Reset games for next set
+            newState.team1.games = 0;
+            newState.team2.games = 0;
 
             // Reset advantage counts
             newState.team1.advantageCount = 0;
@@ -710,6 +790,24 @@ export function useMatchState(tournamentId, matchId) {
     }
     if (typeof previousState.team2.advantageCount !== "number") {
       previousState.team2.advantageCount = 0;
+    }
+    // Ensure games property is initialized from current set
+    const totalCompletedSets =
+      (previousState.team1?.sets || 0) + (previousState.team2?.sets || 0);
+    const activeSetIndex = Math.min(
+      totalCompletedSets,
+      (matchSettings?.numberOfSets || 3) - 1
+    );
+    const activeSetKey = activeSetIndex.toString();
+    const activeSet = previousSets[activeSetKey] || {
+      team1Games: 0,
+      team2Games: 0,
+    };
+    if (typeof previousState.team1?.games !== "number") {
+      previousState.team1.games = activeSet.team1Games || 0;
+    }
+    if (typeof previousState.team2?.games !== "number") {
+      previousState.team2.games = activeSet.team2Games || 0;
     }
 
     // Ensure status is properly restored - if previous state had completed status but
@@ -985,13 +1083,30 @@ export function useMatchState(tournamentId, matchId) {
         };
       }
 
+      // Calculate active set index to determine if we're editing the current set
+      const totalCompletedSets =
+        (matchState.team1.sets || 0) + (matchState.team2.sets || 0);
+      const activeSetIndex = Math.min(
+        totalCompletedSets,
+        (matchSettings.numberOfSets || 3) - 1
+      );
+      const isCurrentSet = setIndex === activeSetIndex;
+
       // Increment the appropriate team's games in the specified set
       if (isTeam1) {
         newSetsData[setKey].team1Games =
           (newSetsData[setKey].team1Games || 0) + 1;
+        // If this is the current set, also update team1.games
+        if (isCurrentSet) {
+          newState.team1.games = newSetsData[setKey].team1Games;
+        }
       } else {
         newSetsData[setKey].team2Games =
           (newSetsData[setKey].team2Games || 0) + 1;
+        // If this is the current set, also update team2.games
+        if (isCurrentSet) {
+          newState.team2.games = newSetsData[setKey].team2Games;
+        }
       }
 
       // Check if this increment completes a set
@@ -1004,11 +1119,24 @@ export function useMatchState(tournamentId, matchId) {
         : hasWonSet(team2Games, team1Games, matchSettings);
 
       if (setWin) {
+        // Finalize the completed set
+        newSetsData[setKey] = {
+          ...newSetsData[setKey],
+          team1Games: team1Games, // Final score
+          team2Games: team2Games, // Final score
+        };
+
         // Team won the set - update set wins
         if (isTeam1) {
           newState.team1.sets = (newState.team1.sets || 0) + 1;
         } else {
           newState.team2.sets = (newState.team2.sets || 0) + 1;
+        }
+
+        // If this was the current set, reset games for next set
+        if (isCurrentSet) {
+          newState.team1.games = 0;
+          newState.team2.games = 0;
         }
 
         // Check match win
