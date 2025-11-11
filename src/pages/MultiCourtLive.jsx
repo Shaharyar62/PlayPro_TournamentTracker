@@ -333,9 +333,22 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
   return (
     <div className="h-full w-full flex flex-col">
       <style jsx>{`
-        .game-score-style {
-          font-size: 70px;    line-height: 100px;
-        }
+        
+          .font-bold.text-sm.text-white {
+    font-size: 40px;
+}
+    .text-3xl.font-bold.text-gray-800.mb-1 {
+    font-size: 40px;
+}
+    .set-score-style {
+    border-left: solid 1px;
+    font-size: 110px !important;
+    line-height: 60px;
+}
+    .game-score-style {
+    font-size: 110px !important;
+    line-height: 100px;
+}
           .set-score-style
 
  
@@ -488,16 +501,16 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                       </div>
                     </div>
                     {isServingTeam(2) && (
-                      <div className="flex items-center">
-                        <span className={isMultiView ? "text-sm" : "text-2xl"}>
+                      <div className="flex items-center text-[#17626c] bg-[#0c4146] rounded-full text-white p-1">
+                        <span className={isMultiView ? "text-sm" : "text-xl"}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width={isMultiView ? "16" : "24"}
-                            height={isMultiView ? "16" : "24"}
+                            width={isMultiView ? "24" : "24"}
+                            height={isMultiView ? "24" : "24"}
                             viewBox="0 0 24 24"
                           >
                             <path
-                              fill="#17626c"
+                              fill="#ffffff"
                               d="M9.406 17.421q-.642 0-1.267-.242t-1.123-.74L2.983 12.4q-.498-.498-.74-1.11T2 10.017t.242-1.272t.74-1.11l2.691-2.69q.498-.499 1.116-.741t1.267-.242q.642 0 1.254.242q.611.242 1.11.74l4.038 4.033q.498.498.74 1.114q.243.615.243 1.275t-.243 1.272t-.74 1.11l-1.008 1.008l5.177 5.177q.146.146.156.347t-.156.366t-.357.166t-.356-.166l-5.158-5.196l-.989.989q-.498.498-1.109.74q-.61.242-1.252.242m-.02-.98q.453 0 .891-.176t.777-.515l2.696-2.715q.339-.333.515-.78q.175-.447.175-.894t-.175-.89t-.515-.78L9.712 5.658q-.333-.339-.766-.518q-.432-.178-.884-.178t-.885.179q-.433.178-.771.517l-2.69 2.69q-.339.339-.515.777t-.176.891t.176.896t.515.78l4.019 4.058q.332.339.765.515t.886.175m-3.868-5.379q.232 0 .387-.151q.155-.152.155-.384t-.152-.386t-.384-.155t-.386.151t-.155.384t.151.387t.384.155m1.523-1.518q.232 0 .387-.151q.155-.152.155-.384t-.152-.387t-.384-.155q-.231 0-.386.152t-.155.384t.152.387q.151.154.383.154m.156 3.216q.232 0 .387-.152t.155-.384t-.152-.396t-.384-.164t-.387.164q-.154.164-.154.396t.151.384t.384.152m1.342-4.74q.232 0 .387-.151t.155-.384t-.152-.387t-.384-.155t-.386.152t-.155.384t.152.386t.383.155m.181 3.221q.232 0 .387-.151q.154-.152.154-.384t-.151-.387t-.384-.154t-.387.151t-.155.384t.152.387t.384.154m.15 3.197q.232 0 .396-.152q.165-.152.165-.384t-.165-.387t-.396-.154t-.384.151t-.152.384t.152.387q.152.155.384.155m1.367-4.72q.232 0 .387-.164t.155-.396t-.152-.384t-.384-.152t-.386.152t-.155.384t.151.396t.384.164m.156 3.197q.232 0 .387-.152t.154-.384t-.151-.387t-.384-.154t-.387.151t-.154.384t.151.387t.384.155m1.504-1.524q.232 0 .396-.151q.165-.152.165-.384t-.165-.387t-.396-.155t-.384.152t-.151.384t.151.387t.384.154M19.13 8.77q-1.197 0-2.029-.846q-.833-.846-.833-2.042t.833-2.039T19.131 3t2.043.846t.845 2.042t-.845 2.039t-2.043.842m.005-1q.778 0 1.33-.548q.553-.549.553-1.332t-.548-1.336T19.139 4t-1.326.548q-.544.549-.544 1.332q0 .784.545 1.336q.544.553 1.322.553m.018-1.884"
                             />
                           </svg>
@@ -642,9 +655,9 @@ const MultiCourtLive = () => {
   const getGridLayout = () => {
     if (courtIds.length === 1) return "grid-cols-1";
     if (courtIds.length === 2) return "grid-cols-2";
-    if (courtIds.length === 3) return "grid-cols-3";
+    if (courtIds.length === 3) return "grid-cols-2";
     if (courtIds.length === 4) return "grid-cols-2 grid-rows-2";
-    if (courtIds.length <= 6) return "grid-cols-3 grid-rows-2";
+    if (courtIds.length <= 6) return "grid-cols-2 grid-rows-2";
     return "grid-cols-3"; // Default for more than 6
   };
 
