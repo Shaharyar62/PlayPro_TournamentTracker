@@ -160,18 +160,26 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
     onSaveRef.current?.(legacyScores);
   }, [matchState, setsData, match?.id]);
 
+  // Reset hasShownSubmitModal when match status changes from completed to active
+  // This handles cases where user edits scores after clicking "Not Now"
+  useEffect(() => {
+    if (matchState?.status === "active" || !matchState?.winnerTeam) {
+      setHasShownSubmitModal(false);
+    }
+  }, [matchState?.status, matchState?.winnerTeam]);
+
   // Detect when match completes and show submission confirmation modal
   useEffect(() => {
     if (
       matchState &&
-      isMatchComplete() &&
+      matchState?.status === "completed" &&
       !hasShownSubmitModal &&
       matchState?.winnerTeam
     ) {
       setShowSubmitResultsModal(true);
       setHasShownSubmitModal(true);
     }
-  }, [matchState, isMatchComplete, hasShownSubmitModal]);
+  }, [matchState?.status, matchState?.winnerTeam, hasShownSubmitModal]);
 
   const handleSubmitResults = async () => {
     if (!isMatchComplete() || !matchState) return;
@@ -240,6 +248,9 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
       )
     ) {
       await resetMatch(match, matchSettings);
+      // Reset the modal state so completion can be detected again after reset
+      setHasShownSubmitModal(false);
+      setShowSubmitResultsModal(false);
     }
   };
 

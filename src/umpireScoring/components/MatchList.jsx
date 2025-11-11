@@ -314,7 +314,7 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
                   </motion.button>
                 )}
 
-                {match.status === "completed" && (
+                {/* {match.status === "completed" && (
                   <motion.button
                     onClick={() => onMatchSelect(match)}
                     whileHover={{ scale: 1.02 }}
@@ -324,7 +324,7 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
                     <CheckCircle className="w-5 h-5" />
                     <span>View Results</span>
                   </motion.button>
-                )}
+                )} */}
               </div>
             </div>
           </motion.div>

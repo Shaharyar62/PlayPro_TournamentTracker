@@ -1052,6 +1052,67 @@ export function useMatchState(tournamentId, matchId) {
     }
   }, [matchState, matchSettings, tournamentId, matchId, socketService]);
 
+  // Recalculate set wins based on current set scores
+  const recalculateSetWins = useCallback(
+    (setsData, matchSettings) => {
+      let team1Sets = 0;
+      let team2Sets = 0;
+
+      // Iterate through all sets - ensure we check all sets up to numberOfSets
+      const numberOfSets = matchSettings?.numberOfSets || 3;
+      for (let i = 0; i < numberOfSets; i++) {
+        const setKey = i.toString();
+        const set = setsData?.[setKey];
+        
+        // Skip if set doesn't exist
+        if (!set) continue;
+
+        const team1Games = set.team1Games || 0;
+        const team2Games = set.team2Games || 0;
+
+        // Check if set is won by games score (6-0, 6-1, 6-2, 6-3, 6-4, 7-5)
+        const team1Won = hasWonSet(team1Games, team2Games, matchSettings);
+        const team2Won = hasWonSet(team2Games, team1Games, matchSettings);
+
+        // OR check if set is completed via tiebreak (6-6 with tiebreak = completed set)
+        // If isTiebreak is true, the set is complete and the winner is determined by the final score
+        // In tiebreak sets, the final score is 7-6 (one team has 7 games)
+        const isTiebreakSet = set.isTiebreak || set.isSuperTiebreak;
+        if (isTiebreakSet) {
+          // For tiebreak sets, check games first (should be 7-6 or 6-7)
+          if (team1Games > team2Games) {
+            team1Sets++;
+          } else if (team2Games > team1Games) {
+            team2Sets++;
+          } else if (team1Games === 6 && team2Games === 6) {
+            // If games are still 6-6, check tiebreak scores to determine winner
+            // The winner of the tiebreak gets the set, so final score is 7-6
+            const tiebreakScore1 =
+              set.isSuperTiebreak
+                ? set.superTieBreakScore1 || 0
+                : set.tiebreakScore1 || 0;
+            const tiebreakScore2 =
+              set.isSuperTiebreak
+                ? set.superTieBreakScore2 || 0
+                : set.tiebreakScore2 || 0;
+            if (tiebreakScore1 > tiebreakScore2) {
+              team1Sets++;
+            } else if (tiebreakScore2 > tiebreakScore1) {
+              team2Sets++;
+            }
+          }
+        } else if (team1Won) {
+          team1Sets++;
+        } else if (team2Won) {
+          team2Sets++;
+        }
+      }
+
+      return { team1Sets, team2Sets };
+    },
+    []
+  );
+
   // Increment set score directly
   const incrementSetScore = useCallback(
     async (setIndex, team) => {
@@ -1109,60 +1170,52 @@ export function useMatchState(tournamentId, matchId) {
         }
       }
 
-      // Check if this increment completes a set
+      // Recalculate all set wins from scratch based on current set scores
+      const { team1Sets, team2Sets } = recalculateSetWins(
+        newSetsData,
+        matchSettings
+      );
+
+      // Update set wins in state
+      newState.team1.sets = team1Sets;
+      newState.team2.sets = team2Sets;
+
+      // Check if this increment completed a set (for resetting games if current set)
       const team1Games = newSetsData[setKey].team1Games || 0;
       const team2Games = newSetsData[setKey].team2Games || 0;
-
-      // Check if the incrementing team won the set
       const setWin = isTeam1
         ? hasWonSet(team1Games, team2Games, matchSettings)
         : hasWonSet(team2Games, team1Games, matchSettings);
+      const isTiebreakSet =
+        newSetsData[setKey].isTiebreak || newSetsData[setKey].isSuperTiebreak;
+      const setCompleted = setWin || isTiebreakSet;
 
-      if (setWin) {
-        // Finalize the completed set
-        newSetsData[setKey] = {
-          ...newSetsData[setKey],
-          team1Games: team1Games, // Final score
-          team2Games: team2Games, // Final score
-        };
+      if (setCompleted && isCurrentSet) {
+        // If this was the current set and it's now complete, reset games for next set
+        newState.team1.games = 0;
+        newState.team2.games = 0;
+      }
 
-        // Team won the set - update set wins
-        if (isTeam1) {
-          newState.team1.sets = (newState.team1.sets || 0) + 1;
-        } else {
-          newState.team2.sets = (newState.team2.sets || 0) + 1;
-        }
+      // Check match win based on recalculated set wins
+      // Important: Pass false for inSuperTieBreak since we're checking completed sets, not active super tiebreak
+      const matchWin = hasWonMatch(
+        team1Sets,
+        team2Sets,
+        matchSettings,
+        false
+      );
 
-        // If this was the current set, reset games for next set
-        if (isCurrentSet) {
-          newState.team1.games = 0;
-          newState.team2.games = 0;
-        }
-
-        // Check match win
-        const matchWin = hasWonMatch(
-          newState.team1.sets,
-          newState.team2.sets,
-          matchSettings,
-          false
-        );
-
-        if (matchWin.won) {
-          newState.status = "completed";
-          newState.winnerTeam = matchWin.winner;
-        } else if (
-          shouldStartSuperTiebreak(
-            newState.team1.sets,
-            newState.team2.sets,
-            matchSettings
-          )
-        ) {
-          // Start super tiebreak
-          newState.isInTiebreak = true;
-          newState.isInSuperTiebreak = true;
-          newState.team1.tiebreakScore = 0;
-          newState.team2.tiebreakScore = 0;
-        }
+      if (matchWin.won) {
+        newState.status = "completed";
+        newState.winnerTeam = matchWin.winner;
+      } else if (
+        shouldStartSuperTiebreak(team1Sets, team2Sets, matchSettings)
+      ) {
+        // Start super tiebreak
+        newState.isInTiebreak = true;
+        newState.isInSuperTiebreak = true;
+        newState.team1.tiebreakScore = 0;
+        newState.team2.tiebreakScore = 0;
       }
 
       // Sync sets property with setsData
@@ -1199,7 +1252,15 @@ export function useMatchState(tournamentId, matchId) {
         throw error; // Re-throw to allow caller to handle if needed
       }
     },
-    [matchState, matchSettings, setsData, tournamentId, matchId, socketService]
+    [
+      matchState,
+      matchSettings,
+      setsData,
+      tournamentId,
+      matchId,
+      socketService,
+      recalculateSetWins,
+    ]
   );
 
   // Update match settings
