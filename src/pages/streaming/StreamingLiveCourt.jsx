@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ImageConstants } from "../../assets/images/ImageConstants";
 import io from "socket.io-client";
@@ -236,22 +236,177 @@ const StreamingLiveCourt = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // Set transparent background for OBS streaming
+  useEffect(() => {
+    // Set body and html background to transparent
+    document.body.style.background = "transparent";
+    document.body.style.backgroundColor = "transparent";
+    document.documentElement.style.background = "transparent";
+    document.documentElement.style.backgroundColor = "transparent";
+
+    // Find and set root element background
+    const root = document.getElementById("root");
+    if (root) {
+      root.style.background = "transparent";
+      root.style.backgroundColor = "transparent";
+    }
+
+    return () => {
+      // Optional: cleanup on unmount
+      // You can remove these lines if you want the background to stay transparent
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    const BODY_CLASS = "route-clean-remove-bg";
+    const STYLE_ID = "route-clean-remove-bg-style";
+
+    // optional whitelist: selectors that SHOULD KEEP their backgrounds
+    const whitelistSelectors = [
+      // example: ".keep-bg", "header .logo", "img.logo"
+      // add selectors here if you want to preserve backgrounds for some elements
+    ];
+
+    // Create CSS that forces transparent backgrounds for everything under .route-clean-remove-bg
+    // but then re-enables backgrounds for anything matching whitelistSelectors.
+    let whitelistCSS = "";
+    // if (whitelistSelectors.length) {
+    //   whitelistCSS = whitelistSelectors
+    //     .map(
+    //       (sel) =>
+    //         `.route-clean-remove-bg ${sel} { background: initial !important; background-color: initial !important; background-image: initial !important; }
+    //          .route-clean-remove-bg ${sel}::before,
+    //          .route-clean-remove-bg ${sel}::after { background: initial !important; background-color: initial !important; background-image: initial !important; }`
+    //     )
+    //     .join("\n");
+    // }
+
+    const css = `
+      /* Scope to the body class so other pages are unaffected */
+      .${BODY_CLASS}, .${BODY_CLASS}  {
+        background: transparent !important;
+        background-color: transparent !important;
+        background-image: none !important;
+      }
+
+      /* Make sure pseudo-elements are covered */
+      .${BODY_CLASS} ::before,
+      .${BODY_CLASS} ::after {
+        background: transparent !important;
+        background-color: transparent !important;
+        background-image: none !important;
+        content: inherit !important; /* keep content but transparent background */
+      }
+
+      /* Also cover html/body themselves */
+      html.${BODY_CLASS}, body {
+        background: transparent !important;
+        background-color: transparent !important;
+        background-image: none !important;
+      }
+
+
+      ${whitelistCSS}
+    `;
+
+    // Insert stylesheet
+    const styleEl = document.createElement("style");
+    styleEl.id = STYLE_ID;
+    styleEl.appendChild(document.createTextNode(css));
+    document.head.appendChild(styleEl);
+
+    // Add class to body to scope overrides to this route/page
+    document.body.classList.add(BODY_CLASS);
+
+    // MutationObserver to strip inline backgrounds (including those set with !important)
+    const stripBackgroundFromElement = (el) => {
+      if (!el || !el.style) return;
+      try {
+        // remove the properties (works even if they were set !important)
+        el.style.removeProperty("background");
+        el.style.removeProperty("background-image");
+        el.style.removeProperty("background-color");
+        el.style.removeProperty("background-repeat");
+        el.style.removeProperty("background-position");
+        el.style.removeProperty("background-size");
+        // also clear shorthand if present
+        // (this helps when inline cssText contains "background: red !important")
+      } catch (e) {
+        // ignore if element.style is readonly for some node types
+      }
+    };
+
+    const observer = new MutationObserver((mutationsList) => {
+      for (const m of mutationsList) {
+        if (
+          m.type === "attributes" &&
+          m.attributeName === "style" &&
+          m.target
+        ) {
+          stripBackgroundFromElement(m.target);
+        }
+        if (m.type === "childList") {
+          // For added nodes, remove inline background if any and also observe children
+          m.addedNodes.forEach((node) => {
+            if (node.nodeType !== Node.ELEMENT_NODE) return;
+            // remove inline background from the added element and its subtree
+            node.querySelectorAll
+              ? node.querySelectorAll("*").forEach(stripBackgroundFromElement)
+              : null;
+            stripBackgroundFromElement(node);
+          });
+        }
+      }
+    });
+
+    // start observing the whole document body for inline style changes and DOM additions
+    observer.observe(document.documentElement || document.body, {
+      attributes: true,
+      attributeFilter: ["style"],
+      subtree: true,
+      childList: true,
+    });
+
+    // Also proactively remove inline background styles that already exist
+    try {
+      document
+        .querySelectorAll("*")
+        .forEach((el) => stripBackgroundFromElement(el));
+    } catch (e) {
+      // ignore any rare Node types that throw
+    }
+
+    // Cleanup on unmount (leaving the page)
+    return () => {
+      observer.disconnect();
+      document.body.classList.remove(BODY_CLASS);
+      const existing = document.getElementById(STYLE_ID);
+      if (existing) existing.remove();
+    };
+  }, []);
+
   // Loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-4xl font-bold text-[#17626c]">
-          Loading match data...
-        </div>
-      </div>
+      <p
+        style={{
+          all: "unset",
+          display: "revert",
+          boxSizing: "border-box",
+        }}
+      >
+        Loading matceh data...
+      </p>
     );
   }
 
   // Error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-4xl font-bold text-red-600">Error: {error}</div>
+      <div className="flex items-center justify-center min-h-screen bg-transparent">
+        <div className="text-4xl font-bold text-red-600 bg-white px-8 py-4 rounded-lg shadow-lg">
+          Error: {error}
+        </div>
       </div>
     );
   }
@@ -259,8 +414,8 @@ const StreamingLiveCourt = () => {
   // No match data
   if (!liveMatchData && !matchData) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-4xl font-bold text-gray-600">
+      <div className="flex items-center justify-center min-h-screen bg-transparent">
+        <div className="text-4xl font-bold text-gray-600 bg-white px-8 py-4 rounded-lg shadow-lg">
           No match data available
         </div>
       </div>
@@ -354,206 +509,214 @@ const StreamingLiveCourt = () => {
 
   return (
     <>
-      <div className="mt-[50px]">
+      <style jsx>{`
+        .obs-streaming-container .set-score-style {
+          color: black !important;
+        }
+        .powered-by-text {
+          padding-top: 0px;
+          padding-bottom: 18px;
+          font-weight: 700;
+        }
+      `}</style>
+      <div className="obs-streaming-container">
         {/* Main content */}
-        <div className="">
-          <div className="">
-            {/* Main scoreboard */}
-            <div className=" live-live-box bg-white rounded-lg ml-[100px] mr-[100px] mt-0 mb-[60px] overflow-hidden">
-              {/* Header row - Dynamic based on number of sets */}
+        <div className="live-live-box bg-white overflow-hidden">
+          {/* Header row - Dynamic based on number of sets */}
 
-              {/* Score content - Dynamic layout */}
-              <div className="p-0">
-                <div
-                  className="grid gap-1 items-center"
-                  style={{
-                    gridTemplateColumns: `2fr ${Array(getNumberOfSets())
-                      .fill("1fr")
-                      .join(" ")} 1fr`,
-                  }}
-                >
-                  {/* Team Names and Players */}
-                  <div className="py-8 w-[500px]">
-                    {/* Team 1 */}
-                    <div className="mb-2">
-                      <div className="flex items-center justify-between  justify-center px-1">
-                        <div className="flex items-center space-x-1">
-                          <div>
-                            <div className="text-5xl  font-bold text-gray-800 mb-1">
-                              {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamA) : getPlayerName(1, 0) + " & " + getPlayerName(1, 1)} */}
-                              {getTeamName(matchData.teamA)}
-                              {/* {getPlayerName(1, 0)} & {getPlayerName(1, 1)} */}
-                            </div>
-                            {/* <div className="text-lg text-gray-600">
+          {/* Score content - Dynamic layout */}
+          <div className="p-0">
+            <div
+              className="grid gap-1 items-center"
+              style={{
+                gridTemplateColumns: `2fr ${Array(getNumberOfSets())
+                  .fill("1fr")
+                  .join(" ")} 1fr`,
+              }}
+            >
+              {/* Team Names and Players */}
+              <div className="py-8 w-[500px]">
+                {/* Team 1 */}
+                <div className="mb-2">
+                  <div className="flex items-center justify-between  justify-center px-1">
+                    <div className="flex items-center space-x-1">
+                      <div>
+                        <div className="text-5xl  font-bold text-gray-800 mb-1">
+                          {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamA) : getPlayerName(1, 0) + " & " + getPlayerName(1, 1)} */}
+                          {getTeamName(matchData.teamA)}
+                          {/* {getPlayerName(1, 0)} & {getPlayerName(1, 1)} */}
+                        </div>
+                        {/* <div className="text-lg text-gray-600">
                               {getTeamName(matchData.teamA)}
                             </div> */}
-                          </div>
-                          {isServingTeam(1) && (
-                            <div className="flex items-center text-[#17626c]">
-                              <span className="text-xl">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="24"
-                                  height="24"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    fill="#00619a"
-                                    d="M9.406 17.421q-.642 0-1.267-.242t-1.123-.74L2.983 12.4q-.498-.498-.74-1.11T2 10.017t.242-1.272t.74-1.11l2.691-2.69q.498-.499 1.116-.741t1.267-.242q.642 0 1.254.242q.611.242 1.11.74l4.038 4.033q.498.498.74 1.114q.243.615.243 1.275t-.243 1.272t-.74 1.11l-1.008 1.008l5.177 5.177q.146.146.156.347t-.156.366t-.357.166t-.356-.166l-5.158-5.196l-.989.989q-.498.498-1.109.74q-.61.242-1.252.242m-.02-.98q.453 0 .891-.176t.777-.515l2.696-2.715q.339-.333.515-.78q.175-.447.175-.894t-.175-.89t-.515-.78L9.712 5.658q-.333-.339-.766-.518q-.432-.178-.884-.178t-.885.179q-.433.178-.771.517l-2.69 2.69q-.339.339-.515.777t-.176.891t.176.896t.515.78l4.019 4.058q.332.339.765.515t.886.175m-3.868-5.379q.232 0 .387-.151q.155-.152.155-.384t-.152-.386t-.384-.155t-.386.151t-.155.384t.151.387t.384.155m1.523-1.518q.232 0 .387-.151q.155-.152.155-.384t-.152-.387t-.384-.155q-.231 0-.386.152t-.155.384t.152.387q.151.154.383.154m.156 3.216q.232 0 .387-.152t.155-.384t-.152-.396t-.384-.164t-.387.164q-.154.164-.154.396t.151.384t.384.152m1.342-4.74q.232 0 .387-.151t.155-.384t-.152-.387t-.384-.155t-.386.152t-.155.384t.152.386t.383.155m.181 3.221q.232 0 .387-.151q.154-.152.154-.384t-.151-.387t-.384-.154t-.387.151t-.155.384t.152.387t.384.154m.15 3.197q.232 0 .396-.152q.165-.152.165-.384t-.165-.387t-.396-.154t-.384.151t-.152.384t.152.387q.152.155.384.155m1.367-4.72q.232 0 .387-.164t.155-.396t-.152-.384t-.384-.152t-.386.152t-.155.384t.151.396t.384.164m.156 3.197q.232 0 .387-.152t.154-.384t-.151-.387t-.384-.154t-.387.151t-.154.384t.151.387t.384.155m1.504-1.524q.232 0 .396-.151q.165-.152.165-.384t-.165-.387t-.396-.155t-.384.152t-.151.384t.151.387t.384.154M19.13 8.77q-1.197 0-2.029-.846q-.833-.846-.833-2.042t.833-2.039T19.131 3t2.043.846t.845 2.042t-.845 2.039t-2.043.842m.005-1q.778 0 1.33-.548q.553-.549.553-1.332t-.548-1.336T19.139 4t-1.326.548q-.544.549-.544 1.332q0 .784.545 1.336q.544.553 1.322.553m.018-1.884"
-                                  />
-                                </svg>
-                              </span>
-                              {/* <span className="ml-1 text-sm font-medium">
+                      </div>
+                      {isServingTeam(1) && (
+                        <div className="flex items-center text-[#17626c]">
+                          <span className="text-xl">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                fill="#00619a"
+                                d="M9.406 17.421q-.642 0-1.267-.242t-1.123-.74L2.983 12.4q-.498-.498-.74-1.11T2 10.017t.242-1.272t.74-1.11l2.691-2.69q.498-.499 1.116-.741t1.267-.242q.642 0 1.254.242q.611.242 1.11.74l4.038 4.033q.498.498.74 1.114q.243.615.243 1.275t-.243 1.272t-.74 1.11l-1.008 1.008l5.177 5.177q.146.146.156.347t-.156.366t-.357.166t-.356-.166l-5.158-5.196l-.989.989q-.498.498-1.109.74q-.61.242-1.252.242m-.02-.98q.453 0 .891-.176t.777-.515l2.696-2.715q.339-.333.515-.78q.175-.447.175-.894t-.175-.89t-.515-.78L9.712 5.658q-.333-.339-.766-.518q-.432-.178-.884-.178t-.885.179q-.433.178-.771.517l-2.69 2.69q-.339.339-.515.777t-.176.891t.176.896t.515.78l4.019 4.058q.332.339.765.515t.886.175m-3.868-5.379q.232 0 .387-.151q.155-.152.155-.384t-.152-.386t-.384-.155t-.386.151t-.155.384t.151.387t.384.155m1.523-1.518q.232 0 .387-.151q.155-.152.155-.384t-.152-.387t-.384-.155q-.231 0-.386.152t-.155.384t.152.387q.151.154.383.154m.156 3.216q.232 0 .387-.152t.155-.384t-.152-.396t-.384-.164t-.387.164q-.154.164-.154.396t.151.384t.384.152m1.342-4.74q.232 0 .387-.151t.155-.384t-.152-.387t-.384-.155t-.386.152t-.155.384t.152.386t.383.155m.181 3.221q.232 0 .387-.151q.154-.152.154-.384t-.151-.387t-.384-.154t-.387.151t-.155.384t.152.387t.384.154m.15 3.197q.232 0 .396-.152q.165-.152.165-.384t-.165-.387t-.396-.154t-.384.151t-.152.384t.152.387q.152.155.384.155m1.367-4.72q.232 0 .387-.164t.155-.396t-.152-.384t-.384-.152t-.386.152t-.155.384t.151.396t.384.164m.156 3.197q.232 0 .387-.152t.154-.384t-.151-.387t-.384-.154t-.387.151t-.154.384t.151.387t.384.155m1.504-1.524q.232 0 .396-.151q.165-.152.165-.384t-.165-.387t-.396-.155t-.384.152t-.151.384t.151.387t.384.154M19.13 8.77q-1.197 0-2.029-.846q-.833-.846-.833-2.042t.833-2.039T19.131 3t2.043.846t.845 2.042t-.845 2.039t-2.043.842m.005-1q.778 0 1.33-.548q.553-.549.553-1.332t-.548-1.336T19.139 4t-1.326.548q-.544.549-.544 1.332q0 .784.545 1.336q.544.553 1.322.553m.018-1.884"
+                              />
+                            </svg>
+                          </span>
+                          {/* <span className="ml-1 text-sm font-medium">
                                 {getServingPlayerName()}
                               </span> */}
-                            </div>
-                          )}
                         </div>
-                        {/* Warning cards for Team 1 */}
-                        <div className="flex space-x-1">
-                          {getTeamWarnings(1).map((warning, index) => (
-                            <span
-                              key={index}
-                              className={`px-2 py-1 text-xs font-bold rounded ${
-                                warning === "W1"
-                                  ? "bg-yellow-400 text-black"
-                                  : "bg-red-500 text-white"
-                              }`}
-                            >
-                              {warning}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+                      )}
                     </div>
-
-                    {/* VS Divider */}
-                    <div className="text-center text-2xl font-bold  mb-1">
-                      VS
-                    </div>
-
-                    {/* Team 2 */}
-                    <div>
-                      <div className="flex items-center justify-between justify-center px-4">
-                        <div className="flex items-center space-x-4">
-                          <div>
-                            <div className="text-5xl font-bold text-gray-800 mb-1">
-                              {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamB) : getPlayerName(2, 0) + " & " + getPlayerName(2, 1)} */}
-                              {getTeamName(matchData.teamB)}
-                              {/* {getTeamName(matchData.teamB)} */}
-                            </div>
-                            {/* <div className="text-lg text-gray-600">
-                              {getTeamName(matchData.teamB)}
-                            </div> */}
-                          </div>
-                          {isServingTeam(2) && (
-                            <div className="flex items-center ">
-                              <span className="text-2xl">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="24"
-                                  height="24"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    fill="#00619a"
-                                    d="M9.406 17.421q-.642 0-1.267-.242t-1.123-.74L2.983 12.4q-.498-.498-.74-1.11T2 10.017t.242-1.272t.74-1.11l2.691-2.69q.498-.499 1.116-.741t1.267-.242q.642 0 1.254.242q.611.242 1.11.74l4.038 4.033q.498.498.74 1.114q.243.615.243 1.275t-.243 1.272t-.74 1.11l-1.008 1.008l5.177 5.177q.146.146.156.347t-.156.366t-.357.166t-.356-.166l-5.158-5.196l-.989.989q-.498.498-1.109.74q-.61.242-1.252.242m-.02-.98q.453 0 .891-.176t.777-.515l2.696-2.715q.339-.333.515-.78q.175-.447.175-.894t-.175-.89t-.515-.78L9.712 5.658q-.333-.339-.766-.518q-.432-.178-.884-.178t-.885.179q-.433.178-.771.517l-2.69 2.69q-.339.339-.515.777t-.176.891t.176.896t.515.78l4.019 4.058q.332.339.765.515t.886.175m-3.868-5.379q.232 0 .387-.151q.155-.152.155-.384t-.152-.386t-.384-.155t-.386.151t-.155.384t.151.387t.384.155m1.523-1.518q.232 0 .387-.151q.155-.152.155-.384t-.152-.387t-.384-.155q-.231 0-.386.152t-.155.384t.152.387q.151.154.383.154m.156 3.216q.232 0 .387-.152t.155-.384t-.152-.396t-.384-.164t-.387.164q-.154.164-.154.396t.151.384t.384.152m1.342-4.74q.232 0 .387-.151t.155-.384t-.152-.387t-.384-.155t-.386.152t-.155.384t.152.386t.383.155m.181 3.221q.232 0 .387-.151q.154-.152.154-.384t-.151-.387t-.384-.154t-.387.151t-.155.384t.152.387t.384.154m.15 3.197q.232 0 .396-.152q.165-.152.165-.384t-.165-.387t-.396-.154t-.384.151t-.152.384t.152.387q.152.155.384.155m1.367-4.72q.232 0 .387-.164t.155-.396t-.152-.384t-.384-.152t-.386.152t-.155.384t.151.396t.384.164m.156 3.197q.232 0 .387-.152t.154-.384t-.151-.387t-.384-.154t-.387.151t-.154.384t.151.387t.384.155m1.504-1.524q.232 0 .396-.151q.165-.152.165-.384t-.165-.387t-.396-.155t-.384.152t-.151.384t.151.387t.384.154M19.13 8.77q-1.197 0-2.029-.846q-.833-.846-.833-2.042t.833-2.039T19.131 3t2.043.846t.845 2.042t-.845 2.039t-2.043.842m.005-1q.778 0 1.33-.548q.553-.549.553-1.332t-.548-1.336T19.139 4t-1.326.548q-.544.549-.544 1.332q0 .784.545 1.336q.544.553 1.322.553m.018-1.884"
-                                  />
-                                </svg>
-                              </span>
-                              {/* <span className="ml-1 text-sm font-medium">
-                                {getServingPlayerName()}
-                              </span> */}
-                            </div>
-                          )}
-                        </div>
-                        {/* Warning cards for Team 2 */}
-                        <div className="flex space-x-1">
-                          {getTeamWarnings(2).map((warning, index) => (
-                            <span
-                              key={index}
-                              className={`px-2 py-1 text-xs font-bold rounded ${
-                                warning === "W1"
-                                  ? "bg-yellow-400 text-black"
-                                  : "bg-red-500 text-white"
-                              }`}
-                            >
-                              {warning}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Dynamic Set Scores */}
-                  {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
-                    <div key={setIndex} className="text-center">
-                      <div className="space-y-1">
-                        <div className="text-8xl font-bold set-score-style">
-                          {getSetScore(1, setIndex)}
-                        </div>
-                        <div className="text-8xl font-bold set-score-style">
-                          {getSetScore(2, setIndex)}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-
-                  {/* Current Game/Points Score */}
-                  <div className="text-center bg-[#015d9c]">
-                    <div className="space-y-1 pt-[20px] pb-[25px]">
-                      <div className="text-8xl font-bold text-white game-score-style">
-                        {getCurrentGameScore(1)}
-                      </div>
-                      <div className="text-8xl font-bold text-white game-score-style">
-                        {getCurrentGameScore(2)}
-                      </div>
+                    {/* Warning cards for Team 1 */}
+                    <div className="flex space-x-1">
+                      {getTeamWarnings(1).map((warning, index) => (
+                        <span
+                          key={index}
+                          className={`px-2 py-1 text-xs font-bold rounded ${
+                            warning === "W1"
+                              ? "bg-yellow-400 text-black"
+                              : "bg-red-500 text-white"
+                          }`}
+                        >
+                          {warning}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </div>
-                <p className="text-center text-6xl text-bold mt-[-3px] pt-[10px] pb-[10px] text-white bg-[#015d9c]">
-                  Live Scoring by PlayPro
-                </p>
+
+                {/* VS Divider */}
+                <div className="text-center text-2xl font-bold  mb-1">VS</div>
+
+                {/* Team 2 */}
+                <div>
+                  <div className="flex items-center justify-between justify-center px-4">
+                    <div className="flex items-center space-x-4">
+                      <div>
+                        <div className="text-5xl font-bold text-gray-800 mb-1">
+                          {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamB) : getPlayerName(2, 0) + " & " + getPlayerName(2, 1)} */}
+                          {getTeamName(matchData.teamB)}
+                          {/* {getTeamName(matchData.teamB)} */}
+                        </div>
+                        {/* <div className="text-lg text-gray-600">
+                              {getTeamName(matchData.teamB)}
+                            </div> */}
+                      </div>
+                      {isServingTeam(2) && (
+                        <div className="flex items-center ">
+                          <span className="text-2xl">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                fill="#00619a"
+                                d="M9.406 17.421q-.642 0-1.267-.242t-1.123-.74L2.983 12.4q-.498-.498-.74-1.11T2 10.017t.242-1.272t.74-1.11l2.691-2.69q.498-.499 1.116-.741t1.267-.242q.642 0 1.254.242q.611.242 1.11.74l4.038 4.033q.498.498.74 1.114q.243.615.243 1.275t-.243 1.272t-.74 1.11l-1.008 1.008l5.177 5.177q.146.146.156.347t-.156.366t-.357.166t-.356-.166l-5.158-5.196l-.989.989q-.498.498-1.109.74q-.61.242-1.252.242m-.02-.98q.453 0 .891-.176t.777-.515l2.696-2.715q.339-.333.515-.78q.175-.447.175-.894t-.175-.89t-.515-.78L9.712 5.658q-.333-.339-.766-.518q-.432-.178-.884-.178t-.885.179q-.433.178-.771.517l-2.69 2.69q-.339.339-.515.777t-.176.891t.176.896t.515.78l4.019 4.058q.332.339.765.515t.886.175m-3.868-5.379q.232 0 .387-.151q.155-.152.155-.384t-.152-.386t-.384-.155t-.386.151t-.155.384t.151.387t.384.155m1.523-1.518q.232 0 .387-.151q.155-.152.155-.384t-.152-.387t-.384-.155q-.231 0-.386.152t-.155.384t.152.387q.151.154.383.154m.156 3.216q.232 0 .387-.152t.155-.384t-.152-.396t-.384-.164t-.387.164q-.154.164-.154.396t.151.384t.384.152m1.342-4.74q.232 0 .387-.151t.155-.384t-.152-.387t-.384-.155t-.386.152t-.155.384t.152.386t.383.155m.181 3.221q.232 0 .387-.151q.154-.152.154-.384t-.151-.387t-.384-.154t-.387.151t-.155.384t.152.387t.384.154m.15 3.197q.232 0 .396-.152q.165-.152.165-.384t-.165-.387t-.396-.154t-.384.151t-.152.384t.152.387q.152.155.384.155m1.367-4.72q.232 0 .387-.164t.155-.396t-.152-.384t-.384-.152t-.386.152t-.155.384t.151.396t.384.164m.156 3.197q.232 0 .387-.152t.154-.384t-.151-.387t-.384-.154t-.387.151t-.154.384t.151.387t.384.155m1.504-1.524q.232 0 .396-.151q.165-.152.165-.384t-.165-.387t-.396-.155t-.384.152t-.151.384t.151.387t.384.154M19.13 8.77q-1.197 0-2.029-.846q-.833-.846-.833-2.042t.833-2.039T19.131 3t2.043.846t.845 2.042t-.845 2.039t-2.043.842m.005-1q.778 0 1.33-.548q.553-.549.553-1.332t-.548-1.336T19.139 4t-1.326.548q-.544.549-.544 1.332q0 .784.545 1.336q.544.553 1.322.553m.018-1.884"
+                              />
+                            </svg>
+                          </span>
+                          {/* <span className="ml-1 text-sm font-medium">
+                                {getServingPlayerName()}
+                              </span> */}
+                        </div>
+                      )}
+                    </div>
+                    {/* Warning cards for Team 2 */}
+                    <div className="flex space-x-1">
+                      {getTeamWarnings(2).map((warning, index) => (
+                        <span
+                          key={index}
+                          className={`px-2 py-1 text-xs font-bold rounded ${
+                            warning === "W1"
+                              ? "bg-yellow-400 text-black"
+                              : "bg-red-500 text-white"
+                          }`}
+                        >
+                          {warning}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Dynamic Set Scores */}
+              {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
+                <div key={setIndex} className="text-center">
+                  <div className="space-y-1">
+                    <div className="text-8xl font-bold set-score-style">
+                      {getSetScore(1, setIndex)}
+                    </div>
+                    <div className="text-8xl font-bold set-score-style">
+                      {getSetScore(2, setIndex)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {/* Current Game/Points Score */}
+              <div className="text-center bg-[#015d9c]">
+                <div className="space-y-1 pt-[20px] pb-[25px]">
+                  <div className="text-8xl font-bold text-white game-score-style">
+                    {getCurrentGameScore(1)}
+                  </div>
+                  <div className="text-8xl font-bold text-white game-score-style">
+                    {getCurrentGameScore(2)}
+                  </div>
+                </div>
               </div>
             </div>
+            <p className="powered-by-text text-center text-6xl text-bold mt-[-3px] pt-[10px] pb-[10px] text-white bg-[#015d9c]">
+              Live Scoring by PlayPro
+            </p>
           </div>
-
-          {/* Live indicator */}
-          {/* {displayMatch.playStatus ===
-            TournamentMatchPlayStatusEnum.In_Progress && (
-            <div className="absolute top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg font-bold animate-pulse">
-              ● LIVE
-            </div>
-          )} */}
         </div>
 
         <style jsx>{`
+          /* OBS Streaming Optimized Styles */
           body {
-            background: none !important;
+            background: transparent !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
           }
+
+          html {
+            background: transparent !important;
+          }
+
           .bg-cover.bg-center.main-body {
-            background: none !important;
+            background: transparent !important;
           }
-          body {
-            visibility: inherit;
-            transform: scale(0.675556, 0.675556) translate(0px, 0px);
-            width: 1920px;
-            height: 1080px;
-            z-index: 0;
-            position: absolute;
-            left: -192px;
-            top: -175.2px;
-            overflow: hidden;
-            touch-action: none;
-            user-select: none;
-            -webkit-user-drag: none;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+          .obs-streaming-container {
+            background: transparent !important;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding-top: 20px;
           }
+
           .live-live-box {
-            margin: 0px;
-            width: 970px;
-            zoom: 0.5;
+            margin: 0;
+            padding: 0;
+            max-width: 1200px;
+            width: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          }
+
+          /* Remove any default backgrounds */
+          #root {
+            background: transparent !important;
           }
         `}</style>
       </div>

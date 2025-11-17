@@ -58,6 +58,11 @@ function App() {
             />
           </Route>
 
+          <Route
+            path="/streaming-live-court"
+            element={<StreamingLiveCourt />}
+          />
+
           {/* Main Application Routes with Layout */}
           <Route path="/home" element={<Layout />}>
             <Route index element={<Home />} />

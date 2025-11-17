@@ -19,11 +19,14 @@ import googlePlay from "./google.jpg";
 import sdksl from "./akdsl.png";
 import sponsor from "./bg-img.jpg";
 import playproColorVertical from "./playpro_logo_vertical.png";
+import mainCenterLogo from "./main-center-logo.png";
 
 import padelVersewhite from "./padelverselogo.png";
 import premierwhite from "./premier-white.png";
 import premiercup from "./premier-cup.png";
+
 export const ImageConstants = {
+  mainCenterLogo,
   premierwhite,
   premiercup,
   sponsor,

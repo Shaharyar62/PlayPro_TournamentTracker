@@ -683,32 +683,32 @@ const MultiCourtLive = () => {
       {/* Header with logos - only show when multi-view */}
       {isMultiView && (
         <div className="relative z-10 flex justify-between items-center px-4 py-2">
-          <div className="text-center" style={{ width: "200px" }}>
+          {/* <div className="text-center" style={{ width: "200px" }}>
             <img
               width={200}
               className="justify-self-start"
               src={ImageConstants.premierwhite}
               alt="Premier Club"
             />
-          </div>
+          </div> */}
 
-          <div className="text-center">
+          <div className="text-center" style={{ margin: "0 auto" }}>
             <img
-              width={120}
-              className="justify-self-end"
-              src={ImageConstants.premiercup}
+              style={{ height: "250px" }}
+              className="justify-self-end mx-auto "
+              src={ImageConstants.mainCenterLogo}
               alt="Playpro"
             />
           </div>
 
-          <div className="text-center" style={{ width: "200px" }}>
+          {/* <div className="text-center" style={{ width: "200px" }}>
             <img
               width={150}
               className="justify-self-end"
               src={ImageConstants.playproWhite}
               alt="Playpro"
             />
-          </div>
+          </div> */}
         </div>
       )}
 
@@ -757,7 +757,7 @@ const MultiCourtLive = () => {
       {isMultiView && (
         <div className={`relative z-10 grid ${getGridLayout()} gap-4 p-4`}>
           {courtIds.map((courtId) => (
-            <div key={courtId} className="min-h-[400px]">
+            <div key={courtId} className="min-h-[350px]">
               <SingleCourtDisplay
                 tournamentId={tournamentId}
                 courtId={courtId}
