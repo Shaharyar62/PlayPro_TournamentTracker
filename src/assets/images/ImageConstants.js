@@ -1,4 +1,4 @@
-import padelVerse from "./padel-verse.png";
+import pakpadel from "./pakistanpadelopen.png";
 import playproWhite from "./playpro-w.png";
 import playpro from "./logo.png";
 import bg from "./bg-vers.jpg";
@@ -19,11 +19,11 @@ import sdksl from "./akdsl.png";
 import sponsor from "./bg-img.jpg";
 
 import playproColorVertical from "./playpro_logo_vertical.png";
-import padelVersewhite from "./padelverselogo.png";
+import padelVersewhite from "./legends01.png";
 export const ImageConstants = {
   sponsor,
   padelVersewhite,
-  padelVerse,
+  pakpadel,
   playproWhite,
   playpro,
   bg,

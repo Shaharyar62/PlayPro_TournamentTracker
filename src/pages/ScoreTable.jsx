@@ -278,18 +278,18 @@ const TournamentStandings = () => {
               // All pages shown for current tournament, move to next tournament
               const nextTournamentIndex = (currentTournamentIndex + 1) % tournamentsData.length;
 
-              if (nextTournamentIndex === 0) {
-                // We've completed all tournaments, show TodayMatch
-                setShowTodayMatch(true);
-                if (!todayMatchData) {
-                  fetchTodayMatchData(); // Fetch data when first time showing
-                }
-                return 0; // Reset to first page for when we come back to groups
-              } else {
+              // if (nextTournamentIndex === 0) {
+              //   // We've completed all tournaments, show TodayMatch
+              //   setShowTodayMatch(true);
+              //   if (!todayMatchData) {
+              //     fetchTodayMatchData(); // Fetch data when first time showing
+              //   }
+              //   return 0; // Reset to first page for when we come back to groups
+              // } else {
                 // Move to next tournament
                 setCurrentTournamentIndex(nextTournamentIndex);
                 return 0; // Reset to first page for next tournament
-              }
+              // }
             }
             return nextPage;
           });
@@ -297,17 +297,17 @@ const TournamentStandings = () => {
           // Current tournament has only one page, move to next tournament
           const nextTournamentIndex = (currentTournamentIndex + 1) % tournamentsData.length;
 
-          if (nextTournamentIndex === 0) {
-            // We've completed all tournaments, show TodayMatch
-            setShowTodayMatch(true);
-            if (!todayMatchData) {
-              fetchTodayMatchData(); // Fetch data when first time showing
-            }
-          } else {
+          // if (nextTournamentIndex === 0) {
+          //   // We've completed all tournaments, show TodayMatch
+          //   setShowTodayMatch(true);
+          //   if (!todayMatchData) {
+          //     fetchTodayMatchData(); // Fetch data when first time showing
+          //   }
+          // } else {
             // Move to next tournament
             setCurrentTournamentIndex(nextTournamentIndex);
             setCurrentGroupPage(0);
-          }
+          // }
         }
       }
     }, groupDisplayTime * 1000); // Convert seconds to milliseconds
@@ -413,9 +413,9 @@ const TournamentStandings = () => {
 
   const getRowGradient = (id) => {
     if (id === 1)
-      return "bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 border-l-4 border-yellow-400";
+      return " from-blue-100 via-blue-50 to-blue-100 border-l-4 border-yellow-400";
     if (id === 2)
-      return "bg-gradient-to-r from-blue-50 to-white border-l-4 border-blue-400";
+      return "from-blue-50 to-white border-l-4 border-blue-400";
     return "bg-white border-l-4 border-gray-200";
   };
 
@@ -580,9 +580,9 @@ const TournamentStandings = () => {
               <div className="w-full">
                 {/* Header with logos */}
                 <div className="flex justify-between items-center">
-                  <div className="text-center" style={{ width: "280px" }}>
+                  <div className="text-center">
                     <img
-                      width={180}
+                      // width={180}
                       className="justify-self-start p-5"
                       src={ImageConstants.padelVersewhite}
                       alt="Playpro"
@@ -591,9 +591,9 @@ const TournamentStandings = () => {
 
                   <div className="text-center">
                     <img
-                      width={220}
+                      // width={220}
                       className="justify-self-end p-5"
-                      src={ImageConstants.padelVerse}
+                      src={ImageConstants.pakpadel}
                       alt="Playpro"
                     />
                   </div>
@@ -646,7 +646,7 @@ const TournamentStandings = () => {
               </div>
               {/* Bottom indicator - Fixed to bottom */}
               <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
-                <img src={ImageConstants.sponsor} className="w-full" />
+                <img src={ImageConstants.pakpadel} className="w-full" />
               </div>
             </div>
 
@@ -687,19 +687,19 @@ const TournamentStandings = () => {
 
             {/* Main content */}
             <div className="relative z-10  mt-[-30px] items-center justify-center min-h-screen">
-              <div
+              {/* <div
                 style={{ position: "absolute" }}
                 className="text-white bg-[#23284c] text-3xl font-bold px-6 py-2 rounded-lg rotate-[-90deg]  top-[500px] left-[-40px]   "
               >
                 GROUPS
-              </div>
+              </div> */}
 
               <div className="w-full">
                 {/* Header with logos */}
                 <div className="flex justify-between items-center">
-                  <div className="text-center" style={{ width: "280px" }}>
+                  <div className="text-center" >
                     <img
-                      width={180}
+                      width={375}
                       className="justify-self-start p-5"
                       src={ImageConstants.padelVersewhite}
                       alt="Playpro"
@@ -708,14 +708,14 @@ const TournamentStandings = () => {
 
                   <div className="text-center">
                     <img
-                      width={220}
+                      width={465}
                       className="justify-self-end p-5"
-                      src={ImageConstants.padelVerse}
+                      src={ImageConstants.pakpadel}
                       alt="Playpro"
                     />
                   </div>
 
-                  <div className="text-center" style={{ width: "280px" }}>
+                  <div className="text-center" style={{ width: "375px" }}>
                     <img
                       width={230}
                       className="justify-self-end p-5"
@@ -756,7 +756,7 @@ const TournamentStandings = () => {
                               className="max-w-[1024px]  mt-[-15px]  mx-auto rounded-lg shadow-lg overflow-hidden bg-white"
                             >
                               {/* Header with glow effect */}
-                              <div className="relative bg-gradient-to-r from-blue-800 via-blue-600 to-blue-700 px-6 py-1 text-white">
+                              <div className="relative bg-gradient-to-blue from-blue-800 via-blue-600 to-blue-700 px-6 py-1 text-white">
                                 <div className="flex justify-between items-center relative z-10">
                                   <div className="flex items-center space-x-1">
                                     <motion.div
@@ -782,7 +782,7 @@ const TournamentStandings = () => {
                               <div className="bg-gradient-to-b from-gray-50 to-white">
                                 <table className="w-full">
                                   <thead>
-                                    <tr className="bg-gradient-to-r from-blue-900 to-blue-800 text-white">
+                                    <tr className="bg-gradient-to-blue2 from-blue-900 to-blue-800 text-white">
                                       <th className="py-1 px-4 text-left">#</th>
                                       <th className="py-1 px-4 text-left">
                                         Team Name
@@ -928,7 +928,7 @@ const TournamentStandings = () => {
                                   </tbody>
                                 </table>
                               </div>
-                              <div className="px-4 py-1 bg-gradient-to-r from-blue-900 to-blue-800 text-white text-xs">
+                              <div className="px-4 py-1 bg-gradient-to-blue3 from-blue-900 to-blue-800 text-white text-xs">
                                 <div className="flex justify-between items-center">
                                   <div className="flex items-center space-x-2">
                                     <Trophy className="h-4 w-4 text-yellow-400" />

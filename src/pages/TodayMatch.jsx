@@ -207,7 +207,7 @@ const MatchScoreCard = () => {
             <div className="p-[50px] pt-[0px] pb-[120px] grid grid-cols-1 gap-6 items-center">
               <div className="col-span-1 text-center">
                 <div className="text-4xl text-white font-bold mt-[-20px] mb-2 ">
-                  HAPPENING NOW
+                  HAPPENING NOWw
                 </div>
               </div>
 
