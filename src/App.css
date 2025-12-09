@@ -134,3 +134,13 @@ body{
 .bg-gradient-to-blue3 {
   background-image: linear-gradient(to bottom, #003897, black);
 }
+.text-smm{
+  font-size: 40px !important;
+}
+.text-smmm{
+  font-size: 30px !important;
+  font-weight: 100;
+}
+.text-lgg{
+  font-size: 45px !important;
+}

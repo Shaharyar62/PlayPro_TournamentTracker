@@ -59,8 +59,8 @@ const TournamentStandings = () => {
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">Missing Parameter</div>
-          <div className="text-white text-lg mb-4">groupDisplayTime parameter is required (in seconds)</div>
-          <div className="text-gray-300 text-sm">Example: ?groupDisplayTime=15</div>
+          <div className="text-white text-lgg mb-4">groupDisplayTime parameter is required (in seconds)</div>
+          <div className="text-gray-300 text-smm">Example: ?groupDisplayTime=15</div>
         </div>
       </div>
     );
@@ -73,8 +73,8 @@ const TournamentStandings = () => {
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">Missing Parameter</div>
-          <div className="text-white text-lg mb-4">refreshInterval parameter is required (in minutes)</div>
-          <div className="text-gray-300 text-sm">Example: ?refreshInterval=10</div>
+          <div className="text-white text-lgg mb-4">refreshInterval parameter is required (in minutes)</div>
+          <div className="text-gray-300 text-smm">Example: ?refreshInterval=10</div>
         </div>
       </div>
     );
@@ -111,7 +111,7 @@ const TournamentStandings = () => {
       return (
         <div className="grid grid-cols-11 gap-4 items-center">
           <div
-            className={`col-span-2 text-center text-lg text-black bg-[#d9d9db] py-1 rounded-lg font-bold`}
+            className={`col-span-2 text-center text-lgg text-black bg-[#d9d9db] py-1 rounded-lg font-bold`}
           >
             {type.toUpperCase()}
           </div>
@@ -125,7 +125,7 @@ const TournamentStandings = () => {
     return (
       <div className="grid grid-cols-11 gap-4 items-center">
         <div
-          className={`col-span-2 text-center text-lg text-black bg-[#d9d9db] py-1 rounded-lg font-bold`}
+          className={`col-span-2 text-center text-lgg text-black bg-[#d9d9db] py-1 rounded-lg font-bold`}
         >
           {type.toUpperCase()}
         </div>
@@ -413,10 +413,10 @@ const TournamentStandings = () => {
 
   const getRowGradient = (id) => {
     if (id === 1)
-      return " from-blue-100 via-blue-50 to-blue-100 border-l-4 border-yellow-400";
+      return " from-blue-100 via-blue-50 to-blue-100 border-l-4 border-yellow-400 text-smmm";
     if (id === 2)
-      return "from-blue-50 to-white border-l-4 border-blue-400";
-    return "bg-white border-l-4 border-gray-200";
+      return "from-blue-50 to-white border-l-4 border-blue-400 text-smmm";
+    return "bg-white border-l-4 border-gray-200 text-smmm";
   };
 
   // Loading state
@@ -456,7 +456,7 @@ const TournamentStandings = () => {
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">Error</div>
-          <div className="text-white text-lg mb-4">{error}</div>
+          <div className="text-white text-lgg mb-4">{error}</div>
           <button
             onClick={() => {
               setError(null);
@@ -522,7 +522,7 @@ const TournamentStandings = () => {
             <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
               <div className="text-center">
                 <div className="text-4xl font-bold text-red-400 mb-4">Error</div>
-                <div className="text-white text-lg">{todayMatchError}</div>
+                <div className="text-white text-lgg">{todayMatchError}</div>
               </div>
             </div>
           </div>
@@ -598,9 +598,9 @@ const TournamentStandings = () => {
                     />
                   </div>
 
-                  <div className="text-center" style={{ width: "280px" }}>
+                  <div className="text-center" style={{ width: "300px" }}>
                     <img
-                      width={230}
+                      // width={230}
                       className="justify-self-end p-5"
                       src={ImageConstants.playproWhite}
                       alt="Playpro"
@@ -715,9 +715,9 @@ const TournamentStandings = () => {
                     />
                   </div>
 
-                  <div className="text-center" style={{ width: "375px" }}>
+                  <div className="text-center" style={{ width: "300px" }}>
                     <img
-                      width={230}
+                      // width={230}
                       className="justify-self-end p-5"
                       src={ImageConstants.playproWhite}
                       alt="Playpro"
@@ -766,11 +766,11 @@ const TournamentStandings = () => {
                                     >
                                       <Trophy className="h-5 w-5 text-yellow-300" />
                                     </motion.div>
-                                    <h2 className="text-lg font-bold tracking-wider">
+                                    <h2 className="text-lgg font-bold tracking-wider">
                                       Group {groupName}
                                     </h2>
                                   </div>
-                                  <div className="text-sm text-blue-100">
+                                  <div className="text-smm text-blue-100">
                                     {currentTournament?.tournamentMasterName ||
                                       currentTournament?.name}
                                   </div>
@@ -867,7 +867,7 @@ const TournamentStandings = () => {
                                               {index + 1}
                                             </motion.div>
                                           </td>
-                                          <td className="py-1 px-1 text-sm font-semibold">
+                                          <td className="py-1 px-1 text-smm font-semibold">
                                             {team.teamName}
                                           </td>
                                           <td className="py-1 px-1 text-center font-bold">
@@ -988,7 +988,7 @@ const TournamentStandings = () => {
           <div className="text-4xl font-bold text-red-400 mb-4">
             Component Error
           </div>
-          <div className="text-white text-lg">
+          <div className="text-white text-lgg">
             {error.message || "An unexpected error occurred"}
           </div>
           <button
