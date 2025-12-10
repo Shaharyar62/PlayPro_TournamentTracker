@@ -144,3 +144,7 @@ body{
 .text-lgg{
   font-size: 45px !important;
 }
+th{
+  font-size: 23px !important;
+  text-align: center;
+}

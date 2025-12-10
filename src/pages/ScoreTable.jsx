@@ -556,7 +556,6 @@ const TournamentStandings = () => {
         );
       }
 
-      // TodayMatch render
       return (
         <>
           <div className="min-h-screen relative overflow-hidden">
@@ -576,7 +575,7 @@ const TournamentStandings = () => {
             </div>
 
             {/* Main content */}
-            <div className="relative z-10 mt-[-30px] items-center justify-center min-h-screen">
+            <div className="relative z-10 mt-[-30px] items-center justify-center min-h-screen ">
               <div className="w-full">
                 {/* Header with logos */}
                 <div className="flex justify-between items-center">
@@ -599,7 +598,7 @@ const TournamentStandings = () => {
                   </div>
 
                   <div className="text-center" style={{ width: "300px" }}>
-                    <img
+                  <img
                       // width={230}
                       className="justify-self-end p-5"
                       src={ImageConstants.playproWhite}
@@ -696,7 +695,7 @@ const TournamentStandings = () => {
 
               <div className="w-full">
                 {/* Header with logos */}
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mr-[80px] ml-[80px]">
                   <div className="text-center" >
                     <img
                       width={375}
@@ -759,21 +758,21 @@ const TournamentStandings = () => {
                               <div className="relative bg-gradient-to-blue from-blue-800 via-blue-600 to-blue-700 px-6 py-1 text-white">
                                 <div className="flex justify-between items-center relative z-10">
                                   <div className="flex items-center space-x-1">
-                                    <motion.div
+                                    {/* <motion.div
                                       initial={{ rotate: -10 }}
                                       animate={{ rotate: 0 }}
                                       transition={{ duration: 0.5 }}
                                     >
-                                      <Trophy className="h-5 w-5 text-yellow-300" />
-                                    </motion.div>
-                                    <h2 className="text-lgg font-bold tracking-wider">
+                                      <Trophy className="text-yellow-300" style={{ width: "20px!important", height: "30px!important" }}/>
+                                    </motion.div> */}
+                                    <h2 className="text-lgg font-bold tracking-wider text-center" style={{ textAlign: "center" }}>
                                       Group {groupName}
                                     </h2>
                                   </div>
-                                  <div className="text-smm text-blue-100">
+                                  {/* <div className="text-smm text-blue-100">
                                     {currentTournament?.tournamentMasterName ||
                                       currentTournament?.name}
-                                  </div>
+                                  </div> */}
                                 </div>
                                 {/* <div className="text-xs text-blue-200 mt-1 relative z-10">
             
@@ -787,21 +786,21 @@ const TournamentStandings = () => {
                                       <th className="py-1 px-4 text-left">
                                         Team Name
                                       </th>
-                                      <th className="py-1 px-4 text-center">
+                                      {/* <th className="py-1 px-4 text-center">
                                         P
-                                      </th>
+                                      </th> */}
                                       <th className="py-1 px-4 text-center">
                                         W
                                       </th>
                                       <th className="py-1 px-4 text-center">
                                         L
                                       </th>
-                                      <th className="py-1 px-4 text-center">
+                                      {/* <th className="py-1 px-4 text-center">
                                         D
-                                      </th>
-                                      <th className="py-1 px-4 text-center">
+                                      </th> */}
+                                      {/* <th className="py-1 px-4 text-center">
                                         PTS
-                                      </th>
+                                      </th> */}
                                       <th className="py-1 px-4 text-center">
                                         PCT
                                       </th>
@@ -870,31 +869,31 @@ const TournamentStandings = () => {
                                           <td className="py-1 px-1 text-smm font-semibold">
                                             {team.teamName}
                                           </td>
-                                          <td className="py-1 px-1 text-center font-bold">
+                                          {/* <td className="py-1 px-1 text-center font-bold">
                                             {team.played ?? 0}
-                                          </td>
+                                          </td> */}
                                           <td className="py-1 px-1 text-center font-bold">
                                             {team.wins ?? 0}
                                           </td>
-                                          <td className="py-1 px-1 text-center text-red-600">
+                                          <td className="py-1 px-1 text-center text-red-600 font-bold">
                                             {team.lose ?? 0}
                                           </td>
-                                          <td className="py-1 px-1 text-center text-gray-600">
+                                          {/* <td className="py-1 px-1 text-center text-gray-600">
                                             {team.draw ?? 0}
-                                          </td>
-                                          <td className="py-1 px-1 text-center font-bold text-blue-600">
+                                          </td> */}
+                                          {/* <td className="py-1 px-1 text-center font-bold text-blue-600">
                                             {team.points ?? 0}
-                                          </td>
-                                          <td className="py-1 px-1 text-center text-blue-600 font-mono">
+                                          </td> */}
+                                          <td className="py-1 px-1 text-center text-blue-600 font-mono font-bold">
                                             {calculatePCT(
                                               team.wins,
                                               team.played
-                                            ).toFixed(3)}
+                                            ).toFixed(2)}
                                           </td>
                                           <td className="py-1 px-1 text-center text-blue-600 font-bold">
                                             {team.pf ?? 0}
                                           </td>
-                                          <td className="py-1 px-1 text-center">
+                                          <td className="py-1 px-1 text-center font-bold">
                                             {team.pa ?? 0}
                                           </td>
                                           <td
@@ -908,12 +907,13 @@ const TournamentStandings = () => {
                                             {team.pd > 0 ? "+" : ""}
                                             {team.pd ?? 0}
                                           </td>
-                                          <td className="py-1 px-1 text-center">
+                                          <td className="py-1 px-1 text-center font-bold">
                                             <motion.div
                                               whileHover={{
                                                 scale: 1.2,
                                                 rotate: 5,
                                               }}
+                                              className="font-bold"
                                               transition={{
                                                 type: "spring",
                                                 stiffness: 400,
@@ -929,7 +929,7 @@ const TournamentStandings = () => {
                                 </table>
                               </div>
                               <div className="px-4 py-1 bg-gradient-to-blue3 from-blue-900 to-blue-800 text-white text-xs">
-                                <div className="flex justify-between items-center">
+                                {/* <div className="flex justify-between items-center">
                                   <div className="flex items-center space-x-2">
                                     <Trophy className="h-4 w-4 text-yellow-400" />
                                     <span>Champion</span>
@@ -942,7 +942,7 @@ const TournamentStandings = () => {
                                     <Shield className="h-4 w-4 text-gray-400" />
                                     <span>Eliminated</span>
                                   </div>
-                                </div>
+                                </div> */}
                               </div>
                             </motion.div>
                           </div>
