@@ -364,7 +364,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           <div className="flex items-center space-x-2 bg-black/50 text-white px-3 py-1 rounded-lg">
             <div
               className={`w-2 h-2 rounded-full ${
-                isConnected ? "bg-[#17626c]" : "bg-red-500"
+                isConnected ? "bg-[#00429a]" : "bg-red-500"
               }`}
             ></div>
             <span className="text-sm font-medium">
@@ -392,7 +392,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         }`}
       >
         {/* Header row */}
-        <div className={`bg-[#17626c] text-white ${paddingScale}`}>
+        <div className={`bg-[#00429a] text-white ${paddingScale}`}>
           <div
             className="grid gap-2 items-center"
             style={{
@@ -441,7 +441,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                       </div>
                     </div>
                     {isServingTeam(1) && (
-                      <div className="flex items-center text-[#17626c] bg-[#0c4146] rounded-full text-white p-1">
+                      <div className="flex items-center text-[#00429a] bg-[#0c4146] rounded-full text-white p-1">
                         <span className={isMultiView ? "text-sm" : "text-xl"}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -501,7 +501,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                       </div>
                     </div>
                     {isServingTeam(2) && (
-                      <div className="flex items-center text-[#17626c] bg-[#0c4146] rounded-full text-white p-1">
+                      <div className="flex items-center text-[#00429a] bg-[#0c4146] rounded-full text-white p-1">
                         <span className={isMultiView ? "text-sm" : "text-xl"}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -560,7 +560,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             ))}
 
             {/* Current Game/Points Score */}
-            <div className="text-center bg-[#17626c]">
+            <div className="text-center bg-[#00429a]">
               <div
                 className={`space-y-${isMultiView ? "1" : "4"} ${
                   isMultiView ? "py-2 px-2" : "pt-[25px] pb-[25px]"
@@ -589,7 +589,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         }`}
       >
         <div
-          className={`bg-[#17626c] text-white px-4 py-1 rounded-lg font-bold ${
+          className={`bg-[#00429a] text-white px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-sm" : "text-xl"
           }`}
         >
@@ -603,7 +603,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           {matchData.court?.name || "LIVE SCOREBOARD"}
         </div>
         <div
-          className={`bg-[#17626c] text-white px-4 py-1 rounded-lg font-bold ${
+          className={`bg-[#00429a] text-white px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-xs" : "text-sm"
           }`}
         >
@@ -643,7 +643,7 @@ const MultiCourtLive = () => {
 
   if (!tournamentId || courtIds.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-from-[#093337] via-[#17626c] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-from-[#093337] via-[#00429a] to-[#093337]">
         <div className="text-4xl font-bold text-white">
           Tournament ID and at least one Court ID are required
         </div>
@@ -682,33 +682,62 @@ const MultiCourtLive = () => {
 
       {/* Header with logos - only show when multi-view */}
       {isMultiView && (
-        <div className="relative z-10 flex justify-between items-center px-4 py-2">
-          {/* <div className="text-center" style={{ width: "200px" }}>
-            <img
-              width={200}
-              className="justify-self-start"
-              src={ImageConstants.premierwhite}
-              alt="Premier Club"
-            />
-          </div> */}
+        // <div className="relative z-10 flex justify-between items-center px-4 py-2">
+        //   {/* <div className="text-center" style={{ width: "200px" }}>
+        //     <img
+        //       width={200}
+        //       className="justify-self-start"
+        //       src={ImageConstants.premierwhite}
+        //       alt="Premier Club"
+        //     />
+        //   </div> */}
 
-          <div className="text-center" style={{ margin: "0 auto" }}>
+        //   <div className="text-center" style={{ margin: "0 auto" }}>
+        //     <img
+        //       style={{ height: "250px" }}
+        //       className="justify-self-end mx-auto "
+        //       src={ImageConstants.mainCenterLogo}
+        //       alt="Playpro"
+        //     />
+        //   </div>
+
+        //   {/* <div className="text-center" style={{ width: "200px" }}>
+        //     <img
+        //       width={150}
+        //       className="justify-self-end"
+        //       src={ImageConstants.playproWhite}
+        //       alt="Playpro"
+        //     />
+        //   </div> */}
+        // </div>
+
+        <div className="flex justify-between items-center">
+          <div style={{ width: "600px" }} className="text-center">
             <img
-              style={{ height: "250px" }}
-              className="justify-self-end mx-auto "
-              src={ImageConstants.mainCenterLogo}
+              // width={180}
+              className="justify-self-start p-5"
+              src={ImageConstants.padelVersewhite}
               alt="Playpro"
             />
           </div>
 
-          {/* <div className="text-center" style={{ width: "200px" }}>
+          <div className="text-center">
             <img
-              width={150}
-              className="justify-self-end"
+              // width={220}
+              className="justify-self-end p-5"
+              src={ImageConstants.pakpadel}
+              alt="Playpro"
+            />
+          </div>
+
+          <div className="text-center" style={{ width: "600px" }}>
+            <img
+              width={350}
+              className="justify-self-end p-5"
               src={ImageConstants.playproWhite}
               alt="Playpro"
             />
-          </div> */}
+          </div>
         </div>
       )}
 
@@ -767,6 +796,15 @@ const MultiCourtLive = () => {
           ))}
         </div>
       )}
+      <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
+        <img src={ImageConstants.sponsor} className="w-full " />
+        {/* <div className="bg-[#015d9c] ml-5 text-white w-min px-[50px] whitespace-nowrap py-1  rounded-lg font-bold text-3xl">
+              3 SETS
+            </div>
+            <div className="font-bold text-3xl text-center text-white">
+              LIVE SCOREBOARD
+            </div> */}
+      </div>
 
       <style jsx>{`
         @keyframes twinkle {

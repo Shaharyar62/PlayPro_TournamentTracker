@@ -120,12 +120,31 @@ body{
   background-size: cover !important;
   background-repeat: repeat !important;}
 
-
-@media screen and (width < 768px) {
-  .text-2xl {
-    font-size: 28px !important;
-  }
+.bg-gradient-to-blue {
+  background: #003a9d;
+  box-shadow: 0 -26px 41px 23px #0c0e10;
 }
 
+.bg-gradient-to-blue2 {
+  background: #003897;
+}
+.col-span-1 {
+  margin-bottom: 20px;}
 
-
+.bg-gradient-to-blue3 {
+  background-image: linear-gradient(to bottom, #003897, black);
+}
+.text-smm{
+  font-size: 40px !important;
+}
+.text-smmm{
+  font-size: 30px !important;
+  font-weight: 100;
+}
+.text-lgg{
+  font-size: 45px !important;
+}
+th{
+  font-size: 23px !important;
+  text-align: center;
+}
