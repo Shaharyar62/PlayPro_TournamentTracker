@@ -388,7 +388,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
       {/* Main scoreboard */}
       <div
         className={`bg-white rounded-lg shadow-2xl overflow-hidden ${
-          isMultiView ? "m-2" : "ml-[100px] mr-[100px]"
+          isMultiView ? "m-2" : ""
         }`}
       >
         {/* Header row */}
@@ -602,20 +602,20 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         >
           {matchData.court?.name || "LIVE SCOREBOARD"}
         </div>
-        <div
+        {/* <div
           className={`bg-[#00429a] text-white px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-xs" : "text-sm"
           }`}
         >
-          {upcomingMatch ? (
+          {/* {upcomingMatch ? (
             <div>
               UPCOMING: {getTeamName(upcomingMatch.teamA)} VS{" "}
               {getTeamName(upcomingMatch.teamB)}
             </div>
           ) : (
             <div>UPCOMING</div>
-          )}
-        </div>
+          )} * 
+        </div> */}
       </div>
     </div>
   );
@@ -744,28 +744,28 @@ const MultiCourtLive = () => {
       {/* Single court - full screen */}
       {!isMultiView && (
         <div className="relative z-10">
-          <div className="flex justify-between items-center px-4 py-2">
-            <div className="text-center" style={{ width: "400px" }}>
+          <div className="flex justify-between items-center">
+            <div style={{ width: "600px" }} className="text-center">
               <img
-                width={400}
+                // width={180}
                 className="justify-self-start p-5"
-                src={ImageConstants.premierwhite}
-                alt="Premier Club"
+                src={ImageConstants.padelVersewhite}
+                alt="Playpro"
               />
             </div>
 
             <div className="text-center">
               <img
-                width={220}
+                // width={220}
                 className="justify-self-end p-5"
-                src={ImageConstants.premiercup}
+                src={ImageConstants.pakpadel}
                 alt="Playpro"
               />
             </div>
 
-            <div className="text-center" style={{ width: "400px" }}>
+            <div className="text-center" style={{ width: "600px" }}>
               <img
-                width={300}
+                width={350}
                 className="justify-self-end p-5"
                 src={ImageConstants.playproWhite}
                 alt="Playpro"
