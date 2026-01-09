@@ -511,10 +511,12 @@ export function useMatchState(tournamentId, matchId) {
 
         // Handle returning to deuce: if opponent has advantage (>= 5) and scoring team scores, both go back to 4
         const returnedToDeuce = opponentScore >= 5 && newScore >= 4;
-        
+
         if (returnedToDeuce) {
           // Both teams return to deuce (4-4)
-          console.log("[SCORING] Returning to deuce - resetting both scores to 4");
+          console.log(
+            "[SCORING] Returning to deuce - resetting both scores to 4"
+          );
           newState.team1.score = 4;
           newState.team2.score = 4;
           // Don't increment advantage count here - this is returning to deuce, not gaining advantage
@@ -527,10 +529,18 @@ export function useMatchState(tournamentId, matchId) {
             if (opponentScore >= 4 && newScore >= 4) {
               // If coming from deuce (both at exactly 4), increment advantage count for golden point tracking
               // This is the ONLY time we increment for advantage exchanges (not when reaching 40-30, etc.)
-              if (matchState.team1.score === 4 && matchState.team2.score === 4) {
+              if (
+                matchState.team1.score === 4 &&
+                matchState.team2.score === 4
+              ) {
                 const oldCount = matchState.team1.advantageCount || 0;
                 newState.team1.advantageCount = oldCount + 1;
-                console.log("[SCORING] Team 1 gained advantage from deuce - advantageCount:", oldCount, "->", newState.team1.advantageCount);
+                console.log(
+                  "[SCORING] Team 1 gained advantage from deuce - advantageCount:",
+                  oldCount,
+                  "->",
+                  newState.team1.advantageCount
+                );
               }
               // Reset opponent's advantage count when scoring team gains advantage
               // BUT: Don't reset if golden point is enabled with advantages threshold (need to track total exchanges)
@@ -551,17 +561,35 @@ export function useMatchState(tournamentId, matchId) {
             if (opponentScore >= 4 && newScore >= 4) {
               // If coming from deuce (both at exactly 4), increment advantage count for golden point tracking
               // This is the ONLY time we increment for advantage exchanges (not when reaching 40-30, etc.)
-              console.log("[SCORING] Team 2 scoring at deuce/advantage - checking deuce condition:", {
-                team1OldScore: matchState.team1.score,
-                team2OldScore: matchState.team2.score,
-                isDeuce: matchState.team2.score === 4 && matchState.team1.score === 4,
-              });
-              if (matchState.team2.score === 4 && matchState.team1.score === 4) {
+              console.log(
+                "[SCORING] Team 2 scoring at deuce/advantage - checking deuce condition:",
+                {
+                  team1OldScore: matchState.team1.score,
+                  team2OldScore: matchState.team2.score,
+                  isDeuce:
+                    matchState.team2.score === 4 &&
+                    matchState.team1.score === 4,
+                }
+              );
+              if (
+                matchState.team2.score === 4 &&
+                matchState.team1.score === 4
+              ) {
                 const oldCount = matchState.team2.advantageCount || 0;
                 newState.team2.advantageCount = oldCount + 1;
-                console.log("[SCORING] Team 2 gained advantage from deuce - advantageCount:", oldCount, "->", newState.team2.advantageCount);
+                console.log(
+                  "[SCORING] Team 2 gained advantage from deuce - advantageCount:",
+                  oldCount,
+                  "->",
+                  newState.team2.advantageCount
+                );
               } else {
-                console.log("[SCORING] Team 2 did NOT gain advantage from deuce - old scores were:", matchState.team1.score, "-", matchState.team2.score);
+                console.log(
+                  "[SCORING] Team 2 did NOT gain advantage from deuce - old scores were:",
+                  matchState.team1.score,
+                  "-",
+                  matchState.team2.score
+                );
               }
               // Reset opponent's advantage count when scoring team gains advantage
               // BUT: Don't reset if golden point is enabled with advantages threshold (need to track total exchanges)
@@ -1112,65 +1140,60 @@ export function useMatchState(tournamentId, matchId) {
   }, [matchState, matchSettings, tournamentId, matchId, socketService]);
 
   // Recalculate set wins based on current set scores
-  const recalculateSetWins = useCallback(
-    (setsData, matchSettings) => {
-      let team1Sets = 0;
-      let team2Sets = 0;
+  const recalculateSetWins = useCallback((setsData, matchSettings) => {
+    let team1Sets = 0;
+    let team2Sets = 0;
 
-      // Iterate through all sets - ensure we check all sets up to numberOfSets
-      const numberOfSets = matchSettings?.numberOfSets || 3;
-      for (let i = 0; i < numberOfSets; i++) {
-        const setKey = i.toString();
-        const set = setsData?.[setKey];
-        
-        // Skip if set doesn't exist
-        if (!set) continue;
+    // Iterate through all sets - ensure we check all sets up to numberOfSets
+    const numberOfSets = matchSettings?.numberOfSets || 3;
+    for (let i = 0; i < numberOfSets; i++) {
+      const setKey = i.toString();
+      const set = setsData?.[setKey];
 
-        const team1Games = set.team1Games || 0;
-        const team2Games = set.team2Games || 0;
+      // Skip if set doesn't exist
+      if (!set) continue;
 
-        // Check if set is won by games score (6-0, 6-1, 6-2, 6-3, 6-4, 7-5)
-        const team1Won = hasWonSet(team1Games, team2Games, matchSettings);
-        const team2Won = hasWonSet(team2Games, team1Games, matchSettings);
+      const team1Games = set.team1Games || 0;
+      const team2Games = set.team2Games || 0;
 
-        // OR check if set is completed via tiebreak (6-6 with tiebreak = completed set)
-        // If isTiebreak is true, the set is complete and the winner is determined by the final score
-        // In tiebreak sets, the final score is 7-6 (one team has 7 games)
-        const isTiebreakSet = set.isTiebreak || set.isSuperTiebreak;
-        if (isTiebreakSet) {
-          // For tiebreak sets, check games first (should be 7-6 or 6-7)
-          if (team1Games > team2Games) {
-            team1Sets++;
-          } else if (team2Games > team1Games) {
-            team2Sets++;
-          } else if (team1Games === 6 && team2Games === 6) {
-            // If games are still 6-6, check tiebreak scores to determine winner
-            // The winner of the tiebreak gets the set, so final score is 7-6
-            const tiebreakScore1 =
-              set.isSuperTiebreak
-                ? set.superTieBreakScore1 || 0
-                : set.tiebreakScore1 || 0;
-            const tiebreakScore2 =
-              set.isSuperTiebreak
-                ? set.superTieBreakScore2 || 0
-                : set.tiebreakScore2 || 0;
-            if (tiebreakScore1 > tiebreakScore2) {
-              team1Sets++;
-            } else if (tiebreakScore2 > tiebreakScore1) {
-              team2Sets++;
-            }
-          }
-        } else if (team1Won) {
+      // Check if set is won by games score (6-0, 6-1, 6-2, 6-3, 6-4, 7-5)
+      const team1Won = hasWonSet(team1Games, team2Games, matchSettings);
+      const team2Won = hasWonSet(team2Games, team1Games, matchSettings);
+
+      // OR check if set is completed via tiebreak (6-6 with tiebreak = completed set)
+      // If isTiebreak is true, the set is complete and the winner is determined by the final score
+      // In tiebreak sets, the final score is 7-6 (one team has 7 games)
+      const isTiebreakSet = set.isTiebreak || set.isSuperTiebreak;
+      if (isTiebreakSet) {
+        // For tiebreak sets, check games first (should be 7-6 or 6-7)
+        if (team1Games > team2Games) {
           team1Sets++;
-        } else if (team2Won) {
+        } else if (team2Games > team1Games) {
           team2Sets++;
+        } else if (team1Games === 6 && team2Games === 6) {
+          // If games are still 6-6, check tiebreak scores to determine winner
+          // The winner of the tiebreak gets the set, so final score is 7-6
+          const tiebreakScore1 = set.isSuperTiebreak
+            ? set.superTieBreakScore1 || 0
+            : set.tiebreakScore1 || 0;
+          const tiebreakScore2 = set.isSuperTiebreak
+            ? set.superTieBreakScore2 || 0
+            : set.tiebreakScore2 || 0;
+          if (tiebreakScore1 > tiebreakScore2) {
+            team1Sets++;
+          } else if (tiebreakScore2 > tiebreakScore1) {
+            team2Sets++;
+          }
         }
+      } else if (team1Won) {
+        team1Sets++;
+      } else if (team2Won) {
+        team2Sets++;
       }
+    }
 
-      return { team1Sets, team2Sets };
-    },
-    []
-  );
+    return { team1Sets, team2Sets };
+  }, []);
 
   // Increment set score directly
   const incrementSetScore = useCallback(
@@ -1257,12 +1280,7 @@ export function useMatchState(tournamentId, matchId) {
 
       // Check match win based on recalculated set wins
       // Important: Pass false for inSuperTieBreak since we're checking completed sets, not active super tiebreak
-      const matchWin = hasWonMatch(
-        team1Sets,
-        team2Sets,
-        matchSettings,
-        false
-      );
+      const matchWin = hasWonMatch(team1Sets, team2Sets, matchSettings, false);
 
       if (matchWin.won) {
         newState.status = "completed";

@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useUmpire } from "../context/UmpireContext";
 import { useMatchState } from "../hooks/useMatchState.js";
-import { getScoreString } from "../utils/scoringRules.js";
+import { getScoreDisplayString } from "../utils/scoringRules.js";
 import TimerHeader from "./TimerHeader.jsx";
 import SettingsPanel from "./SettingsPanel.jsx";
 
@@ -396,6 +396,11 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
   const isInTiebreak = matchState.isInTiebreak || false;
   const isInSuperTiebreak = matchState.isInSuperTiebreak || false;
 
+  // Calculate total advantage exchanges for golden point display
+  const totalAdvantageExchanges =
+    (matchState.team1?.advantageCount || 0) +
+    (matchState.team2?.advantageCount || 0);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white">
       {/* Header with Timer */}
@@ -548,7 +553,17 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                     className="bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block"
                   >
                     <div className="text-xl sm:text-2xl font-bold text-white">
-                      {getScoreString(team1Data?.score || 0, false)}
+                      {getScoreDisplayString(
+                        team1Data?.score || 0,
+                        team2Data?.score || 0,
+                        {
+                          isInTiebreak,
+                          matchSettings,
+                          teamAdvantageCount:
+                            matchState.team1?.advantageCount || 0,
+                          totalAdvantageExchanges,
+                        }
+                      )}
                     </div>
                   </motion.div>
                 )}
@@ -658,7 +673,17 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                     className="bg-red-500 hover:bg-red-600/90 active:bg-red-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block"
                   >
                     <div className="text-xl sm:text-2xl font-bold text-white">
-                      {getScoreString(team2Data?.score || 0, false)}
+                      {getScoreDisplayString(
+                        team2Data?.score || 0,
+                        team1Data?.score || 0,
+                        {
+                          isInTiebreak,
+                          matchSettings,
+                          teamAdvantageCount:
+                            matchState.team2?.advantageCount || 0,
+                          totalAdvantageExchanges,
+                        }
+                      )}
                     </div>
                   </motion.div>
                 )}
