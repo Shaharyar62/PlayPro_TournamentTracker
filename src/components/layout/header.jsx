@@ -6,18 +6,19 @@ export const Header = () => {
       <div className="text-center" style={{ width: "400px" }}>
         <img
           width={400}
-          className="justify-self-start p-5"
-          src={ImageConstants.premierwhite}
-          alt="Premier Club"
+          className="justify-self-start p-0"
+          src={ImageConstants.leftLogo}
+          alt="Greenwich Padel"
+          style={{ height: "135px", objectFit: "contain" }}
         />
       </div>
 
       <div className="text-center">
         <img
-          width={220}
+          width={420}
           className="justify-self-end p-5"
-          src={ImageConstants.premiercup}
-          alt="Playpro"
+          src={ImageConstants.cupLogo}
+          alt="Greenwich Padel"
         />
       </div>
 

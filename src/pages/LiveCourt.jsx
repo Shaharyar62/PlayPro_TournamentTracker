@@ -9,7 +9,7 @@ import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
 import moment from "moment-timezone";
 import { TournamentRuleMatchFormatTypeEnum } from "../const/Constants";
 import MatchIdHelper from "../umpireScoring/utils/matchIdHelper.js";
-
+import Header from "../components/layout/header";
 const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
@@ -53,7 +53,7 @@ const MatchScoreCard = () => {
     var matchFormat = liveMatchData?.matchSettings?.matchFormat;
     switch (matchFormat) {
       case TournamentRuleMatchFormatTypeEnum.raceToSix:
-        return "Race to 6";
+        return "Race to 8";
       case TournamentRuleMatchFormatTypeEnum.twoSetsSuperTieBreak:
         return "2 Sets - Super Tie Break";
       case TournamentRuleMatchFormatTypeEnum.threeSets:
@@ -277,7 +277,7 @@ const MatchScoreCard = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-4xl font-bold text-[#17626c]">
+        <div className="text-4xl font-bold text-[#c5f934]">
           Loading match data...
         </div>
       </div>
@@ -391,7 +391,7 @@ const MatchScoreCard = () => {
 
   return (
     <>
-      <div className="min-h-screen  from-[#093337] via-[#17626c] to-[#093337] relative overflow-hidden">
+      <div className="min-h-screen  from-[#093337] via-[#c5f934] to-[#093337] relative overflow-hidden">
         {/* Stars background */}
         <div className="absolute inset-0">
           {[...Array(50)].map((_, i) => (
@@ -412,7 +412,7 @@ const MatchScoreCard = () => {
           <div className="flex items-center space-x-2 bg-black/50 text-white px-3 py-1 rounded-lg">
             <div
               className={`w-2 h-2 rounded-full ${
-                isConnected ? "bg-[#17626c]" : "bg-red-500"
+                isConnected ? "bg-[#c5f934]" : "bg-red-500"
               }`}
             ></div>
             <span className="text-sm font-medium">
@@ -429,16 +429,16 @@ const MatchScoreCard = () => {
         )}
 
         {/* Main content */}
-        <div className="relative z-10 flex  mt-[-20px] items-center justify-center min-h-screen">
+        <div className="relative z-10 flex items-center justify-center min-h-screen">
           <div className="w-full  ">
             {/* Header with logos */}
-            <div className="flex justify-between items-center">
+            {/* <div className="flex justify-between items-center">
               <div className="text-center" style={{ width: "400px" }}>
                 <img
                   width={400}
                   className="justify-self-start p-5"
-                  src={ImageConstants.premierwhite}
-                  alt="Premier Club"
+                  src={ImageConstants.leftLogo}
+                  alt="Greenwich Padel"
                 />
               </div>
 
@@ -446,8 +446,8 @@ const MatchScoreCard = () => {
                 <img
                   width={220}
                   className="justify-self-end p-5"
-                  src={ImageConstants.premiercup}
-                  alt="Playpro"
+                  src={ImageConstants.cupLogo}
+                  alt="Greenwich Padel"
                 />
               </div>
 
@@ -459,12 +459,12 @@ const MatchScoreCard = () => {
                   alt="Playpro"
                 />
               </div>
-            </div>
-
+            </div> */}
+            <Header />
             {/* Main scoreboard */}
             <div className="bg-white rounded-lg ml-[100px] mr-[100px] mt-[100px] mb-[60px] shadow-2xl overflow-hidden">
               {/* Header row - Dynamic based on number of sets */}
-              <div className="bg-[#17626c] text-white py-4">
+              <div className="bg-[#c5f934] text-black py-4">
                 <div
                   className="grid gap-4 items-center"
                   style={{
@@ -514,7 +514,7 @@ const MatchScoreCard = () => {
                             </div> */}
                           </div>
                           {isServingTeam(1) && (
-                            <div className="flex items-center text-[#17626c]">
+                            <div className="flex items-center text-[#c5f934]">
                               <span className="text-xl">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -523,7 +523,7 @@ const MatchScoreCard = () => {
                                   viewBox="0 0 24 24"
                                 >
                                   <path
-                                    fill="#17626c"
+                                    fill="#c5f934"
                                     d="M9.406 17.421q-.642 0-1.267-.242t-1.123-.74L2.983 12.4q-.498-.498-.74-1.11T2 10.017t.242-1.272t.74-1.11l2.691-2.69q.498-.499 1.116-.741t1.267-.242q.642 0 1.254.242q.611.242 1.11.74l4.038 4.033q.498.498.74 1.114q.243.615.243 1.275t-.243 1.272t-.74 1.11l-1.008 1.008l5.177 5.177q.146.146.156.347t-.156.366t-.357.166t-.356-.166l-5.158-5.196l-.989.989q-.498.498-1.109.74q-.61.242-1.252.242m-.02-.98q.453 0 .891-.176t.777-.515l2.696-2.715q.339-.333.515-.78q.175-.447.175-.894t-.175-.89t-.515-.78L9.712 5.658q-.333-.339-.766-.518q-.432-.178-.884-.178t-.885.179q-.433.178-.771.517l-2.69 2.69q-.339.339-.515.777t-.176.891t.176.896t.515.78l4.019 4.058q.332.339.765.515t.886.175m-3.868-5.379q.232 0 .387-.151q.155-.152.155-.384t-.152-.386t-.384-.155t-.386.151t-.155.384t.151.387t.384.155m1.523-1.518q.232 0 .387-.151q.155-.152.155-.384t-.152-.387t-.384-.155q-.231 0-.386.152t-.155.384t.152.387q.151.154.383.154m.156 3.216q.232 0 .387-.152t.155-.384t-.152-.396t-.384-.164t-.387.164q-.154.164-.154.396t.151.384t.384.152m1.342-4.74q.232 0 .387-.151t.155-.384t-.152-.387t-.384-.155t-.386.152t-.155.384t.152.386t.383.155m.181 3.221q.232 0 .387-.151q.154-.152.154-.384t-.151-.387t-.384-.154t-.387.151t-.155.384t.152.387t.384.154m.15 3.197q.232 0 .396-.152q.165-.152.165-.384t-.165-.387t-.396-.154t-.384.151t-.152.384t.152.387q.152.155.384.155m1.367-4.72q.232 0 .387-.164t.155-.396t-.152-.384t-.384-.152t-.386.152t-.155.384t.151.396t.384.164m.156 3.197q.232 0 .387-.152t.154-.384t-.151-.387t-.384-.154t-.387.151t-.154.384t.151.387t.384.155m1.504-1.524q.232 0 .396-.151q.165-.152.165-.384t-.165-.387t-.396-.155t-.384.152t-.151.384t.151.387t.384.154M19.13 8.77q-1.197 0-2.029-.846q-.833-.846-.833-2.042t.833-2.039T19.131 3t2.043.846t.845 2.042t-.845 2.039t-2.043.842m.005-1q.778 0 1.33-.548q.553-.549.553-1.332t-.548-1.336T19.139 4t-1.326.548q-.544.549-.544 1.332q0 .784.545 1.336q.544.553 1.322.553m.018-1.884"
                                   />
                                 </svg>
@@ -542,7 +542,7 @@ const MatchScoreCard = () => {
                               className={`px-2 py-1 text-xs font-bold rounded ${
                                 warning === "W1"
                                   ? "bg-yellow-400 text-black"
-                                  : "bg-red-500 text-white"
+                                  : "bg-red-500 text-black"
                               }`}
                             >
                               {warning}
@@ -581,7 +581,7 @@ const MatchScoreCard = () => {
                                   viewBox="0 0 24 24"
                                 >
                                   <path
-                                    fill="#17626c"
+                                    fill="#c5f934"
                                     d="M9.406 17.421q-.642 0-1.267-.242t-1.123-.74L2.983 12.4q-.498-.498-.74-1.11T2 10.017t.242-1.272t.74-1.11l2.691-2.69q.498-.499 1.116-.741t1.267-.242q.642 0 1.254.242q.611.242 1.11.74l4.038 4.033q.498.498.74 1.114q.243.615.243 1.275t-.243 1.272t-.74 1.11l-1.008 1.008l5.177 5.177q.146.146.156.347t-.156.366t-.357.166t-.356-.166l-5.158-5.196l-.989.989q-.498.498-1.109.74q-.61.242-1.252.242m-.02-.98q.453 0 .891-.176t.777-.515l2.696-2.715q.339-.333.515-.78q.175-.447.175-.894t-.175-.89t-.515-.78L9.712 5.658q-.333-.339-.766-.518q-.432-.178-.884-.178t-.885.179q-.433.178-.771.517l-2.69 2.69q-.339.339-.515.777t-.176.891t.176.896t.515.78l4.019 4.058q.332.339.765.515t.886.175m-3.868-5.379q.232 0 .387-.151q.155-.152.155-.384t-.152-.386t-.384-.155t-.386.151t-.155.384t.151.387t.384.155m1.523-1.518q.232 0 .387-.151q.155-.152.155-.384t-.152-.387t-.384-.155q-.231 0-.386.152t-.155.384t.152.387q.151.154.383.154m.156 3.216q.232 0 .387-.152t.155-.384t-.152-.396t-.384-.164t-.387.164q-.154.164-.154.396t.151.384t.384.152m1.342-4.74q.232 0 .387-.151t.155-.384t-.152-.387t-.384-.155t-.386.152t-.155.384t.152.386t.383.155m.181 3.221q.232 0 .387-.151q.154-.152.154-.384t-.151-.387t-.384-.154t-.387.151t-.155.384t.152.387t.384.154m.15 3.197q.232 0 .396-.152q.165-.152.165-.384t-.165-.387t-.396-.154t-.384.151t-.152.384t.152.387q.152.155.384.155m1.367-4.72q.232 0 .387-.164t.155-.396t-.152-.384t-.384-.152t-.386.152t-.155.384t.151.396t.384.164m.156 3.197q.232 0 .387-.152t.154-.384t-.151-.387t-.384-.154t-.387.151t-.154.384t.151.387t.384.155m1.504-1.524q.232 0 .396-.151q.165-.152.165-.384t-.165-.387t-.396-.155t-.384.152t-.151.384t.151.387t.384.154M19.13 8.77q-1.197 0-2.029-.846q-.833-.846-.833-2.042t.833-2.039T19.131 3t2.043.846t.845 2.042t-.845 2.039t-2.043.842m.005-1q.778 0 1.33-.548q.553-.549.553-1.332t-.548-1.336T19.139 4t-1.326.548q-.544.549-.544 1.332q0 .784.545 1.336q.544.553 1.322.553m.018-1.884"
                                   />
                                 </svg>
@@ -600,7 +600,7 @@ const MatchScoreCard = () => {
                               className={`px-2 py-1 text-xs font-bold rounded ${
                                 warning === "W1"
                                   ? "bg-yellow-400 text-black"
-                                  : "bg-red-500 text-white"
+                                  : "bg-red-500 text-black"
                               }`}
                             >
                               {warning}
@@ -626,12 +626,12 @@ const MatchScoreCard = () => {
                   ))}
 
                   {/* Current Game/Points Score */}
-                  <div className="text-center bg-[#17626c]">
+                  <div className="text-center bg-[#c5f934]">
                     <div className="space-y-4 pt-[25px] pb-[25px]">
-                      <div className="text-8xl font-bold text-white game-score-style">
+                      <div className="text-8xl font-bold text-black game-score-style">
                         {getCurrentGameScore(1)}
                       </div>
-                      <div className="text-8xl font-bold text-white game-score-style">
+                      <div className="text-8xl font-bold text-black game-score-style">
                         {getCurrentGameScore(2)}
                       </div>
                     </div>
@@ -642,7 +642,7 @@ const MatchScoreCard = () => {
 
             {/* Bottom indicator and Upcoming Match */}
             <div className="grid grid-cols-12 gap-4 items-center mt-[120px] ">
-              <div className="bg-[#17626c] col-span-5 ml-5 text-white w-min px-[50px] whitespace-nowrap py-1 rounded-lg font-bold text-3xl">
+              <div className="bg-[#c5f934] col-span-5 ml-5 text-black w-min px-[50px] whitespace-nowrap py-1 rounded-lg font-bold text-3xl">
                 {matchStatus.current == "completed"
                   ? "COMPLETED"
                   : getMatchFormat()}
@@ -650,7 +650,7 @@ const MatchScoreCard = () => {
               <div className="font-bold text-3xl col-span-2 text-center text-white">
                 {matchData.court?.name || "LIVE SCOREBOARD"}
               </div>
-              <div className="bg-[#17626c] mr-5 col-span-5 ml-auto text-white  px-[20px]  py-1 rounded-lg font-bold text-1xl">
+              <div className="bg-[#c5f934] mr-5 col-span-5 ml-auto text-black  px-[20px]  py-1 rounded-lg font-bold text-1xl">
                 {upcomingMatch ? (
                   <div>
                     UPCOMING: {getTeamName(upcomingMatch.teamA)} VS{" "}

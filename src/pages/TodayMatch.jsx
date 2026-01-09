@@ -78,7 +78,7 @@ const MatchScoreCard = () => {
     if (name.includes("galaxy")) return "bg-[#737373]";
     if (name.includes("black") || name.includes("star")) return "bg-[#000000]";
     if (name.includes("infinity")) return "bg-[#430750]";
-    return "bg-[#737373]"; // default
+    return "bg-[#84a55d]"; // default
   };
 
   const renderMatchInfo = (match, type) => {
@@ -124,7 +124,7 @@ const MatchScoreCard = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
         <div className="text-4xl font-bold text-white">
           Loading tournament courts data...
         </div>
@@ -135,7 +135,7 @@ const MatchScoreCard = () => {
   // Error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">Error</div>
           <div className="text-white text-lg">{error}</div>
@@ -147,7 +147,7 @@ const MatchScoreCard = () => {
   // No tournament data
   if (!tournamentData || !tournamentData.courts) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
         <div className="text-4xl font-bold text-gray-400">
           No tournament courts data available
         </div>
@@ -216,9 +216,9 @@ const MatchScoreCard = () => {
             </div>
           </div>
           {/* Bottom indicator - Fixed to bottom */}
-          {/* <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
+          <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
             <img src={ImageConstants.sponsor} className="w-full" />
-          </div> */}
+          </div>
 
           {/* Live indicator */}
         </div>

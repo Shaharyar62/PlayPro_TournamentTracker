@@ -5,6 +5,7 @@ import LogoFlipBox from "../components/logoFlipBox";
 import { useSearchParams } from "react-router-dom";
 import { ImageConstants } from "../assets/images/ImageConstants";
 import Common from "../helper/common";
+import Header from "../components/layout/header";
 const TournamentStandings = () => {
   const [highlightedRow, setHighlightedRow] = useState(null);
   const [animateRanks, setAnimateRanks] = useState(false);
@@ -59,7 +60,7 @@ const TournamentStandings = () => {
   const groupDisplayTime = parseInt(params.get("groupDisplayTime"));
   if (!groupDisplayTime || groupDisplayTime <= 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">
             Missing Parameter
@@ -79,7 +80,7 @@ const TournamentStandings = () => {
   const refreshInterval = parseInt(params.get("refreshInterval"));
   if (!refreshInterval || refreshInterval <= 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">
             Missing Parameter
@@ -112,13 +113,13 @@ const TournamentStandings = () => {
   };
 
   const getCourtBackgroundColor = (courtName) => {
-    if (!courtName) return "bg-[#17626c]";
+    if (!courtName) return "bg-[#c5f934]";
 
     const name = courtName.toLowerCase();
-    if (name.includes("galaxy")) return "bg-[#17626c]";
+    if (name.includes("galaxy")) return "bg-[#c5f934]";
     if (name.includes("black") || name.includes("star")) return "bg-[#000000]";
     if (name.includes("infinity")) return "bg-[#430750]";
-    return "bg-[#737373]"; // default
+    return "bg-[#84a55d]"; // default
   };
 
   const renderMatchInfo = (match, type) => {
@@ -256,7 +257,7 @@ const TournamentStandings = () => {
     try {
       setTodayMatchLoading(true);
       const response = await Common.ApiService.getInstance().request(
-        `GetMasterTournamentCourtsSchedule?masterTournamentId=${25}`
+        `GetMasterTournamentCourtsSchedule?masterTournamentId=${43}`
       );
 
       if (response?.data) {
@@ -440,7 +441,7 @@ const TournamentStandings = () => {
       case "champion":
         return <Trophy className="h-5 w-5 text-yellow-400" />;
       case "qualified":
-        return <Award className="h-5 w-5 text-[#17626c]" />;
+        return <Award className="h-5 w-5 text-[#c5f934]" />;
       case "eliminated":
         return <Shield className="h-5 w-5 text-gray-400" />;
       default:
@@ -452,14 +453,14 @@ const TournamentStandings = () => {
     if (id === 1)
       return "bg-gradient-to-r from-green-100 via-green-50 to-green-100 border-l-4 border-yellow-400";
     if (id === 2)
-      return "bg-gradient-to-r from-green-50 to-white border-l-4 border-[#17626c]";
+      return "bg-gradient-to-r from-green-50 to-white border-l-4 border-[#c5f934]";
     return "bg-white border-l-4 border-gray-200";
   };
 
   // Loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
         <div className="text-4xl font-bold text-white">
           Loading tournament data...
         </div>
@@ -470,7 +471,7 @@ const TournamentStandings = () => {
   // Error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
         <div className="text-4xl font-bold text-red-400">Error: {error}</div>
       </div>
     );
@@ -479,7 +480,7 @@ const TournamentStandings = () => {
   // No tournament data
   if (!tournamentsData || tournamentsData.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
         <div className="text-4xl font-bold text-gray-400">
           No tournament data available
         </div>
@@ -490,7 +491,7 @@ const TournamentStandings = () => {
   // Add error boundary protection
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">Error</div>
           <div className="text-white text-lg mb-4">{error}</div>
@@ -499,7 +500,7 @@ const TournamentStandings = () => {
               setError(null);
               fetchMultipleTournamentsPointsTable();
             }}
-            className="px-6 py-2 bg-[#17626c] text-white rounded-lg hover:bg-[#093337]"
+            className="px-6 py-2 bg-[#c5f934] text-white rounded-lg hover:bg-[#093337]"
           >
             Retry
           </button>
@@ -529,7 +530,7 @@ const TournamentStandings = () => {
                 />
               ))}
             </div>
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
               <div className="text-4xl font-bold text-white">
                 Loading tournament courts data...
               </div>
@@ -556,7 +557,7 @@ const TournamentStandings = () => {
                 />
               ))}
             </div>
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
               <div className="text-center">
                 <div className="text-4xl font-bold text-red-400 mb-4">
                   Error
@@ -586,7 +587,7 @@ const TournamentStandings = () => {
                 />
               ))}
             </div>
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
               <div className="text-4xl font-bold text-gray-400">
                 No tournament courts data available
               </div>
@@ -615,15 +616,16 @@ const TournamentStandings = () => {
             </div>
 
             {/* Main content */}
-            <div className="relative z-10 mt-[-20px] items-center justify-center min-h-screen">
+            <div className="relative z-10   items-center justify-center min-h-screen">
               <div className="w-full">
                 {/* Header with logos */}
-                <div className="flex justify-between items-center">
+                <Header />
+                {/* <div className="flex justify-between items-center">
                   <div className="text-center" style={{ width: "400px" }}>
                     <img
                       width={400}
                       className="justify-self-start p-5"
-                      src={ImageConstants.premierwhite}
+                      src={ImageConstants.leftLogo}
                       alt="Premier Club"
                     />
                   </div>
@@ -645,7 +647,7 @@ const TournamentStandings = () => {
                       alt="Playpro"
                     />
                   </div>
-                </div>
+                </div> */}
                 <div className="p-[50px] pt-[0px] pb-[120px] grid grid-cols-1 gap-6 items-center">
                   <div className="col-span-1 text-center">
                     <div className="text-4xl text-white font-bold  mb-2">
@@ -684,9 +686,9 @@ const TournamentStandings = () => {
                 </div>
               </div>
               {/* Bottom indicator - Fixed to bottom */}
-              {/* <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
+              <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
                 <img src={ImageConstants.sponsor} className="w-full" />
-              </div> */}
+              </div>
             </div>
 
             <style jsx>{`
@@ -726,7 +728,7 @@ const TournamentStandings = () => {
             </div>
 
             {/* Main content */}
-            <div className="relative z-10  mt-[-20px] items-center justify-center min-h-screen">
+            <div className="relative z-10    items-center justify-center min-h-screen">
               <div
                 style={{ position: "absolute" }}
                 className="text-white bg-[#093337] text-3xl font-bold px-6 py-2 rounded-lg rotate-[-90deg]  top-[500px] left-[-40px]   "
@@ -736,12 +738,14 @@ const TournamentStandings = () => {
 
               <div className="w-full">
                 {/* Header with logos */}
-                <div className="flex justify-between items-center">
+
+                <Header />
+                {/* <div className="flex justify-between items-center">
                   <div className="text-center" style={{ width: "400px" }}>
                     <img
                       width={400}
                       className="justify-self-start p-5"
-                      src={ImageConstants.premierwhite}
+                      src={ImageConstants.leftLogo}
                       alt="Premier Club"
                     />
                   </div>
@@ -763,7 +767,7 @@ const TournamentStandings = () => {
                       alt="Playpro"
                     />
                   </div>
-                </div>
+                </div> */}
                 <div className="p-[50px] pb-[10px] pt-[0px] grid grid-cols-1 gap-6 items-center">
                   <div className="col-span-1 text-center">
                     <div className="text-4xl text-white font-bold   mb-2 ">
@@ -799,7 +803,7 @@ const TournamentStandings = () => {
                               className="max-w-[1024px]   mx-auto rounded-lg shadow-lg overflow-hidden bg-white"
                             >
                               {/* Header with glow effect */}
-                              <div className="relative bg-gradient-to-r from-[#093337] via-[#17626c] to-[#093337] px-6 py-1 text-white">
+                              <div className="relative bg-gradient-to-r from-[#093337] via-[#c5f934] to-[#093337] px-6 py-1 text-white">
                                 <div className="flex justify-between items-center relative z-10">
                                   <div className="flex items-center space-x-1">
                                     <motion.div
@@ -825,7 +829,7 @@ const TournamentStandings = () => {
                               <div className="bg-gradient-to-b text-black from-gray-50 to-white">
                                 <table className="w-full">
                                   <thead>
-                                    <tr className="bg-gradient-to-r from-[#093337] to-[#17626c] text-white">
+                                    <tr className="bg-gradient-to-r from-[#093337] to-[#c5f934] text-white">
                                       <th className="py-1 px-4 text-left">#</th>
                                       <th className="py-1 px-4 text-left">
                                         Team Name
@@ -896,7 +900,7 @@ const TournamentStandings = () => {
                                             <motion.div
                                               initial={{
                                                 scale: animateRanks ? 1.5 : 1,
-                                                color: "#17626c",
+                                                color: "#000",
                                               }}
                                               animate={{
                                                 scale: 1,
@@ -926,16 +930,16 @@ const TournamentStandings = () => {
                                           <td className="py-1 px-1 text-center text-gray-600">
                                             {team.draw ?? 0}
                                           </td>
-                                          <td className="py-1 px-1 text-center font-bold text-[#17626c]">
+                                          <td className="py-1 px-1 text-center font-bold text-[#000]">
                                             {team.points ?? 0}
                                           </td>
-                                          <td className="py-1 px-1 text-center text-[#17626c] font-mono">
+                                          <td className="py-1 px-1 text-center text-[#000] font-mono">
                                             {calculatePCT(
                                               team.wins,
                                               team.played
                                             ).toFixed(3)}
                                           </td>
-                                          <td className="py-1 px-1 text-center text-[#17626c] font-bold">
+                                          <td className="py-1 px-1 text-center text-[#000] font-bold">
                                             {team.pf ?? 0}
                                           </td>
                                           <td className="py-1 px-1 text-center">
@@ -944,10 +948,10 @@ const TournamentStandings = () => {
                                           <td
                                             className={`py-1 px-1 text-center font-bold ${
                                               team.pd > 0
-                                                ? "text-[#17626c]"
+                                                ? "text-[#000]"
                                                 : team.pd < 0
                                                 ? "text-red-500"
-                                                : "text-gray-600"
+                                                : "text-[#000]"
                                             }`}
                                           >
                                             {team.pd > 0 ? "+" : ""}
@@ -973,19 +977,21 @@ const TournamentStandings = () => {
                                   </tbody>
                                 </table>
                               </div>
-                              <div className="px-4 py-1 bg-gradient-to-r from-[#093337] to-[#17626c] text-white text-xs">
+                              <div className="px-4 py-1 bg-gradient-to-r from-[#093337] to-[#c5f934] text-white text-xs">
                                 <div className="flex justify-between items-center">
                                   <div className="flex items-center space-x-2">
                                     <Trophy className="h-4 w-4 text-yellow-400" />
                                     <span>Champion</span>
                                   </div>
                                   <div className="flex items-center space-x-2">
-                                    <Award className="h-4 w-4 text-[#17626c]" />
+                                    <Award className="h-4 w-4 text-[#c5f934]" />
                                     <span>Qualified</span>
                                   </div>
                                   <div className="flex items-center space-x-2">
-                                    <Shield className="h-4 w-4 text-gray-400" />
-                                    <span>Eliminated</span>
+                                    <Shield className="h-4 w-4 text-[#000]" />
+                                    <span className="text-[#000]">
+                                      Eliminated
+                                    </span>
                                   </div>
                                 </div>
                               </div>
@@ -997,10 +1003,9 @@ const TournamentStandings = () => {
                 </div>
               </div>
               {/* Bottom indicator */}
-              {/* <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
+              <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
                 <img src={ImageConstants.sponsor} className="w-full " />
-                 
-              </div> */}
+              </div>
 
               {/* Live indicator */}
             </div>
@@ -1023,7 +1028,7 @@ const TournamentStandings = () => {
   } catch (error) {
     console.error("Error in TournamentStandings component:", error);
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#17626c] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">
             Component Error
@@ -1033,7 +1038,7 @@ const TournamentStandings = () => {
           </div>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 px-6 py-2 bg-[#17626c] text-white rounded-lg hover:bg-[#093337]"
+            className="mt-4 px-6 py-2 bg-[#c5f934] text-white rounded-lg hover:bg-[#093337]"
           >
             Reload Page
           </button>
