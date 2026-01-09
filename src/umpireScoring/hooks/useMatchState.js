@@ -498,60 +498,119 @@ export function useMatchState(tournamentId, matchId) {
           ? matchState.team2.score
           : matchState.team1.score;
 
-        if (isTeam1) {
-          newState.team1.score = newScore;
-          // Track advantage: if team reaches 4 while opponent is at 3, increment advantage count
-          if (newScore >= 4 && opponentScore === 3) {
-            newState.team1.advantageCount =
-              (matchState.team1.advantageCount || 0) + 1;
-          }
-          // Handle advantage when both teams are at 4 or higher (deuce/advantage situations)
-          // When scoring team scores and both are >= 4, scoring team gains/maintains advantage
-          if (opponentScore >= 4 && newScore >= 4) {
-            // If coming from deuce (both at exactly 4), increment advantage count for golden point tracking
-            if (matchState.team1.score === 4 && matchState.team2.score === 4) {
-              newState.team1.advantageCount =
-                (matchState.team1.advantageCount || 0) + 1;
-            }
-            // Reset opponent's advantage count when scoring team gains advantage
-            if (newScore > opponentScore) {
-              newState.team2.advantageCount = 0;
-            }
-          }
+        console.log("[SCORING] Score increment:", {
+          team: isTeam1 ? "Team 1" : "Team 2",
+          oldScore: isTeam1 ? matchState.team1.score : matchState.team2.score,
+          newScore,
+          opponentScore,
+          team1AdvantageCount: matchState.team1.advantageCount || 0,
+          team2AdvantageCount: matchState.team2.advantageCount || 0,
+          goldenPoint: matchSettings.goldenPoint,
+          advantagesWithGoldenPoint: matchSettings.advantagesWithGoldenPoint,
+        });
+
+        // Handle returning to deuce: if opponent has advantage (>= 5) and scoring team scores, both go back to 4
+        const returnedToDeuce = opponentScore >= 5 && newScore >= 4;
+        
+        if (returnedToDeuce) {
+          // Both teams return to deuce (4-4)
+          console.log("[SCORING] Returning to deuce - resetting both scores to 4");
+          newState.team1.score = 4;
+          newState.team2.score = 4;
+          // Don't increment advantage count here - this is returning to deuce, not gaining advantage
         } else {
-          newState.team2.score = newScore;
-          // Track advantage: if team reaches 4 while opponent is at 3, increment advantage count
-          if (newScore >= 4 && opponentScore === 3) {
-            newState.team2.advantageCount =
-              (matchState.team2.advantageCount || 0) + 1;
-          }
-          // Handle advantage when both teams are at 4 or higher (deuce/advantage situations)
-          // When scoring team scores and both are >= 4, scoring team gains/maintains advantage
-          if (opponentScore >= 4 && newScore >= 4) {
-            // If coming from deuce (both at exactly 4), increment advantage count for golden point tracking
-            if (matchState.team2.score === 4 && matchState.team1.score === 4) {
-              newState.team2.advantageCount =
-                (matchState.team2.advantageCount || 0) + 1;
+          // Normal scoring - update the scoring team's score
+          if (isTeam1) {
+            newState.team1.score = newScore;
+            // Handle advantage when both teams are at 4 or higher (deuce/advantage situations)
+            // When scoring team scores and both are >= 4, scoring team gains/maintains advantage
+            if (opponentScore >= 4 && newScore >= 4) {
+              // If coming from deuce (both at exactly 4), increment advantage count for golden point tracking
+              // This is the ONLY time we increment for advantage exchanges (not when reaching 40-30, etc.)
+              if (matchState.team1.score === 4 && matchState.team2.score === 4) {
+                const oldCount = matchState.team1.advantageCount || 0;
+                newState.team1.advantageCount = oldCount + 1;
+                console.log("[SCORING] Team 1 gained advantage from deuce - advantageCount:", oldCount, "->", newState.team1.advantageCount);
+              }
+              // Reset opponent's advantage count when scoring team gains advantage
+              // BUT: Don't reset if golden point is enabled with advantages threshold (need to track total exchanges)
+              if (
+                newScore > opponentScore &&
+                !(
+                  matchSettings.goldenPoint &&
+                  matchSettings.advantagesWithGoldenPoint > 0
+                )
+              ) {
+                newState.team2.advantageCount = 0;
+              }
             }
-            // Reset opponent's advantage count when scoring team gains advantage
-            if (newScore > opponentScore) {
-              newState.team1.advantageCount = 0;
+          } else {
+            newState.team2.score = newScore;
+            // Handle advantage when both teams are at 4 or higher (deuce/advantage situations)
+            // When scoring team scores and both are >= 4, scoring team gains/maintains advantage
+            if (opponentScore >= 4 && newScore >= 4) {
+              // If coming from deuce (both at exactly 4), increment advantage count for golden point tracking
+              // This is the ONLY time we increment for advantage exchanges (not when reaching 40-30, etc.)
+              console.log("[SCORING] Team 2 scoring at deuce/advantage - checking deuce condition:", {
+                team1OldScore: matchState.team1.score,
+                team2OldScore: matchState.team2.score,
+                isDeuce: matchState.team2.score === 4 && matchState.team1.score === 4,
+              });
+              if (matchState.team2.score === 4 && matchState.team1.score === 4) {
+                const oldCount = matchState.team2.advantageCount || 0;
+                newState.team2.advantageCount = oldCount + 1;
+                console.log("[SCORING] Team 2 gained advantage from deuce - advantageCount:", oldCount, "->", newState.team2.advantageCount);
+              } else {
+                console.log("[SCORING] Team 2 did NOT gain advantage from deuce - old scores were:", matchState.team1.score, "-", matchState.team2.score);
+              }
+              // Reset opponent's advantage count when scoring team gains advantage
+              // BUT: Don't reset if golden point is enabled with advantages threshold (need to track total exchanges)
+              if (
+                newScore > opponentScore &&
+                !(
+                  matchSettings.goldenPoint &&
+                  matchSettings.advantagesWithGoldenPoint > 0
+                )
+              ) {
+                newState.team1.advantageCount = 0;
+              }
             }
           }
         }
 
         // Get current advantage count for winning check
+        // Sum both teams' counts to get total advantage exchanges
+        const totalAdvantageExchanges =
+          (newState.team1.advantageCount || 0) +
+          (newState.team2.advantageCount || 0);
         const currentAdvantageCount = isTeam1
           ? newState.team1.advantageCount || 0
           : newState.team2.advantageCount || 0;
 
-        // Check game win
+        // Use updated scores for win check (in case we returned to deuce)
+        const finalTeamScore = newState.team1.score;
+        const finalOpponentScore = newState.team2.score;
+
+        console.log("[SCORING] Win check:", {
+          scoringTeam: isTeam1 ? "Team 1" : "Team 2",
+          teamScore: isTeam1 ? finalTeamScore : finalOpponentScore,
+          opponentScore: isTeam1 ? finalOpponentScore : finalTeamScore,
+          team1AdvantageCount: newState.team1.advantageCount || 0,
+          team2AdvantageCount: newState.team2.advantageCount || 0,
+          totalAdvantageExchanges,
+          advantagesWithGoldenPoint: matchSettings.advantagesWithGoldenPoint,
+          goldenPoint: matchSettings.goldenPoint,
+        });
+
+        // Check game win - pass total exchanges for threshold checking
         const won = hasWonGame(
-          newScore,
-          opponentScore,
-          currentAdvantageCount,
+          isTeam1 ? finalTeamScore : finalOpponentScore,
+          isTeam1 ? finalOpponentScore : finalTeamScore,
+          totalAdvantageExchanges, // Use total exchanges instead of individual count
           matchSettings
         );
+
+        console.log("[SCORING] Win check result:", won);
 
         if (won) {
           // Team won the game - update active set's games count

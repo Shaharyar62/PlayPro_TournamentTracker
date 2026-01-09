@@ -22,7 +22,7 @@ export function getScoreString(score, inTiebreak) {
  * Check if team has won the game
  * @param {number} teamScore - Team's current point score
  * @param {number} opponentScore - Opponent's current point score
- * @param {number} teamAdvantageCount - Number of advantages the team has had
+ * @param {number} teamAdvantageCount - Total number of advantage exchanges (sum of both teams' advantageCounts)
  * @param {Object} settings - MatchSettings object
  * @returns {boolean} True if team has won the game
  */
@@ -32,8 +32,17 @@ export function hasWonGame(
   teamAdvantageCount,
   settings
 ) {
+  console.log("[hasWonGame] Checking win conditions:", {
+    teamScore,
+    opponentScore,
+    teamAdvantageCount,
+    goldenPoint: settings.goldenPoint,
+    advantagesWithGoldenPoint: settings.advantagesWithGoldenPoint,
+  });
+
   // Direct win conditions (40-0, 40-15, 40-30)
   if (teamScore === 4 && opponentScore <= 2) {
+    console.log("[hasWonGame] Won by direct win condition (40-0, 40-15, 40-30)");
     return true;
   }
 
@@ -41,31 +50,60 @@ export function hasWonGame(
   if (settings.goldenPoint) {
     // Direct golden point without advantages
     if (settings.advantagesWithGoldenPoint === 0 && teamScore === 4) {
+      console.log("[hasWonGame] Won by direct golden point (no advantages)");
       return true;
     }
 
     // Golden point after specified advantages
     if (settings.advantagesWithGoldenPoint > 0) {
-      // Win after reaching advantage limit
-      if (
-        teamScore >= 4 &&
-        opponentScore === 3 &&
-        teamAdvantageCount >= settings.advantagesWithGoldenPoint
-      ) {
+      // Win after reaching advantage limit (when at advantage after threshold)
+      const condition1 = teamScore >= 5 && opponentScore === 4 && teamAdvantageCount >= settings.advantagesWithGoldenPoint;
+      console.log("[hasWonGame] Condition 1 (advantage win):", {
+        teamScore,
+        opponentScore,
+        teamAdvantageCount,
+        threshold: settings.advantagesWithGoldenPoint,
+        result: condition1,
+        checks: {
+          "teamScore >= 5": teamScore >= 5,
+          "opponentScore === 4": opponentScore === 4,
+          "teamAdvantageCount >= threshold": teamAdvantageCount >= settings.advantagesWithGoldenPoint,
+        },
+      });
+      if (condition1) {
+        console.log("[hasWonGame] Won by advantage after threshold");
         return true;
       }
-      // Win after advantage (score >= 5)
-      if (teamScore >= 5) {
+      
+      // Win by 2 points - always allowed (traditional tennis rule)
+      // The threshold only applies to advantage wins, not win-by-2
+      const condition2 = teamScore >= 4 && teamScore >= opponentScore + 2;
+      console.log("[hasWonGame] Condition 2 (win by 2 after threshold):", {
+        teamScore,
+        opponentScore,
+        teamAdvantageCount,
+        threshold: settings.advantagesWithGoldenPoint,
+        result: condition2,
+        checks: {
+          "teamScore >= 4": teamScore >= 4,
+          "teamScore >= opponentScore + 2": teamScore >= opponentScore + 2,
+          "teamAdvantageCount >= threshold": teamAdvantageCount >= settings.advantagesWithGoldenPoint,
+        },
+      });
+      if (condition2) {
+        console.log("[hasWonGame] Won by 2 points after threshold");
         return true;
       }
     }
   } else {
     // Traditional scoring - win by 2 points
     if (teamScore >= 4 && teamScore >= opponentScore + 2) {
+      console.log("[hasWonGame] Won by traditional scoring (win by 2)");
       return true;
     }
   }
 
+  console.log("[hasWonGame] No win condition met - returning false");
   return false;
 }
 
