@@ -118,7 +118,9 @@ body{
 
 .main-body {
   background-size: cover !important;
-  background-repeat: repeat !important;}
+  background-repeat: repeat !important;
+background-position: top !important;
+}
 
 
 @media screen and (width < 768px) {

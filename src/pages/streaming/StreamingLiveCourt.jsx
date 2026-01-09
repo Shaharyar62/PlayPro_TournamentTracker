@@ -49,7 +49,7 @@ const StreamingLiveCourt = () => {
     var matchFormat = liveMatchData?.matchSettings?.matchFormat;
     switch (matchFormat) {
       case TournamentRuleMatchFormatTypeEnum.raceToSix:
-        return "Race to 6";
+        return "Race to 8";
       case TournamentRuleMatchFormatTypeEnum.twoSetsSuperTieBreak:
         return "2 Sets - Super Tie Break";
       case TournamentRuleMatchFormatTypeEnum.threeSets:
@@ -551,7 +551,7 @@ const StreamingLiveCourt = () => {
                             </div> */}
                       </div>
                       {isServingTeam(1) && (
-                        <div className="flex items-center text-[#17626c]">
+                        <div className="flex items-center text-[#c5f934]">
                           <span className="text-xl">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"

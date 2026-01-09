@@ -9,6 +9,7 @@ import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
 import moment from "moment-timezone";
 import { TournamentRuleMatchFormatTypeEnum } from "../const/Constants";
 import MatchIdHelper from "../umpireScoring/utils/matchIdHelper.js";
+import Header from "../components/layout/header";
 
 // Single Court Component
 const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
@@ -35,7 +36,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
     var matchFormat = liveMatchData?.matchSettings?.matchFormat;
     switch (matchFormat) {
       case TournamentRuleMatchFormatTypeEnum.raceToSix:
-        return "Race to 6";
+        return "Race to 8";
       case TournamentRuleMatchFormatTypeEnum.twoSetsSuperTieBreak:
         return "2 Sets - Super Tie Break";
       case TournamentRuleMatchFormatTypeEnum.threeSets:
@@ -364,7 +365,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           <div className="flex items-center space-x-2 bg-black/50 text-white px-3 py-1 rounded-lg">
             <div
               className={`w-2 h-2 rounded-full ${
-                isConnected ? "bg-[#17626c]" : "bg-red-500"
+                isConnected ? "bg-[#c5f934]" : "bg-red-500"
               }`}
             ></div>
             <span className="text-sm font-medium">
@@ -392,7 +393,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         }`}
       >
         {/* Header row */}
-        <div className={`bg-[#17626c] text-white ${paddingScale}`}>
+        <div className={`bg-[#c5f934] text-black ${paddingScale}`}>
           <div
             className="grid gap-2 items-center"
             style={{
@@ -441,7 +442,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                       </div>
                     </div>
                     {isServingTeam(1) && (
-                      <div className="flex items-center text-[#17626c] bg-[#0c4146] rounded-full text-white p-1">
+                      <div className="flex items-center text-[#c5f934] bg-[#0c4146] rounded-full text-black p-1">
                         <span className={isMultiView ? "text-sm" : "text-xl"}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -468,7 +469,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                         } font-bold rounded ${
                           warning === "W1"
                             ? "bg-yellow-400 text-black"
-                            : "bg-red-500 text-white"
+                            : "bg-red-500 text-black"
                         }`}
                       >
                         {warning}
@@ -501,7 +502,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                       </div>
                     </div>
                     {isServingTeam(2) && (
-                      <div className="flex items-center text-[#17626c] bg-[#0c4146] rounded-full text-white p-1">
+                      <div className="flex items-center text-[#c5f934] bg-[#0c4146] rounded-full text-black p-1">
                         <span className={isMultiView ? "text-sm" : "text-xl"}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -528,7 +529,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                         } font-bold rounded ${
                           warning === "W1"
                             ? "bg-yellow-400 text-black"
-                            : "bg-red-500 text-white"
+                            : "bg-red-500 text-black"
                         }`}
                       >
                         {warning}
@@ -560,19 +561,19 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             ))}
 
             {/* Current Game/Points Score */}
-            <div className="text-center bg-[#17626c]">
+            <div className="text-center bg-[#c5f934]">
               <div
                 className={`space-y-${isMultiView ? "1" : "4"} ${
                   isMultiView ? "py-2 px-2" : "pt-[25px] pb-[25px]"
                 }`}
               >
                 <div
-                  className={`${textScaleXL} font-bold text-white game-score-style`}
+                  className={`${textScaleXL} font-bold text-black game-score-style`}
                 >
                   {getCurrentGameScore(1)}
                 </div>
                 <div
-                  className={`${textScaleXL} font-bold text-white game-score-style`}
+                  className={`${textScaleXL} font-bold text-black game-score-style`}
                 >
                   {getCurrentGameScore(2)}
                 </div>
@@ -589,7 +590,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         }`}
       >
         <div
-          className={`bg-[#17626c] text-white px-4 py-1 rounded-lg font-bold ${
+          className={`bg-[#c5f934] text-black px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-sm" : "text-xl"
           }`}
         >
@@ -603,7 +604,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           {matchData.court?.name || "LIVE SCOREBOARD"}
         </div>
         <div
-          className={`bg-[#17626c] text-white px-4 py-1 rounded-lg font-bold ${
+          className={`bg-[#c5f934] text-black px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-xs" : "text-sm"
           }`}
         >
@@ -643,7 +644,7 @@ const MultiCourtLive = () => {
 
   if (!tournamentId || courtIds.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-from-[#093337] via-[#17626c] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-from-[#093337] via-[#c5f934] to-[#093337]">
         <div className="text-4xl font-bold text-white">
           Tournament ID and at least one Court ID are required
         </div>
@@ -681,69 +682,13 @@ const MultiCourtLive = () => {
       </div>
 
       {/* Header with logos - only show when multi-view */}
-      {isMultiView && (
-        <div className="relative z-10 flex justify-between items-center px-4 py-2">
-          {/* <div className="text-center" style={{ width: "200px" }}>
-            <img
-              width={200}
-              className="justify-self-start"
-              src={ImageConstants.premierwhite}
-              alt="Premier Club"
-            />
-          </div> */}
-
-          <div className="text-center" style={{ margin: "0 auto" }}>
-            <img
-              style={{ height: "250px" }}
-              className="justify-self-end mx-auto "
-              src={ImageConstants.mainCenterLogo}
-              alt="Playpro"
-            />
-          </div>
-
-          {/* <div className="text-center" style={{ width: "200px" }}>
-            <img
-              width={150}
-              className="justify-self-end"
-              src={ImageConstants.playproWhite}
-              alt="Playpro"
-            />
-          </div> */}
-        </div>
-      )}
+      {isMultiView && <Header />}
 
       {/* Single court - full screen */}
       {!isMultiView && (
         <div className="relative z-10">
-          <div className="flex justify-between items-center px-4 py-2">
-            <div className="text-center" style={{ width: "400px" }}>
-              <img
-                width={400}
-                className="justify-self-start p-5"
-                src={ImageConstants.premierwhite}
-                alt="Premier Club"
-              />
-            </div>
-
-            <div className="text-center">
-              <img
-                width={220}
-                className="justify-self-end p-5"
-                src={ImageConstants.premiercup}
-                alt="Playpro"
-              />
-            </div>
-
-            <div className="text-center" style={{ width: "400px" }}>
-              <img
-                width={300}
-                className="justify-self-end p-5"
-                src={ImageConstants.playproWhite}
-                alt="Playpro"
-              />
-            </div>
-          </div>
-          <div className="px-[100px] mt-[50px]">
+          <Header />
+          <div className="px-[100px] mt-[100px]">
             <SingleCourtDisplay
               tournamentId={tournamentId}
               courtId={courtIds[0]}
@@ -756,15 +701,36 @@ const MultiCourtLive = () => {
       {/* Multi-court grid */}
       {isMultiView && (
         <div className={`relative z-10 grid ${getGridLayout()} gap-4 p-4`}>
-          {courtIds.map((courtId) => (
-            <div key={courtId} className="min-h-[350px]">
-              <SingleCourtDisplay
-                tournamentId={tournamentId}
-                courtId={courtId}
-                isMultiView={true}
-              />
-            </div>
-          ))}
+          {courtIds.map((courtId, index) => {
+            const isLastItem = index === courtIds.length - 1;
+            const isOddCount = courtIds.length % 2 !== 0;
+            const shouldCenter = isLastItem && isOddCount;
+
+            return (
+              <div
+                key={courtId}
+                className={`min-h-[350px] ${
+                  shouldCenter ? "col-span-2 flex justify-center" : ""
+                }`}
+              >
+                <div
+                  className={
+                    shouldCenter ? "w-full max-w-[calc(50%-0.5rem)]" : "w-full"
+                  }
+                >
+                  <SingleCourtDisplay
+                    tournamentId={tournamentId}
+                    courtId={courtId}
+                    isMultiView={true}
+                  />
+                </div>
+              </div>
+            );
+          })}
+          {/* Bottom indicator - Fixed to bottom */}
+          <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
+            <img src={ImageConstants.sponsor} className="w-full" />
+          </div>
         </div>
       )}
 
