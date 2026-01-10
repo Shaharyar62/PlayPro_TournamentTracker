@@ -53,6 +53,12 @@ const Home = () => {
       name: "Today's Matches",
       color: "#2e55b9",
     },
+
+    {
+      path: "/home/multi-court-live?tournamentId=43&courtId=108,109,110",
+      name: "Multi Court Live",
+      color: "#2e55b9",
+    },
     // { path: "/live-score", name: "Live Score", color: "#2e55b9" },
     // { path: "/time-table", name: "Time Table", color: "#2e55b9" },
     // { path: "/matches-timetable", name: "7 Day Schedule", color: "#2e55b9" },

@@ -834,21 +834,21 @@ const TournamentStandings = () => {
                                       <th className="py-1 px-4 text-left">
                                         Team Name
                                       </th>
-                                      <th className="py-1 px-4 text-center">
+                                      {/* <th className="py-1 px-4 text-center">
                                         P
-                                      </th>
+                                      </th> */}
                                       <th className="py-1 px-4 text-center">
                                         W
                                       </th>
                                       <th className="py-1 px-4 text-center">
                                         L
                                       </th>
-                                      <th className="py-1 px-4 text-center">
+                                      {/* <th className="py-1 px-4 text-center">
                                         D
                                       </th>
                                       <th className="py-1 px-4 text-center">
                                         PTS
-                                      </th>
+                                      </th> */}
                                       <th className="py-1 px-4 text-center">
                                         PCT
                                       </th>
@@ -918,21 +918,21 @@ const TournamentStandings = () => {
                                           <td className="py-1 px-1 text-sm font-semibold">
                                             {team.teamName}
                                           </td>
-                                          <td className="py-1 px-1 text-center font-bold">
+                                          {/* <td className="py-1 px-1 text-center font-bold">
                                             {team.played ?? 0}
-                                          </td>
+                                          </td> */}
                                           <td className="py-1 px-1 text-center font-bold">
                                             {team.wins ?? 0}
                                           </td>
                                           <td className="py-1 px-1 text-center text-red-600">
                                             {team.lose ?? 0}
                                           </td>
-                                          <td className="py-1 px-1 text-center text-gray-600">
+                                          {/* <td className="py-1 px-1 text-center text-gray-600">
                                             {team.draw ?? 0}
-                                          </td>
-                                          <td className="py-1 px-1 text-center font-bold text-[#000]">
+                                          </td> */}
+                                          {/* <td className="py-1 px-1 text-center font-bold text-[#000]">
                                             {team.points ?? 0}
-                                          </td>
+                                          </td> */}
                                           <td className="py-1 px-1 text-center text-[#000] font-mono">
                                             {calculatePCT(
                                               team.wins,
