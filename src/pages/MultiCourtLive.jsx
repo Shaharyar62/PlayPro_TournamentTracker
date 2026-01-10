@@ -9,6 +9,7 @@ import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
 import moment from "moment-timezone";
 import { TournamentRuleMatchFormatTypeEnum } from "../const/Constants";
 import MatchIdHelper from "../umpireScoring/utils/matchIdHelper.js";
+import { getScoreDisplayString } from "../umpireScoring/utils/scoringRules.js";
 import Header from "../components/layout/header";
 
 // Single Court Component
@@ -29,8 +30,6 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
       matchStatus.current = liveMatchData.status;
     }
   }, [liveMatchData]);
-
-  const scoreStrings = ["0", "15", "30", "40", "AD"];
 
   const getMatchFormat = () => {
     var matchFormat = liveMatchData?.matchSettings?.matchFormat;
@@ -244,13 +243,28 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
   const getCurrentGameScore = (teamIndex) => {
     if (liveMatchData) {
       const teamKey = teamIndex === 1 ? "team1" : "team2";
-      const score = liveMatchData[teamKey]?.score || 0;
+      const opponentKey = teamIndex === 1 ? "team2" : "team1";
+      const teamScore = liveMatchData[teamKey]?.score || 0;
+      const opponentScore = liveMatchData[opponentKey]?.score || 0;
+      const isInTiebreak =
+        liveMatchData.isInTiebreak || liveMatchData.isInSuperTiebreak;
 
-      if (liveMatchData.isInTiebreak || liveMatchData.isInSuperTiebreak) {
+      if (isInTiebreak) {
         return liveMatchData[teamKey]?.tiebreakScore || 0;
       }
 
-      return scoreStrings[score] || "0";
+      // Calculate total advantage exchanges for golden point display
+      const totalAdvantageExchanges =
+        (liveMatchData.team1?.advantageCount || 0) +
+        (liveMatchData.team2?.advantageCount || 0);
+
+      // Use getScoreDisplayString for consistent scoring display
+      return getScoreDisplayString(teamScore, opponentScore, {
+        isInTiebreak: false,
+        matchSettings: liveMatchData.matchSettings,
+        teamAdvantageCount: liveMatchData[teamKey]?.advantageCount || 0,
+        totalAdvantageExchanges,
+      });
     }
 
     if (matchData?.results?.currentGame) {

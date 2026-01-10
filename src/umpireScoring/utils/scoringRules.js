@@ -34,7 +34,7 @@ export function getScoreDisplayString(teamScore, opponentScore, options = {}) {
   const {
     isInTiebreak = false,
     matchSettings = null,
-    teamAdvantageCount = 0,
+    teamAdvantageCount: _teamAdvantageCount = 0,
     totalAdvantageExchanges = 0,
   } = options;
 
@@ -43,21 +43,16 @@ export function getScoreDisplayString(teamScore, opponentScore, options = {}) {
     return teamScore.toString();
   }
 
-  // If golden point is disabled or advantagesWithGoldenPoint is 0, use standard scoring
-  if (
-    !matchSettings ||
-    !matchSettings.goldenPoint ||
-    matchSettings.advantagesWithGoldenPoint === 0
-  ) {
-    return getScoreString(teamScore, false);
-  }
-
-  const advantagesWithGoldenPoint =
-    matchSettings.advantagesWithGoldenPoint || 0;
-
+  // Always handle deuce/advantage logic regardless of matchSettings
   // Both teams at 4 (deuce)
   if (teamScore === 4 && opponentScore === 4) {
-    if (totalAdvantageExchanges >= advantagesWithGoldenPoint) {
+    // Only show golden point if matchSettings is available and golden point is enabled
+    if (
+      matchSettings &&
+      matchSettings.goldenPoint &&
+      matchSettings.advantagesWithGoldenPoint > 0 &&
+      totalAdvantageExchanges >= matchSettings.advantagesWithGoldenPoint
+    ) {
       return "40 (Golden Point)";
     }
     return "40";
@@ -65,14 +60,12 @@ export function getScoreDisplayString(teamScore, opponentScore, options = {}) {
 
   // Team has advantage (score >= 5, opponent === 4)
   if (teamScore >= 5 && opponentScore === 4) {
-    if (totalAdvantageExchanges >= advantagesWithGoldenPoint) {
-      return "AD (Golden Point)";
-    } else if (teamAdvantageCount === 1) {
-      return "AD (1)";
-    } else if (teamAdvantageCount === 2) {
-      return "AD (2)";
-    }
-    return "AD";
+    return "ADV";
+  }
+
+  // Opponent has advantage (opponent >= 5, team === 4) - team is at 40
+  if (opponentScore >= 5 && teamScore === 4) {
+    return "40";
   }
 
   // Standard scoring for non-deuce situations (0, 15, 30, 40)
