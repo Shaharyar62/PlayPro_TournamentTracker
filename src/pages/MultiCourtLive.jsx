@@ -742,8 +742,75 @@ const MultiCourtLive = () => {
             );
           })}
           {/* Bottom indicator - Fixed to bottom */}
-          <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
+          {/* <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
             <img src={ImageConstants.sponsor} className="w-full" />
+          </div> */}
+
+          <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent overflow-hidden">
+            <div className="flex animate-scrollLeft">
+              <img
+                src={ImageConstants.sponsor1}
+                className="sponsor-slide-image"
+                alt="Sponsor 1"
+              />
+              <img
+                src={ImageConstants.sponsor2}
+                className="sponsor-slide-image"
+                alt="Sponsor 2"
+              />
+              <img
+                src={ImageConstants.sponsor3}
+                className="sponsor-slide-image"
+                alt="Sponsor 3"
+              />
+              <img
+                src={ImageConstants.sponsor4}
+                className="sponsor-slide-image"
+                alt="Sponsor 4"
+              />
+              {/* Duplicates for seamless infinite loop */}
+              <img
+                src={ImageConstants.sponsor1}
+                className="sponsor-slide-image"
+                alt="Sponsor 1"
+              />
+              <img
+                src={ImageConstants.sponsor2}
+                className="sponsor-slide-image"
+                alt="Sponsor 2"
+              />
+              <img
+                src={ImageConstants.sponsor3}
+                className="sponsor-slide-image"
+                alt="Sponsor 3"
+              />
+              <img
+                src={ImageConstants.sponsor4}
+                className="sponsor-slide-image"
+                alt="Sponsor 4"
+              />
+              {/* Third set for ultra-smooth seamless loop */}
+              <img
+                src={ImageConstants.sponsor1}
+                className="sponsor-slide-image"
+                alt="Sponsor 1"
+              />
+              <img
+                src={ImageConstants.sponsor2}
+                className="sponsor-slide-image"
+                alt="Sponsor 2"
+              />
+              <img
+                src={ImageConstants.sponsor3}
+                className="sponsor-slide-image"
+                alt="Sponsor 3"
+              />
+              <img
+                src={ImageConstants.sponsor4}
+                className="sponsor-slide-image"
+                alt="Sponsor 4"
+              />
+            </div>
           </div>
         </div>
       )}
@@ -756,6 +823,39 @@ const MultiCourtLive = () => {
           }
           50% {
             opacity: 1;
+          }
+        }
+        @keyframes scrollLeft {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(calc(-100vw * 4 / 12));
+          }
+        }
+        .animate-scrollLeft {
+          animation: scrollLeft 5s linear infinite;
+          will-change: transform;
+          display: flex;
+          width: calc(100vw * 12 / 4);
+        }
+        .sponsor-slide-image {
+          width: calc(100vw / 1);
+          flex-shrink: 0;
+          height: auto;
+          min-height: 171px;
+          object-fit: contain;
+          object-position: center;
+          display: block;
+        }
+        @media (min-width: 1920px) {
+          .sponsor-slide-image {
+            min-height: 200px;
+          }
+        }
+        @media (min-width: 2560px) {
+          .sponsor-slide-image {
+            min-height: 220px;
           }
         }
       `}</style>

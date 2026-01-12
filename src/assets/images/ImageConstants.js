@@ -1,4 +1,8 @@
 import sponsor from "./sponsor-greenwich-logo.png";
+import sponsor1 from "./ads_s1.png";
+import sponsor2 from "./ads_s2.png";
+import sponsor3 from "./ads_s3.png";
+import sponsor4 from "./ads_s4.png";
 import playproWhite from "./playpro-w.png";
 import playpro from "./logo.png";
 import playproColorVertical from "./playpro_logo_vertical.png";
@@ -26,6 +30,10 @@ export const ImageConstants = {
   leftLogo,
   cupLogo,
   sponsor,
+  sponsor1,
+  sponsor2,
+  sponsor3,
+  sponsor4,
   playproWhite,
   playpro,
   bg,
