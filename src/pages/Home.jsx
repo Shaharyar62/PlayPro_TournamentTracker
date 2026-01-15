@@ -7,25 +7,25 @@ import { ImageConstants } from "../assets/images/ImageConstants";
 const Home = () => {
   const pages = [
     {
-      path: "/home/live-court?tournamentId=43&courtId=108",
+      path: "/home/live-court?tournamentId=44&courtId=266",
       name: "Court 1",
       color: "#2e55b9",
     },
     {
-      path: "/home/live-court?tournamentId=43&courtId=109",
+      path: "/home/live-court?tournamentId=44&courtId=286",
       name: "Court 2",
       color: "#2e55b9",
     },
     {
-      path: "/home/live-court?tournamentId=43&courtId=110",
+      path: "/home/live-court?tournamentId=44&courtId=287",
       name: "Court 3",
       color: "#2e55b9",
     },
-    // {
-    //   path: "/home/live-court?tournamentId=34&courtId=67",
-    //   name: "Court 4",
-    //   color: "#2e55b9",
-    // },
+    {
+      path: "/home/live-court?tournamentId=44&courtId=288",
+      name: "Court 4",
+      color: "#2e55b9",
+    },
     // {
     //   path: "/home/live-court?tournamentId=34&courtId=182",
     //   name: "Court 5",
@@ -44,18 +44,18 @@ const Home = () => {
     // },
 
     {
-      path: "/home/score-table?tournamentIds=145,146,147&groupDisplayTime=2&refreshInterval=10",
+      path: "/home/score-table?tournamentIds=148,&groupDisplayTime=2&refreshInterval=10",
       name: "Score Table",
       color: "#2e55b9",
     },
     {
-      path: "/home/today-match?tournamentId=43",
+      path: "/home/today-match?tournamentId=44",
       name: "Today's Matches",
       color: "#2e55b9",
     },
 
     {
-      path: "/home/multi-court-live?tournamentId=43&courtId=108,109,110",
+      path: "/home/multi-court-live?tournamentId=44&courtId=266,286,287,288",
       name: "Multi Court Live",
       color: "#2e55b9",
     },

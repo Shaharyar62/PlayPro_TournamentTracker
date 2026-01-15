@@ -834,16 +834,17 @@ const MultiCourtLive = () => {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(calc(-100vw * 4 / 12));
+            transform: translateX(calc(-1000vw * 4 / 12));
           }
         }
         .animate-scrollLeft {
-          animation: scrollLeft 5s linear infinite;
+          animation: scrollLeft 80s linear infinite;
           will-change: transform;
           display: flex;
           width: calc(100vw * 12 / 4);
         }
         .sponsor-slide-image {
+          margin-left: 20px;
           width: calc(100vw / 1);
           flex-shrink: 0;
           height: auto;

@@ -15,7 +15,7 @@ export const Header = () => {
 
       <div className="text-center">
         <img
-          width={420}
+          width={300}
           className="justify-self-end p-5"
           src={ImageConstants.cupLogo}
           alt="Greenwich Padel"
@@ -24,9 +24,9 @@ export const Header = () => {
 
       <div className="text-center" style={{ width: "400px" }}>
         <img
-          width={300}
+          width={400}
           className="justify-self-end p-5"
-          src={ImageConstants.playproWhite}
+          src={ImageConstants.playpro}
           alt="Playpro"
         />
       </div>

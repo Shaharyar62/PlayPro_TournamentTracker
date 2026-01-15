@@ -60,7 +60,7 @@ const TournamentStandings = () => {
   const groupDisplayTime = parseInt(params.get("groupDisplayTime"));
   if (!groupDisplayTime || groupDisplayTime <= 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#bb0104] via-[#ffb829] to-[#bb0104]">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">
             Missing Parameter
@@ -80,7 +80,7 @@ const TournamentStandings = () => {
   const refreshInterval = parseInt(params.get("refreshInterval"));
   if (!refreshInterval || refreshInterval <= 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#bb0104] via-[#ffb829] to-[#bb0104]">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">
             Missing Parameter
@@ -113,10 +113,10 @@ const TournamentStandings = () => {
   };
 
   const getCourtBackgroundColor = (courtName) => {
-    if (!courtName) return "bg-[#c5f934]";
+    if (!courtName) return "bg-[#ffb829]";
 
     const name = courtName.toLowerCase();
-    if (name.includes("galaxy")) return "bg-[#c5f934]";
+    if (name.includes("galaxy")) return "bg-[#ffb829]";
     if (name.includes("black") || name.includes("star")) return "bg-[#000000]";
     if (name.includes("infinity")) return "bg-[#430750]";
     return "bg-[#84a55d]"; // default
@@ -441,7 +441,7 @@ const TournamentStandings = () => {
       case "champion":
         return <Trophy className="h-5 w-5 text-yellow-400" />;
       case "qualified":
-        return <Award className="h-5 w-5 text-[#c5f934]" />;
+        return <Award className="h-5 w-5 text-[#ffb829]" />;
       case "eliminated":
         return <Shield className="h-5 w-5 text-gray-400" />;
       default:
@@ -453,14 +453,14 @@ const TournamentStandings = () => {
     if (id === 1)
       return "bg-gradient-to-r from-green-100 via-green-50 to-green-100 border-l-4 border-yellow-400";
     if (id === 2)
-      return "bg-gradient-to-r from-green-50 to-white border-l-4 border-[#c5f934]";
+      return "bg-gradient-to-r from-green-50 to-white border-l-4 border-[#ffb829]";
     return "bg-white border-l-4 border-gray-200";
   };
 
   // Loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#bb0104] via-[#ffb829] to-[#bb0104]">
         <div className="text-4xl font-bold text-white">
           Loading tournament data...
         </div>
@@ -471,7 +471,7 @@ const TournamentStandings = () => {
   // Error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#bb0104] via-[#ffb829] to-[#bb0104]">
         <div className="text-4xl font-bold text-red-400">Error: {error}</div>
       </div>
     );
@@ -480,7 +480,7 @@ const TournamentStandings = () => {
   // No tournament data
   if (!tournamentsData || tournamentsData.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#bb0104] via-[#ffb829] to-[#bb0104]">
         <div className="text-4xl font-bold text-gray-400">
           No tournament data available
         </div>
@@ -491,7 +491,7 @@ const TournamentStandings = () => {
   // Add error boundary protection
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#bb0104] via-[#ffb829] to-[#bb0104]">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">Error</div>
           <div className="text-white text-lg mb-4">{error}</div>
@@ -500,7 +500,7 @@ const TournamentStandings = () => {
               setError(null);
               fetchMultipleTournamentsPointsTable();
             }}
-            className="px-6 py-2 bg-[#c5f934] text-white rounded-lg hover:bg-[#093337]"
+            className="px-6 py-2 bg-[#ffb829] text-white rounded-lg hover:bg-[#bb0104]"
           >
             Retry
           </button>
@@ -510,202 +510,203 @@ const TournamentStandings = () => {
   }
 
   try {
-    // Show TodayMatch component when showTodayMatch is true
-    if (showTodayMatch) {
-      // TodayMatch loading state
-      if (todayMatchLoading) {
-        return (
-          <div className="min-h-screen relative overflow-hidden">
-            {/* Stars background */}
-            <div className="absolute inset-0">
-              {[...Array(50)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-1 h-1 bg-white rounded-full opacity-60"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    animation: `twinkle ${2 + Math.random() * 3}s infinite`,
-                  }}
-                />
-              ))}
-            </div>
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
-              <div className="text-4xl font-bold text-white">
-                Loading tournament courts data...
-              </div>
-            </div>
-          </div>
-        );
-      }
+    // // Show TodayMatch component when showTodayMatch is true
+    // if (showTodayMatch) {
+    //   // TodayMatch loading state
+    //   if (todayMatchLoading) {
+    //     return (
+    //       <div className="min-h-screen relative overflow-hidden">
+    //         {/* Stars background */}
+    //         <div className="absolute inset-0">
+    //           {[...Array(50)].map((_, i) => (
+    //             <div
+    //               key={i}
+    //               className="absolute w-1 h-1 bg-white rounded-full opacity-60"
+    //               style={{
+    //                 left: `${Math.random() * 100}%`,
+    //                 top: `${Math.random() * 100}%`,
+    //                 animation: `twinkle ${2 + Math.random() * 3}s infinite`,
+    //               }}
+    //             />
+    //           ))}
+    //         </div>
+    //         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#bb0104] via-[#ffb829] to-[#bb0104]">
+    //           <div className="text-4xl font-bold text-white">
+    //             Loading tournament courts data...
+    //           </div>
+    //         </div>
+    //       </div>
+    //     );
+    //   }
 
-      // TodayMatch error state
-      if (todayMatchError) {
-        return (
-          <div className="min-h-screen relative overflow-hidden">
-            {/* Stars background */}
-            <div className="absolute inset-0">
-              {[...Array(50)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-1 h-1 bg-white rounded-full opacity-60"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    animation: `twinkle ${2 + Math.random() * 3}s infinite`,
-                  }}
-                />
-              ))}
-            </div>
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-red-400 mb-4">
-                  Error
-                </div>
-                <div className="text-white text-lg">{todayMatchError}</div>
-              </div>
-            </div>
-          </div>
-        );
-      }
+    //   // TodayMatch error state
+    //   if (todayMatchError) {
+    //     return (
+    //       <div className="min-h-screen relative overflow-hidden">
+    //         {/* Stars background */}
+    //         <div className="absolute inset-0">
+    //           {[...Array(50)].map((_, i) => (
+    //             <div
+    //               key={i}
+    //               className="absolute w-1 h-1 bg-white rounded-full opacity-60"
+    //               style={{
+    //                 left: `${Math.random() * 100}%`,
+    //                 top: `${Math.random() * 100}%`,
+    //                 animation: `twinkle ${2 + Math.random() * 3}s infinite`,
+    //               }}
+    //             />
+    //           ))}
+    //         </div>
+    //         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#bb0104] via-[#ffb829] to-[#bb0104]">
+    //           <div className="text-center">
+    //             <div className="text-4xl font-bold text-red-400 mb-4">
+    //               Error
+    //             </div>
+    //             <div className="text-white text-lg">{todayMatchError}</div>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     );
+    //   }
 
-      // No TodayMatch data
-      if (!todayMatchData || !todayMatchData.courts) {
-        return (
-          <div className="min-h-screen relative overflow-hidden">
-            {/* Stars background */}
-            <div className="absolute inset-0">
-              {[...Array(50)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-1 h-1 bg-white rounded-full opacity-60"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    animation: `twinkle ${2 + Math.random() * 3}s infinite`,
-                  }}
-                />
-              ))}
-            </div>
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
-              <div className="text-4xl font-bold text-gray-400">
-                No tournament courts data available
-              </div>
-            </div>
-          </div>
-        );
-      }
+    //   // No TodayMatch data
+    //   if (!todayMatchData || !todayMatchData.courts) {
+    //     return (
+    //       <div className="min-h-screen relative overflow-hidden">
+    //         {/* Stars background */}
+    //         <div className="absolute inset-0">
+    //           {[...Array(50)].map((_, i) => (
+    //             <div
+    //               key={i}
+    //               className="absolute w-1 h-1 bg-white rounded-full opacity-60"
+    //               style={{
+    //                 left: `${Math.random() * 100}%`,
+    //                 top: `${Math.random() * 100}%`,
+    //                 animation: `twinkle ${2 + Math.random() * 3}s infinite`,
+    //               }}
+    //             />
+    //           ))}
+    //         </div>
+    //         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#bb0104] via-[#ffb829] to-[#bb0104]">
+    //           <div className="text-4xl font-bold text-gray-400">
+    //             No tournament courts data available
+    //           </div>
+    //         </div>
+    //       </div>
+    //     );
+    //   }
 
-      // TodayMatch render
-      return (
-        <>
-          <div className="min-h-screen relative overflow-hidden">
-            {/* Stars background */}
-            <div className="absolute inset-0">
-              {[...Array(50)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-1 h-1 bg-white rounded-full opacity-60"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    animation: `twinkle ${2 + Math.random() * 3}s infinite`,
-                  }}
-                />
-              ))}
-            </div>
+    //   // TodayMatch render
+    //   return (
+    //     <>
+    //       <div className="min-h-screen relative overflow-hidden">
+    //         {/* Stars background */}
+    //         <div className="absolute inset-0">
+    //           {[...Array(50)].map((_, i) => (
+    //             <div
+    //               key={i}
+    //               className="absolute w-1 h-1 bg-white rounded-full opacity-60"
+    //               style={{
+    //                 left: `${Math.random() * 100}%`,
+    //                 top: `${Math.random() * 100}%`,
+    //                 animation: `twinkle ${2 + Math.random() * 3}s infinite`,
+    //               }}
+    //             />
+    //           ))}
+    //         </div>
 
-            {/* Main content */}
-            <div className="relative z-10   items-center justify-center min-h-screen">
-              <div className="w-full">
-                {/* Header with logos */}
-                <Header />
-                {/* <div className="flex justify-between items-center">
-                  <div className="text-center" style={{ width: "400px" }}>
-                    <img
-                      width={400}
-                      className="justify-self-start p-5"
-                      src={ImageConstants.leftLogo}
-                      alt="Premier Club"
-                    />
-                  </div>
+    //         {/* Main content */}
+    //         <div className="relative z-10   items-center justify-center min-h-screen">
+    //           <div className="w-full">
+    //             {/* Header with logos */}
+    //             <Header />
+    //             {/* <div className="flex justify-between items-center">
+    //               <div className="text-center" style={{ width: "400px" }}>
+    //                 <img
+    //                   width={400}
+    //                   className="justify-self-start p-5"
+    //                   src={ImageConstants.leftLogo}
+    //                   alt="Premier Club"
+    //                 />
+    //               </div>
 
-                  <div className="text-center">
-                    <img
-                      width={220}
-                      className="justify-self-end p-5"
-                      src={ImageConstants.premiercup}
-                      alt="Playpro"
-                    />
-                  </div>
+    //               <div className="text-center">
+    //                 <img
+    //                   width={220}
+    //                   className="justify-self-end p-5"
+    //                   src={ImageConstants.premiercup}
+    //                   alt="Playpro"
+    //                 />
+    //               </div>
 
-                  <div className="text-center" style={{ width: "400px" }}>
-                    <img
-                      width={300}
-                      className="justify-self-end p-5"
-                      src={ImageConstants.playproWhite}
-                      alt="Playpro"
-                    />
-                  </div>
-                </div> */}
-                <div className="p-[50px] pt-[0px] pb-[120px] grid grid-cols-1 gap-6 items-center">
-                  <div className="col-span-1 text-center">
-                    <div className="text-4xl text-white font-bold  mb-2">
-                      HAPPENING NOW
-                    </div>
-                  </div>
+    //               <div className="text-center" style={{ width: "400px" }}>
+    //                 <img
+    //                   width={300}
+    //                   className="justify-self-end p-5"
+    //                   src={ImageConstants.playproWhite}
+    //                   alt="Playpro"
+    //                 />
+    //               </div>
+    //             </div> */}
+    //             <div className="p-[50px] pt-[0px] pb-[120px] grid grid-cols-1 gap-6 items-center">
+    //               <div className="col-span-1 text-center">
+    //                 <div className="text-4xl text-white font-bold  mb-2">
+    //                   HAPPENING NOW
+    //                 </div>
+    //               </div>
 
-                  {/* Dynamic Courts Rendering */}
-                  {todayMatchData.courts.map((court, index) => (
-                    <div
-                      key={court.courtId || index}
-                      className="grid grid-cols-11 gap-4 items-center"
-                    >
-                      <div className="col-span-3 text-center">
-                        <h2
-                          className={`text-4xl text-white ${getCourtBackgroundColor(
-                            court.courtName
-                          )} py-1 mr-[70px] rounded-lg font-bold break-words overflow-hidden`}
-                        >
-                          <div
-                            className="truncate"
-                            title={court.courtName || `Court ${court.courtId}`}
-                          >
-                            {court.courtName || `Court ${court.courtId}`}
-                          </div>
-                        </h2>
-                      </div>
-                      <div className="col-span-4 text-center">
-                        {renderMatchInfo(court.currentMatch, "current")}
-                      </div>
-                      <div className="col-span-4 text-center">
-                        {renderMatchInfo(court.upcomingMatch, "upcoming")}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              {/* Bottom indicator - Fixed to bottom */}
-              <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
-                <img src={ImageConstants.sponsor} className="w-full" />
-              </div>
-            </div>
+    //               {/* Dynamic Courts Rendering */}
+    //               {todayMatchData.courts.map((court, index) => (
+    //                 <div
+    //                   key={court.courtId || index}
+    //                   className="grid grid-cols-11 gap-4 items-center"
+    //                 >
+    //                   <div className="col-span-3 text-center">
+    //                     <h2
+    //                       className={`text-4xl text-white ${getCourtBackgroundColor(
+    //                         court.courtName
+    //                       )} py-1 mr-[70px] rounded-lg font-bold break-words overflow-hidden`}
+    //                     >
+    //                       <div
+    //                         className="truncate"
+    //                         title={court.courtName || `Court ${court.courtId}`}
+    //                       >
+    //                         {court.courtName || `Court ${court.courtId}`}
+    //                       </div>
+    //                     </h2>
+    //                   </div>
+    //                   <div className="col-span-4 text-center">
+    //                     {renderMatchInfo(court.currentMatch, "current")}
+    //                   </div>
+    //                   <div className="col-span-4 text-center">
+    //                     {renderMatchInfo(court.upcomingMatch, "upcoming")}
+    //                   </div>
+    //                 </div>
+    //               ))}
+    //             </div>
+    //           </div>
+    //           {/* Bottom indicator - Fixed to bottom */}
+    //           <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
+    //             <img src={ImageConstants.sponsor} className="w-full" />
+    //           </div>
+    //         </div>
 
-            <style jsx>{`
-              @keyframes twinkle {
-                0%,
-                100% {
-                  opacity: 0.3;
-                }
-                50% {
-                  opacity: 1;
-                }
-              }
-            `}</style>
-          </div>
-        </>
-      );
-    }
+    //         <style jsx>{`
+    //           @keyframes twinkle {
+    //             0%,
+    //             100% {
+    //               opacity: 0.3;
+    //             }
+    //             50% {
+    //               opacity: 1;
+    //             }
+    //           }
+    //         `}</style>
+    //       </div>
+    //     </>
+    //   );
+    // }
+
     //Groups Section
 
     return (
@@ -731,7 +732,7 @@ const TournamentStandings = () => {
             <div className="relative z-10    items-center justify-center min-h-screen">
               <div
                 style={{ position: "absolute" }}
-                className="text-white bg-[#093337] text-3xl font-bold px-6 py-2 rounded-lg rotate-[-90deg]  top-[500px] left-[-40px]   "
+                className="text-white bg-[#bb0104] text-3xl font-bold px-6 py-2 rounded-lg rotate-[-90deg]  top-[500px] left-[-40px]   "
               >
                 GROUPS
               </div>
@@ -770,7 +771,7 @@ const TournamentStandings = () => {
                 </div> */}
                 <div className="p-[50px] pb-[10px] pt-[0px] grid grid-cols-1 gap-6 items-center">
                   <div className="col-span-1 text-center">
-                    <div className="text-4xl text-white font-bold   mb-2 ">
+                    <div className="text-4xl text-black font-bold   mb-2 ">
                       {currentTournament?.name || "Tournament"}
                     </div>
                   </div>
@@ -803,7 +804,7 @@ const TournamentStandings = () => {
                               className="max-w-[1024px]   mx-auto rounded-lg shadow-lg overflow-hidden bg-white"
                             >
                               {/* Header with glow effect */}
-                              <div className="relative bg-gradient-to-r from-[#093337] via-[#c5f934] to-[#093337] px-6 py-1 text-white">
+                              <div className="relative bg-gradient-to-r from-[#bb0104] via-[#ffb829] to-[#bb0104] px-6 py-1 text-white">
                                 <div className="flex justify-between items-center relative z-10">
                                   <div className="flex items-center space-x-1">
                                     <motion.div
@@ -829,7 +830,7 @@ const TournamentStandings = () => {
                               <div className="bg-gradient-to-b text-black from-gray-50 to-white">
                                 <table className="w-full">
                                   <thead>
-                                    <tr className="bg-gradient-to-r from-[#093337] to-[#c5f934] text-white">
+                                    <tr className="bg-gradient-to-r from-[#bb0104] to-[#ffb829] text-white">
                                       <th className="py-1 px-4 text-left">#</th>
                                       <th className="py-1 px-4 text-left">
                                         Team Name
@@ -915,16 +916,25 @@ const TournamentStandings = () => {
                                               {index + 1}
                                             </motion.div>
                                           </td>
-                                          <td className="py-1 px-1 text-sm font-semibold">
+                                          <td
+                                            style={{ fontSize: "35px" }}
+                                            className="py-1 px-1 text-sm font-semibold"
+                                          >
                                             {team.teamName}
                                           </td>
                                           {/* <td className="py-1 px-1 text-center font-bold">
                                             {team.played ?? 0}
                                           </td> */}
-                                          <td className="py-1 px-1 text-center font-bold">
+                                          <td
+                                            style={{ fontSize: "30px" }}
+                                            className="py-1 px-1 text-center font-bold"
+                                          >
                                             {team.wins ?? 0}
                                           </td>
-                                          <td className="py-1 px-1 text-center text-red-600">
+                                          <td
+                                            style={{ fontSize: "30px" }}
+                                            className="py-1 px-1 text-center text-red-600"
+                                          >
                                             {team.lose ?? 0}
                                           </td>
                                           {/* <td className="py-1 px-1 text-center text-gray-600">
@@ -933,19 +943,29 @@ const TournamentStandings = () => {
                                           {/* <td className="py-1 px-1 text-center font-bold text-[#000]">
                                             {team.points ?? 0}
                                           </td> */}
-                                          <td className="py-1 px-1 text-center text-[#000] font-mono">
+                                          <td
+                                            style={{ fontSize: "30px" }}
+                                            className="py-1 px-1 text-center text-[#000] font-mono"
+                                          >
                                             {calculatePCT(
                                               team.wins,
                                               team.played
                                             ).toFixed(3)}
                                           </td>
-                                          <td className="py-1 px-1 text-center text-[#000] font-bold">
+                                          <td
+                                            style={{ fontSize: "30px" }}
+                                            className="py-1 px-1 text-center text-[#000] font-bold"
+                                          >
                                             {team.pf ?? 0}
                                           </td>
-                                          <td className="py-1 px-1 text-center">
+                                          <td
+                                            style={{ fontSize: "30px" }}
+                                            className="py-1 px-1 text-center"
+                                          >
                                             {team.pa ?? 0}
                                           </td>
                                           <td
+                                            style={{ fontSize: "30px" }}
                                             className={`py-1 px-1 text-center font-bold ${
                                               team.pd > 0
                                                 ? "text-[#000]"
@@ -957,7 +977,10 @@ const TournamentStandings = () => {
                                             {team.pd > 0 ? "+" : ""}
                                             {team.pd ?? 0}
                                           </td>
-                                          <td className="py-1 px-1 text-center">
+                                          <td
+                                            style={{ fontSize: "30px" }}
+                                            className="py-1 px-1 text-center"
+                                          >
                                             <motion.div
                                               whileHover={{
                                                 scale: 1.2,
@@ -977,14 +1000,14 @@ const TournamentStandings = () => {
                                   </tbody>
                                 </table>
                               </div>
-                              <div className="px-4 py-1 bg-gradient-to-r from-[#093337] to-[#c5f934] text-white text-xs">
+                              <div className="px-4 py-1 bg-gradient-to-r from-[#bb0104] to-[#ffb829] text-white text-xs">
                                 <div className="flex justify-between items-center">
                                   <div className="flex items-center space-x-2">
                                     <Trophy className="h-4 w-4 text-yellow-400" />
                                     <span>Champion</span>
                                   </div>
                                   <div className="flex items-center space-x-2">
-                                    <Award className="h-4 w-4 text-[#c5f934]" />
+                                    <Award className="h-4 w-4 text-[#ffb829]" />
                                     <span>Qualified</span>
                                   </div>
                                   <div className="flex items-center space-x-2">
@@ -1003,13 +1026,122 @@ const TournamentStandings = () => {
                 </div>
               </div>
               {/* Bottom indicator */}
-              <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
+              {/* <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
                 <img src={ImageConstants.sponsor} className="w-full " />
+              </div> */}
+              <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent overflow-hidden">
+                <div className="flex animate-scrollLeft">
+                  <img
+                    src={ImageConstants.sponsor1}
+                    className="sponsor-slide-image"
+                    alt="Sponsor 1"
+                  />
+                  <img
+                    src={ImageConstants.sponsor2}
+                    className="sponsor-slide-image"
+                    alt="Sponsor 2"
+                  />
+                  <img
+                    src={ImageConstants.sponsor3}
+                    className="sponsor-slide-image"
+                    alt="Sponsor 3"
+                  />
+                  <img
+                    src={ImageConstants.sponsor4}
+                    className="sponsor-slide-image"
+                    alt="Sponsor 4"
+                  />
+                  {/* Duplicates for seamless infinite loop */}
+                  <img
+                    src={ImageConstants.sponsor1}
+                    className="sponsor-slide-image"
+                    alt="Sponsor 1"
+                  />
+                  <img
+                    src={ImageConstants.sponsor2}
+                    className="sponsor-slide-image"
+                    alt="Sponsor 2"
+                  />
+                  <img
+                    src={ImageConstants.sponsor3}
+                    className="sponsor-slide-image"
+                    alt="Sponsor 3"
+                  />
+                  <img
+                    src={ImageConstants.sponsor4}
+                    className="sponsor-slide-image"
+                    alt="Sponsor 4"
+                  />
+                  {/* Third set for ultra-smooth seamless loop */}
+                  <img
+                    src={ImageConstants.sponsor1}
+                    className="sponsor-slide-image"
+                    alt="Sponsor 1"
+                  />
+                  <img
+                    src={ImageConstants.sponsor2}
+                    className="sponsor-slide-image"
+                    alt="Sponsor 2"
+                  />
+                  <img
+                    src={ImageConstants.sponsor3}
+                    className="sponsor-slide-image"
+                    alt="Sponsor 3"
+                  />
+                  <img
+                    src={ImageConstants.sponsor4}
+                    className="sponsor-slide-image"
+                    alt="Sponsor 4"
+                  />
+                </div>
               </div>
-
               {/* Live indicator */}
             </div>
-
+            <style jsx>{`
+              @keyframes twinkle {
+                0%,
+                100% {
+                  opacity: 0.3;
+                }
+                50% {
+                  opacity: 1;
+                }
+              }
+              @keyframes scrollLeft {
+                0% {
+                  transform: translateX(0);
+                }
+                100% {
+                  transform: translateX(calc(-1000vw * 4 / 12));
+                }
+              }
+              .animate-scrollLeft {
+                animation: scrollLeft 80s linear infinite;
+                will-change: transform;
+                display: flex;
+                width: calc(100vw * 12 / 4);
+              }
+              .sponsor-slide-image {
+                margin-left: 17px;
+                width: calc(100vw / 1);
+                flex-shrink: 0;
+                height: auto;
+                min-height: 171px;
+                object-fit: contain;
+                object-position: center;
+                display: block;
+              }
+              @media (min-width: 1920px) {
+                .sponsor-slide-image {
+                  min-height: 200px;
+                }
+              }
+              @media (min-width: 2560px) {
+                .sponsor-slide-image {
+                  min-height: 220px;
+                }
+              }
+            `}</style>
             <style jsx>{`
               @keyframes twinkle {
                 0%,
@@ -1028,7 +1160,7 @@ const TournamentStandings = () => {
   } catch (error) {
     console.error("Error in TournamentStandings component:", error);
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#c5f934] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#bb0104] via-[#ffb829] to-[#bb0104]">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">
             Component Error
@@ -1038,7 +1170,7 @@ const TournamentStandings = () => {
           </div>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 px-6 py-2 bg-[#c5f934] text-white rounded-lg hover:bg-[#093337]"
+            className="mt-4 px-6 py-2 bg-[#ffb829] text-white rounded-lg hover:bg-[#bb0104]"
           >
             Reload Page
           </button>
