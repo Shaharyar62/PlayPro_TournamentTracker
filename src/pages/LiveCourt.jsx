@@ -9,6 +9,7 @@ import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
 import moment from "moment-timezone";
 import { TournamentRuleMatchFormatTypeEnum } from "../const/Constants";
 import MatchIdHelper from "../umpireScoring/utils/matchIdHelper.js";
+import { getScoreDisplayString } from "../umpireScoring/utils/scoringRules.js";
 import Header from "../components/layout/header";
 const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
@@ -34,9 +35,6 @@ const MatchScoreCard = () => {
       matchStatus.current = liveMatchData.status;
     }
   }, [liveMatchData]);
-
-  // Tennis scoring constants
-  const scoreStrings = ["0", "15", "30", "40", "AD"];
 
   const marqueeVariants = {
     animate: {
@@ -274,15 +272,15 @@ const MatchScoreCard = () => {
   }, []);
 
   // Loading state
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-4xl font-bold text-[#c5f934]">
-          Loading match data...
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen">
+  //       <div className="text-4xl font-bold text-[#c5f934]">
+  //         Loading match data...
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   // Error state
   if (error) {
@@ -297,9 +295,9 @@ const MatchScoreCard = () => {
   if (!liveMatchData && !matchData) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-4xl font-bold text-gray-600">
+        {/* <div className="text-4xl font-bold text-gray-600">
           No match data available
-        </div>
+        </div> */}
       </div>
     );
   }
@@ -334,15 +332,29 @@ const MatchScoreCard = () => {
   const getCurrentGameScore = (teamIndex) => {
     if (liveMatchData) {
       const teamKey = teamIndex === 1 ? "team1" : "team2";
-      const score = liveMatchData[teamKey]?.score || 0;
+      const opponentKey = teamIndex === 1 ? "team2" : "team1";
+      const teamScore = liveMatchData[teamKey]?.score || 0;
+      const opponentScore = liveMatchData[opponentKey]?.score || 0;
+      const isInTiebreak =
+        liveMatchData.isInTiebreak || liveMatchData.isInSuperTiebreak;
 
       // Handle tiebreak scoring
-      if (liveMatchData.isInTiebreak || liveMatchData.isInSuperTiebreak) {
+      if (isInTiebreak) {
         return liveMatchData[teamKey]?.tiebreakScore || 0;
       }
 
-      // Convert to tennis scoring
-      return scoreStrings[score] || "0";
+      // Calculate total advantage exchanges for golden point display
+      const totalAdvantageExchanges =
+        (liveMatchData.team1?.advantageCount || 0) +
+        (liveMatchData.team2?.advantageCount || 0);
+
+      // Use getScoreDisplayString for consistent scoring display
+      return getScoreDisplayString(teamScore, opponentScore, {
+        isInTiebreak: false,
+        matchSettings: liveMatchData.matchSettings,
+        teamAdvantageCount: liveMatchData[teamKey]?.advantageCount || 0,
+        totalAdvantageExchanges,
+      });
     }
 
     // Fallback to API data

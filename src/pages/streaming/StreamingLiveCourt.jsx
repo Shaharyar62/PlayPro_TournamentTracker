@@ -5,6 +5,8 @@ import io from "socket.io-client";
 import Common from "../../helper/common";
 import moment from "moment-timezone";
 import { TournamentRuleMatchFormatTypeEnum } from "../../const/Constants";
+import { getScoreDisplayString } from "../../umpireScoring/utils/scoringRules.js";
+import MatchIdHelper from "../../umpireScoring/utils/matchIdHelper.js";
 
 const StreamingLiveCourt = () => {
   const [searchParams] = useSearchParams();
@@ -30,9 +32,6 @@ const StreamingLiveCourt = () => {
       matchStatus.current = liveMatchData.status;
     }
   }, [liveMatchData]);
-
-  // Tennis scoring constants
-  const scoreStrings = ["0", "15", "30", "40", "AD"];
 
   const marqueeVariants = {
     animate: {
@@ -152,16 +151,30 @@ const StreamingLiveCourt = () => {
       setIsConnected(false);
     });
 
+    // Prefix match and tournament IDs for environment separation
+    const prefixedMatchId = MatchIdHelper.prefixMatchId(currentMatch.id);
+    const prefixedTournamentId = MatchIdHelper.prefixTournamentId(tournamentId);
+
     // Listen for match updates
-    socket.on(`match_update_${currentMatch.id}`, (data) => {
+    socket.on(`match_update_${prefixedMatchId}`, (data) => {
       console.log("Match update received:", data);
+      // Filter by environment - ignore matches from other environments
+      if (data.matchId && !MatchIdHelper.isMatchForCurrentEnv(data.matchId)) {
+        console.log("Ignoring match update from different environment");
+        return; // Ignore matches from other environment
+      }
       matchStatus.current = data.status;
       setLiveMatchData(data);
     });
 
     // Listen for reset events
-    socket.on(`match_reset_${currentMatch.id}`, (data) => {
+    socket.on(`match_reset_${prefixedMatchId}`, (data) => {
       console.log("Match reset received:", data);
+      // Filter by environment - ignore matches from other environments
+      if (data.matchId && !MatchIdHelper.isMatchForCurrentEnv(data.matchId)) {
+        console.log("Ignoring match reset from different environment");
+        return; // Ignore matches from other environment
+      }
       setLiveMatchData(data);
       setShowResetNotification(true);
       // Hide notification after 3 seconds
@@ -169,14 +182,22 @@ const StreamingLiveCourt = () => {
     });
 
     // Listen for tournament updates
-    socket.on(`tournament_update_${tournamentId}`, (data) => {
+    socket.on(`tournament_update_${prefixedTournamentId}`, (data) => {
       console.log("Tournament update received:", data);
+      // Filter by environment - ignore tournaments from other environments
+      if (
+        data.tournamentId &&
+        !MatchIdHelper.isMatchForCurrentEnv(data.tournamentId)
+      ) {
+        console.log("Ignoring tournament update from different environment");
+        return; // Ignore tournaments from other environment
+      }
     });
 
     // Request initial match state
     const matchStateRequest = {
-      tournamentId: tournamentId.toString(),
-      matchId: currentMatch.id.toString(),
+      tournamentId: prefixedTournamentId,
+      matchId: prefixedMatchId,
     };
     console.log("Requesting match state with:", matchStateRequest);
     socket.emit("get_match_state", matchStateRequest);
@@ -193,6 +214,15 @@ const StreamingLiveCourt = () => {
       clearTimeout(fallbackTimeout); // Clear timeout since we got a response
 
       if (data) {
+        // Filter by environment - ignore matches from other environments
+        if (data.matchId && !MatchIdHelper.isMatchForCurrentEnv(data.matchId)) {
+          console.log(
+            "Ignoring match state response from different environment"
+          );
+          // Use API data as fallback when response is from different environment
+          setLiveMatchData(currentMatch);
+          return;
+        }
         matchStatus.current = data.status;
         setLiveMatchData(data);
       } else {
@@ -452,15 +482,29 @@ const StreamingLiveCourt = () => {
   const getCurrentGameScore = (teamIndex) => {
     if (liveMatchData) {
       const teamKey = teamIndex === 1 ? "team1" : "team2";
-      const score = liveMatchData[teamKey]?.score || 0;
+      const opponentKey = teamIndex === 1 ? "team2" : "team1";
+      const teamScore = liveMatchData[teamKey]?.score || 0;
+      const opponentScore = liveMatchData[opponentKey]?.score || 0;
+      const isInTiebreak =
+        liveMatchData.isInTiebreak || liveMatchData.isInSuperTiebreak;
 
       // Handle tiebreak scoring
-      if (liveMatchData.isInTiebreak || liveMatchData.isInSuperTiebreak) {
+      if (isInTiebreak) {
         return liveMatchData[teamKey]?.tiebreakScore || 0;
       }
 
-      // Convert to tennis scoring
-      return scoreStrings[score] || "0";
+      // Calculate total advantage exchanges for golden point display
+      const totalAdvantageExchanges =
+        (liveMatchData.team1?.advantageCount || 0) +
+        (liveMatchData.team2?.advantageCount || 0);
+
+      // Use getScoreDisplayString for consistent scoring display
+      return getScoreDisplayString(teamScore, opponentScore, {
+        isInTiebreak: false,
+        matchSettings: liveMatchData.matchSettings,
+        teamAdvantageCount: liveMatchData[teamKey]?.advantageCount || 0,
+        totalAdvantageExchanges,
+      });
     }
 
     // Fallback to API data
