@@ -196,6 +196,14 @@ export function createUpdateData(matchState, setsData) {
       matchState.currentServe.servingPlayer;
     updateData["currentServe.isServingTeam1"] =
       matchState.currentServe.isServingTeam1;
+    console.log("[createUpdateData] Including serve in update:", {
+      servingPlayer: updateData["currentServe.servingPlayer"],
+      isServingTeam1: updateData["currentServe.isServingTeam1"],
+    });
+  } else {
+    console.warn(
+      "[createUpdateData] WARNING: No currentServe in matchState, serve not included in update!"
+    );
   }
 
   return updateData;
@@ -211,6 +219,29 @@ export function mergeMatchStates(localState, serverState) {
   if (!serverState) return localState;
   if (!localState) return serverState;
 
+  console.log("[mergeMatchStates] Merging states:", {
+    localTeam1Score: localState.team1?.score,
+    localTeam2Score: localState.team2?.score,
+    serverTeam1Score: serverState.team1?.score,
+    serverTeam2Score: serverState.team2?.score,
+    localServe: localState.currentServe,
+    serverServe: serverState.currentServe,
+  });
+
+  // Determine score merge logic:
+  // - If local scores are 0 (reset) and server scores are > 0, preserve the reset (0)
+  // - If server scores are 0 (reset), use server (0)
+  // - Otherwise, use server score if provided, else keep local
+  const shouldPreserveReset =
+    localState.team1?.score === 0 &&
+    localState.team2?.score === 0 &&
+    (serverState.team1?.score ?? 0) > 0 &&
+    (serverState.team2?.score ?? 0) > 0 &&
+    !localState.isInTiebreak &&
+    !serverState.isInTiebreak;
+
+  console.log("[mergeMatchStates] Should preserve reset:", shouldPreserveReset);
+
   // Server state takes precedence
   const merged = {
     ...localState,
@@ -218,28 +249,60 @@ export function mergeMatchStates(localState, serverState) {
     team1: {
       ...localState.team1,
       ...serverState.team1,
+      // Preserve reset scores (0) if local has reset and server has old values
+      score: shouldPreserveReset
+        ? 0
+        : serverState.team1?.score !== undefined
+        ? serverState.team1.score
+        : localState.team1?.score,
       advantageCount:
         serverState.team1?.advantageCount ??
         localState.team1?.advantageCount ??
         0,
-      games:
-        serverState.team1?.games ??
-        localState.team1?.games ??
-        0,
+      games: serverState.team1?.games ?? localState.team1?.games ?? 0,
     },
     team2: {
       ...localState.team2,
       ...serverState.team2,
+      // Preserve reset scores (0) if local has reset and server has old values
+      score: shouldPreserveReset
+        ? 0
+        : serverState.team2?.score !== undefined
+        ? serverState.team2.score
+        : localState.team2?.score,
       advantageCount:
         serverState.team2?.advantageCount ??
         localState.team2?.advantageCount ??
         0,
-      games:
-        serverState.team2?.games ??
-        localState.team2?.games ??
-        0,
+      games: serverState.team2?.games ?? localState.team2?.games ?? 0,
     },
     sets: serverState.sets || localState.sets || {},
   };
+
+  // Handle serve state: prefer server if it exists, otherwise preserve local
+  if (serverState.currentServe) {
+    merged.currentServe = serverState.currentServe;
+    console.log(
+      "[mergeMatchStates] Using server serve:",
+      serverState.currentServe
+    );
+  } else if (localState.currentServe) {
+    merged.currentServe = localState.currentServe;
+    console.log(
+      "[mergeMatchStates] Preserving local serve:",
+      localState.currentServe
+    );
+  } else {
+    console.warn(
+      "[mergeMatchStates] WARNING: No serve state in either local or server!"
+    );
+  }
+
+  console.log("[mergeMatchStates] Merged scores:", {
+    team1Score: merged.team1?.score,
+    team2Score: merged.team2?.score,
+    mergedServe: merged.currentServe,
+  });
+
   return merged;
 }

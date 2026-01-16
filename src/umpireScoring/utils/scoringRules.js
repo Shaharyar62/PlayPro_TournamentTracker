@@ -241,6 +241,128 @@ export function shouldStartTiebreak(team1Games, team2Games, settings) {
 }
 
 /**
+ * Check if a set score is valid based on standard scoring rules
+ * @param {number} team1Games - Team 1's games in the set
+ * @param {number} team2Games - Team 2's games in the set
+ * @param {Object} settings - MatchSettings object
+ * @param {Object} setData - Optional set data object (for checking tiebreak status)
+ * @returns {boolean} True if the set score is valid
+ */
+export function isValidSetScore(team1Games, team2Games, settings, setData = null) {
+  // Validate inputs
+  if (!settings || typeof settings.numberOfGames !== "number") {
+    console.log(`[isValidSetScore] Invalid settings:`, settings);
+    return false;
+  }
+  if (typeof team1Games !== "number" || typeof team2Games !== "number") {
+    console.log(`[isValidSetScore] Invalid scores: ${team1Games}, ${team2Games}`);
+    return false;
+  }
+
+  const numberOfGames = settings.numberOfGames;
+  const minGames = numberOfGames;
+  const tiebreakStartGames = settings.gamesToStartTiebreak?.includes("-")
+    ? parseInt(settings.gamesToStartTiebreak.split("-")[0].trim())
+    : numberOfGames;
+
+  console.log(`[isValidSetScore] Checking score ${team1Games}-${team2Games}, minGames=${minGames}, tiebreakStart=${tiebreakStartGames}`);
+
+  // Check if one team has won the set
+  const team1Won = hasWonSet(team1Games, team2Games, settings);
+  const team2Won = hasWonSet(team2Games, team1Games, settings);
+
+  console.log(`[isValidSetScore] Team1 won: ${team1Won}, Team2 won: ${team2Won}`);
+
+  // If a team has won, the score is valid
+  if (team1Won || team2Won) {
+    console.log(`[isValidSetScore] Set won - valid`);
+    return true;
+  }
+
+  // Case 1: Set still in progress - both teams below minGames (e.g., 5-5, 4-3, 3-2)
+  if (team1Games < minGames && team2Games < minGames) {
+    console.log(`[isValidSetScore] Set in progress (both < ${minGames}) - valid`);
+    return true;
+  }
+
+  // Case 2: One team has reached minGames, other hasn't
+  // This is valid if:
+  // - The leading team has won (win by 2) - e.g., 6-4, 7-5
+  // - OR the opponent is within 1 game (can tie for tiebreak) - e.g., 6-5, 5-6
+  // Invalid: scores where leading team is >= minGames+2 but hasn't won - e.g., 8-5 (should be 8-6 or better)
+  if (team1Games >= minGames && team2Games < minGames) {
+    // Check if team1 has won
+    if (team1Won) {
+      console.log(`[isValidSetScore] Team1 won with ${team1Games}-${team2Games} - valid`);
+      return true;
+    }
+    // If team1 hasn't won, check if opponent is within 1 game (can reach tiebreak)
+    // e.g., 6-5 is valid (can go to 6-6), but 7-4 is invalid (should be 7-5 or better)
+    if (team2Games >= minGames - 1) {
+      console.log(`[isValidSetScore] Team1 at ${team1Games}, Team2 at ${team2Games} (within 1 game) - valid (can tie)`);
+      return true;
+    }
+    // Opponent is too far behind and team1 hasn't won - invalid
+    console.log(`[isValidSetScore] Team1 at ${team1Games} but hasn't won and opponent ${team2Games} too far - invalid`);
+    return false;
+  }
+
+  if (team2Games >= minGames && team1Games < minGames) {
+    // Check if team2 has won
+    if (team2Won) {
+      console.log(`[isValidSetScore] Team2 won with ${team2Games}-${team1Games} - valid`);
+      return true;
+    }
+    // If team2 hasn't won, check if opponent is within 1 game (can reach tiebreak)
+    // e.g., 5-6 is valid (can go to 6-6), but 4-7 is invalid (should be 5-7 or better)
+    if (team1Games >= minGames - 1) {
+      console.log(`[isValidSetScore] Team2 at ${team2Games}, Team1 at ${team1Games} (within 1 game) - valid (can tie)`);
+      return true;
+    }
+    // Opponent is too far behind and team2 hasn't won - invalid
+    console.log(`[isValidSetScore] Team2 at ${team2Games} but hasn't won and opponent ${team1Games} too far - invalid`);
+    return false;
+  }
+
+  // Case 3: Both teams have reached minGames
+  // Valid scenarios:
+  // - Tiebreak start: both at tiebreakStartGames (e.g., 6-6)
+  // - Tiebreak completed: one team at tiebreakStartGames+1, other at tiebreakStartGames (e.g., 7-6)
+  // Invalid: scores where neither team has won and it's not a tiebreak (e.g., 6-5, 7-4, 8-7)
+  if (team1Games >= minGames && team2Games >= minGames) {
+    // Check if it's a tiebreak start (e.g., 6-6)
+    if (team1Games === tiebreakStartGames && team2Games === tiebreakStartGames) {
+      console.log(`[isValidSetScore] Tiebreak start (${team1Games}-${team2Games}) - valid`);
+      return true;
+    }
+
+    // Check if it's a tiebreak completed score (e.g., 7-6, 6-7)
+    if (
+      (team1Games === tiebreakStartGames + 1 && team2Games === tiebreakStartGames) ||
+      (team2Games === tiebreakStartGames + 1 && team1Games === tiebreakStartGames)
+    ) {
+      console.log(`[isValidSetScore] Tiebreak completed (${team1Games}-${team2Games}) - valid`);
+      return true;
+    }
+
+    // If it's a tiebreak set (already in tiebreak), allow tiebreak scores
+    const isTiebreakSet = setData?.isTiebreak || setData?.isSuperTiebreak;
+    if (isTiebreakSet) {
+      console.log(`[isValidSetScore] Tiebreak set - valid`);
+      return true;
+    }
+
+    // Otherwise invalid (e.g., 6-5, 7-4, 8-7 where neither team has won and not tiebreak)
+    console.log(`[isValidSetScore] Both teams >= ${minGames} but invalid score (${team1Games}-${team2Games}) - invalid`);
+    return false;
+  }
+
+  // Should not reach here, but safe fallback
+  console.log(`[isValidSetScore] Fallback - allowing score`);
+  return true;
+}
+
+/**
  * Check if super tiebreak should start
  * @param {number} team1Sets - Team 1's sets won
  * @param {number} team2Sets - Team 2's sets won

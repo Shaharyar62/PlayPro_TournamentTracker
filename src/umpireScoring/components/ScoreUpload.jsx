@@ -49,6 +49,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
     updateServe,
     undo,
     resetMatch,
+    resetScores,
     completeMatch,
     loadMatchState,
     loadMatchSettings,
@@ -165,21 +166,9 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
   useEffect(() => {
     if (matchState?.status === "active" || !matchState?.winnerTeam) {
       setHasShownSubmitModal(false);
+      setShowSubmitResultsModal(false);
     }
   }, [matchState?.status, matchState?.winnerTeam]);
-
-  // Detect when match completes and show submission confirmation modal
-  useEffect(() => {
-    if (
-      matchState &&
-      matchState?.status === "completed" &&
-      !hasShownSubmitModal &&
-      matchState?.winnerTeam
-    ) {
-      setShowSubmitResultsModal(true);
-      setHasShownSubmitModal(true);
-    }
-  }, [matchState?.status, matchState?.winnerTeam, hasShownSubmitModal]);
 
   const handleSubmitResults = async () => {
     if (!isMatchComplete() || !matchState) return;
@@ -215,6 +204,13 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
 
   const handleCancelSubmit = () => {
     setShowSubmitResultsModal(false);
+  };
+
+  const handleCompleteMatchClick = () => {
+    // Show confirmation dialog when button is clicked
+    if (matchState?.status === "completed" && matchState?.winnerTeam) {
+      setShowSubmitResultsModal(true);
+    }
   };
 
   const handleEndMatch = async () => {
@@ -275,7 +271,45 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
     }
   };
 
-  const handleConfirmSetScoreEditing = () => {
+  const handleConfirmSetScoreEditing = async () => {
+    console.log("[handleConfirmSetScoreEditing] Function called");
+    console.log("[handleConfirmSetScoreEditing] resetScores available:", typeof resetScores);
+    
+    if (!matchState) {
+      console.log("[handleConfirmSetScoreEditing] Early return - no matchState");
+      return;
+    }
+
+    if (!resetScores) {
+      console.error("[handleConfirmSetScoreEditing] resetScores is not available!");
+      // Still enter editing mode even if reset fails
+      setIsSetScoreEditingMode(true);
+      setShowSetScoreConfirmation(false);
+      if (pendingSetScoreEdit) {
+        incrementSetScore(pendingSetScoreEdit.setIndex, pendingSetScoreEdit.team);
+        setPendingSetScoreEdit(null);
+      }
+      return;
+    }
+
+    console.log("[handleConfirmSetScoreEditing] Current scores:", {
+      team1Score: matchState.team1?.score,
+      team2Score: matchState.team2?.score,
+    });
+
+    try {
+      // Reset scores to 0 for both teams before entering editing mode
+      console.log("[handleConfirmSetScoreEditing] Calling resetScores...");
+      await resetScores();
+      console.log("[handleConfirmSetScoreEditing] resetScores completed");
+    } catch (error) {
+      console.error("[handleConfirmSetScoreEditing] Error resetting scores:", error);
+      // Optionally show error to user
+      return;
+    }
+
+    // Enter editing mode after successful reset
+    console.log("[handleConfirmSetScoreEditing] Entering editing mode");
     setIsSetScoreEditingMode(true);
     setShowSetScoreConfirmation(false);
     // Optionally increment the score that was tapped
@@ -395,6 +429,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
 
   const isInTiebreak = matchState.isInTiebreak || false;
   const isInSuperTiebreak = matchState.isInSuperTiebreak || false;
+  const isCompleted = isMatchComplete();
 
   // Calculate total advantage exchanges for golden point display
   const totalAdvantageExchanges =
@@ -517,12 +552,16 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                   return (
                     <div key={index} className="text-center">
                       <motion.div
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleSetScoreClick(index, "Team 1")}
-                        className={`rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block ${
-                          isSetScoreEditingMode
-                            ? "bg-blue-600 hover:bg-blue-700/90 active:bg-blue-800 border-2 border-blue-300"
-                            : "bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700"
+                        whileTap={{ scale: isCompleted ? 1 : 0.95 }}
+                        onClick={() =>
+                          !isCompleted && handleSetScoreClick(index, "Team 1")
+                        }
+                        className={`rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] transition-colors inline-block ${
+                          isCompleted
+                            ? "bg-blue-500/50 cursor-not-allowed opacity-60"
+                            : isSetScoreEditingMode
+                            ? "bg-blue-600 hover:bg-blue-700/90 active:bg-blue-800 border-2 border-blue-300 cursor-pointer"
+                            : "bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700 cursor-pointer"
                         }`}
                       >
                         <div className="text-2xl sm:text-2xl font-bold text-white">
@@ -538,9 +577,13 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
               <div className="text-center">
                 {isInTiebreak ? (
                   <motion.div
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => incrementScore("Team 1")}
-                    className="bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block"
+                    whileTap={{ scale: isCompleted ? 1 : 0.95 }}
+                    onClick={() => !isCompleted && incrementScore("Team 1")}
+                    className={`rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] transition-colors inline-block ${
+                      isCompleted
+                        ? "bg-blue-500/50 cursor-not-allowed opacity-60"
+                        : "bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700 cursor-pointer"
+                    }`}
                   >
                     <div className="text-xl sm:text-2xl font-bold text-white">
                       {team1Data?.tiebreakScore || 0}
@@ -548,9 +591,13 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                   </motion.div>
                 ) : (
                   <motion.div
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => incrementScore("Team 1")}
-                    className="bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block"
+                    whileTap={{ scale: isCompleted ? 1 : 0.95 }}
+                    onClick={() => !isCompleted && incrementScore("Team 1")}
+                    className={`rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] transition-colors inline-block ${
+                      isCompleted
+                        ? "bg-blue-500/50 cursor-not-allowed opacity-60"
+                        : "bg-blue-500 hover:bg-blue-600/90 active:bg-blue-700 cursor-pointer"
+                    }`}
                   >
                     <div className="text-xl sm:text-2xl font-bold text-white">
                       {getScoreDisplayString(
@@ -637,12 +684,16 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                   return (
                     <div key={index} className="text-center">
                       <motion.div
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleSetScoreClick(index, "Team 2")}
-                        className={`rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block ${
-                          isSetScoreEditingMode
-                            ? "bg-red-600 hover:bg-red-700/90 active:bg-red-800 border-2 border-red-300"
-                            : "bg-red-500 hover:bg-red-600/90 active:bg-red-700"
+                        whileTap={{ scale: isCompleted ? 1 : 0.95 }}
+                        onClick={() =>
+                          !isCompleted && handleSetScoreClick(index, "Team 2")
+                        }
+                        className={`rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] transition-colors inline-block ${
+                          isCompleted
+                            ? "bg-red-500/50 cursor-not-allowed opacity-60"
+                            : isSetScoreEditingMode
+                            ? "bg-red-600 hover:bg-red-700/90 active:bg-red-800 border-2 border-red-300 cursor-pointer"
+                            : "bg-red-500 hover:bg-red-600/90 active:bg-red-700 cursor-pointer"
                         }`}
                       >
                         <div className="text-2xl sm:text-2xl font-bold text-white">
@@ -658,9 +709,13 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
               <div className="text-center">
                 {isInTiebreak ? (
                   <motion.div
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => incrementScore("Team 2")}
-                    className="bg-red-500 hover:bg-red-600/90 active:bg-red-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block"
+                    whileTap={{ scale: isCompleted ? 1 : 0.95 }}
+                    onClick={() => !isCompleted && incrementScore("Team 2")}
+                    className={`rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] transition-colors inline-block ${
+                      isCompleted
+                        ? "bg-red-500/50 cursor-not-allowed opacity-60"
+                        : "bg-red-500 hover:bg-red-600/90 active:bg-red-700 cursor-pointer"
+                    }`}
                   >
                     <div className="text-xl sm:text-2xl font-bold text-white">
                       {team2Data?.tiebreakScore || 0}
@@ -668,9 +723,13 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                   </motion.div>
                 ) : (
                   <motion.div
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => incrementScore("Team 2")}
-                    className="bg-red-500 hover:bg-red-600/90 active:bg-red-700 rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] cursor-pointer transition-colors inline-block"
+                    whileTap={{ scale: isCompleted ? 1 : 0.95 }}
+                    onClick={() => !isCompleted && incrementScore("Team 2")}
+                    className={`rounded-lg px-3 sm:px-4 py-2 min-w-[70px] sm:min-w-[80px] transition-colors inline-block ${
+                      isCompleted
+                        ? "bg-red-500/50 cursor-not-allowed opacity-60"
+                        : "bg-red-500 hover:bg-red-600/90 active:bg-red-700 cursor-pointer"
+                    }`}
                   >
                     <div className="text-xl sm:text-2xl font-bold text-white">
                       {getScoreDisplayString(
@@ -743,6 +802,46 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
           </div>
         )}
 
+        {/* Complete Match Button - Shows when match is won */}
+        {matchState?.status === "completed" && matchState?.winnerTeam && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 px-2"
+          >
+            <motion.button
+              whileTap={{ scale: 0.98 }}
+              onClick={handleCompleteMatchClick}
+              className="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 border-2 border-green-400 rounded-xl p-4 sm:p-5 flex flex-col items-center justify-center space-y-2 transition-colors shadow-lg"
+            >
+              <div className="flex items-center space-x-2">
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span className="text-lg sm:text-xl font-bold text-white">
+                  Complete Match
+                </span>
+              </div>
+              <p className="text-sm sm:text-base text-green-100">
+                {getMatchWinner() === "Team 1"
+                  ? team1Data?.name || match.teamA?.name
+                  : team2Data?.name || match.teamB?.name}{" "}
+                wins!
+              </p>
+            </motion.button>
+          </motion.div>
+        )}
+
         {/* Action Buttons */}
         <div className="grid grid-cols-6 gap-2 sm:gap-3 px-2">
           {/* Undo Button */}
@@ -759,9 +858,14 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
 
           {/* Change Serve Button */}
           <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowChangeServeModal(true)}
-            className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center space-y-1 sm:space-y-2 transition-colors"
+            whileTap={{ scale: isCompleted ? 1 : 0.95 }}
+            onClick={() => !isCompleted && setShowChangeServeModal(true)}
+            disabled={isCompleted}
+            className={`border border-white/20 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center space-y-1 sm:space-y-2 transition-colors ${
+              isCompleted
+                ? "bg-white/5 opacity-50 cursor-not-allowed"
+                : "bg-white/10 hover:bg-white/20"
+            }`}
           >
             <div className="w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center">
               <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white rounded-full"></div>
@@ -776,9 +880,14 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
 
           {/* Reset Button */}
           <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={handleReset}
-            className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center space-y-1 sm:space-y-2 transition-colors"
+            whileTap={{ scale: isCompleted ? 1 : 0.95 }}
+            onClick={() => !isCompleted && handleReset()}
+            disabled={isCompleted}
+            className={`border border-white/20 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center space-y-1 sm:space-y-2 transition-colors ${
+              isCompleted
+                ? "bg-white/5 opacity-50 cursor-not-allowed"
+                : "bg-white/10 hover:bg-white/20"
+            }`}
           >
             <Trash2 className="w-5 h-5 sm:w-6 sm:h-6" />
             <span className="text-xs font-medium text-center leading-tight">
@@ -788,9 +897,10 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
 
           {/* Super Tiebreak Button */}
           <motion.button
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: isCompleted ? 1 : 0.95 }}
             onClick={async () => {
               if (
+                !isCompleted &&
                 matchSettings?.matchFormat === 2 &&
                 matchState?.team1?.sets === 1 &&
                 matchState?.team2?.sets === 1 &&
@@ -804,6 +914,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
               }
             }}
             disabled={
+              isCompleted ||
               !matchState ||
               matchSettings?.matchFormat !== 2 ||
               matchState?.team1?.sets !== 1 ||
@@ -823,9 +934,14 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
 
           {/* Settings Button */}
           <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowSettings(true)}
-            className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center space-y-1 sm:space-y-2 transition-colors"
+            whileTap={{ scale: isCompleted ? 1 : 0.95 }}
+            onClick={() => !isCompleted && setShowSettings(true)}
+            disabled={isCompleted}
+            className={`border border-white/20 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center space-y-1 sm:space-y-2 transition-colors ${
+              isCompleted
+                ? "bg-white/5 opacity-50 cursor-not-allowed"
+                : "bg-white/10 hover:bg-white/20"
+            }`}
           >
             <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
             <span className="text-xs font-medium text-center leading-tight">
@@ -888,34 +1004,11 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-xl p-6 max-w-sm w-full"
           >
-            <div className="text-center mb-4">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  className="w-8 h-8 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Match Complete!
-              </h3>
-              <p className="text-gray-600 mb-1">
-                {getMatchWinner() === "Team 1"
-                  ? team1Data?.name || match.teamA?.name
-                  : team2Data?.name || match.teamB?.name}{" "}
-                wins!
-              </p>
-            </div>
-            <p className="text-gray-700 mb-6 text-center">
-              Would you like to submit the match results now?
+            <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">
+              Submit match results?
+            </h3>
+            <p className="text-gray-600 mb-6 text-center">
+              This will finalize the match and submit the scores.
             </p>
 
             <div className="flex space-x-3">
@@ -924,7 +1017,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                 disabled={isSubmitting}
                 className="flex-1 bg-gray-500 hover:bg-gray-600 active:bg-gray-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 shadow-md"
               >
-                Not Now
+                Cancel
               </button>
               <button
                 onClick={handleSubmitResults}
@@ -937,7 +1030,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                     Submitting...
                   </>
                 ) : (
-                  "Submit Results"
+                  "Submit"
                 )}
               </button>
             </div>
@@ -1045,7 +1138,10 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                 Cancel
               </button>
               <button
-                onClick={handleConfirmSetScoreEditing}
+                onClick={() => {
+                  console.log("[Button] Enter Editing Mode button clicked");
+                  handleConfirmSetScoreEditing();
+                }}
                 className="flex-1 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 shadow-md"
               >
                 Enter Editing Mode
