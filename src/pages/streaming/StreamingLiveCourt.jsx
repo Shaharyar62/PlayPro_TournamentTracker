@@ -595,7 +595,7 @@ const StreamingLiveCourt = () => {
                             </div> */}
                       </div>
                       {isServingTeam(1) && (
-                        <div className="flex items-center text-[#c5f934]">
+                        <div className="flex items-center text-[#2e7ebb]">
                           <span className="text-xl">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"

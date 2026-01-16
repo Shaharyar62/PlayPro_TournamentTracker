@@ -119,7 +119,7 @@ body{
 .main-body {
   background-size: cover !important;
   background-repeat: repeat !important;
-background-position: top !important;
+background-position: center !important;
 }
 
 

@@ -9,13 +9,13 @@ export const Header = () => {
           className="justify-self-start p-0"
           src={ImageConstants.leftLogo}
           alt="Greenwich Padel"
-          style={{ height: "135px", objectFit: "contain" }}
+          style={{ height: "165px", objectFit: "contain" }}
         />
       </div>
 
       <div className="text-center">
         <img
-          width={300}
+          width={400}
           className="justify-self-end p-5"
           src={ImageConstants.cupLogo}
           alt="Greenwich Padel"
@@ -24,7 +24,7 @@ export const Header = () => {
 
       <div className="text-center" style={{ width: "400px" }}>
         <img
-          width={400}
+          width={350}
           className="justify-self-end p-5"
           src={ImageConstants.playpro}
           alt="Playpro"
