@@ -464,7 +464,7 @@ const MatchScoreCard = () => {
             {/* Main scoreboard */}
             <div className="bg-white rounded-lg ml-[100px] mr-[100px] mt-[100px] mb-[60px] shadow-2xl overflow-hidden">
               {/* Header row - Dynamic based on number of sets */}
-              <div className="  text-white py-4  bg-gradient-to-r from-[#2e7ebb] via-[#2e7ebb] to-[#2e7ebb]">
+              <div className="  text-black py-4  bg-gradient-to-r from-[#e7a203] via-[#ffd55c] to-[#ffd55c]">
                 <div
                   className="grid gap-4 items-center"
                   style={{
@@ -626,12 +626,12 @@ const MatchScoreCard = () => {
                   ))}
 
                   {/* Current Game/Points Score */}
-                  <div className="text-center  bg-[#2e7ebb]">
+                  <div className="text-center bg-[#ffd55c]">
                     <div className="space-y-4 pt-[25px] pb-[25px]">
-                      <div className="text-8xl font-bold text-white game-score-style">
+                      <div className="text-8xl font-bold text-black game-score-style">
                         {getCurrentGameScore(1)}
                       </div>
-                      <div className="text-8xl font-bold text-white game-score-style">
+                      <div className="text-8xl font-bold text-black game-score-style">
                         {getCurrentGameScore(2)}
                       </div>
                     </div>
@@ -656,17 +656,17 @@ const MatchScoreCard = () => {
       </div>
       {/* Bottom indicator and Upcoming Match */}
       <div className="grid grid-cols-12 gap-4 items-center mt-[120px] mr-[100px] ml-[100px]">
-        <div className="bg-[#2e7ebb]  col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
+        <div className="bg-[#ffd55c]  col-span-4 text-black w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
           {matchStatus.current == "completed" ? "COMPLETED" : getMatchFormat()}
         </div>
-        <div className="bg-[#2e7ebb] m-auto col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
+        <div className="bg-[#ffd55c] m-auto col-span-4 text-black w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
           {/* {matchData.court?.name || "LIVE SCOREBOARD"}{" "} */}
           {/* <p className="text">Men B (Group Stage) </p> */}
           <p className="text">
             Men B<br></br> (Group Stage){" "}
           </p>
         </div>
-        <div className="bg-[#2e7ebb] col-span-4 ml-auto text-white  px-[20px]  py-3 rounded-lg font-bold text-4xl">
+        <div className="bg-[#ffd55c] col-span-4 ml-auto text-black  px-[20px]  py-3 rounded-lg font-bold text-4xl">
           {matchData.court?.name || "LIVE SCOREBOARD"}{" "}
           {/* {upcomingMatch ? (
                   <div>

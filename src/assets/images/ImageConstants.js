@@ -10,7 +10,9 @@ import leftLogo from "./padelverselogo.png";
 import cupLogo from "./pvc-4.png";
 // import cupLogo from "./rcb-cup.png";
 // import premiercup from "./premier-cup.png";
-import bg from "./pvc-4-bg.jpg";
+// import bg from "./pvc-4-bg.jpg";
+import bg from "./bg-vers.jpg";
+
 // import bg from "./bg-greenwich.png";
 // import bg from "./bg-premier.png";
 // import bg from "./bg-vers.jpg";
