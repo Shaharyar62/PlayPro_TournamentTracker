@@ -124,7 +124,7 @@ class SocketMatchService {
   async updateMatchState(params) {
     await this.connect();
 
-    this.socket.emit("update_match_state", {
+    const payload = {
       tournamentId: MatchIdHelper.prefixTournamentId(params.tournamentId),
       matchId: MatchIdHelper.prefixMatchId(params.matchId),
       callBy: params.callBy,
@@ -133,7 +133,20 @@ class SocketMatchService {
         ...params.historyEntry,
         timestamp: Date.now(),
       },
+    };
+
+    // Log serve state being sent
+    console.log("[SERVE] socketMatchService.updateMatchState sending:", {
+      callBy: params.callBy,
+      serveInUpdateData: {
+        servingPlayer: params.updateData?.["currentServe.servingPlayer"],
+        isServingTeam1: params.updateData?.["currentServe.isServingTeam1"],
+      },
+      hasServeFields: !!(params.updateData?.["currentServe.servingPlayer"] || params.updateData?.["currentServe.isServingTeam1"]),
+      updateDataKeys: Object.keys(params.updateData || {}),
     });
+
+    this.socket.emit("update_match_state", payload);
   }
 
   /**

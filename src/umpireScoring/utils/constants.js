@@ -49,7 +49,7 @@ export const WARNING_LEVELS = {
 /**
  * Maximum undo stack size
  */
-export const MAX_UNDO_STACK_SIZE = 10;
+export const MAX_UNDO_STACK_SIZE = 100;
 
 /**
  * WebSocket timeout for match state requests (ms)

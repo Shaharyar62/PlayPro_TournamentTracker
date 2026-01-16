@@ -12,6 +12,7 @@ import {
   shouldStartTiebreak,
   shouldStartSuperTiebreak,
   hasWonMatch,
+  isValidSetScore,
 } from "../utils/scoringRules.js";
 import {
   initializeMatchState,
@@ -89,6 +90,11 @@ export function useMatchState(tournamentId, matchId) {
       });
 
       if (state) {
+        console.log("[SERVE] loadMatchState loaded state:", {
+          loadedServe: state.currentServe,
+          hasCurrentServe: !!state.currentServe,
+        });
+
         // Ensure sets property exists and is in sync
         if (!state.sets) {
           state.sets = {};
@@ -255,6 +261,15 @@ export function useMatchState(tournamentId, matchId) {
           return; // Ignore matches from other environment
         }
 
+        console.log("[websocket listener] Received match update:", {
+          team1Score: data.team1?.score,
+          team2Score: data.team2?.score,
+          hasTeam1: !!data.team1,
+          hasTeam2: !!data.team2,
+          incomingServe: data.currentServe,
+          hasCurrentServe: !!data.currentServe,
+        });
+
         // Ensure sets property exists
         if (!data.sets) {
           data.sets = {};
@@ -262,7 +277,50 @@ export function useMatchState(tournamentId, matchId) {
 
         setMatchState((prevState) => {
           if (prevState) {
+            console.log(
+              "[websocket listener] Merging state - prevState scores:",
+              {
+                team1Score: prevState.team1?.score,
+                team2Score: prevState.team2?.score,
+                prevServe: prevState.currentServe,
+              }
+            );
+            console.log(
+              "[websocket listener] Merging state - incoming data scores:",
+              {
+                team1Score: data.team1?.score,
+                team2Score: data.team2?.score,
+                incomingServe: data.currentServe,
+              }
+            );
+
             const merged = mergeMatchStates(prevState, data);
+            console.log("[websocket listener] Merged state scores:", {
+              team1Score: merged.team1?.score,
+              team2Score: merged.team2?.score,
+            });
+
+            // Log serve state changes from websocket
+            if (data.currentServe) {
+              console.log("[SERVE] Websocket update changing serve:", {
+                prevServe: prevState.currentServe,
+                incomingServe: data.currentServe,
+                mergedServe: merged.currentServe,
+              });
+              // Preserve serve from incoming data if it exists
+              merged.currentServe = data.currentServe;
+            } else if (prevState.currentServe && !data.currentServe) {
+              console.warn(
+                "[SERVE] WARNING: Incoming websocket data has no serve, preserving previous:",
+                {
+                  prevServe: prevState.currentServe,
+                  mergedServe: merged.currentServe,
+                }
+              );
+              // Preserve previous serve if incoming doesn't have one
+              merged.currentServe = prevState.currentServe;
+            }
+
             // Ensure sets property is synced
             merged.sets = data.sets || prevState.sets || {};
             // Always sync games property from current set (not just when missing)
@@ -336,6 +394,114 @@ export function useMatchState(tournamentId, matchId) {
     };
   }, [tournamentId, matchId, socketService]);
 
+  // Helper function to rotate serve between teams and players
+  const rotateServe = useCallback((currentState, changeTeam = true) => {
+    console.log("[SERVE] rotateServe called:", {
+      changeTeam,
+      currentServe: currentState.currentServe,
+      hasTeam1: !!currentState.team1,
+      hasTeam2: !!currentState.team2,
+    });
+
+    if (!currentState.currentServe) {
+      // Initialize serve if it doesn't exist
+      const defaultServe = {
+        servingPlayer: currentState.team1?.players?.[0]?.name || "",
+        isServingTeam1: true,
+      };
+      console.log(
+        "[SERVE] No currentServe found, initializing to default:",
+        defaultServe
+      );
+      return defaultServe;
+    }
+
+    const currentIsServingTeam1 = currentState.currentServe.isServingTeam1;
+    const currentServingPlayer = currentState.currentServe.servingPlayer || "";
+
+    console.log("[SERVE] Current serve state:", {
+      isServingTeam1: currentIsServingTeam1,
+      servingPlayer: currentServingPlayer,
+    });
+
+    let newIsServingTeam1 = currentIsServingTeam1;
+    let newServingPlayer = currentServingPlayer;
+
+    if (changeTeam) {
+      // Change serve to the other team
+      newIsServingTeam1 = !currentIsServingTeam1;
+      const newTeam = newIsServingTeam1
+        ? currentState.team1
+        : currentState.team2;
+      const newTeamPlayers = newTeam?.players || [];
+
+      // Get the serving order from the team (0 or 1)
+      const servingOrder = newTeam?.servingOrder || 0;
+
+      // Rotate to the other player in the team
+      const newServingOrder = servingOrder === 0 ? 1 : 0;
+
+      // Update serving order in the team
+      if (newIsServingTeam1) {
+        currentState.team1.servingOrder = newServingOrder;
+      } else {
+        currentState.team2.servingOrder = newServingOrder;
+      }
+
+      // Get the player at the new serving order
+      if (newTeamPlayers.length > newServingOrder) {
+        const player = newTeamPlayers[newServingOrder];
+        newServingPlayer =
+          typeof player === "string" ? player : player?.name || "";
+      } else if (newTeamPlayers.length > 0) {
+        // Fallback to first player if serving order is out of bounds
+        const player = newTeamPlayers[0];
+        newServingPlayer =
+          typeof player === "string" ? player : player?.name || "";
+      }
+    } else {
+      // Same team, just rotate player
+      const currentTeam = currentIsServingTeam1
+        ? currentState.team1
+        : currentState.team2;
+      const currentTeamPlayers = currentTeam?.players || [];
+
+      if (currentTeamPlayers.length >= 2) {
+        // Toggle serving order
+        const currentServingOrder = currentTeam.servingOrder || 0;
+        const newServingOrder = currentServingOrder === 0 ? 1 : 0;
+
+        // Update serving order
+        if (currentIsServingTeam1) {
+          currentState.team1.servingOrder = newServingOrder;
+        } else {
+          currentState.team2.servingOrder = newServingOrder;
+        }
+
+        // Get the player at the new serving order
+        const player = currentTeamPlayers[newServingOrder];
+        newServingPlayer =
+          typeof player === "string" ? player : player?.name || "";
+      }
+    }
+
+    const newServe = {
+      servingPlayer: newServingPlayer,
+      isServingTeam1: newIsServingTeam1,
+    };
+
+    console.log("[SERVE] rotateServe returning new serve:", {
+      from: {
+        isServingTeam1: currentIsServingTeam1,
+        servingPlayer: currentServingPlayer,
+      },
+      to: newServe,
+      changeTeam,
+    });
+
+    return newServe;
+  }, []);
+
   // Increment score
   const incrementScore = useCallback(
     async (team) => {
@@ -386,6 +552,24 @@ export function useMatchState(tournamentId, matchId) {
           newState.team1.tiebreakScore = newTiebreakScore;
         } else {
           newState.team2.tiebreakScore = newTiebreakScore;
+        }
+
+        // Calculate total tiebreak points to determine serve rotation
+        const totalTiebreakPoints =
+          newState.team1.tiebreakScore + newState.team2.tiebreakScore;
+
+        // In tiebreaks, serve alternates every 2 points
+        // Pattern: Team A serves point 1, Team B serves points 2-3, Team A serves points 4-5, etc.
+        // So we rotate serve after points 1, 3, 5, 7, etc. (odd total points)
+        if (totalTiebreakPoints > 1 && totalTiebreakPoints % 2 === 1) {
+          // Rotate serve between teams (but keep same player rotation within team)
+          console.log("[SERVE] Tiebreak serve rotation triggered:", {
+            totalTiebreakPoints,
+            currentServe: newState.currentServe,
+          });
+          const newServe = rotateServe(newState, true);
+          newState.currentServe = newServe;
+          console.log("[SERVE] Tiebreak serve rotated to:", newServe);
         }
 
         // Check tiebreak win
@@ -447,6 +631,17 @@ export function useMatchState(tournamentId, matchId) {
           newState.isInTiebreak = false;
           newState.isInSuperTiebreak = false;
 
+          // Auto rotate serve to the other team after tiebreak set win
+          console.log("[SERVE] Rotating serve after tiebreak set win:", {
+            currentServe: newState.currentServe,
+          });
+          const newServe = rotateServe(newState, true);
+          newState.currentServe = newServe;
+          console.log(
+            "[SERVE] Serve rotated after tiebreak set win to:",
+            newServe
+          );
+
           // Initialize next set if match continues
           // Total completed sets = next set index (sets are 0-indexed)
           const totalCompletedSets =
@@ -487,6 +682,17 @@ export function useMatchState(tournamentId, matchId) {
             newState.isInSuperTiebreak = true;
             newState.team1.tiebreakScore = 0;
             newState.team2.tiebreakScore = 0;
+
+            // First serve of super tiebreak goes to team that didn't serve the last game
+            console.log("[SERVE] Rotating serve for super tiebreak start:", {
+              currentServe: newState.currentServe,
+            });
+            const newServe = rotateServe(newState, true);
+            newState.currentServe = newServe;
+            console.log(
+              "[SERVE] Serve rotated for super tiebreak start to:",
+              newServe
+            );
           }
         }
       } else {
@@ -656,6 +862,16 @@ export function useMatchState(tournamentId, matchId) {
           newState.team1.advantageCount = 0;
           newState.team2.advantageCount = 0;
 
+          // Auto rotate serve to the other team after game win
+          console.log("[SERVE] Rotating serve after game win:", {
+            currentServe: newState.currentServe,
+            team1Games: newSetsData[activeSetKey].team1Games,
+            team2Games: newSetsData[activeSetKey].team2Games,
+          });
+          const newServe = rotateServe(newState, true);
+          newState.currentServe = newServe;
+          console.log("[SERVE] Serve rotated after game win to:", newServe);
+
           // Check set win or tiebreak using games from active set
           const team1Games = newSetsData[activeSetKey].team1Games;
           const team2Games = newSetsData[activeSetKey].team2Games;
@@ -687,6 +903,16 @@ export function useMatchState(tournamentId, matchId) {
             // Reset advantage counts
             newState.team1.advantageCount = 0;
             newState.team2.advantageCount = 0;
+
+            // Auto rotate serve to the other team after set win
+            console.log("[SERVE] Rotating serve after set win:", {
+              currentServe: newState.currentServe,
+              team1Sets: newState.team1.sets,
+              team2Sets: newState.team2.sets,
+            });
+            const newServe = rotateServe(newState, true);
+            newState.currentServe = newServe;
+            console.log("[SERVE] Serve rotated after set win to:", newServe);
 
             // Initialize next set if match continues
             // Total completed sets = next set index (sets are 0-indexed)
@@ -735,6 +961,19 @@ export function useMatchState(tournamentId, matchId) {
             newState.isInSuperTiebreak = false;
             newState.team1.tiebreakScore = 0;
             newState.team2.tiebreakScore = 0;
+
+            // First serve of tiebreak goes to team that didn't serve the last game
+            console.log("[SERVE] Rotating serve for tiebreak start:", {
+              currentServe: newState.currentServe,
+              team1Games,
+              team2Games,
+            });
+            const newServe = rotateServe(newState, true);
+            newState.currentServe = newServe;
+            console.log(
+              "[SERVE] Serve rotated for tiebreak start to:",
+              newServe
+            );
           }
         }
       }
@@ -749,7 +988,25 @@ export function useMatchState(tournamentId, matchId) {
       // Update via WebSocket with rollback on error
       const updateData = createUpdateData(newState, newSetsData);
 
+      // Log serve state being sent to websocket
+      console.log("[SERVE] Sending serve update to websocket:", {
+        serveInUpdateData: {
+          servingPlayer: updateData["currentServe.servingPlayer"],
+          isServingTeam1: updateData["currentServe.isServingTeam1"],
+        },
+        newStateServe: newState.currentServe,
+        updateDataKeys: Object.keys(updateData),
+      });
+
+      // Track if serve was rotated so we can send separate update_serve event
+      const serveWasRotated =
+        matchState.currentServe?.isServingTeam1 !==
+          newState.currentServe?.isServingTeam1 ||
+        matchState.currentServe?.servingPlayer !==
+          newState.currentServe?.servingPlayer;
+
       try {
+        // Send score update
         await socketService.updateMatchState({
           tournamentId,
           matchId,
@@ -761,6 +1018,23 @@ export function useMatchState(tournamentId, matchId) {
             action: "increment",
           },
         });
+
+        // If serve was rotated, also send separate serve update to ensure server processes it
+        if (serveWasRotated && newState.currentServe) {
+          console.log(
+            "[SERVE] Serve was rotated, sending separate update_serve event:",
+            {
+              servingPlayer: newState.currentServe.servingPlayer,
+              isServingTeam1: newState.currentServe.isServingTeam1,
+            }
+          );
+          await socketService.updateServe({
+            tournamentId,
+            matchId,
+            newServingPlayer: newState.currentServe.servingPlayer,
+            isServingTeam1: newState.currentServe.isServingTeam1,
+          });
+        }
       } catch (error) {
         console.error("Error updating match state, rolling back:", error);
         // Rollback to previous state on error
@@ -772,7 +1046,15 @@ export function useMatchState(tournamentId, matchId) {
         throw error; // Re-throw to allow caller to handle if needed
       }
     },
-    [matchState, matchSettings, setsData, tournamentId, matchId, socketService]
+    [
+      matchState,
+      matchSettings,
+      setsData,
+      tournamentId,
+      matchId,
+      socketService,
+      rotateServe,
+    ]
   );
 
   // Increment tiebreak score (specific function for tiebreak)
@@ -846,6 +1128,13 @@ export function useMatchState(tournamentId, matchId) {
         });
 
         // Update local state
+        console.log("[SERVE] updateServe (manual) updating serve:", {
+          prevServe: matchState?.currentServe,
+          newServe: {
+            servingPlayer: newServingPlayer,
+            isServingTeam1,
+          },
+        });
         setMatchState((prev) => ({
           ...prev,
           currentServe: {
@@ -1114,30 +1403,84 @@ export function useMatchState(tournamentId, matchId) {
     newState.team1.tiebreakScore = 0;
     newState.team2.tiebreakScore = 0;
 
+    // First serve of super tiebreak goes to team that didn't serve the last game
+    console.log("[SERVE] startSuperTiebreak rotating serve:", {
+      currentServe: newState.currentServe,
+    });
+    const newServe = rotateServe(newState, true);
+    newState.currentServe = newServe;
+    console.log("[SERVE] startSuperTiebreak serve rotated to:", newServe);
+
     setMatchState(newState);
 
+    // Create update data with serve included
+    const updateData = createUpdateData(newState, setsData);
+    updateData.isInTiebreak = true;
+    updateData.isInSuperTiebreak = true;
+    updateData["team1.tiebreakScore"] = 0;
+    updateData["team2.tiebreakScore"] = 0;
+
+    console.log(
+      "[SERVE] startSuperTiebreak sending serve update to websocket:",
+      {
+        serveInUpdateData: {
+          servingPlayer: updateData["currentServe.servingPlayer"],
+          isServingTeam1: updateData["currentServe.isServingTeam1"],
+        },
+        newStateServe: newState.currentServe,
+      }
+    );
+
+    // Track if serve was rotated
+    const serveWasRotated =
+      matchState.currentServe?.isServingTeam1 !==
+        newState.currentServe?.isServingTeam1 ||
+      matchState.currentServe?.servingPlayer !==
+        newState.currentServe?.servingPlayer;
+
     try {
+      // Send super tiebreak update
       await socketService.updateMatchState({
         tournamentId,
         matchId,
         callBy: "start_super_tiebreak",
-        updateData: {
-          isInTiebreak: true,
-          isInSuperTiebreak: true,
-          "team1.tiebreakScore": 0,
-          "team2.tiebreakScore": 0,
-        },
+        updateData,
         historyEntry: {
           type: "super_tiebreak",
           action: "start",
         },
       });
+
+      // If serve was rotated, also send separate serve update
+      if (serveWasRotated && newState.currentServe) {
+        console.log(
+          "[SERVE] startSuperTiebreak serve was rotated, sending separate update_serve event:",
+          {
+            servingPlayer: newState.currentServe.servingPlayer,
+            isServingTeam1: newState.currentServe.isServingTeam1,
+          }
+        );
+        await socketService.updateServe({
+          tournamentId,
+          matchId,
+          newServingPlayer: newState.currentServe.servingPlayer,
+          isServingTeam1: newState.currentServe.isServingTeam1,
+        });
+      }
     } catch (error) {
       console.error("Error starting super tiebreak:", error);
       // Rollback on error
       setMatchState(matchState);
     }
-  }, [matchState, matchSettings, tournamentId, matchId, socketService]);
+  }, [
+    matchState,
+    matchSettings,
+    tournamentId,
+    matchId,
+    socketService,
+    rotateServe,
+    setsData,
+  ]);
 
   // Recalculate set wins based on current set scores
   const recalculateSetWins = useCallback((setsData, matchSettings) => {
@@ -1235,17 +1578,71 @@ export function useMatchState(tournamentId, matchId) {
       );
       const isCurrentSet = setIndex === activeSetIndex;
 
+      // Calculate what the new scores would be
+      const currentTeam1Games = newSetsData[setKey].team1Games || 0;
+      const currentTeam2Games = newSetsData[setKey].team2Games || 0;
+      const newTeam1Games = isTeam1 ? currentTeam1Games + 1 : currentTeam1Games;
+      const newTeam2Games = isTeam1 ? currentTeam2Games : currentTeam2Games + 1;
+
+      console.log(
+        `[incrementSetScore] Current score: ${currentTeam1Games}-${currentTeam2Games}, New score would be: ${newTeam1Games}-${newTeam2Games}, Team: ${team}`
+      );
+
+      // Check if the set is already won with current score
+      const currentTeam1Won = hasWonSet(
+        currentTeam1Games,
+        currentTeam2Games,
+        matchSettings
+      );
+      const currentTeam2Won = hasWonSet(
+        currentTeam2Games,
+        currentTeam1Games,
+        matchSettings
+      );
+      const setAlreadyWon = currentTeam1Won || currentTeam2Won;
+
+      console.log(
+        `[incrementSetScore] Set already won: ${setAlreadyWon} (Team1: ${currentTeam1Won}, Team2: ${currentTeam2Won})`
+      );
+
+      // If the set is already won, prevent further increments
+      if (setAlreadyWon) {
+        console.log(
+          `[incrementSetScore] Set already won, preventing increment. Current: ${currentTeam1Games}-${currentTeam2Games}`
+        );
+        return; // Prevent increments after set is won
+      }
+
+      // Validate the new set score before incrementing
+      const currentSetData = newSetsData[setKey];
+      const isValid = isValidSetScore(
+        newTeam1Games,
+        newTeam2Games,
+        matchSettings,
+        currentSetData
+      );
+
+      console.log(
+        `[incrementSetScore] Validation result: ${isValid} for score ${newTeam1Games}-${newTeam2Games}`
+      );
+
+      // If the new score is invalid, prevent the increment
+      if (!isValid) {
+        console.log(
+          `[incrementSetScore] Invalid set score prevented: ${newTeam1Games}-${newTeam2Games}`
+        );
+        return; // Silently prevent invalid increments
+      }
+
       // Increment the appropriate team's games in the specified set
       if (isTeam1) {
-        newSetsData[setKey].team1Games =
-          (newSetsData[setKey].team1Games || 0) + 1;
+        newSetsData[setKey].team1Games = newTeam1Games;
         // If this is the current set, also update team1.games
         if (isCurrentSet) {
           newState.team1.games = newSetsData[setKey].team1Games;
         }
       } else {
-        newSetsData[setKey].team2Games =
-          (newSetsData[setKey].team2Games || 0) + 1;
+        newSetsData[setKey].team2Games = newTeam2Games;
         // If this is the current set, also update team2.games
         if (isCurrentSet) {
           newState.team2.games = newSetsData[setKey].team2Games;
@@ -1337,8 +1734,102 @@ export function useMatchState(tournamentId, matchId) {
       matchId,
       socketService,
       recalculateSetWins,
+      isValidSetScore,
     ]
   );
+
+  // Reset scores to 0 (for entering set score editing mode)
+  const resetScores = useCallback(async () => {
+    console.log("[resetScores] Function called");
+    if (!matchState || !matchSettings || !tournamentId || !matchId) {
+      console.log("[resetScores] Early return - missing dependencies", {
+        matchState: !!matchState,
+        matchSettings: !!matchSettings,
+        tournamentId,
+        matchId,
+      });
+      return;
+    }
+
+    console.log("[resetScores] Current scores before reset:", {
+      team1Score: matchState.team1?.score,
+      team2Score: matchState.team2?.score,
+    });
+
+    // Save state for undo - ensure sets property is included
+    const stateForUndo = JSON.parse(JSON.stringify(matchState));
+    stateForUndo.sets = JSON.parse(JSON.stringify(setsData)); // Ensure sets data is included
+    setUndoStack((prev) => {
+      const newStack = [...prev, stateForUndo];
+      return newStack.slice(-MAX_UNDO_STACK_SIZE);
+    });
+
+    let newState = JSON.parse(JSON.stringify(matchState)); // Deep clone
+    let newSetsData = JSON.parse(JSON.stringify(setsData)); // Deep clone
+
+    // Store previous state for potential rollback
+    const previousState = JSON.parse(JSON.stringify(matchState));
+    const previousSetsData = JSON.parse(JSON.stringify(setsData));
+
+    // Reset scores to 0 for both teams
+    newState.team1.score = 0;
+    newState.team2.score = 0;
+
+    console.log("[resetScores] Scores reset in newState:", {
+      team1Score: newState.team1.score,
+      team2Score: newState.team2.score,
+    });
+
+    // Sync sets property with setsData
+    newState.sets = newSetsData;
+
+    // Update state optimistically
+    console.log("[resetScores] Updating state optimistically");
+    setMatchState(newState);
+    setSetsData(newSetsData);
+
+    // Update via WebSocket with rollback on error
+    const updateData = createUpdateData(newState, newSetsData);
+    console.log("[resetScores] WebSocket updateData:", {
+      "team1.score": updateData["team1.score"],
+      "team2.score": updateData["team2.score"],
+      updateData,
+    });
+
+    try {
+      console.log("[resetScores] Sending WebSocket update");
+      await socketService.updateMatchState({
+        tournamentId,
+        matchId,
+        callBy: "reset_score",
+        updateData,
+        historyEntry: {
+          type: "reset_score",
+          action: "reset_scores_for_editing",
+        },
+      });
+      console.log("[resetScores] WebSocket update sent successfully");
+    } catch (error) {
+      console.error(
+        "[resetScores] Error resetting scores, rolling back:",
+        error
+      );
+      // Rollback to previous state on error
+      setMatchState(previousState);
+      setSetsData(previousSetsData);
+      // Remove the failed state from undo stack
+      setUndoStack((prev) => prev.slice(0, -1));
+      // Optionally show error to user
+      throw error; // Re-throw to allow caller to handle if needed
+    }
+  }, [
+    matchState,
+    matchSettings,
+    setsData,
+    tournamentId,
+    matchId,
+    socketService,
+  ]);
 
   // Update match settings
   const updateMatchSettings = useCallback(
@@ -1373,6 +1864,7 @@ export function useMatchState(tournamentId, matchId) {
     updateServe,
     undo,
     resetMatch,
+    resetScores,
     completeMatch,
     loadMatchState,
     loadMatchSettings,
