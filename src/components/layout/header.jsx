@@ -25,7 +25,7 @@ export const Header = () => {
         <img
           width={350}
           className="justify-self-end p-0"
-          src={ImageConstants.playpro}
+          src={ImageConstants.playproWhite}
           alt="Playpro"
         />
       </div>

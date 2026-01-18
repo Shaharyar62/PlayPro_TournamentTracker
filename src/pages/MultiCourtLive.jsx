@@ -353,7 +353,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
     .game-score-style{
     color: white!important;}
           .font-bold.text-sm.text-white {
-          color:black;
+          
     font-size: 40px;
 }
     .text-3xl.font-bold.text-gray-800.mb-1 {
@@ -383,7 +383,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           <div className="flex items-center space-x-2 bg-black/50 text-white px-3 py-1 rounded-lg">
             <div
               className={`w-2 h-2 rounded-full ${
-                isConnected ? "bg-[#b82525]" : "bg-red-500"
+                isConnected ? "bg-[#2e55b9]" : "bg-red-500"
               }`}
             ></div>
             <span className="text-sm font-medium">
@@ -411,7 +411,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         }`}
       >
         {/* Header row */}
-        <div className={`bg-[#b82525] text-black ${paddingScale}`}>
+        <div className={`bg-[#2e55b9] text-black ${paddingScale}`}>
           <div
             className="grid gap-2 items-center"
             style={{
@@ -460,7 +460,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                       </div>
                     </div>
                     {isServingTeam(1) && (
-                      <div className="flex items-center text-[#b82525] bg-[#0c4146] rounded-full text-black p-1">
+                      <div className="flex items-center text-[#2e55b9] bg-[#0c4146] rounded-full text-black p-1">
                         <span className={isMultiView ? "text-sm" : "text-xl"}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -520,7 +520,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                       </div>
                     </div>
                     {isServingTeam(2) && (
-                      <div className="flex items-center text-[#b82525] bg-[#0c4146] rounded-full text-black p-1">
+                      <div className="flex items-center text-[#2e55b9] bg-[#0c4146] rounded-full text-black p-1">
                         <span className={isMultiView ? "text-sm" : "text-xl"}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -579,7 +579,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             ))}
 
             {/* Current Game/Points Score */}
-            <div className="text-center bg-[#b82525]">
+            <div className="text-center bg-[#2e55b9]">
               <div
                 className={`space-y-${isMultiView ? "1" : "4"} ${
                   isMultiView ? "py-2 px-2" : "pt-[25px] pb-[25px]"
@@ -608,7 +608,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         }`}
       >
         <div
-          className={`bg-[#b82525] px-4 py-1 rounded-lg font-bold ${
+          className={`bg-[#2e55b9] px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-sm" : "text-xl"
           }`}
         >
@@ -622,7 +622,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           {matchData.court?.name || "LIVE SCOREBOARD"}
         </div>
         <div
-          className={`bg-[#b82525]  px-4 py-1 rounded-lg font-bold ${
+          className={`bg-[#2e55b9]  px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-xs" : "text-sm"
           }`}
         >
@@ -662,7 +662,7 @@ const MultiCourtLive = () => {
 
   if (!tournamentId || courtIds.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-from-[#093337] via-[#b82525] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-from-[#093337] via-[#2e55b9] to-[#093337]">
         <div className="text-4xl font-bold text-white">
           Tournament ID and at least one Court ID are required
         </div>
@@ -746,75 +746,8 @@ const MultiCourtLive = () => {
             );
           })}
           {/* Bottom indicator - Fixed to bottom */}
-          {/* <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
+          <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
             <img src={ImageConstants.sponsor} className="w-full" />
-          </div> */}
-
-          <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent overflow-hidden">
-            <div className="flex animate-scrollLeft">
-              <img
-                src={ImageConstants.sponsor1}
-                className="sponsor-slide-image"
-                alt="Sponsor 1"
-              />
-              <img
-                src={ImageConstants.sponsor2}
-                className="sponsor-slide-image"
-                alt="Sponsor 2"
-              />
-              <img
-                src={ImageConstants.sponsor3}
-                className="sponsor-slide-image"
-                alt="Sponsor 3"
-              />
-              <img
-                src={ImageConstants.sponsor4}
-                className="sponsor-slide-image"
-                alt="Sponsor 4"
-              />
-              {/* Duplicates for seamless infinite loop */}
-              <img
-                src={ImageConstants.sponsor1}
-                className="sponsor-slide-image"
-                alt="Sponsor 1"
-              />
-              <img
-                src={ImageConstants.sponsor2}
-                className="sponsor-slide-image"
-                alt="Sponsor 2"
-              />
-              <img
-                src={ImageConstants.sponsor3}
-                className="sponsor-slide-image"
-                alt="Sponsor 3"
-              />
-              <img
-                src={ImageConstants.sponsor4}
-                className="sponsor-slide-image"
-                alt="Sponsor 4"
-              />
-              {/* Third set for ultra-smooth seamless loop */}
-              <img
-                src={ImageConstants.sponsor1}
-                className="sponsor-slide-image"
-                alt="Sponsor 1"
-              />
-              <img
-                src={ImageConstants.sponsor2}
-                className="sponsor-slide-image"
-                alt="Sponsor 2"
-              />
-              <img
-                src={ImageConstants.sponsor3}
-                className="sponsor-slide-image"
-                alt="Sponsor 3"
-              />
-              <img
-                src={ImageConstants.sponsor4}
-                className="sponsor-slide-image"
-                alt="Sponsor 4"
-              />
-            </div>
           </div>
         </div>
       )}

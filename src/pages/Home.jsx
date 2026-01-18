@@ -7,58 +7,56 @@ import { ImageConstants } from "../assets/images/ImageConstants";
 const Home = () => {
   const pages = [
     {
-      path: "/home/live-court?tournamentId=44&courtId=266",
-      name: "Court 1",
+      path: "/home/live-court?tournamentId=46&courtId=79",
+      name: "Galaxy 1",
       color: "#2e55b9",
     },
     {
-      path: "/home/live-court?tournamentId=44&courtId=286",
-      name: "Court 2",
+      path: "/home/live-court?tournamentId=46&courtId=80",
+      name: "Galaxy 2",
       color: "#2e55b9",
     },
     {
-      path: "/home/live-court?tournamentId=44&courtId=287",
-      name: "Court 3",
+      path: "/home/live-court?tournamentId=46&courtId=81",
+      name: "Galaxy 3",
       color: "#2e55b9",
     },
     {
-      path: "/home/live-court?tournamentId=44&courtId=288",
-      name: "Court 4",
+      path: "/home/live-court?tournamentId=46&courtId=82",
+      name: "Galaxy 4",
       color: "#2e55b9",
     },
-    // {
-    //   path: "/home/live-court?tournamentId=34&courtId=182",
-    //   name: "Court 5",
-    //   color: "#2e55b9",
-    // },
-    // {
-    //   path: "/home/live-court?tournamentId=34&courtId=247",
-    //   name: "Court 6",
-    //   color: "#2e55b9",
-    // },
-
-    // {
-    //   path: "/admin",
-    //   name: "⚙️ Admin Portal",
-    //   color: "#7c3aed",
-    // },
-
     {
-      path: "/home/score-table?tournamentIds=148,&groupDisplayTime=2&refreshInterval=10",
+      path: "/home/live-court?tournamentId=46&courtId=83",
+      name: "Black Star 1",
+      color: "#2e55b9",
+    },
+    {
+      path: "/home/live-court?tournamentId=46&courtId=84",
+      name: "Black Star 2",
+      color: "#2e55b9",
+    },
+    {
+      path: "/home/live-court?tournamentId=46&courtId=85",
+      name: "Infinity",
+      color: "#2e55b9",
+    },
+    {
+      path: "/home/multi-court-live?tournamentId=46&courtId=79,80,81,82,83,84,85",
+      name: "Multi Court Live",
+      color: "#2e55b9",
+    },
+    {
+      path: "/home/score-table?tournamentIds=161,160,159,158,157,156,155,154,153,152,151&groupDisplayTime=5&refreshInterval=10",
       name: "Score Table",
       color: "#2e55b9",
     },
     {
-      path: "/home/today-match?tournamentId=44",
+      path: "/home/today-match?tournamentId=46",
       name: "Today's Matches",
       color: "#2e55b9",
     },
 
-    {
-      path: "/home/multi-court-live?tournamentId=44&courtId=266,286,287,288",
-      name: "Multi Court Live",
-      color: "#2e55b9",
-    },
     // { path: "/live-score", name: "Live Score", color: "#2e55b9" },
     // { path: "/time-table", name: "Time Table", color: "#2e55b9" },
     // { path: "/matches-timetable", name: "7 Day Schedule", color: "#2e55b9" },
