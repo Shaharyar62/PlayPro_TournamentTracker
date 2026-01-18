@@ -51,7 +51,7 @@ const MatchScoreCard = () => {
     var matchFormat = liveMatchData?.matchSettings?.matchFormat;
     switch (matchFormat) {
       case TournamentRuleMatchFormatTypeEnum.raceToSix:
-        return "Race to 6 ";
+        return `Race to ${liveMatchData?.matchSettings?.numberOfGames}`;
       case TournamentRuleMatchFormatTypeEnum.twoSetsSuperTieBreak:
         return "2 Sets - Super Tie Break";
       case TournamentRuleMatchFormatTypeEnum.threeSets:
@@ -423,9 +423,8 @@ const MatchScoreCard = () => {
         <div className="absolute top-4 right-4 z-20">
           <div className="flex items-center space-x-2 bg-black/50 text-white px-3 py-1 rounded-lg">
             <div
-              className={`w-2 h-2 rounded-full ${
-                isConnected ? "bg-[#2e7ebb]" : "bg-red-500"
-              }`}
+              className={`w-2 h-2 rounded-full ${isConnected ? "bg-[#2e7ebb]" : "bg-red-500"
+                }`}
             ></div>
             <span className="text-sm font-medium">
               {isConnected ? "Live" : "Network Error"}
@@ -551,11 +550,10 @@ const MatchScoreCard = () => {
                           {getTeamWarnings(1).map((warning, index) => (
                             <span
                               key={index}
-                              className={`px-2 py-1 text-xs font-bold rounded ${
-                                warning === "W1"
-                                  ? "bg-yellow-400 text-black"
-                                  : "bg-red-500 text-black"
-                              }`}
+                              className={`px-2 py-1 text-xs font-bold rounded ${warning === "W1"
+                                ? "bg-yellow-400 text-black"
+                                : "bg-red-500 text-black"
+                                }`}
                             >
                               {warning}
                             </span>
@@ -609,11 +607,10 @@ const MatchScoreCard = () => {
                           {getTeamWarnings(2).map((warning, index) => (
                             <span
                               key={index}
-                              className={`px-2 py-1 text-xs font-bold rounded ${
-                                warning === "W1"
-                                  ? "bg-yellow-400 text-black"
-                                  : "bg-red-500 text-black"
-                              }`}
+                              className={`px-2 py-1 text-xs font-bold rounded ${warning === "W1"
+                                ? "bg-yellow-400 text-black"
+                                : "bg-red-500 text-black"
+                                }`}
                             >
                               {warning}
                             </span>
@@ -669,7 +666,8 @@ const MatchScoreCard = () => {
       {/* Bottom indicator and Upcoming Match */}
       <div className="grid grid-cols-12 gap-4 items-center mt-[80px] mb-[20px] mr-[100px] ml-[100px]">
         <div className="bg-[#2e7ebb]  col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
-          {matchStatus.current == "completed" ? "COMPLETED" : "Live"}
+          {/*   {matchStatus.current == "completed" ? "COMPLETED" : "Live"} */}
+          {matchStatus.current == "completed" ? "COMPLETED" : getMatchFormat()}
         </div>
         <div className="bg-[#2e7ebb] m-auto col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
           {/* {matchData.court?.name || "LIVE SCOREBOARD"}{" "} */}
