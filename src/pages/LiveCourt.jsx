@@ -11,10 +11,12 @@ import { TournamentRuleMatchFormatTypeEnum } from "../const/Constants";
 import MatchIdHelper from "../umpireScoring/utils/matchIdHelper.js";
 import { getScoreDisplayString } from "../umpireScoring/utils/scoringRules.js";
 import Header from "../components/layout/header";
+import matchDataTransformer from "../umpireScoring/helpers/matchDataTransformer";
 const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
   const courtId = searchParams.get("courtId");
+  const { mapStageType } = matchDataTransformer;
 
   // State management
   const [matchData, setMatchData] = useState(null);
@@ -672,7 +674,7 @@ const MatchScoreCard = () => {
         <div className="bg-[#2e7ebb] m-auto col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
           {/* {matchData.court?.name || "LIVE SCOREBOARD"}{" "} */}
           {/* <p className="text">Men B (Group Stage) </p> */}
-          <p className="text">(Group Stage) </p>
+          <p className="text">{mapStageType(matchData.stageType)} </p>
         </div>
         <div className="bg-[#2e7ebb] col-span-4 ml-auto text-white  px-[20px]  py-3 rounded-lg font-bold text-4xl">
           {matchData.court?.name || "LIVE SCOREBOARD"}{" "}

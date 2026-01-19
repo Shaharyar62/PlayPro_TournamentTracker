@@ -21,11 +21,15 @@ const mapPlayStatusToUIStatus = (playStatus) => {
  * @returns {string} Stage type label
  */
 const mapStageType = (stageType) => {
+
   const stageTypeMap = {
     1: "Group Match",
     2: "Quarter Final",
     3: "Semi Final",
-    4: "Final",
+    4: "Final Match",
+    5: "Knockout",
+    6: "Third Position",
+    7: "Round of 16",
   };
   return stageTypeMap[stageType] || "Match";
 };
