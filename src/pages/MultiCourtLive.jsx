@@ -11,6 +11,7 @@ import { TournamentRuleMatchFormatTypeEnum } from "../const/Constants";
 import MatchIdHelper from "../umpireScoring/utils/matchIdHelper.js";
 import { getScoreDisplayString } from "../umpireScoring/utils/scoringRules.js";
 import Header from "../components/layout/header";
+import AnimatedScore from "../components/AnimatedScore";
 
 // Single Court Component
 const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
@@ -374,7 +375,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
  
  {
           
-    border-left: solid 1px;
+    border-left: solid 0px;
     font-size: 40px;
     line-height: 60px;
       `}</style>
@@ -568,12 +569,20 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                   <div
                     className={`${textScaleLarge} font-bold set-score-style`}
                   >
-                    {getSetScore(1, setIndex)}
+                    <AnimatedScore 
+                      score={getSetScore(1, setIndex)} 
+                      isGameScore={false}
+                      textColor="text-black"
+                    />
                   </div>
                   <div
                     className={`${textScaleLarge} font-bold set-score-style`}
                   >
-                    {getSetScore(2, setIndex)}
+                    <AnimatedScore 
+                      score={getSetScore(2, setIndex)} 
+                      isGameScore={false}
+                      textColor="text-black"
+                    />
                   </div>
                 </div>
               </div>
@@ -589,12 +598,20 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 <div
                   className={`${textScaleXL} font-bold text-black game-score-style`}
                 >
-                  {getCurrentGameScore(1)}
+                  <AnimatedScore 
+                    score={getCurrentGameScore(1)} 
+                    isGameScore={true}
+                    textColor="text-white"
+                  />
                 </div>
                 <div
                   className={`${textScaleXL} font-bold text-black game-score-style`}
                 >
-                  {getCurrentGameScore(2)}
+                  <AnimatedScore 
+                    score={getCurrentGameScore(2)} 
+                    isGameScore={true}
+                    textColor="text-white"
+                  />
                 </div>
               </div>
             </div>
@@ -622,7 +639,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         >
           {matchData.court?.name || "LIVE SCOREBOARD"}
         </div>
-        <div
+        {/* <div
           className={`bg-[#A8CE08]  px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-xs" : "text-sm"
           }`}
@@ -635,7 +652,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           ) : (
             <div>UPCOMING</div>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

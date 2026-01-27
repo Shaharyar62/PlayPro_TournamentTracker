@@ -6,25 +6,29 @@
   text-align: center;
   padding: 0px !important;
 }
+
 div#root {
   width: 100%;
   padding: 2px;
 }
-body{
+
+body {
   padding: 0px !important;
 }
-@media (max-width: 700px) {
 
-}
+@media (max-width: 700px) {}
+
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -33,6 +37,7 @@ body{
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -53,18 +58,19 @@ body{
 }
 
 
-.main-body{
+.main-body {
   height: 100%;
   min-height: 100vh;
   margin: 0px !important;
   padding: 0px !important;
 }
-.game-score-style{
+
+.game-score-style {
   font-size: 130px;
   line-height: 103px;
   font-weight: 900
 }
- 
+
 
 
 .set-score-style {
@@ -81,6 +87,7 @@ body{
   font-size: 130px;
   line-height: 103px;
   font-weight: 900;
+  padding: 11px 3px;
 }
 
 .animated-set-score {
@@ -97,12 +104,12 @@ body{
 }
 
 
-.user-img-style{
+.user-img-style {
   width: 80px;
   height: 80px;
   border-radius: 50%;
 
-  object-fit: cover;  
+  object-fit: cover;
 }
 
 .marquee-container {
@@ -119,26 +126,29 @@ body{
 }
 
 .logo {
-  height: 3rem; /* h-12 equivalent */
-  margin: 0 1rem; /* mx-4 equivalent */
+  height: 3rem;
+  /* h-12 equivalent */
+  margin: 0 1rem;
+  /* mx-4 equivalent */
 }
 
 @keyframes marquee {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
 }
 
-body{
+body {
   background-color: #2b2b8a !important;
 }
 
 .main-body {
   background-size: cover !important;
-  background-repeat: repeat !important;
+  background-repeat: repeat !important;
   background-position: center !important;
   padding-bottom: 20px !important;
 }
@@ -149,6 +159,3 @@ body{
     font-size: 28px !important;
   }
 }
-
-
-
