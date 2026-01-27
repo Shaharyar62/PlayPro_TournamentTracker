@@ -12,6 +12,7 @@ import MatchIdHelper from "../umpireScoring/utils/matchIdHelper.js";
 import { getScoreDisplayString } from "../umpireScoring/utils/scoringRules.js";
 import Header from "../components/layout/header";
 import matchDataTransformer from "../umpireScoring/helpers/matchDataTransformer";
+import AnimatedScore from "../components/AnimatedScore";
 const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
@@ -405,7 +406,7 @@ const MatchScoreCard = () => {
 
   return (
     <>
-      <div className="min-h-screen  from-[#093337] via-[#2e7ebb] to-[#093337] relative overflow-hidden">
+      <div className="min-h-screen  from-[#093337] via-[#aacb32] to-[#093337] relative overflow-hidden">
         {/* Stars background */}
         <div className="absolute inset-0">
           {[...Array(50)].map((_, i) => (
@@ -425,7 +426,7 @@ const MatchScoreCard = () => {
         <div className="absolute top-4 right-4 z-20">
           <div className="flex items-center space-x-2 bg-black/50 text-white px-3 py-1 rounded-lg">
             <div
-              className={`w-2 h-2 rounded-full ${isConnected ? "bg-[#2e7ebb]" : "bg-red-500"
+              className={`w-2 h-2 rounded-full ${isConnected ? "bg-[#aacb32]" : "bg-red-500"
                 }`}
             ></div>
             <span className="text-sm font-medium">
@@ -468,7 +469,7 @@ const MatchScoreCard = () => {
                 <img
                   width={300}
                   className="justify-self-end p-5"
-                  src={ImageConstants.playproWhite}
+                  src={ImageConstants.rightLogo}
                   alt="Playpro"
                 />
               </div>
@@ -477,7 +478,7 @@ const MatchScoreCard = () => {
             {/* Main scoreboard */}
             <div className="bg-white rounded-lg ml-[100px] mr-[100px] mt-[100px] mb-[60px] shadow-2xl overflow-hidden">
               {/* Header row - Dynamic based on number of sets */}
-              <div className="  text-white py-4  bg-gradient-to-r from-[#2e7ebb] via-[#2e7ebb] to-[#2e7ebb]">
+              <div className="  text-white py-4  bg-gradient-to-r from-[#aacb32] via-[#aacb32] to-[#aacb32]">
                 <div
                   className="grid gap-4 items-center"
                   style={{
@@ -527,7 +528,7 @@ const MatchScoreCard = () => {
                             </div> */}
                           </div>
                           {isServingTeam(1) && (
-                            <div className="flex items-center text-[#2e7ebb]">
+                            <div className="flex items-center text-[#aacb32]">
                               <span className="text-xl bg-[#2c2c2c] rounded-full p-1">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -626,24 +627,40 @@ const MatchScoreCard = () => {
                   {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
                     <div key={setIndex} className="text-center">
                       <div className="space-y-8 text-black">
-                        <div className="text-6xl font-bold set-score-style">
-                          {getSetScore(1, setIndex)}
+                        <div className="text-6xl font-bold">
+                          <AnimatedScore 
+                            score={getSetScore(1, setIndex)} 
+                            isGameScore={false}
+                            textColor="text-black"
+                          />
                         </div>
-                        <div className="text-6xl font-bold set-score-style">
-                          {getSetScore(2, setIndex)}
+                        <div className="text-6xl font-bold">
+                          <AnimatedScore 
+                            score={getSetScore(2, setIndex)} 
+                            isGameScore={false}
+                            textColor="text-black"
+                          />
                         </div>
                       </div>
                     </div>
                   ))}
 
                   {/* Current Game/Points Score */}
-                  <div className="text-center  bg-[#2e7ebb]">
+                  <div className="text-center bg-[#aacb32]">
                     <div className="space-y-4 pt-[25px] pb-[25px]">
-                      <div className="text-8xl font-bold text-white game-score-style">
-                        {getCurrentGameScore(1)}
+                      <div className="text-8xl font-bold text-white">
+                        <AnimatedScore 
+                          score={getCurrentGameScore(1)} 
+                          isGameScore={true}
+                          textColor="text-white"
+                        />
                       </div>
-                      <div className="text-8xl font-bold text-white game-score-style">
-                        {getCurrentGameScore(2)}
+                      <div className="text-8xl font-bold text-white">
+                        <AnimatedScore 
+                          score={getCurrentGameScore(2)} 
+                          isGameScore={true}
+                          textColor="text-white"
+                        />
                       </div>
                     </div>
                   </div>
@@ -667,16 +684,16 @@ const MatchScoreCard = () => {
       </div>
       {/* Bottom indicator and Upcoming Match */}
       <div className="grid grid-cols-12 gap-4 items-center mt-[80px] mb-[20px] mr-[100px] ml-[100px]">
-        <div className="bg-[#2e7ebb]  col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
+        <div className="bg-[#aacb32]  col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
           {/*   {matchStatus.current == "completed" ? "COMPLETED" : "Live"} */}
           {matchStatus.current == "completed" ? "COMPLETED" : getMatchFormat()}
         </div>
-        <div className="bg-[#2e7ebb] m-auto col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
+        <div className="bg-[#aacb32] m-auto col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
           {/* {matchData.court?.name || "LIVE SCOREBOARD"}{" "} */}
           {/* <p className="text">Men B (Group Stage) </p> */}
           <p className="text">{mapStageType(matchData.stageType)} </p>
         </div>
-        <div className="bg-[#2e7ebb] col-span-4 ml-auto text-white  px-[20px]  py-3 rounded-lg font-bold text-4xl">
+        <div className="bg-[#aacb32] col-span-4 ml-auto text-white  px-[20px]  py-3 rounded-lg font-bold text-4xl">
           {matchData.court?.name || "LIVE SCOREBOARD"}{" "}
           {/* {upcomingMatch ? (
                   <div>

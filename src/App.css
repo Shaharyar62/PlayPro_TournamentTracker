@@ -76,6 +76,26 @@ body{
   padding: 25px 0px;
 }
 
+/* 3D Animated Score Styles */
+.animated-game-score {
+  font-size: 130px;
+  line-height: 103px;
+  font-weight: 900;
+}
+
+.animated-set-score {
+  font-size: 80px;
+  line-height: 80px;
+  font-weight: 700;
+}
+
+/* 3D Perspective Container */
+.perspective-container {
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
 
 .user-img-style{
   width: 80px;

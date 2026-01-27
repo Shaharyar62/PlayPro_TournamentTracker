@@ -295,15 +295,16 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div
-          className={`${
-            isMultiView ? "text-xl" : "text-4xl"
-          } font-bold text-white`}
-        >
-          Loading...
-        </div>
-      </div>
+     <></>
+      // <div className="flex items-center justify-center h-full">
+      //   <div
+      //     className={`${
+      //       isMultiView ? "text-xl" : "text-4xl"
+      //     } font-bold text-white`}
+      //   >
+      //     Loading...
+      //   </div>
+      // </div>
     );
   }
 
@@ -383,7 +384,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           <div className="flex items-center space-x-2 bg-black/50 text-white px-3 py-1 rounded-lg">
             <div
               className={`w-2 h-2 rounded-full ${
-                isConnected ? "bg-[#2e55b9]" : "bg-red-500"
+                isConnected ? "bg-[#A8CE08]" : "bg-red-500"
               }`}
             ></div>
             <span className="text-sm font-medium">
@@ -411,7 +412,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         }`}
       >
         {/* Header row */}
-        <div className={`bg-[#2e55b9] text-black ${paddingScale}`}>
+        <div className={`bg-[#A8CE08] text-black ${paddingScale}`}>
           <div
             className="grid gap-2 items-center"
             style={{
@@ -460,7 +461,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                       </div>
                     </div>
                     {isServingTeam(1) && (
-                      <div className="flex items-center text-[#2e55b9] bg-[#0c4146] rounded-full text-black p-1">
+                      <div className="flex items-center text-[#A8CE08] bg-[#A8CE08] rounded-full text-black p-1">
                         <span className={isMultiView ? "text-sm" : "text-xl"}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -520,7 +521,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                       </div>
                     </div>
                     {isServingTeam(2) && (
-                      <div className="flex items-center text-[#2e55b9] bg-[#0c4146] rounded-full text-black p-1">
+                      <div className="flex items-center text-[#A8CE08] bg-[#A8CE08] rounded-full text-black p-1">
                         <span className={isMultiView ? "text-sm" : "text-xl"}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -579,7 +580,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             ))}
 
             {/* Current Game/Points Score */}
-            <div className="text-center bg-[#2e55b9]">
+            <div className="text-center bg-[#A8CE08]">
               <div
                 className={`space-y-${isMultiView ? "1" : "4"} ${
                   isMultiView ? "py-2 px-2" : "pt-[25px] pb-[25px]"
@@ -608,7 +609,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         }`}
       >
         <div
-          className={`bg-[#2e55b9] px-4 py-1 rounded-lg font-bold ${
+          className={`bg-[#A8CE08] px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-sm" : "text-xl"
           }`}
         >
@@ -622,7 +623,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           {matchData.court?.name || "LIVE SCOREBOARD"}
         </div>
         <div
-          className={`bg-[#2e55b9]  px-4 py-1 rounded-lg font-bold ${
+          className={`bg-[#A8CE08]  px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-xs" : "text-sm"
           }`}
         >
@@ -662,7 +663,7 @@ const MultiCourtLive = () => {
 
   if (!tournamentId || courtIds.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-from-[#093337] via-[#2e55b9] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-from-[#093337] via-[#A8CE08] to-[#093337]">
         <div className="text-4xl font-bold text-white">
           Tournament ID and at least one Court ID are required
         </div>

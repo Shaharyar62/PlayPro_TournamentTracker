@@ -455,7 +455,7 @@ const MatchScoreCard = () => {
                 <img
                   width={300}
                   className="justify-self-end p-5"
-                  src={ImageConstants.playproWhite}
+                  src={ImageConstants.rightLogo}
                   alt="Playpro"
                 />
               </div>

@@ -6,12 +6,15 @@ import sponsor4 from "./ads_s4.png";
 import playproWhite from "./playpro-w.png";
 import playpro from "./playpro.png";
 import playproColorVertical from "./playpro_logo_vertical.png";
-import leftLogo from "./padelverselogo.png";
-import cupLogo from "./pvc-4.png";
+import leftLogo from "./padel_collective.png";
+import rightLogo from "./playpro-w.png";
+import cupLogo from "./appt-cup.png";
+// import cupLogo from "./pvc-4.png";
 // import cupLogo from "./rcb-cup.png";
 // import premiercup from "./premier-cup.png";
 // import bg from "./pvc-4-bg.jpg";
-import bg from "./bg-vers.jpg";
+// import bg from "./bg-vers.jpg";
+import bg from "./appt-bg.png";
 
 // import bg from "./bg-greenwich.png";
 // import bg from "./bg-premier.png";
@@ -32,6 +35,7 @@ import googlePlay from "./google.jpg";
 
 export const ImageConstants = {
   leftLogo,
+  rightLogo,
   cupLogo,
   sponsor,
   sponsor1,
