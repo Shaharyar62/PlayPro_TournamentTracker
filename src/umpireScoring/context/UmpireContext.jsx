@@ -5,7 +5,10 @@ import {
   getUmpireToken,
   clearUmpireToken,
 } from "../helpers/tokenHelper";
-import { transformCourtsScheduleToMatches } from "../helpers/matchDataTransformer";
+import {
+  transformCourtsScheduleToMatches,
+  transform24HourScheduleToCourts,
+} from "../helpers/matchDataTransformer";
 
 // Load initial state from localStorage
 const loadInitialState = () => {
@@ -33,6 +36,7 @@ const loadInitialState = () => {
     masterTournaments: parsedTournaments,
     masterTournamentId: parsedSelectedTournamentId,
     matches: [],
+    courts: [],
     currentMatch: null,
     loading: false,
     error: null,
@@ -52,6 +56,7 @@ const actionTypes = {
   SET_MASTER_TOURNAMENT_ID: "SET_MASTER_TOURNAMENT_ID",
   SET_CURRENT_MATCH: "SET_CURRENT_MATCH",
   SET_MATCHES: "SET_MATCHES",
+  SET_COURTS: "SET_COURTS",
   UPDATE_MATCH_STATUS: "UPDATE_MATCH_STATUS",
   UPDATE_SCORE: "UPDATE_SCORE",
   END_MATCH: "END_MATCH",
@@ -97,6 +102,7 @@ const umpireReducer = (state, action) => {
         masterTournaments: [],
         masterTournamentId: null,
         matches: [],
+        courts: [],
         currentMatch: null,
       };
 
@@ -116,6 +122,14 @@ const umpireReducer = (state, action) => {
       return {
         ...state,
         matches: action.payload,
+      };
+
+    case actionTypes.SET_COURTS:
+      return {
+        ...state,
+        courts: action.payload.courts || [],
+        timeRange: action.payload.timeRange || null,
+        totalCourts: action.payload.totalCourts || 0,
       };
 
     case actionTypes.SET_CURRENT_MATCH:
@@ -324,22 +338,25 @@ export const UmpireProvider = ({ children }) => {
     });
   };
 
-  // Fetch matches for selected tournament
+  // Fetch matches for selected tournament (using 24-hour schedule API)
   const fetchMatches = async (tournamentId = null) => {
     const targetTournamentId = tournamentId || state.masterTournamentId;
 
     if (!targetTournamentId) {
       dispatch({ type: actionTypes.SET_MATCHES, payload: [] });
+      dispatch({
+        type: actionTypes.SET_COURTS,
+        payload: { courts: [], timeRange: null, totalCourts: 0 },
+      });
       return [];
     }
 
     dispatch({ type: actionTypes.SET_LOADING, payload: true });
 
     try {
-      const response =
-        await umpireAPI.getUmpireMasterTournamentCourtsSchedule(
-          targetTournamentId
-        );
+      const response = await umpireAPI.getUmpireSchedule24Hours(
+        targetTournamentId
+      );
 
       if (response.success) {
         // Find tournament object for name
@@ -347,16 +364,33 @@ export const UmpireProvider = ({ children }) => {
           (t) => t.id === targetTournamentId
         );
 
-        // Transform API data to UI format
-        const allMatches = transformCourtsScheduleToMatches(
+        // Transform API data to court-wise format
+        const courtsData = transform24HourScheduleToCourts(
           response,
           tournament
         );
 
-        const matches = allMatches;
+        // Also create a flat matches array for backward compatibility
+        const allMatches = [];
+        courtsData.courts.forEach((court) => {
+          court.matches.forEach((match) => {
+            allMatches.push(match);
+          });
+        });
 
-        dispatch({ type: actionTypes.SET_MATCHES, payload: matches });
-        return matches;
+        // Sort matches by scheduled time
+        allMatches.sort((a, b) => {
+          const timeA = new Date(a.scheduledTime || 0);
+          const timeB = new Date(b.scheduledTime || 0);
+          return timeA - timeB;
+        });
+
+        dispatch({ type: actionTypes.SET_MATCHES, payload: allMatches });
+        dispatch({
+          type: actionTypes.SET_COURTS,
+          payload: courtsData,
+        });
+        return allMatches;
       } else {
         throw new Error(response.error || "Failed to fetch matches");
       }
@@ -367,6 +401,10 @@ export const UmpireProvider = ({ children }) => {
         payload: error.message,
       });
       dispatch({ type: actionTypes.SET_MATCHES, payload: [] });
+      dispatch({
+        type: actionTypes.SET_COURTS,
+        payload: { courts: [], timeRange: null, totalCourts: 0 },
+      });
       return [];
     } finally {
       dispatch({ type: actionTypes.SET_LOADING, payload: false });

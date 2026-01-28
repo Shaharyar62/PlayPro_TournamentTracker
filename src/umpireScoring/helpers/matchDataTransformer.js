@@ -278,9 +278,65 @@ export const transformMatchToUIFormat = (apiMatch, tournament = null) => {
   return transformMatch(apiMatch, tournament);
 };
 
+/**
+ * Transform API 24-hour schedule response to court-wise format
+ * @param {Object} apiResponse - Response from GetUmpireSchedule24Hours
+ * @param {Object} tournament - Tournament object (optional, for name)
+ * @returns {Object} Object with courts array, each containing court info and matches
+ */
+export const transform24HourScheduleToCourts = (
+  apiResponse,
+  tournament = null
+) => {
+  if (!apiResponse || !apiResponse.data || !apiResponse.data.courts) {
+    return {
+      courts: [],
+      timeRange: null,
+      totalCourts: 0,
+    };
+  }
+
+  const courts = apiResponse.data.courts.map((court) => {
+    // Transform all matches in the court
+    const transformedMatches = (court.matches || []).map((match) => {
+      const transformedMatch = transformMatch(match, tournament);
+      if (transformedMatch) {
+        return {
+          ...transformedMatch,
+          courtId: court.courtId,
+          courtName: court.courtName,
+        };
+      }
+      return null;
+    }).filter(Boolean);
+
+    // Sort matches by scheduled time
+    transformedMatches.sort((a, b) => {
+      const timeA = new Date(a.scheduledTime || 0);
+      const timeB = new Date(b.scheduledTime || 0);
+      return timeA - timeB;
+    });
+
+    return {
+      courtId: court.courtId,
+      courtName: court.courtName,
+      matches: transformedMatches,
+      totalMatches: court.totalMatches || transformedMatches.length,
+    };
+  });
+
+  return {
+    courts,
+    timeRange: apiResponse.data.timeRange || null,
+    totalCourts: apiResponse.data.totalCourts || courts.length,
+    masterTournamentId: apiResponse.data.masterTournamentId || null,
+  };
+};
+
 export default {
   transformCourtsScheduleToMatches,
   transformMatchToUIFormat,
+  transform24HourScheduleToCourts,
   mapPlayStatusToUIStatus,
   mapStageType,
   mapMatchResult,

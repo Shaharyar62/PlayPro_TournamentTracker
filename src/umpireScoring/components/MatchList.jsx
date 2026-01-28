@@ -11,10 +11,11 @@ import {
   AlertCircle,
   Award,
   Target,
+  Pause,
 } from "lucide-react";
 import { format } from "date-fns";
 
-const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
+const MatchList = ({ matches, onMatchSelect, onGoLive, onPauseLive }) => {
   const getStatusConfig = (status) => {
     switch (status) {
       case "upcoming":
@@ -303,15 +304,26 @@ const MatchList = ({ matches, onMatchSelect, onGoLive }) => {
                 )}
 
                 {match.status === "live" && (
-                  <motion.button
-                    onClick={() => onMatchSelect(match)}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-md border border-blue-500"
-                  >
-                    <MapPin className="w-5 h-5" />
-                    <span>Continue Scoring</span>
-                  </motion.button>
+                  <>
+                    <motion.button
+                      onClick={() => onMatchSelect(match)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-md border border-blue-500"
+                    >
+                      <MapPin className="w-5 h-5" />
+                      <span>Continue Scoring</span>
+                    </motion.button>
+                    <motion.button
+                      onClick={() => onPauseLive(match)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex-1 bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-md border border-orange-500"
+                    >
+                      <Pause className="w-5 h-5" />
+                      <span>Pause Live</span>
+                    </motion.button>
+                  </>
                 )}
 
                 {/* {match.status === "completed" && (
