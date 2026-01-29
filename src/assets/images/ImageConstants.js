@@ -1,4 +1,4 @@
-import sponsor from "./sponsor-pv4.png";
+import sponsor from "./sponsor-appt-1.png";
 import sponsor1 from "./ads_s1.png";
 import sponsor2 from "./ads_s2.png";
 import sponsor3 from "./ads_s3.png";

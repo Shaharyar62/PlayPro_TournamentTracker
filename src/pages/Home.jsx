@@ -7,52 +7,50 @@ import { ImageConstants } from "../assets/images/ImageConstants";
 const Home = () => {
   const pages = [
     {
-      path: "/home/live-court?tournamentId=46&courtId=79",
-      name: "Galaxy 1",
+      path: "/home/live-court?tournamentId=47&courtId=247",
+      name: "Premier Court",
       color: "#2e55b9",
     },
     {
-      path: "/home/live-court?tournamentId=46&courtId=80",
-      name: "Galaxy 2",
+      path: "/home/live-court?tournamentId=47&courtId=64",
+      name: "Court 1",
       color: "#2e55b9",
     },
     {
-      path: "/home/live-court?tournamentId=46&courtId=81",
-      name: "Galaxy 3",
+      path: "/home/live-court?tournamentId=47&courtId=65",
+      name: "Court 2",
+      color: "#2e55b9",
+    },
+   
+    {
+      path: "/home/live-court?tournamentId=47&courtId=66",
+      name: "Court 3",
+      color: "#2e55b9",
+    },
+ 
+    {
+      path: "/home/live-court?tournamentId=47&courtId=67",
+      name: "Court 4",
       color: "#2e55b9",
     },
     {
-      path: "/home/live-court?tournamentId=46&courtId=82",
-      name: "Galaxy 4",
+      path: "/home/live-court?tournamentId=47&courtId=182",
+      name: "Court 5",
       color: "#2e55b9",
     },
+     
     {
-      path: "/home/live-court?tournamentId=46&courtId=83",
-      name: "Black Star 1",
-      color: "#2e55b9",
-    },
-    {
-      path: "/home/live-court?tournamentId=46&courtId=84",
-      name: "Black Star 2",
-      color: "#2e55b9",
-    },
-    {
-      path: "/home/live-court?tournamentId=46&courtId=85",
-      name: "Infinity",
-      color: "#2e55b9",
-    },
-    {
-      path: "/home/multi-court-live?tournamentId=46&courtId=79,80,81,82,83,84,85",
+      path: "/home/multi-court-live?tournamentId=47&courtId=247,66,65,64,67,182",
       name: "Multi Court Live",
       color: "#2e55b9",
     },
     {
-      path: "/home/score-table?tournamentIds=161,160,159,158,157,156,155,154,153,152,151&groupDisplayTime=5&refreshInterval=10",
+      path: "/home/score-table?tournamentIds=162,163,164,165,166,167,168,169,170&groupDisplayTime=5&refreshInterval=10",
       name: "Score Table",
       color: "#2e55b9",
     },
     {
-      path: "/home/today-match?tournamentId=46",
+      path: "/home/today-match?tournamentId=47",
       name: "Today's Matches",
       color: "#2e55b9",
     },
