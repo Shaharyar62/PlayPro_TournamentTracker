@@ -203,6 +203,21 @@ class UmpireAPIService {
   }
 
   /**
+   * Get Umpire Schedule 24 Hours
+   * GET /GetUmpireSchedule24Hours?masterTournamentId={id}
+   * @param {number} masterTournamentId - Master Tournament ID
+   * @returns {Promise} Response with 24-hour courts schedule data
+   */
+  async getUmpireSchedule24Hours(masterTournamentId) {
+    return await this.makeRequest(
+      `GetUmpireSchedule24Hours?masterTournamentId=${masterTournamentId}`,
+      {
+        method: "GET",
+      }
+    );
+  }
+
+  /**
    * Get Umpire Courts
    * GET /GetUmpireCourts?masterTournamentId={id}
    * @param {number} masterTournamentId - Optional Master Tournament ID
@@ -396,13 +411,13 @@ class UmpireAPIService {
 
   /**
    * Update Tournament Match Status
-   * POST /UpdateTournamentMatchStatus (general service API, not UmpireTournament)
+   * POST /api/UmpireTournament/UpdateTournamentMatchStatus
    * @param {number|string} tournamentScheduleId - Tournament Schedule ID (match ID)
    * @param {number} playStatus - Play status enum value (0=Pending, 1=In_Progress, 2=Completed)
    * @returns {Promise} Response with update status
    */
   async updateTournamentMatchStatus(tournamentScheduleId, playStatus) {
-    const url = `${baseUrl}/UpdateTournamentMatchStatus`;
+    const url = `${this.baseUrl}/UpdateTournamentMatchStatus`;
     const token = getUmpireToken();
 
     const options = {

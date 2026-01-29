@@ -7,6 +7,7 @@ import { umpireAPI } from "../services/umpireAPI";
 import { TournamentMatchPlayStatusEnum } from "../../const/appConstant";
 import Filters from "../components/Filters";
 import MatchList from "../components/MatchList";
+import CourtSection from "../components/CourtSection";
 
 const MatchListPage = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const MatchListPage = () => {
     setMasterTournamentId,
     fetchMatches,
     loading,
+    courts,
   } = useUmpire();
 
   const [activeFilter, setActiveFilter] = useState("all");
@@ -39,6 +41,28 @@ const MatchListPage = () => {
     }
     return getMatchesForCourt(activeFilter);
   }, [activeFilter, getMatchesForCourt]);
+
+  // Get filtered courts with matches based on filter
+  const filteredCourts = useMemo(() => {
+    if (!courts || courts.length === 0) return [];
+
+    return courts.map((court) => {
+      let courtMatches = court.matches || [];
+
+      // Apply filter if not "all"
+      if (activeFilter !== "all") {
+        courtMatches = courtMatches.filter(
+          (match) => match.status === activeFilter
+        );
+      }
+
+      return {
+        ...court,
+        matches: courtMatches,
+        totalMatches: courtMatches.length,
+      };
+    }).filter((court) => court.matches.length > 0); // Only show courts with matches
+  }, [courts, activeFilter]);
 
   // Calculate match counts for filters
   const matchCounts = useMemo(() => {
@@ -99,6 +123,34 @@ const MatchListPage = () => {
       alert(
         error.message ||
           "An error occurred while updating match status. Please try again."
+      );
+    }
+  };
+
+  const handlePauseLive = async (match) => {
+    try {
+      // Call API to update match status to Pending (pause live match)
+      const response = await umpireAPI.updateTournamentMatchStatus(
+        match.id,
+        TournamentMatchPlayStatusEnum.Pending
+      );
+
+      if (response.success) {
+        // Refresh matches to update UI state
+        await fetchMatches();
+      } else {
+        // Show error message if API call failed
+        console.error("Failed to pause match:", response.error);
+        alert(
+          response.error || "Failed to pause match. Please try again."
+        );
+      }
+    } catch (error) {
+      // Handle API errors
+      console.error("Error pausing match:", error);
+      alert(
+        error.message ||
+          "An error occurred while pausing match. Please try again."
       );
     }
   };
@@ -225,12 +277,28 @@ const MatchListPage = () => {
             matchCounts={matchCounts}
           />
 
-          {/* Match List */}
-          <MatchList
-            matches={filteredMatches}
-            onMatchSelect={handleMatchSelect}
-            onGoLive={handleGoLive}
-          />
+          {/* Court-wise Match Display */}
+          {filteredCourts.length > 0 ? (
+            <div className="space-y-6">
+              {filteredCourts.map((court) => (
+                <CourtSection
+                  key={court.courtId}
+                  court={court}
+                  onMatchSelect={handleMatchSelect}
+                  onGoLive={handleGoLive}
+                  onPauseLive={handlePauseLive}
+                />
+              ))}
+            </div>
+          ) : (
+            /* Fallback to flat list if no courts data */
+            <MatchList
+              matches={filteredMatches}
+              onMatchSelect={handleMatchSelect}
+              onGoLive={handleGoLive}
+              onPauseLive={handlePauseLive}
+            />
+          )}
 
           {/* Empty State */}
           {filteredMatches.length === 0 && (
