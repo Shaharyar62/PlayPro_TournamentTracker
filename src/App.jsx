@@ -12,6 +12,7 @@ import ScoreCard from "./pages/ScoringCard";
 import TodayMatch from "./pages/TodayMatch";
 import LiveCourt from "./pages/LiveCourt";
 import MultiCourtLive from "./pages/MultiCourtLive";
+import MultiCourtSchedule from "./pages/MultiCourtSchedule";
 import Common from "./helper/common";
 import Scoreboard from "./live/overlays/scorebar";
 import NullLayout from "./components/NullLayout";
@@ -72,6 +73,7 @@ function App() {
               element={<LiveCourt />}
             />
             <Route path="multi-court-live" element={<MultiCourtLive />} />
+            <Route path="multi-court-schedule" element={<MultiCourtSchedule />} />
             <Route path="live-score" element={<LiveScore />} />
             <Route path="time-table" element={<TimeTable />} />
             <Route path="score-table" element={<ScoreTable />} />
