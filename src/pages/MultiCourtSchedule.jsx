@@ -846,14 +846,15 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
   const { courtName, matches } = courtData;
 
   // Filter matches to show only upcoming and live matches
-  const filteredMatches = matches.filter((match) => {
-    const matchStartTime = moment.tz(match.matchStartDateTime, "Asia/Karachi");
-    const isUpcoming = matchStartTime.isAfter(currentTime);
-    const isLive =
-      match.playStatus === TournamentMatchPlayStatusEnum.live ||
-      match.playStatus === TournamentMatchPlayStatusEnum.inProgress;
-    return isUpcoming || isLive;
-  });
+  const filteredMatches = matches;
+  // matches.filter((match) => {
+  //   const matchStartTime = moment.tz(match.matchStartDateTime, "Asia/Karachi");
+  //   const isUpcoming = matchStartTime.isAfter(currentTime);
+  //   const isLive =
+  //     match.playStatus === TournamentMatchPlayStatusEnum.live ||
+  //     match.playStatus === TournamentMatchPlayStatusEnum.inProgress;
+  //   return isUpcoming || isLive;
+  // });
 
   // Sort matches by start time
   const sortedMatches = [...filteredMatches].sort(
@@ -947,7 +948,10 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
                   </td>
                   <td className="py-4 px-4 text-center">
                     <span className="inline-block bg-[#A8CE08] text-black px-3 py-1 rounded-full font-bold text-sm">
-                      {match.tournamentId}
+                      {match.tournament?.name ||
+                        match.tournamentName ||
+                        match.tournamentId ||
+                        "—"}
                     </span>
                   </td>
                 </tr>
