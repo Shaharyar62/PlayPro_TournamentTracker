@@ -1,14 +1,15 @@
-import sponsor from "./sponsor-appt-1.png";
-import sponsor1 from "./ads_s1.png";
-import sponsor2 from "./ads_s2.png";
+import sponsor1 from "./sponsor-appt-2.png";
+import sponsor2 from "./sponsor-appt-1.png";
+// import sponsor1 from "./ads_s1.png";
+// import sponsor2 from "./ads_s2.png";
 import sponsor3 from "./ads_s3.png";
 import sponsor4 from "./ads_s4.png";
 import playproWhite from "./playpro-w.png";
 import playpro from "./playpro.png";
 import playproColorVertical from "./playpro_logo_vertical.png";
 import leftLogo from "./padel_collective.png";
-import rightLogo from "./playpro-w.png";
-import cupLogo from "./appt-cup.png";
+import rightLogo from "./premier-white.png";
+import cupLogo from "./appt-cup3.png";
 // import cupLogo from "./pvc-4.png";
 // import cupLogo from "./rcb-cup.png";
 // import premiercup from "./premier-cup.png";
@@ -37,7 +38,7 @@ export const ImageConstants = {
   leftLogo,
   rightLogo,
   cupLogo,
-  sponsor,
+  // sponsor,
   sponsor1,
   sponsor2,
   sponsor3,

@@ -764,8 +764,15 @@ const MultiCourtLive = () => {
             );
           })}
           {/* Bottom indicator - Fixed to bottom */}
-          <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
-            <img src={ImageConstants.sponsor} className="w-full" />
+          <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
+            <div className="marquee-wrapper">
+              <div className="marquee-content-scroll">
+                <img src={ImageConstants.sponsor2} alt="Sponsor" className="marquee-image" />
+                <img src={ImageConstants.sponsor1} alt="Sponsor" className="marquee-image" />
+                <img src={ImageConstants.sponsor2} alt="Sponsor" className="marquee-image" />
+                <img src={ImageConstants.sponsor1} alt="Sponsor" className="marquee-image" />
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -780,38 +787,47 @@ const MultiCourtLive = () => {
             opacity: 1;
           }
         }
-        @keyframes scrollLeft {
+        
+        @keyframes marqueeScroll {
           0% {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(calc(-1000vw * 4 / 12));
+            transform: translateX(-50%);
           }
         }
-        .animate-scrollLeft {
-          animation: scrollLeft 80s linear infinite;
-          will-change: transform;
+        
+        .marquee-wrapper {
+          width: 100%;
+          overflow: hidden;
+          background: white;
+          padding: 10px 0;
+        }
+        
+        .marquee-content-scroll {
           display: flex;
-          width: calc(100vw * 12 / 4);
+          width: fit-content;
+          animation: marqueeScroll 30s linear infinite;
+          will-change: transform;
         }
-        .sponsor-slide-image {
-          margin-left: 20px;
-          width: calc(100vw / 1);
-          flex-shrink: 0;
-          height: auto;
-          min-height: 171px;
+        
+        .marquee-image {
+          height: 80px;
+          width: auto;
+          margin: 0 50px;
           object-fit: contain;
-          object-position: center;
-          display: block;
+          flex-shrink: 0;
         }
+        
         @media (min-width: 1920px) {
-          .sponsor-slide-image {
-            min-height: 200px;
+          .marquee-image {
+            height: 100px;
           }
         }
+        
         @media (min-width: 2560px) {
-          .sponsor-slide-image {
-            min-height: 220px;
+          .marquee-image {
+            height: 120px;
           }
         }
       `}</style>
