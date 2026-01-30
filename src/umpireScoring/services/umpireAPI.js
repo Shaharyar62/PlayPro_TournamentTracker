@@ -218,6 +218,23 @@ class UmpireAPIService {
   }
 
   /**
+   * Get Courts Schedule 24 Hours By Court
+   * POST /GetCourtsSchedule24HoursByCourt
+   * @param {number} masterTournamentId - Master Tournament ID
+   * @param {number[]} courtIds - Array of Court IDs
+   * @returns {Promise} Response with 24-hour courts schedule data for specified courts
+   */
+  async getCourtsSchedule24HoursByCourt(masterTournamentId, courtIds) {
+    return await this.makeRequest("GetCourtsSchedule24HoursByCourt", {
+      method: "POST",
+      body: JSON.stringify({
+        masterTournamentId: masterTournamentId,
+        courtIds: courtIds,
+      }),
+    });
+  }
+
+  /**
    * Get Umpire Courts
    * GET /GetUmpireCourts?masterTournamentId={id}
    * @param {number} masterTournamentId - Optional Master Tournament ID

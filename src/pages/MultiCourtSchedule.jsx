@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Clock } from "lucide-react";
 import { motion } from "framer-motion";
@@ -6,9 +6,14 @@ import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
 import moment from "moment-timezone";
 import Header from "../components/layout/header";
 import { ImageConstants } from "../assets/images/ImageConstants";
+import { umpireAPI } from "../umpireScoring/services/umpireAPI";
 
-// Mock data - will be replaced with API call later
-const MOCK_DATA = {
+// Configuration constants
+const MAX_MATCHES_DISPLAY = 5; // Maximum number of matches to display per court
+const AUTO_REFETCH_INTERVAL_MS = 300000; // Auto-refetch interval: 5 minutes (300000 ms)
+
+// Mock data - replaced with API call
+/* const MOCK_DATA = {
   status: 1,
   message: "Umpire tournament courts schedule (24-hour range) retrieved successfully",
   data: {
@@ -832,6 +837,7 @@ const MOCK_DATA = {
     ],
   },
 };
+*/
 
 // Single Court Schedule Table Component
 const CourtScheduleTable = ({ courtData, currentTime }) => {
@@ -843,8 +849,9 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
   const filteredMatches = matches.filter((match) => {
     const matchStartTime = moment.tz(match.matchStartDateTime, "Asia/Karachi");
     const isUpcoming = matchStartTime.isAfter(currentTime);
-    const isLive = match.playStatus === TournamentMatchPlayStatusEnum.live || 
-                   match.playStatus === TournamentMatchPlayStatusEnum.inProgress;
+    const isLive =
+      match.playStatus === TournamentMatchPlayStatusEnum.live ||
+      match.playStatus === TournamentMatchPlayStatusEnum.inProgress;
     return isUpcoming || isLive;
   });
 
@@ -852,6 +859,10 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
   const sortedMatches = [...filteredMatches].sort(
     (a, b) => new Date(a.matchStartDateTime) - new Date(b.matchStartDateTime)
   );
+
+  // Limit displayed matches to MAX_MATCHES_DISPLAY
+  const displayedMatches = sortedMatches.slice(0, MAX_MATCHES_DISPLAY);
+  const totalMatchesCount = sortedMatches.length;
 
   const formatTime = (dateTimeString) => {
     if (!dateTimeString) return "";
@@ -863,8 +874,10 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
   };
 
   const isLiveMatch = (match) => {
-    return match.playStatus === TournamentMatchPlayStatusEnum.live || 
-           match.playStatus === TournamentMatchPlayStatusEnum.inProgress;
+    return (
+      match.playStatus === TournamentMatchPlayStatusEnum.live ||
+      match.playStatus === TournamentMatchPlayStatusEnum.inProgress
+    );
   };
 
   return (
@@ -881,18 +894,23 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
             <tr className="bg-[#003184] text-white">
               <th className="py-3 px-4 text-left font-bold text-lg">Time</th>
               <th className="py-3 px-4 text-left font-bold text-lg">Match</th>
-              <th className="py-3 px-4 text-center font-bold text-lg">Category</th>
+              <th className="py-3 px-4 text-center font-bold text-lg">
+                Category
+              </th>
             </tr>
           </thead>
           <tbody>
-            {sortedMatches.length === 0 ? (
+            {displayedMatches.length === 0 ? (
               <tr>
-                <td colSpan="3" className="py-8 px-4 text-center text-gray-500 text-lg">
+                <td
+                  colSpan="3"
+                  className="py-8 px-4 text-center text-gray-500 text-lg"
+                >
                   No upcoming matches
                 </td>
               </tr>
             ) : (
-              sortedMatches.map((match, index) => (
+              displayedMatches.map((match, index) => (
                 <tr
                   key={match.id}
                   className={`border-b border-gray-200 ${
@@ -918,9 +936,13 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
                   </td>
                   <td className="py-4 px-4">
                     <div className="font-semibold text-lg text-gray-800">
-                      <span className="text-[#003184]">{getTeamName(match.teamA)}</span>
+                      <span className="text-[#003184]">
+                        {getTeamName(match.teamA)}
+                      </span>
                       <span className="mx-2 text-gray-500">vs</span>
-                      <span className="text-[#003184]">{getTeamName(match.teamB)}</span>
+                      <span className="text-[#003184]">
+                        {getTeamName(match.teamB)}
+                      </span>
                     </div>
                   </td>
                   <td className="py-4 px-4 text-center">
@@ -936,9 +958,20 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
       </div>
 
       {/* Footer with match count */}
-      {sortedMatches.length > 0 && (
+      {totalMatchesCount > 0 && (
         <div className="bg-gray-100 py-2 px-6 text-center text-sm text-gray-600">
-          Total Matches: <span className="font-bold">{sortedMatches.length}</span>
+          {totalMatchesCount > MAX_MATCHES_DISPLAY ? (
+            <>
+              Showing{" "}
+              <span className="font-bold">{displayedMatches.length}</span> of{" "}
+              <span className="font-bold">{totalMatchesCount}</span> matches
+            </>
+          ) : (
+            <>
+              Total Matches:{" "}
+              <span className="font-bold">{totalMatchesCount}</span>
+            </>
+          )}
         </div>
       )}
     </div>
@@ -955,6 +988,7 @@ const MultiCourtSchedule = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentTime, setCurrentTime] = useState(moment().tz("Asia/Karachi"));
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Update current time every 30 seconds
   useEffect(() => {
@@ -965,42 +999,102 @@ const MultiCourtSchedule = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Load mock data (will be replaced with API call later)
-  useEffect(() => {
-    setLoading(true);
-    
-    // Parse comma-separated court IDs
-    const requestedCourtIds = courtIdsParam
-      ? courtIdsParam.split(",").map((id) => parseInt(id.trim()))
-      : [];
-    
-    // Simulate API delay
-    setTimeout(() => {
-      if (MOCK_DATA?.data?.courts) {
-        // Filter courts based on requested court IDs
-        let filteredCourts = MOCK_DATA.data.courts;
-        
-        if (requestedCourtIds.length > 0) {
-          filteredCourts = filteredCourts.filter((court) =>
-            requestedCourtIds.includes(court.courtId)
-          );
+  // Load data from API
+  const fetchCourtsSchedule = useCallback(
+    async (showLoader = true) => {
+      // Validate required parameters
+      if (!masterTournamentId) {
+        setError("Master Tournament ID is required");
+        if (showLoader) {
+          setLoading(false);
+        }
+        return;
+      }
+
+      if (showLoader) {
+        setLoading(true);
+      }
+      setError(null);
+
+      try {
+        // Parse comma-separated court IDs and convert to numbers
+        const courtIdsArray = courtIdsParam
+          ? courtIdsParam
+              .split(",")
+              .map((id) => parseInt(id.trim()))
+              .filter((id) => !isNaN(id))
+          : [];
+
+        // Convert masterTournamentId to number
+        const masterTournamentIdNum = parseInt(masterTournamentId);
+
+        if (isNaN(masterTournamentIdNum)) {
+          throw new Error("Invalid Master Tournament ID");
         }
 
-        setCourtsData(filteredCourts);
-        setError(null);
-      } else {
-        setError("No court data found");
+        // Call API
+        const response = await umpireAPI.getCourtsSchedule24HoursByCourt(
+          masterTournamentIdNum,
+          courtIdsArray
+        );
+
+        if (response.success && response.data?.courts) {
+          setCourtsData(response.data.courts);
+          setError(null);
+          // Mark initial load as complete after first successful load
+          setIsInitialLoad((prev) => {
+            if (prev) {
+              return false;
+            }
+            return prev;
+          });
+        } else {
+          throw new Error(response.error || "No court data found");
+        }
+      } catch (err) {
+        console.error("Error fetching courts schedule:", err);
+        setError(err.message || "Failed to fetch courts schedule");
         setCourtsData([]);
+        // Mark initial load as complete even on error to prevent infinite loading
+        setIsInitialLoad((prev) => {
+          if (prev) {
+            return false;
+          }
+          return prev;
+        });
+      } finally {
+        if (showLoader) {
+          setLoading(false);
+        }
       }
-      setLoading(false);
-    }, 500); // Simulate network delay
-  }, [masterTournamentId, courtIdsParam]);
+    },
+    [masterTournamentId, courtIdsParam]
+  );
+
+  // Initial load on mount or when params change
+  useEffect(() => {
+    setIsInitialLoad(true);
+    fetchCourtsSchedule(true);
+  }, [masterTournamentId, courtIdsParam, fetchCourtsSchedule]);
+
+  // Auto-refetch interval
+  useEffect(() => {
+    // Only set up auto-refetch after initial load is complete
+    if (!isInitialLoad) {
+      const intervalId = setInterval(() => {
+        fetchCourtsSchedule(false); // Silent refresh without loader
+      }, AUTO_REFETCH_INTERVAL_MS);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [isInitialLoad, fetchCourtsSchedule]);
 
   // Determine grid layout based on number of courts
   const getGridLayout = () => {
     if (courtsData.length === 1) return "grid-cols-1";
     if (courtsData.length === 2) return "grid-cols-1 lg:grid-cols-2";
-    if (courtsData.length >= 3) return "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3";
+    if (courtsData.length >= 3)
+      return "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3";
     return "grid-cols-1";
   };
 
@@ -1045,9 +1139,7 @@ const MultiCourtSchedule = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-8"
         >
-          <h1 className="text-5xl font-bold text-white mb-2">
-            Court Schedule
-          </h1>
+          <h1 className="text-5xl font-bold text-white mb-2">Court Schedule</h1>
           <p className="text-xl text-gray-300">
             {currentTime.format("dddd, MMMM D, YYYY - HH:mm")}
           </p>
@@ -1056,14 +1148,18 @@ const MultiCourtSchedule = () => {
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-20">
-            <div className="text-2xl font-bold text-white">Loading schedules...</div>
+            <div className="text-2xl font-bold text-white">
+              Loading schedules...
+            </div>
           </div>
         )}
 
         {/* Error State */}
         {error && !loading && (
           <div className="flex items-center justify-center py-20">
-            <div className="text-2xl font-bold text-red-400">Error: {error}</div>
+            <div className="text-2xl font-bold text-red-400">
+              Error: {error}
+            </div>
           </div>
         )}
 
@@ -1108,19 +1204,35 @@ const MultiCourtSchedule = () => {
           }
         }
       `}</style>
-    
-    <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
-            <div className="marquee-wrapper">
-              <div className="marquee-content-scroll">
-                <img src={ImageConstants.sponsor2} alt="Sponsor" className="marquee-image" />
-                <img src={ImageConstants.sponsor1} alt="Sponsor" className="marquee-image" />
-                <img src={ImageConstants.sponsor2} alt="Sponsor" className="marquee-image" />
-                <img src={ImageConstants.sponsor1} alt="Sponsor" className="marquee-image" />
-              </div>
-            </div>
+
+      <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
+        <div className="marquee-wrapper">
+          <div className="marquee-content-scroll">
+            <img
+              src={ImageConstants.sponsor2}
+              alt="Sponsor"
+              className="marquee-image"
+            />
+            <img
+              src={ImageConstants.sponsor1}
+              alt="Sponsor"
+              className="marquee-image"
+            />
+            <img
+              src={ImageConstants.sponsor2}
+              alt="Sponsor"
+              className="marquee-image"
+            />
+            <img
+              src={ImageConstants.sponsor1}
+              alt="Sponsor"
+              className="marquee-image"
+            />
           </div>
-    
-          <style jsx>{`
+        </div>
+      </div>
+
+      <style jsx>{`
         @keyframes twinkle {
           0%,
           100% {
@@ -1130,7 +1242,7 @@ const MultiCourtSchedule = () => {
             opacity: 1;
           }
         }
-        
+
         @keyframes marqueeScroll {
           0% {
             transform: translateX(0);
@@ -1139,21 +1251,21 @@ const MultiCourtSchedule = () => {
             transform: translateX(-50%);
           }
         }
-        
+
         .marquee-wrapper {
           width: 100%;
           overflow: hidden;
           background: white;
           padding: 10px 0;
         }
-        
+
         .marquee-content-scroll {
           display: flex;
           width: fit-content;
           animation: marqueeScroll 30s linear infinite;
           will-change: transform;
         }
-        
+
         .marquee-image {
           height: 80px;
           width: auto;
@@ -1161,13 +1273,13 @@ const MultiCourtSchedule = () => {
           object-fit: contain;
           flex-shrink: 0;
         }
-        
+
         @media (min-width: 1920px) {
           .marquee-image {
             height: 100px;
           }
         }
-        
+
         @media (min-width: 2560px) {
           .marquee-image {
             height: 120px;
