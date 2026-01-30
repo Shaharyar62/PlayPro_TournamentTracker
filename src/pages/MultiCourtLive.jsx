@@ -12,6 +12,7 @@ import MatchIdHelper from "../umpireScoring/utils/matchIdHelper.js";
 import { getScoreDisplayString } from "../umpireScoring/utils/scoringRules.js";
 import Header from "../components/layout/header";
 import AnimatedScore from "../components/AnimatedScore";
+import matchDataTransformer from "../umpireScoring/helpers/matchDataTransformer";
 
 // Single Court Component
 const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
@@ -22,6 +23,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
   const [liveMatchData, setLiveMatchData] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [showResetNotification, setShowResetNotification] = useState(false);
+  const { mapStageType } = matchDataTransformer;
 
   const matchStatus = useRef();
   const socketRef = useRef(null);
@@ -36,7 +38,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
     var matchFormat = liveMatchData?.matchSettings?.matchFormat;
     switch (matchFormat) {
       case TournamentRuleMatchFormatTypeEnum.raceToSix:
-        return "Race to 8";
+        return `Race to ${liveMatchData?.matchSettings?.numberOfGames}`;
       case TournamentRuleMatchFormatTypeEnum.twoSetsSuperTieBreak:
         return "2 Sets - Super Tie Break";
       case TournamentRuleMatchFormatTypeEnum.threeSets:
@@ -631,6 +633,22 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           }`}
         >
           {matchStatus.current == "completed" ? "COMPLETED" : getMatchFormat()}
+        </div>
+
+        <div
+          className={`bg-[#A8CE08] px-4 py-1 rounded-lg font-bold ${
+            isMultiView ? "text-sm" : "text-xl"
+          }`}
+        >
+          <p className="text">{mapStageType(matchData.stageType)} </p>
+        </div>
+
+        <div
+          className={`bg-[#A8CE08] px-4 py-1 rounded-lg font-bold ${
+            isMultiView ? "text-sm" : "text-xl"
+          }`}
+        >
+          <p className="text">{matchData.tournamentName || "LIVE SCOREBOARD"} </p>
         </div>
         <div
           className={`font-bold ${
