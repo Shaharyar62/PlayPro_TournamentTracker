@@ -946,8 +946,8 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
                     </div>
                   </td>
                   <td className="py-4 px-4 text-center">
-                    <span className="inline-block bg-[#A8CE08] text-black px-3 py-1 rounded-full font-bold text-sm">
-                      {match.tournamentId}
+                    <span className="inline-block bg-[#A8CE08] text-white px-3 py-1 rounded-full font-bold text-sm">
+                      {match.tournamentName}
                     </span>
                   </td>
                 </tr>

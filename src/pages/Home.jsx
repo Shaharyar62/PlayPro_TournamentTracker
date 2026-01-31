@@ -45,6 +45,12 @@ const Home = () => {
       color: "#2e55b9",
     },
     {
+      path: "/home/multi-court-schedule?masterTournamentId=47&courtId=67,182,247,66,65",
+      name: "Multi Court Schedule",
+      color: "#2e55b9",
+    },
+
+   {
       path: "/home/score-table?tournamentIds=162,163,164,165,166,167,168,169,170&groupDisplayTime=5&refreshInterval=10",
       name: "Score Table",
       color: "#2e55b9",

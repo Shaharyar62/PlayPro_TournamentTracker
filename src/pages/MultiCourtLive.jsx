@@ -423,15 +423,15 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             }}
           >
             <div className="text-center">
-              <h2 className={`${textScale} font-bold`}>PLAYERS</h2>
+              <h2 style={{ fontSize: "35px" }} className={`${textScale} font-bold`}>PLAYERS</h2>
             </div>
             {Array.from({ length: getNumberOfSets() }, (_, index) => (
               <div key={index} className="text-center">
-                <h2 className={`${textScale} font-bold`}>SET {index + 1}</h2>
+                <h2  style={{ fontSize: "35px" }} className={`${textScale} font-bold`}>SET {index + 1}</h2>
               </div>
             ))}
             <div className="text-center">
-              <h2 className={`${textScale} font-bold`}>{getHeaderText()}</h2>
+              <h2  style={{ fontSize: "35px" }} className={`${textScale} font-bold`}>{getHeaderText()}</h2>
             </div>
           </div>
         </div>
@@ -562,7 +562,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
             {/* Dynamic Set Scores */}
             {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
-              <div key={setIndex} className="text-center">
+              <div key={setIndex}  className="text-center">
                 <div
                   className={`space-y-${isMultiView ? "2" : "8"} text-black`}
                 >
@@ -625,7 +625,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           isMultiView ? "mt-2 px-2" : "mt-8 px-8"
         }`}
       >
-        <div
+        <div style={{ fontSize: "35px" }}
           className={`bg-[#A8CE08] px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-sm" : "text-xl"
           }`}
