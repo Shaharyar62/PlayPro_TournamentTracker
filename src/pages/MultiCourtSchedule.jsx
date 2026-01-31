@@ -1043,7 +1043,29 @@ const MultiCourtSchedule = () => {
         );
 
         if (response.success && response.data?.courts) {
-          setCourtsData(response.data.courts);
+          // Sort courts to match the order specified in the URL parameter
+          let sortedCourts = response.data.courts;
+          
+          if (courtIdsArray.length > 0) {
+            // Create a position map for court IDs from the URL parameter
+            const courtIdPositionMap = new Map();
+            courtIdsArray.forEach((courtId, index) => {
+              courtIdPositionMap.set(courtId, index);
+            });
+            
+            // Sort courts based on the order in courtIdsArray
+            sortedCourts = [...response.data.courts].sort((a, b) => {
+              const posA = courtIdPositionMap.has(a.courtId)
+                ? courtIdPositionMap.get(a.courtId)
+                : Number.MAX_SAFE_INTEGER;
+              const posB = courtIdPositionMap.has(b.courtId)
+                ? courtIdPositionMap.get(b.courtId)
+                : Number.MAX_SAFE_INTEGER;
+              return posA - posB;
+            });
+          }
+          
+          setCourtsData(sortedCourts);
           setError(null);
           // Mark initial load as complete after first successful load
           setIsInitialLoad((prev) => {
@@ -1097,6 +1119,7 @@ const MultiCourtSchedule = () => {
   const getGridLayout = () => {
     if (courtsData.length === 1) return "grid-cols-1";
     if (courtsData.length === 2) return "grid-cols-1 lg:grid-cols-2";
+    if (courtsData.length === 4) return "grid-cols-1 lg:grid-cols-2";
     if (courtsData.length >= 3)
       return "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3";
     return "grid-cols-1";
