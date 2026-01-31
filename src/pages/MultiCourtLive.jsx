@@ -634,22 +634,6 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         >
           {matchStatus.current == "completed" ? "COMPLETED" : getMatchFormat()}
         </div>
-
-        <div
-          className={`bg-[#A8CE08] px-4 py-1 rounded-lg font-bold ${
-            isMultiView ? "text-sm" : "text-xl"
-          }`}
-        >
-          <p className="text">{mapStageType(matchData.stageType)} </p>
-        </div>
-
-        <div
-          className={`bg-[#A8CE08] px-4 py-1 rounded-lg font-bold ${
-            isMultiView ? "text-sm" : "text-xl"
-          }`}
-        >
-          <p className="text">{matchData.tournamentName || "LIVE SCOREBOARD"} </p>
-        </div>
         <div
           className={`font-bold ${
             isMultiView ? "text-sm" : "text-xl"
@@ -657,6 +641,23 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         >
           {matchData.court?.name || "LIVE SCOREBOARD"}
         </div>
+        <div style={{ fontSize: "35px" }}
+          className={`bg-[#A8CE08] px-4 py-1 rounded-lg font-bold ${
+            isMultiView ? "text-sm" : "text-xl"
+          }`}
+        >
+          <p className="text">{mapStageType(matchData.stageType)} - {matchData.tournamentName || "LIVE SCOREBOARD"} </p>
+      
+        </div>
+
+        {/* <div
+          className={`bg-[#A8CE08] px-4 py-1 rounded-lg font-bold ${
+            isMultiView ? "text-sm" : "text-xl"
+          }`}
+        >
+          <p className="text">{matchData.tournamentName || "LIVE SCOREBOARD"} </p>
+        </div> */}
+        
         {/* <div
           className={`bg-[#A8CE08]  px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-xs" : "text-sm"

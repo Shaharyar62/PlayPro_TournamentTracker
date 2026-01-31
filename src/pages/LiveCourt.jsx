@@ -691,7 +691,9 @@ const MatchScoreCard = () => {
         <div className="bg-[#aacb32] m-auto col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
           {/* {matchData.court?.name || "LIVE SCOREBOARD"}{" "} */}
           {/* <p className="text">Men B (Group Stage) </p> */}
-          <p className="text">{mapStageType(matchData.stageType)} </p>
+          {/* <p className="text">{mapStageType(matchData.stageType)} </p> */}
+          <p className="text">{mapStageType(matchData.stageType)} - {matchData.tournamentName || "LIVE SCOREBOARD"} </p>
+      
         </div>
         <div className="bg-[#aacb32] col-span-4 ml-auto text-white  px-[20px]  py-3 rounded-lg font-bold text-4xl">
           {matchData.court?.name || "LIVE SCOREBOARD"}{" "}
