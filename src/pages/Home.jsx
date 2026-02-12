@@ -2,61 +2,51 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../assets/css/home.css";
-import { ImageConstants } from "../assets/images/ImageConstants";
+import { useTournamentImages } from "../context/TournamentImagesContext";
 
 const Home = () => {
+  const images = useTournamentImages();
   const pages = [
     {
-      path: "/home/live-court?tournamentId=47&courtId=247",
-      name: "Premier Court",
-      color: "#2e55b9",
-    },
-    {
-      path: "/home/live-court?tournamentId=47&courtId=64",
+      path: "/home/live-court?tournamentId=49&courtId=105",
       name: "Court 1",
       color: "#2e55b9",
     },
     {
-      path: "/home/live-court?tournamentId=47&courtId=65",
+      path: "/home/live-court?tournamentId=49&courtId=106",
       name: "Court 2",
       color: "#2e55b9",
     },
-   
     {
-      path: "/home/live-court?tournamentId=47&courtId=66",
+      path: "/home/live-court?tournamentId=49&courtId=107",
       name: "Court 3",
       color: "#2e55b9",
     },
- 
+
     {
-      path: "/home/live-court?tournamentId=47&courtId=67",
+      path: "/home/live-court?tournamentId=49&courtId=263",
       name: "Court 4",
       color: "#2e55b9",
     },
+
     {
-      path: "/home/live-court?tournamentId=47&courtId=182",
-      name: "Court 5",
-      color: "#2e55b9",
-    },
-     
-    {
-      path: "/home/multi-court-live?tournamentId=47&courtId=247,66,65,64,67,182",
+      path: "/home/multi-court-live?tournamentId=49&courtId=105,106,107,263",
       name: "Multi Court Live",
       color: "#2e55b9",
     },
     {
-      path: "/home/multi-court-schedule?masterTournamentId=47&courtId=67,182,247,66,65",
+      path: "/home/multi-court-schedule?masterTournamentId=49&courtId=105,106,107,263",
       name: "Multi Court Schedule",
       color: "#2e55b9",
     },
 
-   {
-      path: "/home/score-table?tournamentIds=162,163,164,165,166,167,168,169,170&groupDisplayTime=5&refreshInterval=10",
+    {
+      path: "/home/score-table?tournamentIds=177,176,175,174,173,172&groupDisplayTime=5&refreshInterval=10",
       name: "Score Table",
       color: "#2e55b9",
     },
     {
-      path: "/home/today-match?tournamentId=47",
+      path: "/home/today-match?tournamentId=49",
       name: "Today's Matches",
       color: "#2e55b9",
     },
@@ -70,7 +60,7 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="home-header">
-        <img width={300} src={ImageConstants.playpro} alt="logo" />
+        <img width={300} src={images.playpro} alt="logo" />
       </div>
 
       <div className="buttons-grid">

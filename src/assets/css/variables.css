@@ -1,0 +1,51 @@
+/**
+ * Central CSS Variables - Colors and Font Sizes
+ * Tournament-specific overrides are applied via TournamentThemeProvider
+ */
+
+:root {
+  /* ========== Color Variables ========== */
+  --color-primary: #093337;
+  --color-primary-dark: #061f22;
+  --color-accent: #aacb32;
+  --color-background: #2b2b8a;
+  --color-background-start: #093337;
+  --color-background-end: #093337;
+  --color-background-mid: #2e7ebb;
+  --color-primary-blue: #003184;
+  --color-button: #265cb6;
+  --color-link: #646cff;
+  --color-link-hover: #535bf2;
+  --color-link-glow: rgba(100, 108, 255, 0.67);
+  --color-text: rgba(255, 255, 255, 0.87);
+  --color-text-muted: #888;
+  --color-success: #16a34a;
+  --color-warning: #ca8a04;
+  --color-danger: #dc2626;
+  --color-body-bg: #2b2b8a;
+  --color-status-bar: #1e40af;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gradient-start: #667eea;
+  --color-gradient-end: #764ba2;
+  --color-info: #2196f3;
+  --color-info-dark: #1976d2;
+
+  /* ========== Font Size Variables ========== */
+  --font-xs: 12px;
+  --font-sm: 14px;
+  --font-base: 16px;
+  --font-md: 18px;
+  --font-lg: 20px;
+  --font-xl: 24px;
+  --font-2xl: 28px;
+  --font-2xl-md: 30px;
+  --font-3xl: 35px;
+  --font-4xl: 40px;
+  --font-score: 80px;
+  --font-game-score: 110px;
+  --font-game-score-lg: 130px;
+  --font-heading: 3rem;
+  --font-heading-sm: 1.2rem;
+  --font-heading-md: 1.8rem;
+}

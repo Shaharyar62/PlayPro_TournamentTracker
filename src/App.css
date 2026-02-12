@@ -26,7 +26,7 @@ body {
 }
 
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em var(--color-link-glow));
 }
 
 .logo.react:hover {
@@ -54,7 +54,7 @@ body {
 }
 
 .read-the-docs {
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 
@@ -66,7 +66,7 @@ body {
 }
 
 .game-score-style {
-  font-size: 130px;
+  font-size: var(--font-game-score-lg);
   line-height: 103px;
   font-weight: 900
 }
@@ -74,7 +74,7 @@ body {
 
 
 .set-score-style {
-  font-size: 80px;
+  font-size: var(--font-score);
   line-height: 80px;
   font-weight: 700;
   border-left: solid;
@@ -84,14 +84,14 @@ body {
 
 /* 3D Animated Score Styles */
 .animated-game-score {
-  font-size: 130px;
+  font-size: var(--font-game-score-lg);
   line-height: 103px;
   font-weight: 900;
   padding: 11px 3px;
 }
 
 .animated-set-score {
-  font-size: 80px;
+  font-size: var(--font-score);
   line-height: 80px;
   font-weight: 700;
 }
@@ -143,7 +143,7 @@ body {
 }
 
 body {
-  background-color: #2b2b8a !important;
+  background-color: var(--color-body-bg) !important;
 }
 
 .main-body {
@@ -156,6 +156,6 @@ body {
 
 @media screen and (width < 768px) {
   .text-2xl {
-    font-size: 28px !important;
+    font-size: var(--font-2xl) !important;
   }
 }

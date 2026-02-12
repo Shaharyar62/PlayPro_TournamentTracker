@@ -1,11 +1,12 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { ImageConstants } from "../assets/images/ImageConstants";
+import { useTournamentImages } from "../context/TournamentImagesContext";
 
 export default function Layout({}) {
+  const images = useTournamentImages();
   return (
     <div
-      style={{ backgroundImage: `url(${ImageConstants.bg})` }}
+      style={{ backgroundImage: `url(${images.bg})` }}
       className="bg-cover bg-center main-body"
     >
       <Outlet />

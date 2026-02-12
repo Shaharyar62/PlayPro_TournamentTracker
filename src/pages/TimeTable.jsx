@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { ImageConstants } from "../assets/images/ImageConstants";
 import LogoFlipBox from "../components/logoFlipBox";
 import Common from "../helper/common";
 import { useEffect, useRef, useState } from "react";

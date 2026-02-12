@@ -1,7 +1,7 @@
 /* Score Page Styles */
 .score-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
   font-family: 'Arial', sans-serif;
 }
 
@@ -18,7 +18,7 @@
 }
 
 .header h1 {
-  font-size: 3rem;
+  font-size: var(--font-heading);
   margin: 0 0 10px 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -55,13 +55,13 @@
 .match-selector h2 {
   color: white;
   margin: 0 0 20px 0;
-  font-size: 1.8rem;
+  font-size: var(--font-heading-md);
 }
 
 .match-selector h3 {
   color: white;
   margin: 20px 0 15px 0;
-  font-size: 1.3rem;
+  font-size: var(--font-heading-sm);
 }
 
 /* Manual Entry */
@@ -87,7 +87,7 @@
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.9);
   color: #333;
-  font-size: 16px;
+  font-size: var(--font-base);
   box-sizing: border-box;
 }
 
@@ -97,12 +97,12 @@
 }
 
 .start-btn {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
+  background: linear-gradient(135deg, var(--color-success), #45a049);
   color: white;
   border: none;
   padding: 15px 30px;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: var(--font-base);
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s;
@@ -161,26 +161,26 @@
 .match-id, .tournament-id, .group-title {
   color: white;
   margin-bottom: 5px;
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 .match-id {
   font-weight: bold;
-  font-size: 16px;
+  font-size: var(--font-base);
 }
 
 .status {
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: bold;
   margin-top: 5px;
 }
 
 .status.active {
-  color: #4CAF50;
+  color: var(--color-success);
 }
 
 .status.completed {
-  color: #f44336;
+  color: var(--color-danger);
 }
 
 .match-actions {
@@ -188,12 +188,12 @@
 }
 
 .select-btn {
-  background: linear-gradient(135deg, #2196F3, #1976D2);
+  background: linear-gradient(135deg, var(--color-info), var(--color-info-dark));
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: var(--font-sm);
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -236,7 +236,7 @@
 .instructions h3 {
   color: white;
   margin: 0 0 20px 0;
-  font-size: 1.5rem;
+  font-size: var(--font-heading-md);
 }
 
 .instructions ol {
@@ -263,7 +263,7 @@
 .features h3 {
   color: white;
   margin: 0 0 30px 0;
-  font-size: 1.5rem;
+  font-size: var(--font-heading-md);
   text-align: center;
 }
 
@@ -294,7 +294,7 @@
 .feature h4 {
   color: white;
   margin: 0 0 10px 0;
-  font-size: 1.2rem;
+  font-size: var(--font-heading-sm);
 }
 
 .feature p {
@@ -311,7 +311,7 @@
   }
   
   .header p {
-    font-size: 1rem;
+    font-size: var(--font-base);
   }
   
   .match-selector, .instructions, .features {
@@ -329,7 +329,7 @@
   }
   
   .header h1 {
-    font-size: 1.8rem;
+    font-size: var(--font-heading-md);
   }
   
   .match-item {

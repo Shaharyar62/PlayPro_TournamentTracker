@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Trophy, Clock } from "lucide-react";
 import { motion } from "framer-motion";
-import { ImageConstants } from "../assets/images/ImageConstants";
+import { useTournamentImages } from "../context/TournamentImagesContext";
 import io from "socket.io-client";
 import Common from "../helper/common";
 import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
@@ -358,18 +358,18 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
     color: white!important;}
           .font-bold.text-sm.text-white {
           
-    font-size: 40px;
+    font-size: var(--font-4xl);
 }
     .text-3xl.font-bold.text-gray-800.mb-1 {
-    font-size: 40px;
+    font-size: var(--font-4xl);
 }
     .set-score-style {
     border-left: solid 1px;
-    font-size: 110px !important;
+    font-size: var(--font-game-score) !important;
     line-height: 60px;
 }
     .game-score-style {
-    font-size: 110px !important;
+    font-size: var(--font-game-score) !important;
     line-height: 100px;
 }
           .set-score-style
@@ -378,7 +378,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
  {
           
     border-left: solid 0px;
-    font-size: 40px;
+    font-size: var(--font-4xl);
     line-height: 60px;
       `}</style>
       {/* Connection Status */}
@@ -387,7 +387,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           <div className="flex items-center space-x-2 bg-black/50 text-white px-3 py-1 rounded-lg">
             <div
               className={`w-2 h-2 rounded-full ${
-                isConnected ? "bg-[#A8CE08]" : "bg-red-500"
+                isConnected ? "bg-[var(--color-accent)]" : "bg-red-500"
               }`}
             ></div>
             <span className="text-sm font-medium">
@@ -415,7 +415,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         }`}
       >
         {/* Header row */}
-        <div className={`bg-[#A8CE08] text-black ${paddingScale}`}>
+        <div className={`bg-[var(--color-accent)] text-black ${paddingScale}`}>
           <div
             className="grid gap-2 items-center"
             style={{
@@ -425,15 +425,15 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             }}
           >
             <div className="text-center">
-              <h2 style={{ fontSize: "35px" }} className={`${textScale} font-bold`}>PLAYERS</h2>
+              <h2 style={{ fontSize: "var(--font-3xl)" }} className={`${textScale} font-bold`}>PLAYERS</h2>
             </div>
             {Array.from({ length: getNumberOfSets() }, (_, index) => (
               <div key={index} className="text-center">
-                <h2  style={{ fontSize: "35px" }} className={`${textScale} font-bold`}>SET {index + 1}</h2>
+                <h2  style={{ fontSize: "var(--font-3xl)" }} className={`${textScale} font-bold`}>SET {index + 1}</h2>
               </div>
             ))}
             <div className="text-center">
-              <h2  style={{ fontSize: "35px" }} className={`${textScale} font-bold`}>{getHeaderText()}</h2>
+              <h2  style={{ fontSize: "var(--font-3xl)" }} className={`${textScale} font-bold`}>{getHeaderText()}</h2>
             </div>
           </div>
         </div>
@@ -464,7 +464,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                       </div>
                     </div>
                     {isServingTeam(1) && (
-                      <div className="flex items-center text-[#A8CE08] bg-[#A8CE08] rounded-full text-black p-1">
+                      <div className="flex items-center text-[var(--color-accent)] bg-[var(--color-accent)] rounded-full text-black p-1">
                         <span className={isMultiView ? "text-sm" : "text-xl"}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -524,7 +524,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                       </div>
                     </div>
                     {isServingTeam(2) && (
-                      <div className="flex items-center text-[#A8CE08] bg-[#A8CE08] rounded-full text-black p-1">
+                      <div className="flex items-center text-[var(--color-accent)] bg-[var(--color-accent)] rounded-full text-black p-1">
                         <span className={isMultiView ? "text-sm" : "text-xl"}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -591,7 +591,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             ))}
 
             {/* Current Game/Points Score */}
-            <div className="text-center bg-[#A8CE08]">
+            <div className="text-center bg-[var(--color-accent)]">
               <div
                 className={`space-y-${isMultiView ? "1" : "4"} ${
                   isMultiView ? "py-2 px-2" : "pt-[25px] pb-[25px]"
@@ -627,8 +627,8 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           isMultiView ? "mt-2 px-2" : "mt-8 px-8"
         }`}
       >
-        <div style={{ fontSize: "35px" }}
-          className={`bg-[#A8CE08] px-4 py-1 rounded-lg font-bold ${
+        <div style={{ fontSize: "var(--font-3xl)" }}
+          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-sm" : "text-xl"
           }`}
         >
@@ -641,8 +641,8 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         >
           {matchData.court?.name || "LIVE SCOREBOARD"}
         </div>
-        <div style={{ fontSize: "35px" }}
-          className={`bg-[#A8CE08] px-4 py-1 rounded-lg font-bold ${
+        <div style={{ fontSize: "var(--font-3xl)" }}
+          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-sm" : "text-xl"
           }`}
         >
@@ -651,7 +651,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         </div>
 
         {/* <div
-          className={`bg-[#A8CE08] px-4 py-1 rounded-lg font-bold ${
+          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-sm" : "text-xl"
           }`}
         >
@@ -659,7 +659,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         </div> */}
         
         {/* <div
-          className={`bg-[#A8CE08]  px-4 py-1 rounded-lg font-bold ${
+          className={`bg-[var(--color-accent)]  px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-xs" : "text-sm"
           }`}
         >
@@ -679,6 +679,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
 // Main Multi-Court Component
 const MultiCourtLive = () => {
+  const images = useTournamentImages();
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
   const courtIdsParam = searchParams.get("courtId");
@@ -699,7 +700,7 @@ const MultiCourtLive = () => {
 
   if (!tournamentId || courtIds.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-from-[#093337] via-[#A8CE08] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[var(--color-primary)] via-[var(--color-accent)] to-[var(--color-primary)]">
         <div className="text-4xl font-bold text-white">
           Tournament ID and at least one Court ID are required
         </div>
@@ -786,10 +787,10 @@ const MultiCourtLive = () => {
           <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
             <div className="marquee-wrapper">
               <div className="marquee-content-scroll">
-                <img src={ImageConstants.sponsor2} alt="Sponsor" className="marquee-image" />
-                <img src={ImageConstants.sponsor1} alt="Sponsor" className="marquee-image" />
-                <img src={ImageConstants.sponsor2} alt="Sponsor" className="marquee-image" />
-                <img src={ImageConstants.sponsor1} alt="Sponsor" className="marquee-image" />
+                <img src={images.sponsor2} alt="Sponsor" className="marquee-image" />
+                <img src={images.sponsor1} alt="Sponsor" className="marquee-image" />
+                <img src={images.sponsor2} alt="Sponsor" className="marquee-image" />
+                <img src={images.sponsor1} alt="Sponsor" className="marquee-image" />
               </div>
             </div>
           </div>

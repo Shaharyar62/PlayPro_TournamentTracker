@@ -1,55 +1,60 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import "../../assets/css/home.css";
-import { useTournamentImages } from "../../context/TournamentImagesContext";
+import "../assets/css/home.css";
+import { useTournamentImages } from "../context/TournamentImagesContext";
 
-const StreamingHome = () => {
+const TMP = () => {
   const images = useTournamentImages();
   const pages = [
     {
-      path: "/streaming-live-court?tournamentId=25&courtId=79",
-      name: "Galaxy 1 -",
+      path: "/home/live-court?tournamentId=49&courtId=105",
+      name: "Court 1",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=25&courtId=80",
-      name: "Galaxy 2",
+      path: "/home/live-court?tournamentId=49&courtId=106",
+      name: "Court 2",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=25&courtId=81",
-      name: "Galaxy 3",
+      path: "/home/live-court?tournamentId=49&courtId=107",
+      name: "Court 3",
+      color: "#2e55b9",
+    },
+
+    {
+      path: "/home/live-court?tournamentId=49&courtId=263",
+      name: "Court 4",
+      color: "#2e55b9",
+    },
+
+    {
+      path: "/home/multi-court-live?tournamentId=49&courtId=105,106,107,263",
+      name: "Multi Court Live",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=25&courtId=82",
-      name: "Galaxy 4",
+      path: "/home/multi-court-schedule?masterTournamentId=49&courtId=105,106,107,263",
+      name: "Multi Court Schedule",
+      color: "#2e55b9",
+    },
+
+    {
+      path: "/home/score-table?tournamentIds=177,176,175,174,173,172&groupDisplayTime=5&refreshInterval=10",
+      name: "Score Table",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=25&courtId=83",
-      name: "Black Star 1 -",
-      color: "#2e55b9",
-    },
-    {
-      path: "/streaming-live-court?tournamentId=25&courtId=84",
-      name: "Black Star 2",
-      color: "#2e55b9",
-    },
-    {
-      path: "/streaming-live-court?tournamentId=25&courtId=85",
-      name: "Infinity -",
+      path: "/home/today-match?tournamentId=49",
+      name: "Today's Matches",
       color: "#2e55b9",
     },
 
     // { path: "/live-score", name: "Live Score", color: "#2e55b9" },
     // { path: "/time-table", name: "Time Table", color: "#2e55b9" },
-    // { path: "/score-table", name: "Score Table", color: "#2e55b9" },
-    // { path: "/score-card", name: "Score Card", color: "#2e55b9" },
-    // { path: "/today-match", name: "Today's Matches", color: "#2e55b9" },
-    // { path: "/live-court", name: "Live Court", color: "#2e55b9" },
     // { path: "/matches-timetable", name: "7 Day Schedule", color: "#2e55b9" },
+    // { path: "/score-card", name: "Score Card", color: "#2e55b9" },
   ];
 
   return (
@@ -89,4 +94,4 @@ const StreamingHome = () => {
   );
 };
 
-export default StreamingHome;
+export default TMP;

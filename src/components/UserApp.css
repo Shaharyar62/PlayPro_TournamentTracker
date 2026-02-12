@@ -1,6 +1,6 @@
 .user-app {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
   color: white;
   font-family: "Arial", sans-serif;
 }
@@ -38,7 +38,7 @@
 
 .display-header h1 {
   margin: 0;
-  font-size: 3em;
+  font-size: var(--font-heading);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -47,7 +47,7 @@
   justify-content: center;
   gap: 30px;
   margin-top: 15px;
-  font-size: 16px;
+  font-size: var(--font-base);
   flex-wrap: wrap;
 }
 
@@ -93,7 +93,7 @@
 }
 
 .score-label {
-  font-size: 14px;
+  font-size: var(--font-sm);
   opacity: 0.8;
   margin-bottom: 10px;
   text-transform: uppercase;
@@ -105,7 +105,7 @@
 }
 
 .score-value.large {
-  font-size: 3em;
+  font-size: var(--font-heading);
 }
 
 .vs-section {
@@ -114,7 +114,7 @@
 }
 
 .vs-text {
-  font-size: 3em;
+  font-size: var(--font-heading);
   font-weight: bold;
   opacity: 0.7;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -122,13 +122,13 @@
 
 .set-indicator {
   margin-top: 20px;
-  font-size: 18px;
+  font-size: var(--font-md);
   opacity: 0.8;
 }
 
 .serving-indicator {
   margin-top: 10px;
-  font-size: 14px;
+  font-size: var(--font-sm);
   opacity: 0.7;
   background: rgba(255, 255, 255, 0.1);
   padding: 8px 16px;
@@ -154,7 +154,7 @@
 }
 
 .detail-item span:first-child {
-  font-size: 12px;
+  font-size: var(--font-xs);
   opacity: 0.7;
   text-transform: uppercase;
 }
@@ -165,7 +165,7 @@
 
 .error {
   background: rgba(244, 67, 54, 0.2);
-  border: 1px solid #f44336;
+  border: 1px solid var(--color-danger);
   color: #ffcdd2;
   padding: 15px;
   border-radius: 8px;
@@ -179,7 +179,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
   padding: 20px;
 }
 
@@ -221,25 +221,25 @@
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: var(--font-base);
   box-sizing: border-box;
 }
 
 .join-btn {
   width: 100%;
   padding: 15px;
-  background: #3498db;
+  background: var(--color-info);
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: var(--font-base);
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .join-btn:hover:not(:disabled) {
-  background: #2980b9;
+  background: var(--color-info-dark);
 }
 
 .join-btn:disabled {
@@ -254,7 +254,7 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--font-sm);
   margin: 10px;
 }
 
@@ -291,7 +291,7 @@
   }
 
   .display-header h1 {
-    font-size: 2em;
+    font-size: var(--font-heading-md);
   }
 
   .match-info {

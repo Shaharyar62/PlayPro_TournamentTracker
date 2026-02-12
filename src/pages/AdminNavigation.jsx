@@ -10,9 +10,10 @@ import {
   Settings,
   ArrowLeft,
 } from "lucide-react";
-import { ImageConstants } from "../assets/images/ImageConstants";
+import { useTournamentImages } from "../context/TournamentImagesContext";
 
 const AdminNavigation = () => {
+  const images = useTournamentImages();
   const adminPages = [
     {
       path: "/umpire-scoring",
@@ -85,7 +86,7 @@ const AdminNavigation = () => {
           >
             <img
               width={300}
-              src={ImageConstants.playpro}
+              src={images.playpro}
               alt="PlayPro Logo"
               className="mx-auto mb-6"
             />

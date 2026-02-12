@@ -3,7 +3,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
   min-height: 100vh;
   font-family: 'Arial', sans-serif;
   color: white;
@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 .status-indicator {
@@ -36,11 +36,11 @@
 }
 
 .status-indicator.connected {
-  background: #4CAF50;
+  background: var(--color-success);
 }
 
 .status-indicator.disconnected {
-  background: #f44336;
+  background: var(--color-danger);
 }
 
 @keyframes pulse {
@@ -53,7 +53,7 @@
   background: rgba(255, 255, 255, 0.2);
   border: none;
   color: white;
-  font-size: 24px;
+  font-size: var(--font-xl);
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -73,21 +73,21 @@
 
 .match-info h2 {
   margin: 0 0 10px 0;
-  font-size: 28px;
+  font-size: var(--font-2xl);
   font-weight: bold;
 }
 
 .match-status {
-  font-size: 16px;
+  font-size: var(--font-base);
 }
 
 .match-status .completed {
-  color: #4CAF50;
+  color: var(--color-success);
   font-weight: bold;
 }
 
 .match-status .active {
-  color: #FFC107;
+  color: var(--color-warning);
   font-weight: bold;
 }
 
@@ -114,7 +114,7 @@
   padding: 10px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 .team-row {
@@ -137,17 +137,17 @@
 }
 
 .team-name {
-  font-size: 20px;
+  font-size: var(--font-lg);
   font-weight: bold;
   margin-bottom: 5px;
 }
 
 .team1 .team-name {
-  color: #2196F3;
+  color: var(--color-info);
 }
 
 .team2 .team-name {
-  color: #f44336;
+  color: var(--color-danger);
 }
 
 .players {
@@ -157,19 +157,19 @@
 }
 
 .player {
-  font-size: 14px;
+  font-size: var(--font-sm);
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
 .serving {
-  font-size: 16px;
+  font-size: var(--font-base);
 }
 
 .set-score, .current-score {
   text-align: center;
-  font-size: 24px;
+  font-size: var(--font-xl);
   font-weight: bold;
   padding: 15px;
   border-radius: 8px;
@@ -177,12 +177,12 @@
 }
 
 .team1-score {
-  background: linear-gradient(135deg, #2196F3, #1976D2);
+  background: linear-gradient(135deg, var(--color-info), var(--color-info-dark));
   color: white;
 }
 
 .team2-score {
-  background: linear-gradient(135deg, #f44336, #d32f2f);
+  background: linear-gradient(135deg, var(--color-danger), #d32f2f);
   color: white;
 }
 
@@ -195,17 +195,17 @@
 .warning {
   padding: 2px 6px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: bold;
 }
 
 .warning.yellow {
-  background: #FFC107;
+  background: var(--color-warning);
   color: #000;
 }
 
 .warning.red {
-  background: #f44336;
+  background: var(--color-danger);
   color: white;
 }
 
@@ -229,19 +229,19 @@
 }
 
 .stat .label {
-  font-size: 14px;
+  font-size: var(--font-sm);
   opacity: 0.8;
 }
 
 .stat .value {
-  font-size: 18px;
+  font-size: var(--font-md);
   font-weight: bold;
 }
 
 /* Last Update */
 .last-update {
   text-align: center;
-  font-size: 12px;
+  font-size: var(--font-xs);
   opacity: 0.7;
   margin-top: 20px;
 }
@@ -272,12 +272,12 @@
 }
 
 .error h3 {
-  color: #f44336;
+  color: var(--color-danger);
   margin-bottom: 10px;
 }
 
 .error button {
-  background: #f44336;
+  background: var(--color-danger);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -302,21 +302,21 @@
   }
   
   .set-header, .score-header {
-    font-size: 12px;
+    font-size: var(--font-xs);
     padding: 8px;
   }
   
   .set-score, .current-score {
-    font-size: 20px;
+    font-size: var(--font-lg);
     padding: 10px;
   }
   
   .team-name {
-    font-size: 16px;
+    font-size: var(--font-base);
   }
   
   .player {
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
   
   .match-stats {
@@ -331,11 +331,11 @@
   }
   
   .set-score, .current-score {
-    font-size: 18px;
+    font-size: var(--font-md);
     padding: 8px;
   }
   
   .team-name {
-    font-size: 14px;
+    font-size: var(--font-sm);
   }
 }

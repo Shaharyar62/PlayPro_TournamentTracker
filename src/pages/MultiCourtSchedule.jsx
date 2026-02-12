@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
 import moment from "moment-timezone";
 import Header from "../components/layout/header";
-import { ImageConstants } from "../assets/images/ImageConstants";
+import { useTournamentImages } from "../context/TournamentImagesContext";
 import { umpireAPI } from "../umpireScoring/services/umpireAPI";
 
 // Configuration constants
@@ -884,7 +884,7 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
   return (
     <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
       {/* Court Header */}
-      <div className="bg-[#A8CE08] text-white py-4 px-6">
+      <div className="bg-[var(--color-accent)] text-white py-4 px-6">
         <h2 className="text-3xl font-bold text-center">{courtName}</h2>
       </div>
 
@@ -892,7 +892,7 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="bg-[#003184] text-white">
+            <tr className="bg-[var(--color-primary-blue)] text-white">
               <th className="py-3 px-4 text-left font-bold text-lg">Time</th>
               <th className="py-3 px-4 text-left font-bold text-lg">Match</th>
               <th className="py-3 px-4 text-center font-bold text-lg">
@@ -924,8 +924,8 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
                 >
                   <td className="py-4 px-4">
                     <div className="flex items-center">
-                      <Clock className="w-5 h-5 mr-2 text-[#003184]" />
-                      <span className="font-bold text-[#003184] text-lg">
+                      <Clock className="w-5 h-5 mr-2 text-[var(--color-primary-blue)]" />
+                      <span className="font-bold text-[var(--color-primary-blue)] text-lg">
                         {formatTime(match.matchStartDateTime)}
                       </span>
                       {isLiveMatch(match) && (
@@ -937,17 +937,17 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
                   </td>
                   <td className="py-4 px-4">
                     <div className="font-semibold text-lg text-gray-800">
-                      <span className="text-[#003184]">
+                      <span className="text-[var(--color-primary-blue)]">
                         {getTeamName(match.teamA)}
                       </span>
                       <span className="mx-2 text-gray-500">vs</span>
-                      <span className="text-[#003184]">
+                      <span className="text-[var(--color-primary-blue)]">
                         {getTeamName(match.teamB)}
                       </span>
                     </div>
                   </td>
                   <td className="py-4 px-4 text-center">
-                    <span className="inline-block bg-[#A8CE08] text-white px-3 py-1 rounded-full font-bold text-sm">
+                    <span className="inline-block bg-[var(--color-accent)] text-white px-3 py-1 rounded-full font-bold text-sm">
                       {match.tournament?.name ||
                         match.tournamentName ||
                         match.tournamentId ||
@@ -984,6 +984,7 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
 
 // Main Multi-Court Schedule Component
 const MultiCourtSchedule = () => {
+  const images = useTournamentImages();
   const [searchParams] = useSearchParams();
   const masterTournamentId = searchParams.get("masterTournamentId");
   const courtIdsParam = searchParams.get("courtId");
@@ -1127,7 +1128,7 @@ const MultiCourtSchedule = () => {
 
   if (!masterTournamentId) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#003184] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[var(--color-primary)] via-[var(--color-primary-blue)] to-[var(--color-primary)]">
         <div className="text-4xl font-bold text-white">
           Master Tournament ID is required
         </div>
@@ -1236,22 +1237,22 @@ const MultiCourtSchedule = () => {
         <div className="marquee-wrapper">
           <div className="marquee-content-scroll">
             <img
-              src={ImageConstants.sponsor2}
+              src={images.sponsor2}
               alt="Sponsor"
               className="marquee-image"
             />
             <img
-              src={ImageConstants.sponsor1}
+              src={images.sponsor1}
               alt="Sponsor"
               className="marquee-image"
             />
             <img
-              src={ImageConstants.sponsor2}
+              src={images.sponsor2}
               alt="Sponsor"
               className="marquee-image"
             />
             <img
-              src={ImageConstants.sponsor1}
+              src={images.sponsor1}
               alt="Sponsor"
               className="marquee-image"
             />

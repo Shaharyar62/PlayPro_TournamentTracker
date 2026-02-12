@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Trophy, Clock, ArrowRight, Users } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
-import { ImageConstants } from "../assets/images/ImageConstants";
+import { useTournamentImages } from "../context/TournamentImagesContext";
 import Common from "../helper/common";
 import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
 import Header from "../components/layout/header";
 
 const MatchScoreCard = () => {
+  const images = useTournamentImages();
   const [showDetails, setShowDetails] = useState(false);
   const [tournamentData, setTournamentData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -124,7 +125,7 @@ const MatchScoreCard = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#2e7ebb] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[var(--color-primary)] via-[var(--color-background-mid)] to-[var(--color-primary)]">
         <div className="text-4xl font-bold text-white">
           Loading tournament courts data...
         </div>
@@ -135,7 +136,7 @@ const MatchScoreCard = () => {
   // Error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#2e7ebb] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[var(--color-primary)] via-[var(--color-background-mid)] to-[var(--color-primary)]">
         <div className="text-center">
           <div className="text-4xl font-bold text-red-400 mb-4">Error</div>
           <div className="text-white text-lg">{error}</div>
@@ -147,7 +148,7 @@ const MatchScoreCard = () => {
   // No tournament data
   if (!tournamentData || !tournamentData.courts) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#093337] via-[#2e7ebb] to-[#093337]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[var(--color-primary)] via-[var(--color-background-mid)] to-[var(--color-primary)]">
         <div className="text-4xl font-bold text-gray-400">
           No tournament courts data available
         </div>
@@ -217,7 +218,7 @@ const MatchScoreCard = () => {
           </div>
           {/* Bottom indicator - Fixed to bottom */}
           <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
-            <img src={ImageConstants.sponsor} className="w-full" />
+            <img src={images.sponsor} className="w-full" />
           </div>
 
           {/* Live indicator */}

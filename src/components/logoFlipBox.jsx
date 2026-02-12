@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ImageConstants } from "../assets/images/ImageConstants";
+import { useTournamentImages } from "../context/TournamentImagesContext";
 const LogoFlipBox = () => {
+  const images = useTournamentImages();
   const [isFlipped, setIsFlipped] = useState(false);
 
   // Auto-flip every 3 seconds
@@ -33,7 +34,7 @@ const LogoFlipBox = () => {
           <div className="absolute w-full h-full   flex items-center justify-center backface-hidden">
             <motion.img
               width={300}
-              src={ImageConstants.playproWhite}
+              src={images.playproWhite}
               alt="Playpro"
             />
             {/* <div className="p-4 flex items-center justify-center">
@@ -52,7 +53,7 @@ const LogoFlipBox = () => {
             </div> */}
             <motion.img
               width={300}
-              src={ImageConstants.padelVerse}
+              src={images.padelVerse}
               alt="Playpro"
             />
           </div>

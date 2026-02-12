@@ -1,31 +1,32 @@
-import { ImageConstants } from "../../assets/images/ImageConstants";
+import { useTournamentImages } from "../../context/TournamentImagesContext";
 
 export const Header = () => {
+  const images = useTournamentImages();
   return (
     <div className="flex ml-[100px] mr-[100px] justify-between items-center">
-      <div className="text-center" style={{ width: "400px" }}>
+      <div className="text-center" style={{ width: "500px" }}>
         <img
           className="justify-self-start p-0"
-          src={ImageConstants.leftLogo}
+          src={images.leftLogo}
           alt="Greenwich Padel"
-          style={{ height: "175px", objectFit: "contain" }}
+          style={{ objectFit: "contain" }}
         />
       </div>
 
       <div className="text-center">
         <img
-          width={1120}
+          width={420}
           className="justify-self-end p-0"
-          src={ImageConstants.cupLogo}
+          src={images.cupLogo}
           alt="Greenwich Padel"
         />
       </div>
 
-      <div className="text-center" style={{ width: "400px" }}>
+      <div className="text-center" style={{ width: "500px" }}>
         <img
           width={350}
           className="justify-self-end p-0"
-          src={ImageConstants.rightLogo}
+          src={images.rightLogo}
           alt="Playpro"
         />
       </div>

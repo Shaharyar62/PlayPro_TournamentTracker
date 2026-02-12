@@ -1,4 +1,4 @@
-import { ImageConstants } from "../../assets/images/ImageConstants";
+import { useTournamentImages } from "../../context/TournamentImagesContext";
 
 const imageData = [
   { alt: "logo8", className: "", src: "/src/assets/images/logos/8.png" },
@@ -13,12 +13,13 @@ const imageData = [
 ];
 
 const Footer = () => {
+  const images = useTournamentImages();
   return (
     <>
       <div className="fixed bottom-0 left-0 w-full">
         <div className="flex justify-between">
           <img
-            src={ImageConstants.appStore}
+            src={images.appStore}
             className="rounded-[20px] w-[300px]"
             alt="App Store"
           />
@@ -33,7 +34,7 @@ const Footer = () => {
             ))}
           </div>
           <img
-            src={ImageConstants.googlePlay}
+            src={images.googlePlay}
             className="rounded-[20px] w-[300px]"
             alt="Google Play"
           />

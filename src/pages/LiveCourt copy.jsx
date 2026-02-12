@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Trophy, Clock } from "lucide-react";
 import { motion } from "framer-motion";
-import { ImageConstants } from "../assets/images/ImageConstants";
 import io from "socket.io-client";
 import Common from "../helper/common";
 import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
@@ -391,7 +390,7 @@ const MatchScoreCard = () => {
 
   return (
     <>
-      <div className="min-h-screen  from-[#093337] via-[#2e7ebb] to-[#093337] relative overflow-hidden">
+      <div className="min-h-screen bg-gradient-to-br from-[var(--color-primary)] via-[var(--color-background-mid)] to-[var(--color-primary)] relative overflow-hidden">
         {/* Stars background */}
         <div className="absolute inset-0">
           {[...Array(50)].map((_, i) => (

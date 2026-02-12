@@ -4,7 +4,7 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: var(--color-text);
 
 
   font-synthesis: none;
@@ -15,11 +15,11 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--color-link);
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--color-link-hover);
 }
 
 body {
@@ -40,15 +40,15 @@ button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
+  font-size: var(--font-base);
   font-weight: 500;
   font-family: inherit;
-  background-color: #265cb6;
+  background-color: var(--color-button);
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--color-link);
 }
 button:focus,
 button:focus-visible {
@@ -123,7 +123,7 @@ html {
 input,
 select,
 textarea {
-  font-size: 16px !important;
+  font-size: var(--font-base) !important;
 }
 
 /* Better touch targets (minimum 44x44px for iOS) */
@@ -212,7 +212,7 @@ html {
     left: 0;
     right: 0;
     height: env(safe-area-inset-top);
-    background-color: #1e40af;
+    background-color: var(--color-status-bar);
     z-index: 9999;
   }
 }

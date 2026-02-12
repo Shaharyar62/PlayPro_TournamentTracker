@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ImageConstants } from "../../assets/images/ImageConstants";
 import io from "socket.io-client";
 import Common from "../../helper/common";
 import moment from "moment-timezone";

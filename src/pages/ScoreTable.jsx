@@ -3,10 +3,11 @@ import { ChevronUp, Trophy, Award, Shield } from "lucide-react";
 import { motion } from "framer-motion";
 import LogoFlipBox from "../components/logoFlipBox";
 import { useSearchParams } from "react-router-dom";
-import { ImageConstants } from "../assets/images/ImageConstants";
+import { useTournamentImages } from "../context/TournamentImagesContext";
 import Common from "../helper/common";
 import Header from "../components/layout/header";
 const TournamentStandings = () => {
+  const images = useTournamentImages();
   const [highlightedRow, setHighlightedRow] = useState(null);
   const [animateRanks, setAnimateRanks] = useState(false);
   const [tournamentsData, setTournamentsData] = useState([]);
@@ -917,7 +918,7 @@ const TournamentStandings = () => {
                                             </motion.div>
                                           </td>
                                           <td
-                                            style={{ fontSize: "35px" }}
+                                            style={{ fontSize: "var(--font-3xl)" }}
                                             className="py-1 px-1 text-sm font-semibold"
                                           >
                                             {team.teamName}
@@ -926,13 +927,13 @@ const TournamentStandings = () => {
                                             {team.played ?? 0}
                                           </td> */}
                                           <td
-                                            style={{ fontSize: "30px" }}
+                                            style={{ fontSize: "var(--font-2xl-md)" }}
                                             className="py-1 px-1 text-center font-bold"
                                           >
                                             {team.wins ?? 0}
                                           </td>
                                           <td
-                                            style={{ fontSize: "30px" }}
+                                            style={{ fontSize: "var(--font-2xl-md)" }}
                                             className="py-1 px-1 text-center text-red-600"
                                           >
                                             {team.lose ?? 0}
@@ -944,7 +945,7 @@ const TournamentStandings = () => {
                                             {team.points ?? 0}
                                           </td> */}
                                           <td
-                                            style={{ fontSize: "30px" }}
+                                            style={{ fontSize: "var(--font-2xl-md)" }}
                                             className="py-1 px-1 text-center text-[#000] font-mono"
                                           >
                                             {calculatePCT(
@@ -953,19 +954,19 @@ const TournamentStandings = () => {
                                             ).toFixed(3)}
                                           </td>
                                           <td
-                                            style={{ fontSize: "30px" }}
+                                            style={{ fontSize: "var(--font-2xl-md)" }}
                                             className="py-1 px-1 text-center text-[#000] font-bold"
                                           >
                                             {team.pf ?? 0}
                                           </td>
                                           <td
-                                            style={{ fontSize: "30px" }}
+                                            style={{ fontSize: "var(--font-2xl-md)" }}
                                             className="py-1 px-1 text-center"
                                           >
                                             {team.pa ?? 0}
                                           </td>
                                           <td
-                                            style={{ fontSize: "30px" }}
+                                            style={{ fontSize: "var(--font-2xl-md)" }}
                                             className={`py-1 px-1 text-center font-bold ${
                                               team.pd > 0
                                                 ? "text-[#000]"
@@ -978,7 +979,7 @@ const TournamentStandings = () => {
                                             {team.pd ?? 0}
                                           </td>
                                           <td
-                                            style={{ fontSize: "30px" }}
+                                            style={{ fontSize: "var(--font-2xl-md)" }}
                                             className="py-1 px-1 text-center"
                                           >
                                             <motion.div
@@ -1027,7 +1028,7 @@ const TournamentStandings = () => {
               </div>
               {/* Bottom indicator */}
               <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
-                <img src={ImageConstants.sponsor} className="w-full " />
+                <img src={images.sponsor} className="w-full " />
               </div>
               {/* <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent overflow-hidden">
                 <div className="flex animate-scrollLeft">

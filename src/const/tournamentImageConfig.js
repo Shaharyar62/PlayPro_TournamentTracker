@@ -1,0 +1,84 @@
+/**
+ * Tournament Image Configuration
+ * Maps tournamentId to image key overrides.
+ * Each value references a key in ALL_IMAGES from ImageConstants.
+ */
+
+const DEFAULT_IMAGES = {
+  leftLogo: "tmp-logo",
+  rightLogo: "playpro-w",
+  cupLogo: "tmp-cup",
+  bg: "appt-bg",
+  sponsor1: "sponsor-tmp-2026",
+  sponsor2: "sponsor-tmp-2026",
+  sponsor3: "ads_s3",
+  sponsor4: "ads_s4",
+  playproWhite: "playpro-w",
+  playpro: "playpro",
+  padelVerse: "padel-verse",
+  premierCup: "premier-cup",
+};
+
+export const TOURNAMENT_IMAGES = {
+  default: DEFAULT_IMAGES,
+  46: {
+    leftLogo: "padelverselogo",
+    cupLogo: "pvc-4",
+    bg: "pvc-4-bg",
+    sponsor1: "ads_s1",
+    sponsor2: "ads_s2",
+  },
+  47: {
+    leftLogo: "padel_collective",
+    rightLogo: "premier-white",
+    cupLogo: "premier-cup",
+    bg: "appt-bg",
+    sponsor1: "ads_s1",
+    sponsor2: "ads_s2",
+  },
+};
+
+/**
+ * Get resolved image modules for a tournament ID.
+ * @param {string|null|undefined} tournamentId - Tournament ID from URL
+ * @param {Object} allImages - ALL_IMAGES from ImageConstants
+ * @returns {Object} Images object with same keys as ImageConstants
+ */
+export function getImagesForTournament(tournamentId, allImages) {
+  const config =
+    TOURNAMENT_IMAGES[tournamentId] ||
+    TOURNAMENT_IMAGES[String(tournamentId)] ||
+    DEFAULT_IMAGES;
+  const merged = { ...DEFAULT_IMAGES, ...config };
+
+  const defaultImg = (key) =>
+    allImages[merged[key]] || allImages[DEFAULT_IMAGES[key]];
+
+  return {
+    leftLogo: defaultImg("leftLogo"),
+    rightLogo: defaultImg("rightLogo"),
+    cupLogo: defaultImg("cupLogo"),
+    bg: defaultImg("bg"),
+    sponsor1: defaultImg("sponsor1"),
+    sponsor2: defaultImg("sponsor2"),
+    sponsor3: defaultImg("sponsor3"),
+    sponsor4: defaultImg("sponsor4"),
+    sponsor: defaultImg("sponsor1"),
+    playproWhite: defaultImg("playproWhite"),
+    playpro: defaultImg("playpro"),
+    padelVerse: defaultImg("padelVerse"),
+    premierCup: defaultImg("premierCup"),
+    appStore: allImages["apple"],
+    googlePlay: allImages["google"],
+    playproColorVertical: allImages["playpro_logo_vertical"],
+    logo1: allImages["logo1"],
+    logo2: allImages["logo2"],
+    logo3: allImages["logo3"],
+    logo4: allImages["logo4"],
+    logo5: allImages["logo5"],
+    logo6: allImages["logo6"],
+    logo7: allImages["logo7"],
+    logo8: allImages["logo8"],
+    logo9: allImages["logo9"],
+  };
+}

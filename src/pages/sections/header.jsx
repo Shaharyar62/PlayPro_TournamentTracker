@@ -1,14 +1,15 @@
 import { motion } from "framer-motion";
-import { ImageConstants } from "../../assets/images/ImageConstants";
+import { useTournamentImages } from "../../context/TournamentImagesContext";
 
 const Header = ({ displayTime }) => {
+  const images = useTournamentImages();
   return (
     <>
       <div
         className="w-full mt-[40px] flex justify-end mb-2"
         style={{ marginBottom: "-170px" }}
       >
-        <div className="bg-[#00084e] p-[15px] rounded-lg shadow-lg text-[55px] font-bold">
+        <div className="bg-[var(--color-primary)] p-[15px] rounded-lg shadow-lg text-[55px] font-bold">
           {displayTime.format("HH:mm:ss")}
         </div>
       </div>
@@ -25,7 +26,7 @@ const Header = ({ displayTime }) => {
           <img
             width={300}
             className="justify-self-end"
-            src={ImageConstants.padelVerse}
+            src={images.padelVerse}
             alt="Playpro"
           />
         </motion.div>
@@ -34,12 +35,12 @@ const Header = ({ displayTime }) => {
           <h1 className="text-6xl font-bold mt-4">MATCH SCHEDULE</h1>
           <p
             style={{
-              color: "#091368",
+              color: "var(--color-primary)",
               textShadow: "1px 1px 8px white, 3px 3px 11px white",
               fontWeight: 700,
-              fontSize: "40px",
+              fontSize: "var(--font-4xl)",
             }}
-            className="text-[#0caced] text-4xl mt-2 font-semibold"
+            className="text-[var(--color-background-mid)] text-4xl mt-2 font-semibold"
           >
             HAPPENING NOW
           </p>
@@ -47,7 +48,7 @@ const Header = ({ displayTime }) => {
         <img
           width={300}
           className="justify-self-end"
-          src={ImageConstants.playproWhite}
+          src={images.playproWhite}
           alt="Playpro"
         />
       </motion.div>

@@ -27,6 +27,12 @@ import LoginPage from "./umpireScoring/pages/LoginPage";
 import MatchListPage from "./umpireScoring/pages/MatchListPage";
 import ScoreUploadPage from "./umpireScoring/pages/ScoreUploadPage";
 import { UmpireProvider } from "./umpireScoring/context/UmpireContext";
+import TournamentThemeProvider from "./components/TournamentThemeProvider";
+import { TournamentImagesProvider } from "./context/TournamentImagesContext";
+
+import Padelverse from "./pages/Padelverse";
+import TMP from "./pages/TMP";
+import Links from "./pages/live/Links";
 
 function App() {
   const isLoaded = useRef(false);
@@ -40,59 +46,70 @@ function App() {
   return (
     <Router>
       <UmpireProvider>
-        <Routes>
-          {/* Root route - Login Page First */}
-          <Route path="/" element={<NullLayout />}>
-            <Route index element={<LoginPage />} />
-            <Route path="matches" element={<MatchListPage />} />
-            <Route path="score-upload" element={<ScoreUploadPage />} />
-            <Route path="scorebar" element={<Scoreboard />} />
-            <Route path="streaming-home" element={<StreamingHome />} />
-            <Route
-              path="streaming-live-court"
-              element={<StreamingLiveCourt />}
-            />
-            {/* <Route path="multi-court-live" element={<MultiCourtLive />} /> */}
-            <Route
-              path="scorebar/:tournamentId/:matchId"
-              element={<Scoreboard />}
-            />
-          </Route>
+        <TournamentThemeProvider>
+          <TournamentImagesProvider>
+            <Routes>
+              {/* Root route - Login Page First */}
+              <Route path="/" element={<NullLayout />}>
+                <Route index element={<LoginPage />} />
+                <Route path="matches" element={<MatchListPage />} />
+                <Route path="score-upload" element={<ScoreUploadPage />} />
+                <Route path="scorebar" element={<Scoreboard />} />
+                <Route path="streaming-home" element={<StreamingHome />} />
+                <Route
+                  path="streaming-live-court"
+                  element={<StreamingLiveCourt />}
+                />
+                {/* <Route path="multi-court-live" element={<MultiCourtLive />} /> */}
+                <Route
+                  path="scorebar/:tournamentId/:matchId"
+                  element={<Scoreboard />}
+                />
+              </Route>
 
-          <Route
-            path="/streaming-live-court"
-            element={<StreamingLiveCourt />}
-          />
+              <Route
+                path="/streaming-live-court"
+                element={<StreamingLiveCourt />}
+              />
 
-          {/* Main Application Routes with Layout */}
-          <Route path="/home" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="live-court" element={<LiveCourt />} />
-            <Route
-              path="live-court/:tournamentId/:matchId"
-              element={<LiveCourt />}
-            />
-            <Route path="multi-court-live" element={<MultiCourtLive />} />
-            <Route path="multi-court-schedule" element={<MultiCourtSchedule />} />
-            <Route path="live-score" element={<LiveScore />} />
-            <Route path="time-table" element={<TimeTable />} />
-            <Route path="score-table" element={<ScoreTable />} />
-            <Route path="score-card" element={<ScoreCard />} />
-            <Route path="today-match" element={<TodayMatch />} />
-            <Route path="umpire" element={<UmpirePage />} />
-            <Route path="viewer" element={<UserPage />} />
-            <Route path="score-page" element={<ScorePage />} />
-            <Route path="admin" element={<AdminNavigation />} />
+              <Route path="/live/links" element={<Links />} />
 
-            {/* <Route
+              {/* Main Application Routes with Layout */}
+              <Route path="/home" element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route path="live-court" element={<LiveCourt />} />
+                <Route path="padelverse" element={<Padelverse />} />
+                <Route path="tmp" element={<TMP />} />
+                <Route
+                  path="live-court/:tournamentId/:matchId"
+                  element={<LiveCourt />}
+                />
+                <Route path="multi-court-live" element={<MultiCourtLive />} />
+                <Route
+                  path="multi-court-schedule"
+                  element={<MultiCourtSchedule />}
+                />
+                <Route path="live-score" element={<LiveScore />} />
+                <Route path="time-table" element={<TimeTable />} />
+                <Route path="score-table" element={<ScoreTable />} />
+                <Route path="score-card" element={<ScoreCard />} />
+                <Route path="today-match" element={<TodayMatch />} />
+                <Route path="umpire" element={<UmpirePage />} />
+                <Route path="viewer" element={<UserPage />} />
+                <Route path="score-page" element={<ScorePage />} />
+                <Route path="admin" element={<AdminNavigation />} />
+
+                {/* <Route
             path="matches-timetable"
             element={<MatchesTimetableScreen />}
           /> */}
-          </Route>
+              </Route>
 
-          {/* Umpire Scoring Routes - Standalone App */}
-          {/* <Route path="umpire-scoring/*" element={<UmpireApp />} /> */}
-        </Routes>
+              {/* Umpire Scoring Routes - Standalone App */}
+              {/* <Route path="umpire-scoring/*" element={<UmpireApp />} /> */}
+            </Routes>
+          </TournamentImagesProvider>
+        </TournamentThemeProvider>
       </UmpireProvider>
     </Router>
   );

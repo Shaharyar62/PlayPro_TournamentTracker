@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Trophy, Clock } from "lucide-react";
 import { motion } from "framer-motion";
-import { ImageConstants } from "../assets/images/ImageConstants";
+import { useTournamentImages } from "../context/TournamentImagesContext";
 import {
   listenToSpecificMatch,
   initializeLiveMatchesListener,
@@ -11,6 +11,7 @@ import {
 import moment from "moment-timezone";
 
 const MatchScoreCard = () => {
+  const images = useTournamentImages();
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
   const matchId = searchParams.get("matchId");
@@ -88,7 +89,7 @@ const MatchScoreCard = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-4xl font-bold text-[#2e7ebb]">
+        <div className="text-4xl font-bold text-[var(--color-background-mid)]">
           Loading match data...
         </div>
       </div>
@@ -122,7 +123,7 @@ const MatchScoreCard = () => {
         className="w-full flex justify-end mb-2"
         style={{ marginBottom: "-90px" }}
       >
-        <div className="bg-[#093337] p-[15px] rounded-lg shadow-lg text-[55px] font-bold">
+        <div className="bg-[var(--color-primary)] p-[15px] rounded-lg shadow-lg text-[55px] font-bold">
           {displayTime.format("HH:mm:ss")}
         </div>
       </div> */}
@@ -139,7 +140,7 @@ const MatchScoreCard = () => {
           <img
             width={300}
             className="justify-self-end p-5"
-            src={ImageConstants.padelVerse}
+            src={images.padelVerse}
             alt="Playpro"
           />
         </motion.div>
@@ -148,12 +149,12 @@ const MatchScoreCard = () => {
           <h1 className="text-6xl font-bold mt-4">MATCH SCHEDULE</h1>
           <p
             style={{
-              color: "#093337",
+              color: "var(--color-primary)",
               textShadow: "1px 1px 8px white, 3px 3px 11px white",
               fontWeight: 700,
               fontSize: "40px",
             }}
-            className="text-[#2e7ebb] text-4xl mt-2 font-semibold"
+            className="text-[var(--color-background-mid)] text-4xl mt-2 font-semibold"
           >
             HAPPENING NOW
           </p>
@@ -162,7 +163,7 @@ const MatchScoreCard = () => {
           <img
             width={300}
             className="justify-self-end p-5"
-            src={ImageConstants.playproWhite}
+            src={images.playproWhite}
             alt="Playpro"
           />
         </motion.div>
@@ -171,7 +172,7 @@ const MatchScoreCard = () => {
         <div className="col-span-1">
           {(() => {
             // Collect all logo keys from ImageConstants that start with 'logo'
-            const logoKeys = Object.keys(ImageConstants).filter((key) =>
+            const logoKeys = Object.keys(images).filter((key) =>
               key.startsWith("logo")
             );
             // Shuffle the array randomly
@@ -188,7 +189,7 @@ const MatchScoreCard = () => {
                 {shuffledKeys.map((key, idx) => (
                   <img
                     key={key}
-                    src={ImageConstants[key]}
+                    src={images[key]}
                     alt={key}
                     className={
                       sizeClasses[
@@ -204,7 +205,7 @@ const MatchScoreCard = () => {
         <div className="col-span-3">
           <div className=" rounded-lg shadow-lg overflow-hidden">
             {/* Header with match info */}
-            <div className="relative bg-gradient-to-r from-[#093337] via-[#2e7ebb] to-[#093337] px-6 py-4 text-white">
+            <div className="relative bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-background-mid)] to-[var(--color-primary)] px-6 py-4 text-white">
               <div className="absolute inset-0 bg-opacity-50"></div>
               <div className="flex justify-between items-center relative z-10">
                 <div className="flex items-center space-x-3">
@@ -213,7 +214,7 @@ const MatchScoreCard = () => {
                     Court {matchData.id || "Live"}
                   </h2>
                 </div>
-                <div className="text-2xl bg-[#093337] bg-opacity-70 px-4 py-2 rounded-full flex items-center">
+                <div className="text-2xl bg-[var(--color-primary)] bg-opacity-70 px-4 py-2 rounded-full flex items-center">
                   <Clock className="h-5 w-5 mr-2" />
                   {matchData.matchTitle || "Live Match"}
                 </div>
@@ -311,7 +312,7 @@ const MatchScoreCard = () => {
                           <span
                             className={`text-8xl font-bold ${
                               matchData.team1?.sets > matchData.team2?.sets
-                                ? "text-[#2e7ebb]"
+                                ? "text-[var(--color-background-mid)]"
                                 : "text-gray-800"
                             }`}
                           >
@@ -323,7 +324,7 @@ const MatchScoreCard = () => {
                           <span
                             className={`text-8xl font-bold ${
                               matchData.team2?.sets > matchData.team1?.sets
-                                ? "text-[#2e7ebb]"
+                                ? "text-[var(--color-background-mid)]"
                                 : "text-gray-800"
                             }`}
                           >
@@ -374,7 +375,7 @@ const MatchScoreCard = () => {
                           <span
                             className={`text-8xl font-bold ${
                               matchData.team1?.games > matchData.team2?.games
-                                ? "text-[#2e7ebb]"
+                                ? "text-[var(--color-background-mid)]"
                                 : "text-gray-800"
                             }`}
                           >
@@ -386,7 +387,7 @@ const MatchScoreCard = () => {
                           <span
                             className={`text-8xl font-bold ${
                               matchData.team2?.games > matchData.team1?.games
-                                ? "text-[#2e7ebb]"
+                                ? "text-[var(--color-background-mid)]"
                                 : "text-gray-800"
                             }`}
                           >
@@ -400,13 +401,13 @@ const MatchScoreCard = () => {
                           SCORE
                         </div>
                         <div className="flex justify-center flex-col items-center space-x-4">
-                          <span className={`text-8xl font-bold text-[#2e7ebb]`}>
+                          <span className={`text-8xl font-bold text-[var(--color-background-mid)]`}>
                             {matchData.team1?.score || 0}
                           </span>
                           <span className="text-gray-500 font-bold text-8xl">
                             -
                           </span>
-                          <span className={`text-8xl font-bold text-[#2e7ebb]`}>
+                          <span className={`text-8xl font-bold text-[var(--color-background-mid)]`}>
                             {matchData.team2?.score || 0}
                           </span>
                         </div>
@@ -419,7 +420,7 @@ const MatchScoreCard = () => {
                       <div
                         className={`text-4xl font-bold ${
                           matchData.teamA.winner
-                            ? "text-[#2e7ebb]"
+                            ? "text-[var(--color-background-mid)]"
                             : "text-gray-800"
                         }`}
                       >
@@ -447,7 +448,7 @@ const MatchScoreCard = () => {
             </div>
 
             {/* Footer */}
-            {/* <div className="px-4 py-3 bg-gradient-to-r from-[#093337] to-[#2e7ebb] text-white text-xs">
+            {/* <div className="px-4 py-3 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-background-mid)] text-white text-xs">
               <div className="flex justify-between items-center">
                 <div className="text-green-200">Match #{matchData.matchId}</div>
                 <div className="text-green-200">PADELVERSE CUP 2025</div>
@@ -456,7 +457,7 @@ const MatchScoreCard = () => {
           </div>
           <div className="rounded-lg shadow-lg overflow-hidden mt-5">
             {/* Header */}
-            <div className="relative bg-gradient-to-r from-[#093337] via-[#2e7ebb] to-[#093337] px-6 py-4 text-white">
+            <div className="relative bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-background-mid)] to-[var(--color-primary)] px-6 py-4 text-white">
               <div className="absolute inset-0 bg-opacity-50"></div>
               <div className="flex justify-between items-center relative z-10">
                 <h2 className="text-4xl font-bold text-center tracking-wider">
@@ -475,7 +476,7 @@ const MatchScoreCard = () => {
                       className="py-4 flex flex-col md:flex-row md:items-center md:justify-between"
                     >
                       <div className="flex flex-col text-3xl md:flex-row md:items-center gap-2">
-                        <span className="font-semibold text-[#093337]">
+                        <span className="font-semibold text-[var(--color-primary)]">
                           Match {match.id}
                         </span>
                         <span className="text-gray-500 hidden md:inline mx-2">
@@ -516,7 +517,7 @@ const MatchScoreCard = () => {
               </ul>
             </div>
             {/* Footer */}
-            <div className="px-4 py-3 bg-gradient-to-r from-[#093337] to-[#2e7ebb] text-white text-xs">
+            <div className="px-4 py-3 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-background-mid)] text-white text-xs">
               <div className="flex justify-between  text-3xl items-center">
                 <div className="text-green-200">Live Matches</div>
                 <div className="text-green-200">TOURNAMENT 2025</div>
@@ -528,7 +529,7 @@ const MatchScoreCard = () => {
         <div className="col-span-1">
           {(() => {
             // Collect all logo keys from ImageConstants that start with 'logo'
-            const logoKeys = Object.keys(ImageConstants).filter((key) =>
+            const logoKeys = Object.keys(images).filter((key) =>
               key.startsWith("logo")
             );
             // Shuffle the array randomly
@@ -545,7 +546,7 @@ const MatchScoreCard = () => {
                 {shuffledKeys.map((key, idx) => (
                   <img
                     key={key}
-                    src={ImageConstants[key]}
+                    src={images[key]}
                     alt={key}
                     className={
                       sizeClasses[

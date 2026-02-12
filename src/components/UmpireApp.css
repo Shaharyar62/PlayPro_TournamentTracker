@@ -34,7 +34,7 @@
 
 .error {
   background: #ffebee;
-  color: #c62828;
+  color: var(--color-danger);
   padding: 10px;
   border-radius: 4px;
   margin: 10px 0;
@@ -59,7 +59,7 @@
 .team-section h3 {
   margin: 0 0 20px 0;
   color: #2c3e50;
-  font-size: 1.5em;
+  font-size: var(--font-heading-md);
 }
 
 .score-display {
@@ -81,14 +81,14 @@
 }
 
 .score-item .label {
-  font-size: 12px;
-  color: #666;
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
   margin-bottom: 5px;
   text-transform: uppercase;
 }
 
 .score-item .value {
-  font-size: 24px;
+  font-size: var(--font-xl);
   font-weight: bold;
   color: #2c3e50;
 }
@@ -106,7 +106,7 @@
   background: white;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--font-sm);
   transition: background-color 0.2s;
 }
 
@@ -115,9 +115,9 @@
 }
 
 .vs-section {
-  font-size: 24px;
+  font-size: var(--font-xl);
   font-weight: bold;
-  color: #666;
+  color: var(--color-text-muted);
   margin: 0 20px;
   text-align: center;
 }
@@ -135,13 +135,13 @@
 
 .reset-btn {
   padding: 12px 24px;
-  background: #e74c3c;
+  background: var(--color-danger);
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
-  font-size: 16px;
+  font-size: var(--font-base);
 }
 
 .reset-btn:hover {
@@ -149,7 +149,7 @@
 }
 
 .serving-info {
-  font-size: 16px;
+  font-size: var(--font-base);
   color: #2c3e50;
   font-weight: bold;
 }
@@ -160,7 +160,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
   padding: 20px;
 }
 
@@ -201,14 +201,14 @@
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: var(--font-base);
   box-sizing: border-box;
 }
 
 .join-btn {
   width: 100%;
   padding: 15px;
-  background: #3498db;
+  background: var(--color-info);
   color: white;
   border: none;
   border-radius: 6px;
@@ -219,7 +219,7 @@
 }
 
 .join-btn:hover:not(:disabled) {
-  background: #2980b9;
+  background: var(--color-info-dark);
 }
 
 .join-btn:disabled {
@@ -234,7 +234,7 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--font-sm);
   margin: 10px;
 }
 
