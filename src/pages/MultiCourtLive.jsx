@@ -64,7 +64,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
       const currentDateTime = Common.Utility.GetCurrentDateTime(5);
 
       const response = await Common.ApiService.getInstance().request(
-        `GetMasterTournamentMatchScheduleByCourt?masterTournamentId=${tournamentId}&courtId=${courtId}`
+        `GetMasterTournamentMatchScheduleByCourt?masterTournamentId=${tournamentId}&courtId=${courtId}`,
       );
 
       if (response?.data) {
@@ -75,7 +75,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         if (currentMatch) {
           console.log(
             `Setting up WebSocket for current match on court ${courtId}:`,
-            currentMatch
+            currentMatch,
           );
           setupWebSocketConnection(currentMatch);
         } else {
@@ -166,13 +166,13 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
     };
     console.log(
       `Requesting match state for court ${courtId} with:`,
-      matchStateRequest
+      matchStateRequest,
     );
     socket.emit("get_match_state", matchStateRequest);
 
     const fallbackTimeout = setTimeout(() => {
       console.log(
-        `Timeout waiting for match state for court ${courtId}, using API data`
+        `Timeout waiting for match state for court ${courtId}, using API data`,
       );
       setLiveMatchData(currentMatch);
     }, 5000);
@@ -184,7 +184,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
       if (data) {
         if (data.matchId && !MatchIdHelper.isMatchForCurrentEnv(data.matchId)) {
           console.log(
-            "Ignoring match state response from different environment"
+            "Ignoring match state response from different environment",
           );
           setLiveMatchData(currentMatch);
           return;
@@ -193,7 +193,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         setLiveMatchData(data);
       } else {
         console.log(
-          `No match state from server for court ${courtId}, using API data as fallback`
+          `No match state from server for court ${courtId}, using API data as fallback`,
         );
         setLiveMatchData(currentMatch);
       }
@@ -298,7 +298,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
   if (loading) {
     return (
-     <></>
+      <></>
       // <div className="flex items-center justify-center h-full">
       //   <div
       //     className={`${
@@ -362,6 +362,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 }
     .text-3xl.font-bold.text-gray-800.mb-1 {
     font-size: var(--font-4xl);
+    color: black!important;
 }
     .set-score-style {
     border-left: solid 1px;
@@ -425,15 +426,34 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             }}
           >
             <div className="text-center">
-              <h2 style={{ fontSize: "var(--font-3xl)" }} className={`${textScale} font-bold`}>PLAYERS</h2>
+              <h2
+                style={{ fontSize: "var(--font-3xl)" }}
+                className={`${textScale} font-bold`}
+              >
+                PLAYERS
+              </h2>
             </div>
             {Array.from({ length: getNumberOfSets() }, (_, index) => (
               <div key={index} className="text-center">
-                <h2  style={{ fontSize: "var(--font-3xl)" }} className={`${textScale} font-bold`}>SET {index + 1}</h2>
+                <h2
+                  style={{ fontSize: "var(--font-3xl)" }}
+                  className={`${textScale} font-bold`}
+                >
+                  SET {index + 1}
+                </h2>
               </div>
             ))}
             <div className="text-center">
-              <h2  style={{ fontSize: "var(--font-3xl)" }} className={`${textScale} font-bold`}>{getHeaderText()}</h2>
+              <h2
+                style={
+                  getHeaderText() === "SUPER TIE BREAK"
+                    ? { fontSize: "27px", lineHeight: "23px" }
+                    : { fontSize: "var(--font-3xl)" }
+                }
+                className={`${textScale} font-bold`}
+              >
+                {getHeaderText()}
+              </h2>
             </div>
           </div>
         </div>
@@ -564,15 +584,15 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
             {/* Dynamic Set Scores */}
             {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
-              <div key={setIndex}  className="text-center">
+              <div key={setIndex} className="text-center">
                 <div
                   className={`space-y-${isMultiView ? "2" : "8"} text-black`}
                 >
                   <div
                     className={`${textScaleLarge} font-bold set-score-style`}
                   >
-                    <AnimatedScore 
-                      score={getSetScore(1, setIndex)} 
+                    <AnimatedScore
+                      score={getSetScore(1, setIndex)}
                       isGameScore={false}
                       textColor="text-black"
                     />
@@ -580,8 +600,8 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                   <div
                     className={`${textScaleLarge} font-bold set-score-style`}
                   >
-                    <AnimatedScore 
-                      score={getSetScore(2, setIndex)} 
+                    <AnimatedScore
+                      score={getSetScore(2, setIndex)}
                       isGameScore={false}
                       textColor="text-black"
                     />
@@ -600,8 +620,8 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 <div
                   className={`${textScaleXL} font-bold text-black game-score-style`}
                 >
-                  <AnimatedScore 
-                    score={getCurrentGameScore(1)} 
+                  <AnimatedScore
+                    score={getCurrentGameScore(1)}
                     isGameScore={true}
                     textColor="text-white"
                   />
@@ -609,8 +629,8 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 <div
                   className={`${textScaleXL} font-bold text-black game-score-style`}
                 >
-                  <AnimatedScore 
-                    score={getCurrentGameScore(2)} 
+                  <AnimatedScore
+                    score={getCurrentGameScore(2)}
                     isGameScore={true}
                     textColor="text-white"
                   />
@@ -627,7 +647,8 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           isMultiView ? "mt-2 px-2" : "mt-8 px-8"
         }`}
       >
-        <div style={{ fontSize: "var(--font-3xl)" }}
+        <div
+          style={{ fontSize: "var(--font-3xl)" }}
           className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-sm" : "text-xl"
           }`}
@@ -641,13 +662,16 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         >
           {matchData.court?.name || "LIVE SCOREBOARD"}
         </div>
-        <div style={{ fontSize: "var(--font-3xl)" }}
+        <div
+          style={{ fontSize: "var(--font-3xl)" }}
           className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-sm" : "text-xl"
           }`}
         >
-          <p className="text">{mapStageType(matchData.stageType)} - {matchData.tournamentName || "LIVE SCOREBOARD"} </p>
-      
+          <p className="text">
+            {mapStageType(matchData.stageType)} -{" "}
+            {matchData.tournamentName || "LIVE SCOREBOARD"}{" "}
+          </p>
         </div>
 
         {/* <div
@@ -657,7 +681,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         >
           <p className="text">{matchData.tournamentName || "LIVE SCOREBOARD"} </p>
         </div> */}
-        
+
         {/* <div
           className={`bg-[var(--color-accent)]  px-4 py-1 rounded-lg font-bold ${
             isMultiView ? "text-xs" : "text-sm"
@@ -787,10 +811,26 @@ const MultiCourtLive = () => {
           <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
             <div className="marquee-wrapper">
               <div className="marquee-content-scroll">
-                <img src={images.sponsor2} alt="Sponsor" className="marquee-image" />
-                <img src={images.sponsor1} alt="Sponsor" className="marquee-image" />
-                <img src={images.sponsor2} alt="Sponsor" className="marquee-image" />
-                <img src={images.sponsor1} alt="Sponsor" className="marquee-image" />
+                <img
+                  src={images.sponsor2}
+                  alt="Sponsor"
+                  className="marquee-image"
+                />
+                <img
+                  src={images.sponsor1}
+                  alt="Sponsor"
+                  className="marquee-image"
+                />
+                <img
+                  src={images.sponsor2}
+                  alt="Sponsor"
+                  className="marquee-image"
+                />
+                <img
+                  src={images.sponsor1}
+                  alt="Sponsor"
+                  className="marquee-image"
+                />
               </div>
             </div>
           </div>
@@ -807,7 +847,7 @@ const MultiCourtLive = () => {
             opacity: 1;
           }
         }
-        
+
         @keyframes marqueeScroll {
           0% {
             transform: translateX(0);
@@ -816,21 +856,21 @@ const MultiCourtLive = () => {
             transform: translateX(-50%);
           }
         }
-        
+
         .marquee-wrapper {
           width: 100%;
           overflow: hidden;
           background: white;
           padding: 10px 0;
         }
-        
+
         .marquee-content-scroll {
           display: flex;
           width: fit-content;
           animation: marqueeScroll 30s linear infinite;
           will-change: transform;
         }
-        
+
         .marquee-image {
           height: 80px;
           width: auto;
@@ -838,13 +878,13 @@ const MultiCourtLive = () => {
           object-fit: contain;
           flex-shrink: 0;
         }
-        
+
         @media (min-width: 1920px) {
           .marquee-image {
             height: 100px;
           }
         }
-        
+
         @media (min-width: 2560px) {
           .marquee-image {
             height: 120px;

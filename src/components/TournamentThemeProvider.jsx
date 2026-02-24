@@ -19,6 +19,8 @@ const CSS_VAR_MAP = {
   danger: "--color-danger",
   bodyBg: "--color-body-bg",
   statusBar: "--color-status-bar",
+  gradientPrimary: "--color-gradient-primary",
+  gradientAccent: "--color-gradient-accent",
 };
 
 /**
@@ -29,11 +31,22 @@ export default function TournamentThemeProvider({ children }) {
   const [searchParams] = useSearchParams();
   const params = useParams();
 
-  const tournamentId =
+  // Support tournamentId, masterTournamentId, or first ID from tournamentIds (for ScoreTable)
+  let tournamentId =
     searchParams.get("tournamentId") ||
     searchParams.get("masterTournamentId") ||
     params?.tournamentId ||
     null;
+
+  if (!tournamentId && searchParams.get("tournamentIds")) {
+    try {
+      const parsed = JSON.parse(searchParams.get("tournamentIds"));
+      tournamentId = Array.isArray(parsed) ? parsed[0] : parsed;
+    } catch {
+      const csv = searchParams.get("tournamentIds").split(",").map((id) => id.trim())[0];
+      tournamentId = csv || null;
+    }
+  }
 
   useEffect(() => {
     const theme = getThemeForTournament(tournamentId);

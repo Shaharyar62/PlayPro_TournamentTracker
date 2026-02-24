@@ -32,6 +32,7 @@ import { TournamentImagesProvider } from "./context/TournamentImagesContext";
 
 import Padelverse from "./pages/Padelverse";
 import TMP from "./pages/TMP";
+import GK from "./pages/GK";
 import Links from "./pages/live/Links";
 
 function App() {
@@ -80,6 +81,7 @@ function App() {
                 <Route path="live-court" element={<LiveCourt />} />
                 <Route path="padelverse" element={<Padelverse />} />
                 <Route path="tmp" element={<TMP />} />
+                <Route path="gk" element={<GK />} />
                 <Route
                   path="live-court/:tournamentId/:matchId"
                   element={<LiveCourt />}

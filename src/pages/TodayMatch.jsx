@@ -30,7 +30,7 @@ const MatchScoreCard = () => {
       const currentDateTime = Common.Utility.GetCurrentDateTime(5);
 
       const response = await Common.ApiService.getInstance().request(
-        `GetMasterTournamentCourtsSchedule?masterTournamentId=${tournamentId}`
+        `GetMasterTournamentCourtsSchedule?masterTournamentId=${tournamentId}`,
       );
 
       if (response?.data) {
@@ -59,9 +59,12 @@ const MatchScoreCard = () => {
   useEffect(() => {
     if (!tournamentId) return;
 
-    const fetchInterval = setInterval(() => {
-      fetchTournamentCourtsSchedule();
-    }, 10 * 60 * 1000); // Fetch every 10 minutes
+    const fetchInterval = setInterval(
+      () => {
+        fetchTournamentCourtsSchedule();
+      },
+      10 * 60 * 1000,
+    ); // Fetch every 10 minutes
 
     return () => clearInterval(fetchInterval);
   }, [tournamentId]);
@@ -195,7 +198,7 @@ const MatchScoreCard = () => {
                   <div className="col-span-3 text-center">
                     <h2
                       className={`text-4xl text-white ${getCourtBackgroundColor(
-                        court.courtName
+                        court.courtName,
                       )} py-1 mr-[70px] rounded-lg font-bold break-words overflow-hidden`}
                     >
                       <div
@@ -217,13 +220,89 @@ const MatchScoreCard = () => {
             </div>
           </div>
           {/* Bottom indicator - Fixed to bottom */}
-          <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent">
-            <img src={images.sponsor} className="w-full" />
+          <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
+            <div className="marquee-wrapper">
+              <div className="marquee-content-scroll">
+                <img
+                  src={images.sponsor2}
+                  alt="Sponsor"
+                  className="marquee-image"
+                />
+                <img
+                  src={images.sponsor1}
+                  alt="Sponsor"
+                  className="marquee-image"
+                />
+                <img
+                  src={images.sponsor2}
+                  alt="Sponsor"
+                  className="marquee-image"
+                />
+                <img
+                  src={images.sponsor1}
+                  alt="Sponsor"
+                  className="marquee-image"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Live indicator */}
         </div>
+        <style jsx>{`
+          @keyframes twinkle {
+            0%,
+            100% {
+              opacity: 0.3;
+            }
+            50% {
+              opacity: 1;
+            }
+          }
 
+          @keyframes marqueeScroll {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+
+          .marquee-wrapper {
+            width: 100%;
+            overflow: hidden;
+            background: white;
+            padding: 10px 0;
+          }
+
+          .marquee-content-scroll {
+            display: flex;
+            width: fit-content;
+            animation: marqueeScroll 30s linear infinite;
+            will-change: transform;
+          }
+
+          .marquee-image {
+            height: 80px;
+            width: auto;
+            margin: 0 50px;
+            object-fit: contain;
+            flex-shrink: 0;
+          }
+
+          @media (min-width: 1920px) {
+            .marquee-image {
+              height: 100px;
+            }
+          }
+
+          @media (min-width: 2560px) {
+            .marquee-image {
+              height: 120px;
+            }
+          }
+        `}</style>
         <style jsx>{`
           @keyframes twinkle {
             0%,

@@ -75,7 +75,7 @@ const StreamingLiveCourt = () => {
       const currentDateTime = Common.Utility.GetCurrentDateTime(5);
 
       const response = await Common.ApiService.getInstance().request(
-        `GetMasterTournamentMatchScheduleByCourt?masterTournamentId=${tournamentId}&courtId=${courtId}`
+        `GetMasterTournamentMatchScheduleByCourt?masterTournamentId=${tournamentId}&courtId=${courtId}`,
       );
 
       if (response?.data) {
@@ -90,13 +90,13 @@ const StreamingLiveCourt = () => {
             "Match ID:",
             currentMatch.id,
             "Type:",
-            typeof currentMatch.id
+            typeof currentMatch.id,
           );
           console.log(
             "Tournament ID:",
             tournamentId,
             "Type:",
-            typeof tournamentId
+            typeof tournamentId,
           );
           setupWebSocketConnection(currentMatch);
         } else {
@@ -216,7 +216,7 @@ const StreamingLiveCourt = () => {
         // Filter by environment - ignore matches from other environments
         if (data.matchId && !MatchIdHelper.isMatchForCurrentEnv(data.matchId)) {
           console.log(
-            "Ignoring match state response from different environment"
+            "Ignoring match state response from different environment",
           );
           // Use API data as fallback when response is from different environment
           setLiveMatchData(currentMatch);

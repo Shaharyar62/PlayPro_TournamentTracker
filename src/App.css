@@ -10,8 +10,8 @@
 div#root {
   width: 100%;
   padding: 2px;
+  zoom: 0.91;
 }
-
 body {
   padding: 0px !important;
 }

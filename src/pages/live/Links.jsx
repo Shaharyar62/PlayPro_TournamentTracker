@@ -8,38 +8,18 @@ const Links = () => {
   const images = useTournamentImages();
   const pagespadelverse = [
     {
-      path: "/streaming-live-court?tournamentId=46&courtId=79",
-      name: "Galaxy 1",
+      path: "/streaming-live-court?tournamentId=52&courtId=302",
+      name: "Court 1",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=46&courtId=80",
-      name: "Galaxy 2",
+      path: "/streaming-live-court?tournamentId=52&courtId=303",
+      name: "Court 2",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=46&courtId=81",
-      name: "Galaxy 3",
-      color: "#2e55b9",
-    },
-    {
-      path: "/streaming-live-court?tournamentId=46&courtId=82",
-      name: "Galaxy 4",
-      color: "#2e55b9",
-    },
-    {
-      path: "/streaming-live-court?tournamentId=46&courtId=83",
-      name: "Black Star 1",
-      color: "#2e55b9",
-    },
-    {
-      path: "/streaming-live-court?tournamentId=46&courtId=84",
-      name: "Black Star 2",
-      color: "#2e55b9",
-    },
-    {
-      path: "/streaming-live-court?tournamentId=46&courtId=85",
-      name: "Infinity",
+      path: "/streaming-live-court?tournamentId=52&courtId=304",
+      name: "Court 3",
       color: "#2e55b9",
     },
   ];
@@ -73,7 +53,7 @@ const Links = () => {
         <img width={300} src={images.playpro} alt="logo" />
       </div>
 
-      <h1 className="text-2xl  font-bold text-black mb-5">TMP</h1>
+      <h1 className="text-2xl  font-bold text-black mb-5">GK</h1>
 
       <div className="buttons-grid">
         {pagestmp.map((page, index) => (

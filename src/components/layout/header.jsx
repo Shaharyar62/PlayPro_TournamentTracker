@@ -15,7 +15,7 @@ export const Header = () => {
 
       <div className="text-center">
         <img
-          width={420}
+          width={520}
           className="justify-self-end p-0"
           src={images.cupLogo}
           alt="Greenwich Padel"

@@ -1,5 +1,9 @@
 /* Default / shared images */
 import sponsorTmp from "./sponsor-tmp-2026.png";
+import gkBg from "./gk-bg.png";
+import sponsorKG from "./sponsor-kg.png";
+import sponsorKG2 from "./sponsor-kg-2.png";
+import gkCup from "./fix/gk-cup.png";
 import adsS1 from "./ads_s1.png";
 import adsS2 from "./ads_s2.png";
 import adsS3 from "./ads_s3.png";
@@ -7,6 +11,7 @@ import adsS4 from "./ads_s4.png";
 import playproWhite from "./fix/playpro-w.png";
 import playpro from "./playpro.png";
 import playproColorVertical from "./playpro_logo_vertical.png";
+import gkLogo from "./fix/kg-logo.png";
 import tmpLogo from "./tmp-logo.png";
 import tmpCup from "./fix/tmp-cup.png";
 import apptBg from "./appt-bg.png";
@@ -38,9 +43,14 @@ import logo9 from "./logos/9.png";
 export const ALL_IMAGES = {
   "tmp-logo": tmpLogo,
   "playpro-w": playproWhite,
+  "kg-logo": gkLogo,
   "tmp-cup": tmpCup,
+  "gk-cup": gkCup,
   "appt-bg": apptBg,
   "sponsor-tmp-2026": sponsorTmp,
+  "sponsor-kg": sponsorKG,
+  "sponsor-kg-2": sponsorKG2,
+  "gk-bg": gkBg,
   ads_s1: adsS1,
   ads_s2: adsS2,
   ads_s3: adsS3,

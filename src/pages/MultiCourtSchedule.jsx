@@ -858,7 +858,7 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
 
   // Sort matches by start time
   const sortedMatches = [...filteredMatches].sort(
-    (a, b) => new Date(a.matchStartDateTime) - new Date(b.matchStartDateTime)
+    (a, b) => new Date(a.matchStartDateTime) - new Date(b.matchStartDateTime),
   );
 
   // Limit displayed matches to MAX_MATCHES_DISPLAY
@@ -918,8 +918,8 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
                     isLiveMatch(match)
                       ? "bg-[#0caced] bg-opacity-20 animate-pulse"
                       : index % 2 === 0
-                      ? "bg-gray-50"
-                      : "bg-white"
+                        ? "bg-gray-50"
+                        : "bg-white"
                   } hover:bg-gray-100 transition-colors`}
                 >
                   <td className="py-4 px-4">
@@ -1040,20 +1040,20 @@ const MultiCourtSchedule = () => {
         // Call API
         const response = await umpireAPI.getCourtsSchedule24HoursByCourt(
           masterTournamentIdNum,
-          courtIdsArray
+          courtIdsArray,
         );
 
         if (response.success && response.data?.courts) {
           // Sort courts to match the order specified in the URL parameter
           let sortedCourts = response.data.courts;
-          
+
           if (courtIdsArray.length > 0) {
             // Create a position map for court IDs from the URL parameter
             const courtIdPositionMap = new Map();
             courtIdsArray.forEach((courtId, index) => {
               courtIdPositionMap.set(courtId, index);
             });
-            
+
             // Sort courts based on the order in courtIdsArray
             sortedCourts = [...response.data.courts].sort((a, b) => {
               const posA = courtIdPositionMap.has(a.courtId)
@@ -1065,7 +1065,7 @@ const MultiCourtSchedule = () => {
               return posA - posB;
             });
           }
-          
+
           setCourtsData(sortedCourts);
           setError(null);
           // Mark initial load as complete after first successful load
@@ -1095,7 +1095,7 @@ const MultiCourtSchedule = () => {
         }
       }
     },
-    [masterTournamentId, courtIdsParam]
+    [masterTournamentId, courtIdsParam],
   );
 
   // Initial load on mount or when params change
@@ -1297,7 +1297,7 @@ const MultiCourtSchedule = () => {
         .marquee-image {
           height: 80px;
           width: auto;
-          margin: 0 50px;
+          margin: 0 !important;
           object-fit: contain;
           flex-shrink: 0;
         }

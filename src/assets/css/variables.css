@@ -30,6 +30,8 @@
   --color-gradient-end: #764ba2;
   --color-info: #2196f3;
   --color-info-dark: #1976d2;
+  --color-gradient-primary: #2e55b9;
+  --color-gradient-accent: #67b3fd;
 
   /* ========== Font Size Variables ========== */
   --font-xs: 12px;

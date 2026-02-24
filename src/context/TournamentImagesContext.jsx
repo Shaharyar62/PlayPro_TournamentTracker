@@ -9,11 +9,22 @@ export function TournamentImagesProvider({ children }) {
   const [searchParams] = useSearchParams();
   const params = useParams();
 
-  const tournamentId =
+  // Support tournamentId, masterTournamentId, or first ID from tournamentIds (for ScoreTable)
+  let tournamentId =
     searchParams.get("tournamentId") ||
     searchParams.get("masterTournamentId") ||
     params?.tournamentId ||
     null;
+
+  if (!tournamentId && searchParams.get("tournamentIds")) {
+    try {
+      const parsed = JSON.parse(searchParams.get("tournamentIds"));
+      tournamentId = Array.isArray(parsed) ? parsed[0] : parsed;
+    } catch {
+      const csv = searchParams.get("tournamentIds").split(",").map((id) => id.trim())[0];
+      tournamentId = csv || null;
+    }
+  }
 
   const images = useMemo(() => {
     return getImagesForTournament(tournamentId, ALL_IMAGES);
