@@ -8,9 +8,11 @@ import {
   Settings,
   AlertTriangle,
   ChevronDown,
+  CheckCircle,
 } from "lucide-react";
 import { useUmpire } from "../context/UmpireContext";
 import { useMatchState } from "../hooks/useMatchState.js";
+import { useMatchTimer } from "../hooks/useMatchTimer.js";
 import { getScoreDisplayString } from "../utils/scoringRules.js";
 import TimerHeader from "./TimerHeader.jsx";
 import SettingsPanel from "./SettingsPanel.jsx";
@@ -27,6 +29,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
   const [showSubmitResultsModal, setShowSubmitResultsModal] = useState(false);
   const [hasShownSubmitModal, setHasShownSubmitModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showManualCompleteModal, setShowManualCompleteModal] = useState(false);
   console.log("ScoreUpload match", match);
 
   // Get tournamentId from match or use default
@@ -59,6 +62,11 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
     getMatchWinner,
     isMatchComplete,
   } = useMatchState(tournamentId, matchId);
+
+  const { formattedTime, isRunning, startTimer, stopTimer } = useMatchTimer(
+    matchId,
+    isMatchComplete()
+  );
 
   // Initialize match on mount - following guide's initialization flow
   useEffect(() => {
@@ -243,6 +251,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
         "Are you sure you want to reset the match? This will clear all scores."
       )
     ) {
+      stopTimer();
       await resetMatch(match, matchSettings);
       // Reset the modal state so completion can be detected again after reset
       setHasShownSubmitModal(false);
@@ -326,6 +335,109 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
 
   const handleDoneEditing = () => {
     setIsSetScoreEditingMode(false);
+  };
+
+  // Helper function to determine current winner based on scores
+  const getCurrentWinner = () => {
+    if (!matchState) return null;
+
+    const team1Sets = matchState.team1?.sets || 0;
+    const team2Sets = matchState.team2?.sets || 0;
+
+    // Compare sets first
+    if (team1Sets > team2Sets) {
+      return "Team 1";
+    } else if (team2Sets > team1Sets) {
+      return "Team 2";
+    }
+
+    // If sets are tied, compare games in current set
+    const totalCompletedSets = team1Sets + team2Sets;
+    const activeSetIndex = totalCompletedSets.toString();
+    const activeSet = setsData?.[activeSetIndex] || {
+      team1Games: 0,
+      team2Games: 0,
+    };
+
+    const team1Games = activeSet.team1Games || 0;
+    const team2Games = activeSet.team2Games || 0;
+
+    if (team1Games > team2Games) {
+      return "Team 1";
+    } else if (team2Games > team1Games) {
+      return "Team 2";
+    }
+
+    // If games are also tied, compare current point score
+    const team1Score = matchState.team1?.score || 0;
+    const team2Score = matchState.team2?.score || 0;
+
+    if (team1Score > team2Score) {
+      return "Team 1";
+    } else if (team2Score > team1Score) {
+      return "Team 2";
+    }
+
+    // If everything is tied, default to Team 1 (edge case)
+    return "Team 1";
+  };
+
+  // Handle manual complete button click
+  const handleManualCompleteClick = () => {
+    if (matchState?.status === "active") {
+      setShowManualCompleteModal(true);
+    }
+  };
+
+  // Handle confirmation of manual completion
+  const handleConfirmManualComplete = async () => {
+    if (!matchState) return;
+
+    setIsSubmitting(true);
+    try {
+      const winner = getCurrentWinner();
+      if (winner) {
+        await completeMatch(winner);
+        // Convert to legacy format for onEndMatch callback
+        const legacyScores = {
+          teamA: {
+            sets: [0, 0, 0],
+            games: [0, 0, 0],
+            points: matchState.team1?.score || 0,
+          },
+          teamB: {
+            sets: [0, 0, 0],
+            games: [0, 0, 0],
+            points: matchState.team2?.score || 0,
+          },
+        };
+
+        // Update sets and games from setsData
+        Object.keys(setsData || {}).forEach((setIndex) => {
+          const set = setsData[setIndex];
+          const idx = parseInt(setIndex);
+          if (idx < 3) {
+            legacyScores.teamA.sets[idx] = set.team1Games || 0;
+            legacyScores.teamB.sets[idx] = set.team2Games || 0;
+            legacyScores.teamA.games[idx] = set.team1Games || 0;
+            legacyScores.teamB.games[idx] = set.team2Games || 0;
+          }
+        });
+
+        onEndMatch?.(match.id, legacyScores);
+      }
+      setShowManualCompleteModal(false);
+    } catch (error) {
+      console.error("Error completing match manually:", error);
+      // Keep modal open on error so user can retry
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Handle cancel manual completion
+  const handleCancelManualComplete = () => {
+    setShowManualCompleteModal(false);
   };
 
   // Get team display data
@@ -438,14 +550,38 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white">
-      {/* Header with Timer */}
-      {/* <TimerHeader
-        matchSettings={matchSettings}
-        matchState={matchState}
-        setsData={setsData}
-        onBack={onBack}
-        onEndMatch={() => setShowEndMatchModal(true)}
-      /> */}
+      {/* Match Timer - persists across navigation until match is finished */}
+      <div className="flex items-center justify-between px-4 py-3 bg-blue-900/50 backdrop-blur-sm">
+        <div className="flex-1 flex justify-start min-w-0">
+          {onBack && (
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={onBack}
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors flex-shrink-0"
+            >
+              <ArrowLeft className="w-6 h-6 text-white" />
+            </motion.button>
+          )}
+        </div>
+        <motion.div
+          whileTap={{ scale: isRunning || isCompleted ? 1 : 0.95 }}
+          onClick={() => !isRunning && !isCompleted && startTimer()}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-lg flex-shrink-0 ${
+            isRunning || isCompleted
+              ? "bg-gray-800 cursor-default"
+              : "bg-gray-800 hover:bg-gray-700 cursor-pointer active:bg-gray-600"
+          }`}
+        >
+          <span className="text-white">{formattedTime}</span>
+          {isRunning && (
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+          )}
+          {!isRunning && !isCompleted && (
+            <span className="text-xs text-white/70">Tap to start</span>
+          )}
+        </motion.div>
+        <div className="flex-1 flex justify-end min-w-0" />
+      </div>
 
       {/* Main Score Display */}
       <div className="px-4 py-2">
@@ -842,6 +978,31 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
           </motion.div>
         )}
 
+        {/* Manual Complete Match Button - Shows when match is active */}
+        {matchState?.status === "active" && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 px-2"
+          >
+            <motion.button
+              whileTap={{ scale: 0.98 }}
+              onClick={handleManualCompleteClick}
+              className="w-full bg-amber-600 hover:bg-amber-700 active:bg-amber-800 border-2 border-amber-400 rounded-xl p-4 sm:p-5 flex flex-col items-center justify-center space-y-2 transition-colors shadow-lg"
+            >
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="w-6 h-6 text-white" />
+                <span className="text-lg sm:text-xl font-bold text-white">
+                  Complete Match Manually
+                </span>
+              </div>
+              <p className="text-sm sm:text-base text-amber-100">
+                Submit current scores and end match
+              </p>
+            </motion.button>
+          </motion.div>
+        )}
+
         {/* Action Buttons */}
         <div className="grid grid-cols-6 gap-2 sm:gap-3 px-2">
           {/* Undo Button */}
@@ -1031,6 +1192,94 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
                   </>
                 ) : (
                   "Submit"
+                )}
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Manual Complete Match Confirmation Modal */}
+      {showManualCompleteModal && matchState && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-xl p-6 max-w-sm w-full"
+          >
+            <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">
+              Complete Match Manually?
+            </h3>
+            <p className="text-gray-600 mb-4 text-center">
+              Are you sure you want to complete this match with the current scores? This will submit the results as-is.
+            </p>
+            
+            {/* Display current scores */}
+            <div className="bg-gray-50 rounded-lg p-4 mb-6">
+              <div className="text-sm font-semibold text-gray-700 mb-2">Current Scores:</div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">{team1Data?.name || "Team 1"}:</span>
+                  <span className="font-semibold text-gray-800">
+                    {matchState.team1?.sets || 0} sets
+                    {(() => {
+                      const totalCompletedSets = (matchState.team1?.sets || 0) + (matchState.team2?.sets || 0);
+                      const activeSetIndex = totalCompletedSets.toString();
+                      const activeSet = setsData?.[activeSetIndex];
+                      if (activeSet) {
+                        return `, ${activeSet.team1Games || 0} games`;
+                      }
+                      return "";
+                    })()}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">{team2Data?.name || "Team 2"}:</span>
+                  <span className="font-semibold text-gray-800">
+                    {matchState.team2?.sets || 0} sets
+                    {(() => {
+                      const totalCompletedSets = (matchState.team1?.sets || 0) + (matchState.team2?.sets || 0);
+                      const activeSetIndex = totalCompletedSets.toString();
+                      const activeSet = setsData?.[activeSetIndex];
+                      if (activeSet) {
+                        return `, ${activeSet.team2Games || 0} games`;
+                      }
+                      return "";
+                    })()}
+                  </span>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-200">
+                <div className="text-xs text-gray-500 text-center">
+                  Winner will be: <span className="font-semibold text-gray-700">
+                    {getCurrentWinner() === "Team 1" 
+                      ? team1Data?.name || "Team 1"
+                      : team2Data?.name || "Team 2"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex space-x-3">
+              <button
+                onClick={handleCancelManualComplete}
+                disabled={isSubmitting}
+                className="flex-1 bg-gray-500 hover:bg-gray-600 active:bg-gray-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 shadow-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmManualComplete}
+                disabled={isSubmitting}
+                className="flex-1 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 disabled:bg-amber-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 shadow-md flex items-center justify-center"
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    Submitting...
+                  </>
+                ) : (
+                  "Complete Match"
                 )}
               </button>
             </div>
