@@ -298,6 +298,11 @@ export function mergeMatchStates(localState, serverState) {
     );
   }
 
+  // Match timer: server takes precedence
+  if (serverState.matchTimer !== undefined) {
+    merged.matchTimer = serverState.matchTimer;
+  }
+
   console.log("[mergeMatchStates] Merged scores:", {
     team1Score: merged.team1?.score,
     team2Score: merged.team2?.score,

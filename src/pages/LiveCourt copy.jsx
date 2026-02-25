@@ -9,6 +9,7 @@ import moment from "moment-timezone";
 import { TournamentRuleMatchFormatTypeEnum } from "../const/Constants";
 import MatchIdHelper from "../umpireScoring/utils/matchIdHelper.js";
 import Header from "../components/layout/header";
+import { SERVER_URL } from "../umpireScoring/utils/constants.js";
 const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
@@ -82,7 +83,7 @@ const MatchScoreCard = () => {
       const currentDateTime = Common.Utility.GetCurrentDateTime(5);
 
       const response = await Common.ApiService.getInstance().request(
-        `GetMasterTournamentMatchScheduleByCourt?masterTournamentId=${tournamentId}&courtId=${courtId}`
+        `GetMasterTournamentMatchScheduleByCourt?masterTournamentId=${tournamentId}&courtId=${courtId}`,
       );
 
       if (response?.data) {
@@ -97,13 +98,13 @@ const MatchScoreCard = () => {
             "Match ID:",
             currentMatch.id,
             "Type:",
-            typeof currentMatch.id
+            typeof currentMatch.id,
           );
           console.log(
             "Tournament ID:",
             tournamentId,
             "Type:",
-            typeof tournamentId
+            typeof tournamentId,
           );
           setupWebSocketConnection(currentMatch);
         } else {
@@ -130,7 +131,7 @@ const MatchScoreCard = () => {
     }
 
     // Initialize socket connection
-    const socket = io("https://ttwp.playpro.pk", {
+    const socket = io(SERVER_URL, {
       transports: ["websocket"],
       timeout: 20000,
       reconnectionAttempts: 5,
@@ -223,7 +224,7 @@ const MatchScoreCard = () => {
         // Filter by environment - ignore matches from other environments
         if (data.matchId && !MatchIdHelper.isMatchForCurrentEnv(data.matchId)) {
           console.log(
-            "Ignoring match state response from different environment"
+            "Ignoring match state response from different environment",
           );
           // Use API data as fallback when response is from different environment
           setLiveMatchData(currentMatch);

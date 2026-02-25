@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
-import { SERVER_URL, SOCKET_PATH, MATCH_STATE_TIMEOUT } from "../utils/constants.js";
+import { MATCH_STATE_TIMEOUT } from "../utils/constants.js";
 import MatchIdHelper from "../utils/matchIdHelper.js";
+import { SERVER_URL, SOCKET_PATH } from "../utils/constants.js";
 
 /**
  * Socket Match Service
@@ -142,11 +143,32 @@ class SocketMatchService {
         servingPlayer: params.updateData?.["currentServe.servingPlayer"],
         isServingTeam1: params.updateData?.["currentServe.isServingTeam1"],
       },
-      hasServeFields: !!(params.updateData?.["currentServe.servingPlayer"] || params.updateData?.["currentServe.isServingTeam1"]),
+      hasServeFields: !!(
+        params.updateData?.["currentServe.servingPlayer"] ||
+        params.updateData?.["currentServe.isServingTeam1"]
+      ),
       updateDataKeys: Object.keys(params.updateData || {}),
     });
 
     this.socket.emit("update_match_state", payload);
+  }
+
+  /**
+   * Update match timer (convenience method using update_match_state)
+   * @param {Object} params
+   * @param {string} params.tournamentId
+   * @param {string} params.matchId
+   * @param {Object} params.matchTimer - { elapsedSeconds, startedAt, status }
+   * @param {string} params.action - 'start' | 'pause' | 'resume' | 'reset'
+   */
+  async updateMatchTimer(params) {
+    await this.updateMatchState({
+      tournamentId: params.tournamentId,
+      matchId: params.matchId,
+      callBy: "match_timer",
+      updateData: { matchTimer: params.matchTimer },
+      historyEntry: { type: "match_timer", action: params.action || "update" },
+    });
   }
 
   /**
@@ -287,13 +309,18 @@ class SocketMatchService {
   async listenToTournamentUpdates(params) {
     await this.connect();
 
-    const prefixedTournamentId = MatchIdHelper.prefixTournamentId(params.tournamentId);
+    const prefixedTournamentId = MatchIdHelper.prefixTournamentId(
+      params.tournamentId,
+    );
     const eventName = `tournament_update_${prefixedTournamentId}`;
 
     this.socket.on(eventName, (data) => {
       console.log("Received tournament update:", data);
       // Filter by environment - ignore tournaments from other environments
-      if (data.tournamentId && !MatchIdHelper.isMatchForCurrentEnv(data.tournamentId)) {
+      if (
+        data.tournamentId &&
+        !MatchIdHelper.isMatchForCurrentEnv(data.tournamentId)
+      ) {
         return; // Ignore tournaments from other environment
       }
       params.onUpdate(data);
@@ -306,7 +333,8 @@ class SocketMatchService {
    */
   stopListeningToTournamentUpdates(tournamentId) {
     if (this.socket) {
-      const prefixedTournamentId = MatchIdHelper.prefixTournamentId(tournamentId);
+      const prefixedTournamentId =
+        MatchIdHelper.prefixTournamentId(tournamentId);
       const eventName = `tournament_update_${prefixedTournamentId}`;
       this.socket.off(eventName);
     }
@@ -317,4 +345,3 @@ class SocketMatchService {
 const socketMatchService = new SocketMatchService();
 
 export default socketMatchService;
-

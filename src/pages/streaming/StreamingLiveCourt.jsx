@@ -6,6 +6,7 @@ import moment from "moment-timezone";
 import { TournamentRuleMatchFormatTypeEnum } from "../../const/Constants";
 import { getScoreDisplayString } from "../../umpireScoring/utils/scoringRules.js";
 import MatchIdHelper from "../../umpireScoring/utils/matchIdHelper.js";
+import { SERVER_URL } from "../../umpireScoring/utils/constants.js";
 
 const StreamingLiveCourt = () => {
   const [searchParams] = useSearchParams();
@@ -123,7 +124,7 @@ const StreamingLiveCourt = () => {
     }
 
     // Initialize socket connection
-    const socket = io("https://ttwp.playpro.pk", {
+    const socket = io(SERVER_URL, {
       transports: ["websocket"],
       timeout: 20000,
       reconnectionAttempts: 5,

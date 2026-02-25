@@ -1,119 +1,51 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-
-const STORAGE_KEY_PREFIX = "match-timer-";
-
-/**
- * Get localStorage key for a match
- * @param {string} matchId - Match ID
- * @returns {string}
- */
-function getStorageKey(matchId) {
-  return `${STORAGE_KEY_PREFIX}${matchId}`;
-}
-
-/**
- * Load startedAt timestamp from localStorage
- * @param {string} matchId - Match ID
- * @returns {number|null} startedAt timestamp or null
- */
-function loadStartedAt(matchId) {
-  try {
-    const key = getStorageKey(matchId);
-    const stored = localStorage.getItem(key);
-    if (!stored) return null;
-    const parsed = JSON.parse(stored);
-    return typeof parsed?.startedAt === "number" ? parsed.startedAt : null;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Save startedAt timestamp to localStorage
- * @param {string} matchId - Match ID
- * @param {number} startedAt - Timestamp
- */
-function saveStartedAt(matchId, startedAt) {
-  try {
-    const key = getStorageKey(matchId);
-    localStorage.setItem(key, JSON.stringify({ startedAt }));
-  } catch (e) {
-    console.warn("Failed to save match timer:", e);
-  }
-}
-
-/**
- * Clear timer from localStorage
- * @param {string} matchId - Match ID
- */
-function clearTimerStorage(matchId) {
-  try {
-    localStorage.removeItem(getStorageKey(matchId));
-  } catch (e) {
-    console.warn("Failed to clear match timer:", e);
-  }
-}
-
-/**
- * Format seconds as MM:SS or HH:MM:SS
- * @param {number} seconds - Elapsed seconds
- * @returns {string}
- */
-function formatElapsedTime(seconds) {
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = Math.floor(seconds % 60);
-
-  if (hrs > 0) {
-    return `${hrs.toString().padStart(2, "0")}:${mins
-      .toString()
-      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  }
-  return `${mins.toString().padStart(2, "0")}:${secs
-    .toString()
-    .padStart(2, "0")}`;
-}
+import { useSocket } from "./useSocket.js";
+import {
+  formatElapsedTime,
+  computeElapsedSeconds,
+} from "../utils/matchTimerUtils.js";
 
 /**
  * Custom hook for match duration timer (count-up)
- * Persists startedAt in localStorage so timer survives navigation.
+ * Syncs with WebSocket - server is source of truth.
  *
- * @param {string} matchId - Match ID for storage key
- * @param {boolean} isMatchComplete - Whether match is completed (stops timer)
+ * @param {string} matchId - Match ID
+ * @param {string} tournamentId - Tournament ID
+ * @param {Object|null} matchTimer - Timer state from matchState (server)
+ * @param {boolean} isMatchComplete - Whether match is completed
  * @returns {Object} Timer state and controls
  */
-export function useMatchTimer(matchId, isMatchComplete) {
+export function useMatchTimer(matchId, tournamentId, matchTimer, isMatchComplete) {
+  const { socketService } = useSocket();
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
 
-  // Compute elapsed from startedAt
-  const computeElapsed = useCallback(() => {
-    const startedAt = loadStartedAt(matchId);
-    if (!startedAt) return 0;
-    return Math.floor((Date.now() - startedAt) / 1000);
-  }, [matchId]);
+  const status = matchTimer?.status || "stopped";
+  const isRunning = status === "running";
+  const isPaused = status === "paused";
 
-  // Initialize from localStorage on mount or matchId change
+  // Compute display value from server state
+  const computeDisplay = useCallback(() => {
+    return computeElapsedSeconds(matchTimer);
+  }, [matchTimer]);
+
+  // Update elapsed for display (when running, tick every second)
   useEffect(() => {
-    if (!matchId) return;
-
-    const startedAt = loadStartedAt(matchId);
-    if (startedAt) {
-      setElapsedSeconds(computeElapsed());
-      setIsRunning(true);
-    } else {
-      setElapsedSeconds(0);
-      setIsRunning(false);
-    }
-  }, [matchId, computeElapsed]);
+    setElapsedSeconds(computeDisplay());
+  }, [computeDisplay, matchTimer]);
 
   // Tick every second when running
   useEffect(() => {
-    if (!isRunning || !matchId) return;
+    if (status !== "running" || isMatchComplete) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      return;
+    }
 
     const tick = () => {
-      setElapsedSeconds(computeElapsed());
+      setElapsedSeconds(computeElapsedSeconds(matchTimer));
     };
 
     intervalRef.current = setInterval(tick, 1000);
@@ -123,39 +55,65 @@ export function useMatchTimer(matchId, isMatchComplete) {
         intervalRef.current = null;
       }
     };
-  }, [isRunning, matchId, computeElapsed]);
+  }, [status, isMatchComplete, matchTimer]);
 
-  // Stop timer when match is complete
-  useEffect(() => {
-    if (isMatchComplete && matchId) {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-      setIsRunning(false);
-      clearTimerStorage(matchId);
-    }
-  }, [isMatchComplete, matchId]);
+  const startTimer = useCallback(async () => {
+    if (!matchId || !tournamentId || !socketService || isMatchComplete) return;
+    await socketService.updateMatchTimer({
+      tournamentId,
+      matchId,
+      matchTimer: {
+        elapsedSeconds: 0,
+        startedAt: Date.now(),
+        status: "running",
+      },
+      action: "start",
+    });
+  }, [matchId, tournamentId, socketService, isMatchComplete]);
 
-  const startTimer = useCallback(() => {
-    if (!matchId) return;
-    const now = Date.now();
-    saveStartedAt(matchId, now);
-    setElapsedSeconds(0);
-    setIsRunning(true);
-  }, [matchId]);
+  const pauseTimer = useCallback(async () => {
+    if (!matchId || !tournamentId || !socketService || isMatchComplete) return;
+    const currentElapsed = computeElapsedSeconds(matchTimer);
+    await socketService.updateMatchTimer({
+      tournamentId,
+      matchId,
+      matchTimer: {
+        elapsedSeconds: currentElapsed,
+        startedAt: null,
+        status: "paused",
+      },
+      action: "pause",
+    });
+  }, [matchId, tournamentId, socketService, matchTimer, isMatchComplete]);
 
-  const stopTimer = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-    if (matchId) {
-      clearTimerStorage(matchId);
-    }
-    setIsRunning(false);
-    setElapsedSeconds(0);
-  }, [matchId]);
+  const resumeTimer = useCallback(async () => {
+    if (!matchId || !tournamentId || !socketService || isMatchComplete) return;
+    const currentElapsed = computeElapsedSeconds(matchTimer);
+    await socketService.updateMatchTimer({
+      tournamentId,
+      matchId,
+      matchTimer: {
+        elapsedSeconds: currentElapsed,
+        startedAt: Date.now(),
+        status: "running",
+      },
+      action: "resume",
+    });
+  }, [matchId, tournamentId, socketService, matchTimer, isMatchComplete]);
+
+  const resetTimer = useCallback(async () => {
+    if (!matchId || !tournamentId || !socketService) return;
+    await socketService.updateMatchTimer({
+      tournamentId,
+      matchId,
+      matchTimer: {
+        elapsedSeconds: 0,
+        startedAt: null,
+        status: "stopped",
+      },
+      action: "reset",
+    });
+  }, [matchId, tournamentId, socketService]);
 
   const formattedTime = formatElapsedTime(elapsedSeconds);
 
@@ -163,8 +121,12 @@ export function useMatchTimer(matchId, isMatchComplete) {
     elapsedSeconds,
     formattedTime,
     isRunning,
+    isPaused,
+    status,
     startTimer,
-    stopTimer,
+    pauseTimer,
+    resumeTimer,
+    resetTimer,
     formatElapsedTime,
   };
 }

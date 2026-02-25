@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Trophy, Clock } from "lucide-react";
+import {
+  formatElapsedTime,
+  computeElapsedSeconds,
+} from "../umpireScoring/utils/matchTimerUtils.js";
 import { motion } from "framer-motion";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 import io from "socket.io-client";
@@ -13,6 +17,7 @@ import { getScoreDisplayString } from "../umpireScoring/utils/scoringRules.js";
 import Header from "../components/layout/header";
 import AnimatedScore from "../components/AnimatedScore";
 import matchDataTransformer from "../umpireScoring/helpers/matchDataTransformer";
+import { SERVER_URL } from "../umpireScoring/utils/constants.js";
 
 // Single Court Component
 const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
@@ -27,6 +32,24 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
   const matchStatus = useRef();
   const socketRef = useRef(null);
+  const [timerDisplay, setTimerDisplay] = useState("00:00");
+
+  // Match timer display - syncs from liveMatchData.matchTimer (WebSocket)
+  useEffect(() => {
+    const matchTimer = liveMatchData?.matchTimer;
+    if (!matchTimer) {
+      setTimerDisplay("00:00");
+      return;
+    }
+    const updateDisplay = () => {
+      setTimerDisplay(formatElapsedTime(computeElapsedSeconds(matchTimer)));
+    };
+    updateDisplay();
+    if (matchTimer?.status === "running") {
+      const interval = setInterval(updateDisplay, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [liveMatchData?.matchTimer, liveMatchData?.matchTimer?.status]);
 
   useEffect(() => {
     if (liveMatchData) {
@@ -99,7 +122,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
       socketRef.current.disconnect();
     }
 
-    const socket = io("https://ttwp.playpro.pk", {
+    const socket = io(SERVER_URL, {
       transports: ["websocket"],
       timeout: 20000,
       reconnectionAttempts: 5,
@@ -382,9 +405,19 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
     font-size: var(--font-4xl);
     line-height: 60px;
       `}</style>
-      {/* Connection Status */}
-      {!isMultiView && (
-        <div className="absolute top-4 right-4 z-20">
+      {/* Connection Status and Match Timer */}
+      {/* {!isMultiView && (
+        <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
+          {liveMatchData?.matchTimer &&
+            (liveMatchData.matchTimer.status === "running" ||
+              liveMatchData.matchTimer.status === "paused" ||
+              (liveMatchData.matchTimer.status === "stopped" &&
+                (liveMatchData.matchTimer.elapsedSeconds || 0) > 0)) && (
+              <div className="flex items-center space-x-2 bg-black/50 text-white px-4 py-2 rounded-lg font-mono text-xl">
+                <Clock className="w-5 h-5" />
+                <span className="font-bold">{timerDisplay}</span>
+              </div>
+            )}
           <div className="flex items-center space-x-2 bg-black/50 text-white px-3 py-1 rounded-lg">
             <div
               className={`w-2 h-2 rounded-full ${
@@ -396,7 +429,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             </span>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Reset Notification */}
       {showResetNotification && (
@@ -425,7 +458,21 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 .join(" ")} 1fr`,
             }}
           >
-            <div className="text-center">
+            <div className="flex items-center justify-center gap-2 leading-none">
+              {liveMatchData?.matchTimer &&
+                (liveMatchData.matchTimer.status === "running" ||
+                  liveMatchData.matchTimer.status === "paused" ||
+                  (liveMatchData.matchTimer.status === "stopped" &&
+                    (liveMatchData.matchTimer.elapsedSeconds || 0) > 0)) && (
+                  <div
+                    className={`flex items-center gap-0.5 font-mono font-bold shrink-0 leading-none ${
+                      isMultiView ? "text-[10px]" : "text-xs"
+                    } text-white`}
+                  >
+                    <Clock className="w-3 h-3" />
+                    <span>{timerDisplay}</span>
+                  </div>
+                )}
               <h2
                 style={{ fontSize: "var(--font-3xl)" }}
                 className={`${textScale} font-bold`}
@@ -655,6 +702,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         >
           {matchStatus.current == "completed" ? "COMPLETED" : getMatchFormat()}
         </div>
+
         <div
           className={`font-bold ${
             isMultiView ? "text-sm" : "text-xl"

@@ -1,10 +1,15 @@
 import { MatchFormat } from "../types/match.types.js";
 
+const isLocal = false;
+
+export const SERVER_URL = isLocal
+  ? "http://localhost:3000"
+  : "https://ttwp.playpro.pk";
+export const SOCKET_PATH = "/socket.io/";
+
 /**
  * Server configuration
  */
-export const SERVER_URL = "https://ttwp.playpro.pk";
-export const SOCKET_PATH = "/socket.io/";
 
 /**
  * Default Match Settings for standard Padel match

@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Trophy, Clock } from "lucide-react";
+import {
+  formatElapsedTime,
+  computeElapsedSeconds,
+} from "../umpireScoring/utils/matchTimerUtils.js";
 import { motion } from "framer-motion";
 import io from "socket.io-client";
 import Common from "../helper/common";
@@ -12,6 +16,7 @@ import { getScoreDisplayString } from "../umpireScoring/utils/scoringRules.js";
 import Header from "../components/layout/header";
 import matchDataTransformer from "../umpireScoring/helpers/matchDataTransformer";
 import AnimatedScore from "../components/AnimatedScore";
+import { SERVER_URL } from "../umpireScoring/utils/constants.js";
 const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
@@ -31,6 +36,24 @@ const MatchScoreCard = () => {
 
   const matchStatus = useRef();
   const socketRef = useRef(null);
+  const [timerDisplay, setTimerDisplay] = useState("00:00");
+
+  // Match timer display - syncs from liveMatchData.matchTimer (WebSocket)
+  useEffect(() => {
+    const matchTimer = liveMatchData?.matchTimer;
+    if (!matchTimer) {
+      setTimerDisplay("00:00");
+      return;
+    }
+    const updateDisplay = () => {
+      setTimerDisplay(formatElapsedTime(computeElapsedSeconds(matchTimer)));
+    };
+    updateDisplay();
+    if (matchTimer?.status === "running") {
+      const interval = setInterval(updateDisplay, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [liveMatchData?.matchTimer, liveMatchData?.matchTimer?.status]);
 
   useEffect(() => {
     if (liveMatchData) {
@@ -83,7 +106,7 @@ const MatchScoreCard = () => {
       const currentDateTime = Common.Utility.GetCurrentDateTime(5);
 
       const response = await Common.ApiService.getInstance().request(
-        `GetMasterTournamentMatchScheduleByCourt?masterTournamentId=${tournamentId}&courtId=${courtId}`
+        `GetMasterTournamentMatchScheduleByCourt?masterTournamentId=${tournamentId}&courtId=${courtId}`,
       );
 
       if (response?.data) {
@@ -98,13 +121,13 @@ const MatchScoreCard = () => {
             "Match ID:",
             currentMatch.id,
             "Type:",
-            typeof currentMatch.id
+            typeof currentMatch.id,
           );
           console.log(
             "Tournament ID:",
             tournamentId,
             "Type:",
-            typeof tournamentId
+            typeof tournamentId,
           );
           setupWebSocketConnection(currentMatch);
         } else {
@@ -131,7 +154,7 @@ const MatchScoreCard = () => {
     }
 
     // Initialize socket connection
-    const socket = io("https://ttwp.playpro.pk", {
+    const socket = io(SERVER_URL, {
       transports: ["websocket"],
       timeout: 20000,
       reconnectionAttempts: 5,
@@ -224,7 +247,7 @@ const MatchScoreCard = () => {
         // Filter by environment - ignore matches from other environments
         if (data.matchId && !MatchIdHelper.isMatchForCurrentEnv(data.matchId)) {
           console.log(
-            "Ignoring match state response from different environment"
+            "Ignoring match state response from different environment",
           );
           // Use API data as fallback when response is from different environment
           setLiveMatchData(currentMatch);
@@ -422,12 +445,23 @@ const MatchScoreCard = () => {
           ))}
         </div>
 
-        {/* Connection Status */}
-        <div className="absolute top-4 right-4 z-20">
+        {/* Connection Status and Match Timer */}
+        <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
+          {liveMatchData?.matchTimer &&
+            (liveMatchData.matchTimer.status === "running" ||
+              liveMatchData.matchTimer.status === "paused" ||
+              (liveMatchData.matchTimer.status === "stopped" &&
+                (liveMatchData.matchTimer.elapsedSeconds || 0) > 0)) && (
+              <div className="flex items-center space-x-2 bg-black/50 text-white px-4 py-2 rounded-lg font-mono text-xl">
+                <Clock className="w-5 h-5" />
+                <span className="font-bold">{timerDisplay}</span>
+              </div>
+            )}
           <div className="flex items-center space-x-2 bg-black/50 text-white px-3 py-1 rounded-lg">
             <div
-              className={`w-2 h-2 rounded-full ${isConnected ? "bg-[var(--color-accent)]" : "bg-red-500"
-                }`}
+              className={`w-2 h-2 rounded-full ${
+                isConnected ? "bg-[var(--color-accent)]" : "bg-red-500"
+              }`}
             ></div>
             <span className="text-sm font-medium">
               {isConnected ? "Live" : "Network Error"}
@@ -553,10 +587,11 @@ const MatchScoreCard = () => {
                           {getTeamWarnings(1).map((warning, index) => (
                             <span
                               key={index}
-                              className={`px-2 py-1 text-xs font-bold rounded ${warning === "W1"
-                                ? "bg-yellow-400 text-black"
-                                : "bg-red-500 text-black"
-                                }`}
+                              className={`px-2 py-1 text-xs font-bold rounded ${
+                                warning === "W1"
+                                  ? "bg-yellow-400 text-black"
+                                  : "bg-red-500 text-black"
+                              }`}
                             >
                               {warning}
                             </span>
@@ -610,10 +645,11 @@ const MatchScoreCard = () => {
                           {getTeamWarnings(2).map((warning, index) => (
                             <span
                               key={index}
-                              className={`px-2 py-1 text-xs font-bold rounded ${warning === "W1"
-                                ? "bg-yellow-400 text-black"
-                                : "bg-red-500 text-black"
-                                }`}
+                              className={`px-2 py-1 text-xs font-bold rounded ${
+                                warning === "W1"
+                                  ? "bg-yellow-400 text-black"
+                                  : "bg-red-500 text-black"
+                              }`}
                             >
                               {warning}
                             </span>
@@ -628,15 +664,15 @@ const MatchScoreCard = () => {
                     <div key={setIndex} className="text-center">
                       <div className="space-y-8 text-black">
                         <div className="text-6xl font-bold">
-                          <AnimatedScore 
-                            score={getSetScore(1, setIndex)} 
+                          <AnimatedScore
+                            score={getSetScore(1, setIndex)}
                             isGameScore={false}
                             textColor="text-black"
                           />
                         </div>
                         <div className="text-6xl font-bold">
-                          <AnimatedScore 
-                            score={getSetScore(2, setIndex)} 
+                          <AnimatedScore
+                            score={getSetScore(2, setIndex)}
                             isGameScore={false}
                             textColor="text-black"
                           />
@@ -649,15 +685,15 @@ const MatchScoreCard = () => {
                   <div className="text-center bg-[var(--color-accent)]">
                     <div className="space-y-4 pt-[25px] pb-[25px]">
                       <div className="text-8xl font-bold text-white">
-                        <AnimatedScore 
-                          score={getCurrentGameScore(1)} 
+                        <AnimatedScore
+                          score={getCurrentGameScore(1)}
                           isGameScore={true}
                           textColor="text-white"
                         />
                       </div>
                       <div className="text-8xl font-bold text-white">
-                        <AnimatedScore 
-                          score={getCurrentGameScore(2)} 
+                        <AnimatedScore
+                          score={getCurrentGameScore(2)}
                           isGameScore={true}
                           textColor="text-white"
                         />
@@ -692,8 +728,10 @@ const MatchScoreCard = () => {
           {/* {matchData.court?.name || "LIVE SCOREBOARD"}{" "} */}
           {/* <p className="text">Men B (Group Stage) </p> */}
           {/* <p className="text">{mapStageType(matchData.stageType)} </p> */}
-          <p className="text">{mapStageType(matchData.stageType)} - {matchData.tournamentName || "LIVE SCOREBOARD"} </p>
-      
+          <p className="text">
+            {mapStageType(matchData.stageType)} -{" "}
+            {matchData.tournamentName || "LIVE SCOREBOARD"}{" "}
+          </p>
         </div>
         <div className="bg-[var(--color-accent)] col-span-4 ml-auto text-white  px-[20px]  py-3 rounded-lg font-bold text-4xl">
           {matchData.court?.name || "LIVE SCOREBOARD"}{" "}
