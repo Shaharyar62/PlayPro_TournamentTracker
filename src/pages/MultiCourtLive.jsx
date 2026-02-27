@@ -458,7 +458,10 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 .join(" ")} 1fr`,
             }}
           >
-            <div className="flex items-center justify-center gap-2 leading-none">
+            <div
+              className="flex items-center justify-center gap-2 leading-none "
+              style={{ position: "relative" }}
+            >
               {liveMatchData?.matchTimer &&
                 (liveMatchData.matchTimer.status === "running" ||
                   liveMatchData.matchTimer.status === "paused" ||
@@ -466,10 +469,18 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                     (liveMatchData.matchTimer.elapsedSeconds || 0) > 0)) && (
                   <div
                     className={`flex items-center gap-0.5 font-mono font-bold shrink-0 leading-none ${
-                      isMultiView ? "text-[10px]" : "text-xs"
+                      isMultiView ? "text-[30px]" : "text-xs"
                     } text-white`}
+                    style={{
+                      left: "40px",
+                      position: "absolute",
+                      background: "rgb(200 255 0)",
+                      borderRadius: "5px",
+                      color: "#005da4",
+                      padding: "0px 10px",
+                    }}
                   >
-                    <Clock className="w-3 h-3" />
+                    <Clock className="w-6 h-6 mr-1" />
                     <span>{timerDisplay}</span>
                   </div>
                 )}
@@ -477,7 +488,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 style={{ fontSize: "var(--font-3xl)" }}
                 className={`${textScale} font-bold`}
               >
-                PLAYERS
+                &nbsp;&nbsp;&nbsp;&nbsp; PLAYERS
               </h2>
             </div>
             {Array.from({ length: getNumberOfSets() }, (_, index) => (
