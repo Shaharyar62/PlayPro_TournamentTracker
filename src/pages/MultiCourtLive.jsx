@@ -108,7 +108,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
         setError(null);
       } else {
-        setError("No match data found");
+        setError("No match data found"); 
       }
     } catch (err) {
       setError(err.message || "Failed to fetch match data");
@@ -314,7 +314,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
   };
 
   const getHeaderText = () => {
-    if (liveMatchData?.isInSuperTiebreak) return "SUPER TIE BREAK";
+    if (liveMatchData?.isInSuperTiebreak) return "SUPER TIE BREAK"; 
     if (liveMatchData?.isInTiebreak) return "TIE BREAK";
     return "SCORE";
   };

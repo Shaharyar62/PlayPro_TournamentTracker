@@ -164,11 +164,8 @@ export function prepareMatchResults(matchData, winnerTeam, sets) {
     for (let round = 0; round <= 2; round++) {
       const setsData = getSetData(sets, round);
 
-      // For super tie-break sets, use tiebreak scores instead of games
+      // Use games as points for all sets, including super tiebreak
       let team1Points = setsData.team1Games || 0;
-      if (setsData.isSuperTiebreak === true) {
-        team1Points = setsData.superTieBreakScore1 || 0;
-      }
 
       results.push({
         bookingResultTmpId: 0,
@@ -189,11 +186,8 @@ export function prepareMatchResults(matchData, winnerTeam, sets) {
     for (let round = 0; round <= 2; round++) {
       const setsData = getSetData(sets, round);
 
-      // For super tie-break sets, use tiebreak scores instead of games
+      // Use games as points for all sets, including super tiebreak
       let team2Points = setsData.team2Games || 0;
-      if (setsData.isSuperTiebreak === true) {
-        team2Points = setsData.superTieBreakScore2 || 0;
-      }
 
       results.push({
         bookingResultTmpId: 0,

@@ -2,6 +2,8 @@
  * Helper functions for match state transformations and validation
  */
 
+import { computeElapsedSeconds } from "./matchTimerUtils.js";
+
 /**
  * Initialize empty match state
  * @param {Array} team1Players - Array of Player objects
@@ -165,9 +167,10 @@ export function validateMatchState(matchState) {
  * Create update data object for WebSocket update_match_state event
  * @param {Object} matchState - Updated match state
  * @param {Record<string, SetData>} setsData - Updated sets data
+ * @param {Object} [previousMatchState] - Previous match state (for stopping timer on completion)
  * @returns {Record<string, any>} Update data for WebSocket
  */
-export function createUpdateData(matchState, setsData) {
+export function createUpdateData(matchState, setsData, previousMatchState) {
   const updateData = {
     "team1.score": matchState.team1.score,
     "team2.score": matchState.team2.score,
@@ -186,6 +189,16 @@ export function createUpdateData(matchState, setsData) {
   updateData.status = matchState.status || "active";
   if (matchState.status === "completed" && matchState.winnerTeam) {
     updateData.winnerTeam = matchState.winnerTeam;
+    // Stop match timer when match completes - persist so viewers and refresh get it
+    const timer = previousMatchState?.matchTimer;
+    if (timer) {
+      const elapsedSeconds = computeElapsedSeconds(timer);
+      updateData.matchTimer = {
+        elapsedSeconds,
+        startedAt: null,
+        status: "stopped",
+      };
+    }
   } else {
     // Explicitly clear winnerTeam when status is active
     updateData.winnerTeam = "";

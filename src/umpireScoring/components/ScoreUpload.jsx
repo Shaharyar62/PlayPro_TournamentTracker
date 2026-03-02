@@ -1092,12 +1092,10 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
           {/* Reset Button */}
           <motion.button
             whileTap={{ scale: isCompleted ? 1 : 0.95 }}
-            onClick={() => !isCompleted && handleReset()}
-            disabled={isCompleted}
+            onClick={() =>  handleReset()}
+             
             className={`border border-white/20 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center space-y-1 sm:space-y-2 transition-colors ${
-              isCompleted
-                ? "bg-white/5 opacity-50 cursor-not-allowed"
-                : "bg-white/10 hover:bg-white/20"
+               "bg-white/10 hover:bg-white/20"
             }`}
           >
             <Trash2 className="w-5 h-5 sm:w-6 sm:h-6" />

@@ -26,6 +26,7 @@ import { prepareMatchResults } from "../utils/matchResultsHelper.js";
 import { umpireAPI } from "../services/umpireAPI.js";
 import MatchIdHelper from "../utils/matchIdHelper.js";
 import { useUmpire } from "../context/UmpireContext.jsx";
+import { computeElapsedSeconds } from "../utils/matchTimerUtils.js";
 
 /**
  * Custom hook for managing match state with WebSocket integration
@@ -584,16 +585,36 @@ export function useMatchState(tournamentId, matchId) {
 
         if (won) {
           // Team won the tiebreak set
-          if (isTeam1) {
-            // Increment games count to 7 for the winning team (6-6 -> 7-6)
-            newSetsData[activeSetKey].team1Games += 1;
-            newState.team1.games = newSetsData[activeSetKey].team1Games;
-            newState.team1.sets += 1;
+          if (matchState.isInSuperTiebreak) {
+            // Super tiebreak: add one game to the winner in the
+            // current deciding set, keeping the loser games as-is.
+            const prevTeam1Games = newSetsData[activeSetKey].team1Games || 0;
+            const prevTeam2Games = newSetsData[activeSetKey].team2Games || 0;
+
+            if (isTeam1) {
+              newSetsData[activeSetKey].team1Games = prevTeam1Games + 1;
+              newSetsData[activeSetKey].team2Games = prevTeam2Games;
+              newState.team1.games = newSetsData[activeSetKey].team1Games;
+              newState.team2.games = newSetsData[activeSetKey].team2Games;
+              newState.team1.sets += 1;
+            } else {
+              newSetsData[activeSetKey].team2Games = prevTeam2Games + 1;
+              newSetsData[activeSetKey].team1Games = prevTeam1Games;
+              newState.team1.games = newSetsData[activeSetKey].team1Games;
+              newState.team2.games = newSetsData[activeSetKey].team2Games;
+              newState.team2.sets += 1;
+            }
           } else {
-            // Increment games count to 7 for the winning team (6-6 -> 6-7)
-            newSetsData[activeSetKey].team2Games += 1;
-            newState.team2.games = newSetsData[activeSetKey].team2Games;
-            newState.team2.sets += 1;
+            // Regular tiebreak: increment from 6-6 to 7-6 or 6-7
+            if (isTeam1) {
+              newSetsData[activeSetKey].team1Games += 1;
+              newState.team1.games = newSetsData[activeSetKey].team1Games;
+              newState.team1.sets += 1;
+            } else {
+              newSetsData[activeSetKey].team2Games += 1;
+              newState.team2.games = newSetsData[activeSetKey].team2Games;
+              newState.team2.sets += 1;
+            }
           }
 
           // Finalize the completed set with tiebreak data
@@ -986,7 +1007,7 @@ export function useMatchState(tournamentId, matchId) {
       setSetsData(newSetsData);
 
       // Update via WebSocket with rollback on error
-      const updateData = createUpdateData(newState, newSetsData);
+      const updateData = createUpdateData(newState, newSetsData, matchState);
 
       // Log serve state being sent to websocket
       console.log("[SERVE] Sending serve update to websocket:", {
@@ -1234,6 +1255,27 @@ export function useMatchState(tournamentId, matchId) {
       if (!tournamentId || !matchId) return;
 
       try {
+        // Stop match timer on completion (non-blocking)
+        try {
+          if (matchState?.matchTimer) {
+            const currentElapsed = computeElapsedSeconds(matchState.matchTimer);
+            await socketService.updateMatchTimer({
+              tournamentId,
+              matchId,
+              matchTimer: {
+                elapsedSeconds: currentElapsed,
+                startedAt: null,
+                status: "stopped",
+              },
+            });
+          }
+        } catch (timerError) {
+          console.error(
+            "Error stopping match timer on completion:",
+            timerError
+          );
+        }
+
         // Complete match via socket service
         await socketService.completeMatch({
           tournamentId,
@@ -1700,7 +1742,7 @@ export function useMatchState(tournamentId, matchId) {
       setSetsData(newSetsData);
 
       // Update via WebSocket with rollback on error
-      const updateData = createUpdateData(newState, newSetsData);
+      const updateData = createUpdateData(newState, newSetsData, matchState);
 
       try {
         await socketService.updateMatchState({
