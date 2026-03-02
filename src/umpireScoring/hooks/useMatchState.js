@@ -528,11 +528,20 @@ export function useMatchState(tournamentId, matchId) {
       // Total completed sets = active set index (sets are 0-indexed)
       const totalCompletedSets =
         (matchState.team1.sets || 0) + (matchState.team2.sets || 0);
-      // Ensure we don't exceed the number of sets in the match
-      const activeSetIndex = Math.min(
-        totalCompletedSets,
-        (matchSettings.numberOfSets || 3) - 1
-      );
+
+      // For 2-sets + super tiebreak, store super tiebreak in set index 2
+      const isTwoSetsSuperTiebreak =
+        matchSettings?.matchFormat === MatchFormat.TWO_SETS_SUPER_TIEBREAK;
+
+      let activeSetIndex;
+      if (isTwoSetsSuperTiebreak && matchState.isInSuperTiebreak) {
+        activeSetIndex = 2; // Third set for super tiebreak
+      } else {
+        activeSetIndex = Math.min(
+          totalCompletedSets,
+          (matchSettings.numberOfSets || 3) - 1
+        );
+      }
       const activeSetKey = activeSetIndex.toString();
 
       // Ensure active set exists in sets data
@@ -586,22 +595,19 @@ export function useMatchState(tournamentId, matchId) {
         if (won) {
           // Team won the tiebreak set
           if (matchState.isInSuperTiebreak) {
-            // Super tiebreak: add one game to the winner in the
-            // current deciding set, keeping the loser games as-is.
-            const prevTeam1Games = newSetsData[activeSetKey].team1Games || 0;
-            const prevTeam2Games = newSetsData[activeSetKey].team2Games || 0;
-
+            // Super tiebreak: store result in set 3 as 1-0 (winner) or 0-1 (loser)
+            // Sets 1 and 2 remain unchanged
             if (isTeam1) {
-              newSetsData[activeSetKey].team1Games = prevTeam1Games + 1;
-              newSetsData[activeSetKey].team2Games = prevTeam2Games;
-              newState.team1.games = newSetsData[activeSetKey].team1Games;
-              newState.team2.games = newSetsData[activeSetKey].team2Games;
+              newSetsData[activeSetKey].team1Games = 1;
+              newSetsData[activeSetKey].team2Games = 0;
+              newState.team1.games = 1;
+              newState.team2.games = 0;
               newState.team1.sets += 1;
             } else {
-              newSetsData[activeSetKey].team2Games = prevTeam2Games + 1;
-              newSetsData[activeSetKey].team1Games = prevTeam1Games;
-              newState.team1.games = newSetsData[activeSetKey].team1Games;
-              newState.team2.games = newSetsData[activeSetKey].team2Games;
+              newSetsData[activeSetKey].team1Games = 0;
+              newSetsData[activeSetKey].team2Games = 1;
+              newState.team1.games = 0;
+              newState.team2.games = 1;
               newState.team2.sets += 1;
             }
           } else {

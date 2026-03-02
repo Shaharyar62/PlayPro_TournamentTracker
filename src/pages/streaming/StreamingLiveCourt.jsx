@@ -461,6 +461,10 @@ const StreamingLiveCourt = () => {
 
   // Helper functions for JSON data binding
   const getNumberOfSets = () => {
+    // For 2-sets + super tiebreak, show 3 set columns (SET 1, SET 2, STB)
+    if (liveMatchData?.matchSettings?.matchFormat === 2) {
+      return 3;
+    }
     if (liveMatchData?.matchSettings?.numberOfSets) {
       return liveMatchData.matchSettings.numberOfSets;
     }

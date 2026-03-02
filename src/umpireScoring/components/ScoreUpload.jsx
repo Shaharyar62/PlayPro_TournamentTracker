@@ -554,6 +554,13 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
   const isInTiebreak = matchState.isInTiebreak || false;
   const isInSuperTiebreak = matchState.isInSuperTiebreak || false;
   const isCompleted = isMatchComplete();
+  // For 2-sets + super tiebreak: show 2 columns until super tiebreak; then 3
+  const displaySetCount =
+    matchSettings?.matchFormat === 2
+      ? isInSuperTiebreak || isCompleted
+        ? 3
+        : 2
+      : (matchSettings?.numberOfSets || 3);
 
   // Calculate total advantage exchanges for golden point display
   const totalAdvantageExchanges =
@@ -642,9 +649,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
             <div
               className="grid gap-2 items-center px-2"
               style={{
-                gridTemplateColumns: `2fr ${Array(
-                  matchSettings?.numberOfSets || 3
-                )
+                gridTemplateColumns: `2fr ${Array(displaySetCount)
                   .fill("1fr")
                   .join(" ")} 1fr`,
               }}
@@ -652,14 +657,17 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
               <div className="text-center">
                 <h2 className="font-bold">PLAYERS</h2>
               </div>
-              {Array.from(
-                { length: matchSettings?.numberOfSets || 3 },
-                (_, index) => (
-                  <div key={index} className="text-center">
-                    <h2 className=" font-bold">SET {index + 1}</h2>
-                  </div>
-                )
-              )}
+              {Array.from({ length: displaySetCount }, (_, index) => (
+                <div key={index} className="text-center">
+                  <h2 className=" font-bold">
+                    {matchSettings?.matchFormat === 2 &&
+                    index === 2 &&
+                    isCompleted
+                      ? "STB"
+                      : `SET ${index + 1}`}
+                  </h2>
+                </div>
+              ))}
               <div className="text-center">
                 <h2 className="  font-bold">
                   {isInSuperTiebreak
@@ -678,9 +686,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
             <div
               className="grid gap-2 items-center   px-2 py-3"
               style={{
-                gridTemplateColumns: `2fr ${Array(
-                  matchSettings?.numberOfSets || 3
-                )
+                gridTemplateColumns: `2fr ${Array(displaySetCount)
                   .fill("1fr")
                   .join(" ")} 1fr`,
               }}
@@ -727,9 +733,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
               </div>
 
               {/* SET Columns - Team 1 */}
-              {Array.from(
-                { length: matchSettings?.numberOfSets || 3 },
-                (_, index) => {
+              {Array.from({ length: displaySetCount }, (_, index) => {
                   const setKey = index.toString();
                   const setData = setsData?.[setKey] || {
                     team1Games: 0,
@@ -807,9 +811,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
             <div
               className="grid gap-2 items-center border-b border-gray-200 px-2 py-3"
               style={{
-                gridTemplateColumns: `2fr ${Array(
-                  matchSettings?.numberOfSets || 3
-                )
+                gridTemplateColumns: `2fr ${Array(displaySetCount)
                   .fill("1fr")
                   .join(" ")} 1fr`,
               }}
@@ -859,9 +861,7 @@ const ScoreUpload = ({ match, onSave, onEndMatch, onBack }) => {
               </div>
 
               {/* SET Columns - Team 2 */}
-              {Array.from(
-                { length: matchSettings?.numberOfSets || 3 },
-                (_, index) => {
+              {Array.from({ length: displaySetCount }, (_, index) => {
                   const setKey = index.toString();
                   const setData = setsData?.[setKey] || {
                     team1Games: 0,

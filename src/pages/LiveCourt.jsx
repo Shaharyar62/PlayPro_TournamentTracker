@@ -336,6 +336,10 @@ const MatchScoreCard = () => {
 
   // Helper functions for JSON data binding
   const getNumberOfSets = () => {
+    // For 2-sets + super tiebreak, show 3 set columns (SET 1, SET 2, STB)
+    if (liveMatchData?.matchSettings?.matchFormat === 2) {
+      return 3;
+    }
     if (liveMatchData?.matchSettings?.numberOfSets) {
       return liveMatchData.matchSettings.numberOfSets;
     }
@@ -526,7 +530,13 @@ const MatchScoreCard = () => {
                   </div>
                   {Array.from({ length: getNumberOfSets() }, (_, index) => (
                     <div key={index} className="text-center">
-                      <h2 className="text-4xl font-bold">SET {index + 1}</h2>
+                      <h2 className="text-4xl font-bold">
+                        {liveMatchData?.matchSettings?.matchFormat === 2 &&
+                        index === 2 &&
+                        liveMatchData?.status === "completed"
+                          ? "STB"
+                          : `SET ${index + 1}`}
+                      </h2>
                     </div>
                   ))}
                   <div className="text-center">

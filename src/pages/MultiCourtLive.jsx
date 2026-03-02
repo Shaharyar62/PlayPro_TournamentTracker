@@ -466,7 +466,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 (liveMatchData.matchTimer.status === "running" ||
                   liveMatchData.matchTimer.status === "paused" ||
                   (liveMatchData.matchTimer.status === "stopped" &&
-                    (liveMatchData.matchTimer.elapsedSeconds || 0) > 0)) && (
+                    (liveMatchData.matchTimer.elapsedSeconds || 0) > 0)) && ( 
                   <div
                     className={`flex items-center gap-0.5 font-mono font-bold shrink-0 leading-none ${
                       isMultiView ? "text-[30px]" : "text-xs"
@@ -497,7 +497,9 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                   style={{ fontSize: "var(--font-3xl)" }}
                   className={`${textScale} font-bold`}
                 >
-                  SET {index + 1}
+                  {liveMatchData?.matchSettings?.matchFormat === 2 && index === 2
+                    ? "STB"
+                    : `SET ${index + 1}`}
                 </h2>
               </div>
             ))}
