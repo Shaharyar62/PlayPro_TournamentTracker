@@ -17,7 +17,7 @@
   --color-link: #646cff;
   --color-link-hover: #535bf2;
   --color-link-glow: rgba(100, 108, 255, 0.67);
-  --color-text: rgba(255, 255, 255, 0.87);
+  --color-text: rgba(255, 255, 255, 1);
   --color-text-muted: #888;
   --color-success: #16a34a;
   --color-warning: #ca8a04;

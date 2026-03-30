@@ -1,6 +1,8 @@
 /* Default / shared images */
 import sponsorTmp from "./sponsor-tmp-2026.png";
 import gkBg from "./gk-bg.png";
+import gkvb from "./bg-vb.png";
+
 import sponsorKG from "./sponsor-kg.png";
 import sponsorKG2 from "./sponsor-kg-2.png";
 import gkCup from "./fix/gk-cup.png";
@@ -51,6 +53,7 @@ export const ALL_IMAGES = {
   "sponsor-kg": sponsorKG,
   "sponsor-kg-2": sponsorKG2,
   "gk-bg": gkBg,
+  "bg-vb": bg-vb,
   ads_s1: adsS1,
   ads_s2: adsS2,
   ads_s3: adsS3,

@@ -108,7 +108,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
         setError(null);
       } else {
-        setError("No match data found"); 
+        setError("No match data found");
       }
     } catch (err) {
       setError(err.message || "Failed to fetch match data");
@@ -314,7 +314,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
   };
 
   const getHeaderText = () => {
-    if (liveMatchData?.isInSuperTiebreak) return "SUPER TIE BREAK"; 
+    if (liveMatchData?.isInSuperTiebreak) return "SUPER TIE BREAK";
     if (liveMatchData?.isInTiebreak) return "TIE BREAK";
     return "SCORE";
   };
@@ -455,7 +455,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             style={{
               gridTemplateColumns: `4fr ${Array(getNumberOfSets())
                 .fill("1fr")
-                .join(" ")} 1fr`,
+                .join(" ")}`,
             }}
           >
             <div
@@ -466,7 +466,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 (liveMatchData.matchTimer.status === "running" ||
                   liveMatchData.matchTimer.status === "paused" ||
                   (liveMatchData.matchTimer.status === "stopped" &&
-                    (liveMatchData.matchTimer.elapsedSeconds || 0) > 0)) && ( 
+                    (liveMatchData.matchTimer.elapsedSeconds || 0) > 0)) && (
                   <div
                     className={`flex items-center gap-0.5 font-mono font-bold shrink-0 leading-none ${
                       isMultiView ? "text-[30px]" : "text-xs"
@@ -488,7 +488,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 style={{ fontSize: "var(--font-3xl)" }}
                 className={`${textScale} font-bold`}
               >
-                &nbsp;&nbsp;&nbsp;&nbsp; PLAYERS
+                &nbsp;&nbsp;&nbsp;&nbsp; TEAMS
               </h2>
             </div>
             {Array.from({ length: getNumberOfSets() }, (_, index) => (
@@ -497,13 +497,14 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                   style={{ fontSize: "var(--font-3xl)" }}
                   className={`${textScale} font-bold`}
                 >
-                  {liveMatchData?.matchSettings?.matchFormat === 2 && index === 2
+                  {liveMatchData?.matchSettings?.matchFormat === 2 &&
+                  index === 2
                     ? "STB"
                     : `SET ${index + 1}`}
                 </h2>
               </div>
             ))}
-            <div className="text-center">
+            {/* <div className="text-center">
               <h2
                 style={
                   getHeaderText() === "SUPER TIE BREAK"
@@ -514,7 +515,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
               >
                 {getHeaderText()}
               </h2>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -525,7 +526,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             style={{
               gridTemplateColumns: `4fr ${Array(getNumberOfSets())
                 .fill("1fr")
-                .join(" ")} 1fr`,
+                .join(" ")} `,
             }}
           >
             {/* Team Names and Players */}
@@ -671,7 +672,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             ))}
 
             {/* Current Game/Points Score */}
-            <div className="text-center bg-[var(--color-accent)]">
+            {/* <div className="text-center bg-[var(--color-accent)]">
               <div
                 className={`space-y-${isMultiView ? "1" : "4"} ${
                   isMultiView ? "py-2 px-2" : "pt-[25px] pb-[25px]"
@@ -696,7 +697,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

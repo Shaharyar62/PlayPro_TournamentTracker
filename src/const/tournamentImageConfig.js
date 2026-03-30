@@ -52,6 +52,14 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "sponsor-kg",
     sponsor2: "sponsor-kg-2",
   },
+  55: {
+    leftLogo: "kg-logo",
+    rightLogo: "playpro-w",
+    cupLogo: "gk-cup",
+    bg: "gk-vb",
+    sponsor1: "sponsor-kg",
+    sponsor2: "sponsor-kg-2",
+  },
 };
 
 /**
