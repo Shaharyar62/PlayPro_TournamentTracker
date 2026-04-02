@@ -34,6 +34,7 @@ import Padelverse from "./pages/Padelverse";
 import TMP from "./pages/TMP";
 import GK from "./pages/GK";
 import Links from "./pages/live/Links";
+import Appt from "./pages/Appt";
 
 function App() {
   const isLoaded = useRef(false);
@@ -82,6 +83,8 @@ function App() {
                 <Route path="padelverse" element={<Padelverse />} />
                 <Route path="tmp" element={<TMP />} />
                 <Route path="gk" element={<GK />} />
+                <Route path="appt" element={<Appt />} />
+
                 <Route
                   path="live-court/:tournamentId/:matchId"
                   element={<LiveCourt />}

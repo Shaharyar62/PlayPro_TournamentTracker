@@ -8,18 +8,28 @@ const Links = () => {
   const images = useTournamentImages();
   const pagespadelverse = [
     {
-      path: "/streaming-live-court?tournamentId=52&courtId=302",
+      path: "/streaming-live-court?tournamentId=58&courtId=347",
       name: "Court 1",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=52&courtId=303",
+      path: "/streaming-live-court?tournamentId=58&courtId=348",
       name: "Court 2",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=52&courtId=304",
+      path: "/streaming-live-court?tournamentId=58&courtId=349",
       name: "Court 3",
+      color: "#2e55b9",
+    },
+    {
+      path: "/streaming-live-court?tournamentId=58&courtId=350",
+      name: "Court 4",
+      color: "#2e55b9",
+    },
+    {
+      path: "/streaming-live-court?tournamentId=58&courtId=351",
+      name: "Court 5",
       color: "#2e55b9",
     },
   ];
@@ -53,10 +63,10 @@ const Links = () => {
         <img width={300} src={images.playpro} alt="logo" />
       </div>
 
-      <h1 className="text-2xl  font-bold text-black mb-5">GK</h1>
+      <h1 className="text-2xl  font-bold text-black mb-5">APPT</h1>
 
       <div className="buttons-grid">
-        {pagestmp.map((page, index) => (
+        {pagespadelverse.map((page, index) => (
           <motion.div
             key={index}
             className="button-wrapper"

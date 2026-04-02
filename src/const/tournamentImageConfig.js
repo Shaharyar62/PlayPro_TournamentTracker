@@ -52,6 +52,16 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "sponsor-kg",
     sponsor2: "sponsor-kg-2",
   },
+  58: {
+    leftLogo: "padel_collective",
+    cupLogo: "appt-cup3",
+    rightLogo: "legends-logo",
+    // rightLogo: "padel-in",
+    bg: "apptBg",
+
+    sponsor1: "sponsor-appt",
+    sponsor2: "sponsor-appt",
+  },
 };
 
 /**

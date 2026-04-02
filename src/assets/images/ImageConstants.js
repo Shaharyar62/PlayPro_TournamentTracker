@@ -1,27 +1,30 @@
 /* Default / shared images */
 import sponsorTmp from "./sponsor-tmp-2026.png";
+import padelCollective from "./fix/padel_collective.png";
+import apptCup from "./fix/appt-cup.png";
+import playproWhite from "./fix/playpro-w.png";
+import legendsLogo from "./fix/legends-logo.png";
 import gkBg from "./gk-bg.png";
+import sponsorAppt from "./fix/sponsor-appt.png";
 import sponsorKG from "./sponsor-kg.png";
 import sponsorKG2 from "./sponsor-kg-2.png";
 import gkCup from "./fix/gk-cup.png";
+import padelIn from "./fix/padelin.png";
 import adsS1 from "./ads_s1.png";
 import adsS2 from "./ads_s2.png";
 import adsS3 from "./ads_s3.png";
 import adsS4 from "./ads_s4.png";
-import playproWhite from "./fix/playpro-w.png";
 import playpro from "./playpro.png";
 import playproColorVertical from "./playpro_logo_vertical.png";
 import gkLogo from "./fix/kg-logo.png";
 import tmpLogo from "./tmp-logo.png";
 import tmpCup from "./fix/tmp-cup.png";
 import apptBg from "./appt-bg.png";
-import padelCollective from "./padel_collective.png";
 import premierWhite from "./premier-white.png";
 import pvc4 from "./pvc-4.png";
 import pvc4Bg from "./pvc-4-bg.jpg";
 import premierCup from "./premier-cup.png";
-import apptCup from "./appt-cup.png";
-import apptCup3 from "./appt-cup3.png";
+import apptCup3 from "./fix/appt-cup-3.png";
 import padelVerse from "./padel-verse.png";
 import padelverse_W from "./fix/padelvers.png";
 import appStore from "./apple.jpg";
@@ -46,6 +49,8 @@ export const ALL_IMAGES = {
   "kg-logo": gkLogo,
   "tmp-cup": tmpCup,
   "gk-cup": gkCup,
+  "legends-logo": legendsLogo,
+  "padel-in": padelIn,
   "appt-bg": apptBg,
   "sponsor-tmp-2026": sponsorTmp,
   "sponsor-kg": sponsorKG,
@@ -63,6 +68,7 @@ export const ALL_IMAGES = {
   "premier-cup": premierCup,
   "appt-cup": apptCup,
   "appt-cup3": apptCup3,
+  "sponsor-appt": sponsorAppt,
   padelverselogo: padelverse_W,
   apple: appStore,
   google: googlePlay,
