@@ -589,7 +589,10 @@ const StreamingLiveCourt = () => {
                   <div className="flex items-center justify-between  justify-center px-1">
                     <div className="flex items-center space-x-1">
                       <div>
-                        <div className="text-5xl  font-bold text-gray-800 mb-1">
+                        <div
+                          style={{ color: "#000000" }}
+                          className="text-5xl  font-bold text-gray-800 mb-1"
+                        >
                           {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamA) : getPlayerName(1, 0) + " & " + getPlayerName(1, 1)} */}
                           {getTeamName(matchData.teamA)}
                           {/* {getPlayerName(1, 0)} & {getPlayerName(1, 1)} */}
@@ -645,7 +648,10 @@ const StreamingLiveCourt = () => {
                   <div className="flex items-center justify-between justify-center px-4">
                     <div className="flex items-center space-x-4">
                       <div>
-                        <div className="text-5xl font-bold text-gray-800 mb-1">
+                        <div
+                          style={{ color: "#000000" }}
+                          className="text-5xl font-bold text-gray-800 mb-1"
+                        >
                           {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamB) : getPlayerName(2, 0) + " & " + getPlayerName(2, 1)} */}
                           {getTeamName(matchData.teamB)}
                           {/* {getTeamName(matchData.teamB)} */}

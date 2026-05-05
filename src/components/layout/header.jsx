@@ -3,7 +3,7 @@ import { useTournamentImages } from "../../context/TournamentImagesContext";
 export const Header = () => {
   const images = useTournamentImages();
   return (
-    <div className="flex ml-[100px] mr-[100px] justify-between items-center">
+    <div className="flex ml-[100px] mb-5 mr-[100px] justify-between items-center">
       <div className="text-center" style={{ width: "500px" }}>
         <img
           className="justify-self-start p-0"
@@ -13,9 +13,8 @@ export const Header = () => {
         />
       </div>
 
-      <div className="text-center">
+      <div className="text-center" style={{ width: "700px" }}>
         <img
-          width={1040}
           className="justify-self-end p-0"
           src={images.cupLogo}
           alt="Greenwich Padel"

@@ -62,6 +62,22 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "sponsor-appt",
     sponsor2: "sponsor-appt",
   },
+  57: {
+    leftLogo: "greenwich",
+    cupLogo: "mmi-cup",
+    rightLogo: "playpro-w",
+    bg: "mmi-bg",
+    sponsor1: "sponsor-mmi-1",
+    sponsor2: "sponsor-mmi-2",
+  },
+  60: {
+    leftLogo: "cross-court",
+    cupLogo: "shamsi-padel-open-cup",
+    rightLogo: "playpro-w",
+    bg: "shamsi-padel-open-bg",
+    sponsor1: "sponsor-shamshi",
+    sponsor2: "sponsor-shamshi",
+  },
 };
 
 /**

@@ -86,6 +86,26 @@ export const TOURNAMENT_THEMES = {
     gradientPrimary: "#0d57a7",
     gradientAccent: "#3d8fd9",
   },
+  57: {
+    primary: "#cccccc",
+    primaryDark: "#cccccc",
+    accent: "#0d57a7",
+    background: "#0d57a7",
+    backgroundStart: "#093337",
+    backgroundEnd: "#093337",
+    backgroundMid: "#2e7ebb",
+    primaryBlue: "#003184",
+    button: "#265cb6",
+    link: "#646cff",
+    linkHover: "#535bf2",
+    success: "#16a34a",
+    warning: "#ca8a04",
+    danger: "#dc2626",
+    bodyBg: "#2b2b8a",
+    statusBar: "#000000",
+    gradientPrimary: "#0d57a7",
+    gradientAccent: "#3d8fd9",
+  },
   // "appt": { primary: "#093337", accent: "#aacb32", ... },
   // "pvc": { primary: "#003184", accent: "#A8CE08", ... },
 };
@@ -99,7 +119,8 @@ export function getThemeForTournament(tournamentId) {
   if (tournamentId == null || tournamentId === "") {
     return DEFAULT_THEME;
   }
-  const id = typeof tournamentId === "string" ? tournamentId : String(tournamentId);
+  const id =
+    typeof tournamentId === "string" ? tournamentId : String(tournamentId);
   const theme =
     TOURNAMENT_THEMES[tournamentId] ||
     TOURNAMENT_THEMES[id] ||

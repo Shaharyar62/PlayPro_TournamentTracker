@@ -2,6 +2,11 @@
 import sponsorTmp from "./sponsor-tmp-2026.png";
 import padelCollective from "./fix/padel_collective.png";
 import apptCup from "./fix/appt-cup.png";
+import greenwich from "./fix/greenwich-w.png";
+import mmiCup from "./fix/mmi-cup.png";
+import mmiBg from "./mmi-bg.png";
+import sponsorMMI1 from "./fix/sponsor-mmi-1.png";
+import sponsorMMI2 from "./fix/sponsor-mmi-2.png";
 import playproWhite from "./fix/playpro-w.png";
 import legendsLogo from "./fix/legends-logo.png";
 import gkBg from "./gk-bg.png";
@@ -29,16 +34,11 @@ import padelVerse from "./padel-verse.png";
 import padelverse_W from "./fix/padelvers.png";
 import appStore from "./apple.jpg";
 import googlePlay from "./google.jpg";
-import logo1 from "./logos/1.png";
-import logo2 from "./logos/2.png";
-import logo3 from "./logos/3.png";
-import logo4 from "./logos/4.png";
-import logo5 from "./logos/5.png";
-import logo6 from "./logos/6.png";
-import logo7 from "./logos/7.png";
-import logo8 from "./logos/8.png";
-import logo9 from "./logos/9.png";
-
+import shamsiPadelOpenCup from "./fix/shamsi-padel-open-cup.png";
+import shamsiPadelOpenBg from "./shamsi-padel-open-bg.png";
+import crossCourt from "./fix/cross-court.png";
+import sponsorShamsiPadelOpen1 from "./fix/sponsor-shamshi.png";
+// import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
 /**
  * Flat map of all imported images by key.
  * Used by getImagesForTournament to resolve tournament-specific images.
@@ -73,15 +73,15 @@ export const ALL_IMAGES = {
   apple: appStore,
   google: googlePlay,
   playpro_logo_vertical: playproColorVertical,
-  logo1,
-  logo2,
-  logo3,
-  logo4,
-  logo5,
-  logo6,
-  logo7,
-  logo8,
-  logo9,
+  "mmi-cup": mmiCup,
+  "mmi-bg": mmiBg,
+  greenwich: greenwich,
+  "sponsor-mmi-1": sponsorMMI1,
+  "sponsor-mmi-2": sponsorMMI2,
+  "shamsi-padel-open-cup": shamsiPadelOpenCup,
+  "shamsi-padel-open-bg": shamsiPadelOpenBg,
+  "cross-court": crossCourt,
+  "sponsor-shamshi": sponsorShamsiPadelOpen1,
 };
 
 /**

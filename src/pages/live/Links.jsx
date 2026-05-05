@@ -36,23 +36,18 @@ const Links = () => {
 
   const pagestmp = [
     {
-      path: "/streaming-live-court?tournamentId=49&courtId=105",
+      path: "/streaming-live-court?tournamentId=57&courtId=108",
       name: "Court 1",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=49&courtId=106",
+      path: "/streaming-live-court?tournamentId=57&courtId=109",
       name: "Court 2",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=49&courtId=107",
+      path: "/streaming-live-court?tournamentId=57&courtId=110",
       name: "Court 3",
-      color: "#2e55b9",
-    },
-    {
-      path: "/streaming-live-court?tournamentId=49&courtId=263",
-      name: "Court 4",
       color: "#2e55b9",
     },
   ];
@@ -63,10 +58,10 @@ const Links = () => {
         <img width={300} src={images.playpro} alt="logo" />
       </div>
 
-      <h1 className="text-2xl  font-bold text-black mb-5">APPT</h1>
+      <h1 className="text-2xl  font-bold text-black mb-5">MMI</h1>
 
       <div className="buttons-grid">
-        {pagespadelverse.map((page, index) => (
+        {pagestmp.map((page, index) => (
           <motion.div
             key={index}
             className="button-wrapper"

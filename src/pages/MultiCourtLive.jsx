@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Trophy, Clock } from "lucide-react";
+import {
+  Trophy,
+  Clock,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+  Maximize2,
+  Minimize2,
+} from "lucide-react";
 import {
   formatElapsedTime,
   computeElapsedSeconds,
@@ -18,6 +26,10 @@ import Header from "../components/layout/header";
 import AnimatedScore from "../components/AnimatedScore";
 import matchDataTransformer from "../umpireScoring/helpers/matchDataTransformer";
 import { SERVER_URL } from "../umpireScoring/utils/constants.js";
+
+const ZOOM_MIN = 0.1;
+const ZOOM_MAX = 2;
+const ZOOM_STEP = 0.1;
 
 // Single Court Component
 const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
@@ -108,7 +120,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
         setError(null);
       } else {
-        setError("No match data found"); 
+        setError("No match data found");
       }
     } catch (err) {
       setError(err.message || "Failed to fetch match data");
@@ -314,7 +326,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
   };
 
   const getHeaderText = () => {
-    if (liveMatchData?.isInSuperTiebreak) return "SUPER TIE BREAK"; 
+    if (liveMatchData?.isInSuperTiebreak) return "SUPER TIE BREAK";
     if (liveMatchData?.isInTiebreak) return "TIE BREAK";
     return "SCORE";
   };
@@ -466,7 +478,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 (liveMatchData.matchTimer.status === "running" ||
                   liveMatchData.matchTimer.status === "paused" ||
                   (liveMatchData.matchTimer.status === "stopped" &&
-                    (liveMatchData.matchTimer.elapsedSeconds || 0) > 0)) && ( 
+                    (liveMatchData.matchTimer.elapsedSeconds || 0) > 0)) && (
                   <div
                     className={`flex items-center gap-0.5 font-mono font-bold shrink-0 leading-none ${
                       isMultiView ? "text-[30px]" : "text-xs"
@@ -497,7 +509,8 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                   style={{ fontSize: "var(--font-3xl)" }}
                   className={`${textScale} font-bold`}
                 >
-                  {liveMatchData?.matchSettings?.matchFormat === 2 && index === 2
+                  {liveMatchData?.matchSettings?.matchFormat === 2 &&
+                  index === 2
                     ? "STB"
                     : `SET ${index + 1}`}
                 </h2>
@@ -769,6 +782,65 @@ const MultiCourtLive = () => {
   const tournamentId = searchParams.get("tournamentId");
   const courtIdsParam = searchParams.get("courtId");
   const [displayTime, setDisplayTime] = useState(moment().tz("Asia/Karachi"));
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [showZoomBar, setShowZoomBar] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const pageRootRef = useRef(null);
+
+  useEffect(() => {
+    if (!showZoomBar) return;
+    const t = setTimeout(() => setShowZoomBar(false), 60_000);
+    return () => clearTimeout(t);
+  }, [showZoomBar]);
+
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsFullscreen(
+        !!(document.fullscreenElement || document.webkitFullscreenElement),
+      );
+    };
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", onFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        onFullscreenChange,
+      );
+    };
+  }, []);
+
+  const toggleFullscreen = async () => {
+    const el = pageRootRef.current;
+    if (!el) return;
+    const active =
+      document.fullscreenElement || document.webkitFullscreenElement;
+    try {
+      if (!active) {
+        const req =
+          el.requestFullscreen?.bind(el) ??
+          el.webkitRequestFullscreen?.bind(el);
+        if (req) await req();
+      } else {
+        const exit =
+          document.exitFullscreen?.bind(document) ??
+          document.webkitExitFullscreen?.bind(document);
+        if (exit) await exit();
+      }
+    } catch {
+      /* user gesture / policy */
+    }
+  };
+
+  const zoomIn = () =>
+    setZoomLevel((z) =>
+      Math.min(ZOOM_MAX, Math.round((z + ZOOM_STEP) * 10) / 10),
+    );
+  const zoomOut = () =>
+    setZoomLevel((z) =>
+      Math.max(ZOOM_MIN, Math.round((z - ZOOM_STEP) * 10) / 10),
+    );
+  const resetZoom = () => setZoomLevel(1);
 
   // Parse comma-separated court IDs
   const courtIds = courtIdsParam
@@ -806,152 +878,232 @@ const MultiCourtLive = () => {
   const isMultiView = courtIds.length > 1;
 
   return (
-    <div className="min-h-screen  relative overflow-hidden">
-      {/* Stars background */}
-      <div className="absolute inset-0">
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-white rounded-full opacity-60"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `twinkle ${2 + Math.random() * 3}s infinite`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Header with logos - only show when multi-view */}
-      {isMultiView && <Header />}
-
-      {/* Single court - full screen */}
-      {!isMultiView && (
-        <div className="relative z-10">
-          <Header />
-          <div className="px-[100px] mt-[100px]">
-            <SingleCourtDisplay
-              tournamentId={tournamentId}
-              courtId={courtIds[0]}
-              isMultiView={false}
+    <div
+      ref={pageRootRef}
+      className="main-body relative min-h-screen overflow-auto bg-cover bg-center"
+      style={{ backgroundImage: `url(${images.bg})` }}
+    >
+      <div className="min-h-screen relative" style={{ zoom: zoomLevel }}>
+        {/* Stars background */}
+        <div className="absolute inset-0">
+          {[...Array(50)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-white rounded-full opacity-60"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animation: `twinkle ${2 + Math.random() * 3}s infinite`,
+              }}
             />
-          </div>
+          ))}
         </div>
-      )}
 
-      {/* Multi-court grid */}
-      {isMultiView && (
-        <div className={`relative z-10 grid ${getGridLayout()} gap-4 p-4`}>
-          {courtIds.map((courtId, index) => {
-            const isLastItem = index === courtIds.length - 1;
-            const isOddCount = courtIds.length % 2 !== 0;
-            const shouldCenter = isLastItem && isOddCount;
+        {/* Header with logos - only show when multi-view */}
+        {isMultiView && <Header />}
 
-            return (
-              <div
-                key={courtId}
-                className={`min-h-[350px] ${
-                  shouldCenter ? "col-span-2 flex justify-center" : ""
-                }`}
-              >
+        {/* Single court - full screen */}
+        {!isMultiView && (
+          <div className="relative z-10">
+            <Header />
+            <div className="px-[100px] mt-[100px]">
+              <SingleCourtDisplay
+                tournamentId={tournamentId}
+                courtId={courtIds[0]}
+                isMultiView={false}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Multi-court grid */}
+        {isMultiView && (
+          <div className={`relative z-10 grid ${getGridLayout()} gap-4 p-4`}>
+            {courtIds.map((courtId, index) => {
+              const isLastItem = index === courtIds.length - 1;
+              const isOddCount = courtIds.length % 2 !== 0;
+              const shouldCenter = isLastItem && isOddCount;
+
+              return (
                 <div
-                  className={
-                    shouldCenter ? "w-full max-w-[calc(50%-0.5rem)]" : "w-full"
-                  }
+                  key={courtId}
+                  className={`min-h-[350px] ${
+                    shouldCenter ? "col-span-2 flex justify-center" : ""
+                  }`}
                 >
-                  <SingleCourtDisplay
-                    tournamentId={tournamentId}
-                    courtId={courtId}
-                    isMultiView={true}
+                  <div
+                    className={
+                      shouldCenter
+                        ? "w-full max-w-[calc(50%-0.5rem)]"
+                        : "w-full"
+                    }
+                  >
+                    <SingleCourtDisplay
+                      tournamentId={tournamentId}
+                      courtId={courtId}
+                      isMultiView={true}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+            {/* Bottom indicator - Fixed to bottom */}
+            <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
+              <div className="marquee-wrapper">
+                <div className="marquee-content-scroll">
+                  <img
+                    src={images.sponsor2}
+                    alt="Sponsor"
+                    className="marquee-image"
+                  />
+                  <img
+                    src={images.sponsor1}
+                    alt="Sponsor"
+                    className="marquee-image"
+                  />
+                  <img
+                    src={images.sponsor2}
+                    alt="Sponsor"
+                    className="marquee-image"
+                  />
+                  <img
+                    src={images.sponsor1}
+                    alt="Sponsor"
+                    className="marquee-image"
                   />
                 </div>
               </div>
-            );
-          })}
-          {/* Bottom indicator - Fixed to bottom */}
-          <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
-            <div className="marquee-wrapper">
-              <div className="marquee-content-scroll">
-                <img
-                  src={images.sponsor2}
-                  alt="Sponsor"
-                  className="marquee-image"
-                />
-                <img
-                  src={images.sponsor1}
-                  alt="Sponsor"
-                  className="marquee-image"
-                />
-                <img
-                  src={images.sponsor2}
-                  alt="Sponsor"
-                  className="marquee-image"
-                />
-                <img
-                  src={images.sponsor1}
-                  alt="Sponsor"
-                  className="marquee-image"
-                />
-              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        <style jsx>{`
+          @keyframes twinkle {
+            0%,
+            100% {
+              opacity: 0.3;
+            }
+            50% {
+              opacity: 1;
+            }
+          }
+
+          @keyframes marqueeScroll {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+
+          .marquee-wrapper {
+            width: 100%;
+            overflow: hidden;
+            background: white;
+            padding: 10px 0;
+          }
+
+          .marquee-content-scroll {
+            display: flex;
+            width: fit-content;
+            animation: marqueeScroll 30s linear infinite;
+            will-change: transform;
+          }
+
+          .marquee-image {
+            height: 80px;
+            width: auto;
+            margin: 0 50px;
+            object-fit: contain;
+            flex-shrink: 0;
+          }
+
+          @media (min-width: 1920px) {
+            .marquee-image {
+              height: 100px;
+            }
+          }
+
+          @media (min-width: 2560px) {
+            .marquee-image {
+              height: 120px;
+            }
+          }
+        `}</style>
+      </div>
+
+      <div
+        className={`zoom-zain fixed bottom-[49px] right-4 z-50 flex items-center gap-1 rounded-lg bg-black/55 p-1.5 text-white shadow-lg backdrop-blur-sm transition-opacity duration-300 ${
+          showZoomBar
+            ? "opacity-100"
+            : "pointer-events-none invisible opacity-0"
+        }`}
+        role="toolbar"
+        aria-hidden={!showZoomBar}
+        aria-label="Page zoom"
+      >
+        <button
+          type="button"
+          onClick={zoomOut}
+          disabled={zoomLevel <= ZOOM_MIN}
+          className="rounded p-2 hover:bg-white/15 disabled:opacity-40 disabled:hover:bg-transparent"
+          aria-label="Zoom out"
+        >
+          <ZoomOut className="h-5 w-5" />
+        </button>
+        <span className="min-w-[2.75rem] px-1 text-center text-xs tabular-nums">
+          {Math.round(zoomLevel * 100)}%
+        </span>
+        <button
+          type="button"
+          onClick={zoomIn}
+          disabled={zoomLevel >= ZOOM_MAX}
+          className="rounded p-2 hover:bg-white/15 disabled:opacity-40 disabled:hover:bg-transparent"
+          aria-label="Zoom in"
+        >
+          <ZoomIn className="h-5 w-5" />
+        </button>
+        <button
+          type="button"
+          onClick={resetZoom}
+          disabled={zoomLevel === 1}
+          className="rounded p-2 hover:bg-white/15 disabled:opacity-40 disabled:hover:bg-transparent"
+          aria-label="Reset zoom"
+          title="Reset zoom"
+        >
+          <RotateCcw className="h-4 w-4" />
+        </button>
+        <span
+          className="mx-0.5 h-6 w-px shrink-0 self-center bg-white/30"
+          aria-hidden
+        />
+        <button
+          type="button"
+          onClick={toggleFullscreen}
+          className="rounded p-2 hover:bg-white/15"
+          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+          title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+        >
+          {isFullscreen ? (
+            <Minimize2 className="h-5 w-5" />
+          ) : (
+            <Maximize2 className="h-5 w-5" />
+          )}
+        </button>
+      </div>
+
+      {!showZoomBar && (
+        <button
+          type="button"
+          className="fixed opacity-10 bottom-[49px] right-4 z-50 rounded-full bg-black/55 p-3 text-white shadow-lg backdrop-blur-sm hover:bg-black/70"
+          aria-label="Show zoom controls"
+          title="Show zoom controls"
+          onClick={() => setShowZoomBar(true)}
+        >
+          <ZoomIn className="h-5 w-5" />
+        </button>
       )}
-
-      <style jsx>{`
-        @keyframes twinkle {
-          0%,
-          100% {
-            opacity: 0.3;
-          }
-          50% {
-            opacity: 1;
-          }
-        }
-
-        @keyframes marqueeScroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-
-        .marquee-wrapper {
-          width: 100%;
-          overflow: hidden;
-          background: white;
-          padding: 10px 0;
-        }
-
-        .marquee-content-scroll {
-          display: flex;
-          width: fit-content;
-          animation: marqueeScroll 30s linear infinite;
-          will-change: transform;
-        }
-
-        .marquee-image {
-          height: 80px;
-          width: auto;
-          margin: 0 50px;
-          object-fit: contain;
-          flex-shrink: 0;
-        }
-
-        @media (min-width: 1920px) {
-          .marquee-image {
-            height: 100px;
-          }
-        }
-
-        @media (min-width: 2560px) {
-          .marquee-image {
-            height: 120px;
-          }
-        }
-      `}</style>
     </div>
   );
 };
