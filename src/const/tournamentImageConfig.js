@@ -78,6 +78,14 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "sponsor-shamshi",
     sponsor2: "sponsor-shamshi",
   },
+  63: {
+    leftLogo: "meydan-logo",
+    cupLogo: "ogs-logo",
+    rightLogo: "playpro-w",
+    bg: "ogs-bg",
+    sponsor1: "sponsor-appt",
+    sponsor2: "sponsor-appt",
+  },
 };
 
 /**

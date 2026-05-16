@@ -38,6 +38,10 @@ import shamsiPadelOpenCup from "./fix/shamsi-padel-open-cup.png";
 import shamsiPadelOpenBg from "./shamsi-padel-open-bg.png";
 import crossCourt from "./fix/cross-court.png";
 import sponsorShamsiPadelOpen1 from "./fix/sponsor-shamshi.png";
+import ogsLogo from "./fix/ogs-logo.png";
+import ogsBg from "./ogs-bg.jpg";
+import meydanLogo from "./fix/meydan-logo.png";
+
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
 /**
  * Flat map of all imported images by key.
@@ -82,6 +86,9 @@ export const ALL_IMAGES = {
   "shamsi-padel-open-bg": shamsiPadelOpenBg,
   "cross-court": crossCourt,
   "sponsor-shamshi": sponsorShamsiPadelOpen1,
+  "ogs-logo": ogsLogo,
+  "ogs-bg": ogsBg,
+  "meydan-logo": meydanLogo,
 };
 
 /**

@@ -948,7 +948,7 @@ const MultiCourtLive = () => {
               );
             })}
             {/* Bottom indicator - Fixed to bottom */}
-            <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
+            <div className="fixed bottom-0 left-0 right-0 z-20 bg-whitex overflow-hidden">
               <div className="marquee-wrapper">
                 <div className="marquee-content-scroll">
                   <img
@@ -1000,7 +1000,7 @@ const MultiCourtLive = () => {
           .marquee-wrapper {
             width: 100%;
             overflow: hidden;
-            background: white;
+            background: transparent;
             padding: 10px 0;
           }
 
@@ -1014,7 +1014,7 @@ const MultiCourtLive = () => {
           .marquee-image {
             height: 80px;
             width: auto;
-            margin: 0 50px;
+            margin: 0 0px;
             object-fit: contain;
             flex-shrink: 0;
           }
