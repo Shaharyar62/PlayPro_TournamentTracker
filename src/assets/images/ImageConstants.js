@@ -41,6 +41,9 @@ import sponsorShamsiPadelOpen1 from "./fix/sponsor-shamshi.png";
 import ogsLogo from "./fix/ogs-logo.png";
 import ogsBg from "./ogs-bg.jpg";
 import meydanLogo from "./fix/meydan-logo.png";
+import centenaryLogo from "./fix/centenary.png";
+// import centenaryBg from "./centenary-bg.jpg";
+import centenaryCup from "./fix/centenary-cup.png";
 
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
 /**
@@ -89,6 +92,9 @@ export const ALL_IMAGES = {
   "ogs-logo": ogsLogo,
   "ogs-bg": ogsBg,
   "meydan-logo": meydanLogo,
+  "centenary-logo": centenaryLogo,
+  // "centenary-bg": centenaryBg,
+  "centenary-cup": centenaryCup,
 };
 
 /**

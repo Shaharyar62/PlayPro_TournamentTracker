@@ -38,6 +38,7 @@ import Appt from "./pages/Appt";
 import MMI from "./pages/mmi";
 import ShamsiPadelOpen from "./pages/ShamsiPadelOpen";
 import OGS from "./pages/ogs";
+import Centenary from "./pages/centenary";
 
 function App() {
   const isLoaded = useRef(false);
@@ -90,7 +91,7 @@ function App() {
                 <Route path="mmi" element={<MMI />} />
                 <Route path="shamsi-padel-open" element={<ShamsiPadelOpen />} />
                 <Route path="ogs" element={<OGS />} />
-
+                <Route path="centenary" element={<Centenary />} />
                 <Route
                   path="live-court/:tournamentId/:matchId"
                   element={<LiveCourt />}

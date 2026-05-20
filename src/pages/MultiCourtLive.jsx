@@ -553,7 +553,24 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                           isMultiView ? "text-3xl" : "text-3xl"
                         } font-bold text-gray-800 mb-1`}
                       >
-                        {getTeamName(matchData.teamA)}
+                        <div className="flex items-center space-x-3">
+                          {matchData.teamA.logo && (
+                            <img
+                            src={matchData.teamA.logo}
+                            alt=""
+                            className={`${isMultiView ? "w-25 h-25" : "w-25 h-25"} rounded-lg  shadow-lgx border-2x border-gray-200`}
+                            style={{
+                              objectFit: "cover",
+                              marginRight: "10px",
+                              backgroundColor: "#fff"
+                            }}
+                          />
+                          )}
+                          <span className={`${isMultiView ? "text-4xl" : "text-4xl"} font-bold text-gray-900`} style={{ letterSpacing: "1px" }}>
+                            {getTeamName(matchData.teamA)}
+                          </span>
+                        </div>
+                  
                       </div>
                     </div>
                     {isServingTeam(1) && (
@@ -613,7 +630,25 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                           isMultiView ? "text-3xl" : "text-3xl"
                         } font-bold text-gray-800 mb-1`}
                       >
-                        {getTeamName(matchData.teamB)}
+                        <div className="flex items-center space-x-3">
+                          {matchData.teamB.logo && (
+                            <img
+                              src={matchData.teamB.logo}
+                              alt=""
+                              className={`${isMultiView ? "w-25 h-25" : "w-25 h-25"} rounded-lg  shadow-lgx border-2x border-gray-200`}
+                              style={{
+                                objectFit: "cover",
+                                marginRight: "10px",
+                                backgroundColor: "#fff"
+                              }}
+                            />
+                          )}
+                    
+                          <span className={`${isMultiView ? "text-4xl" : "text-4xl"} font-bold text-gray-900`} style={{ letterSpacing: "1px" }}>
+                            {getTeamName(matchData.teamB)}
+                          </span>
+                        </div>
+                  
                       </div>
                     </div>
                     {isServingTeam(2) && (
