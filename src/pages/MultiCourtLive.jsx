@@ -26,6 +26,7 @@ import Header from "../components/layout/header";
 import AnimatedScore from "../components/AnimatedScore";
 import matchDataTransformer from "../umpireScoring/helpers/matchDataTransformer";
 import { SERVER_URL } from "../umpireScoring/utils/constants.js";
+import { useDisplaySettings } from "../hooks/useDisplaySettings";
 
 const ZOOM_MIN = 0.1;
 const ZOOM_MAX = 2;
@@ -382,41 +383,11 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
   const textScaleLarge = isMultiView ? "text-2xl" : "text-6xl";
   const textScaleXL = isMultiView ? "text-3xl" : "text-8xl";
   const paddingScale = isMultiView ? "py-2" : "py-4";
-  const marginScale = isMultiView ? "mb-2" : "mb-8";
+  const marginScale = isMultiView ? "mb-2" : undefined;
+  const marginScaleStyle = !isMultiView ? { marginBottom: "clamp(10px, 1.5vh, 24px)" } : {};
 
   return (
     <div className="h-full w-full flex flex-col">
-      <style jsx>{`
-        .text-xl {
-    color: white;}
-    .game-score-style{
-    color: white!important;}
-          .font-bold.text-sm.text-white {
-          
-    font-size: var(--font-4xl);
-}
-    .text-3xl.font-bold.text-gray-800.mb-1 {
-    font-size: var(--font-4xl);
-    color: black!important;
-}
-    .set-score-style {
-    border-left: solid 1px;
-    font-size: var(--font-game-score) !important;
-    line-height: 60px;
-}
-    .game-score-style {
-    font-size: var(--font-game-score) !important;
-    line-height: 100px;
-}
-          .set-score-style
-
- 
- {
-          
-    border-left: solid 0px;
-    font-size: var(--font-4xl);
-    line-height: 60px;
-      `}</style>
       {/* Connection Status and Match Timer */}
       {/* {!isMultiView && (
         <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
@@ -456,9 +427,8 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
       {/* Main scoreboard */}
       <div
-        className={`bg-white rounded-lg shadow-2xl overflow-hidden ${
-          isMultiView ? "m-2" : "ml-[100px] mr-[100px]"
-        }`}
+        className={`bg-white rounded-lg shadow-2xl overflow-hidden ${isMultiView ? "m-2" : ""}`}
+        style={!isMultiView ? { margin: "0 var(--display-margin-h)" } : {}}
       >
         {/* Header row */}
         <div className={`bg-[var(--color-accent)] text-black ${paddingScale}`}>
@@ -542,9 +512,12 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             }}
           >
             {/* Team Names and Players */}
-            <div className={`${isMultiView ? "py-2" : "py-8"}`}>
+            <div
+              className={isMultiView ? "py-2" : undefined}
+              style={!isMultiView ? { padding: "clamp(12px, 2.5vh, 32px) 0" } : {}}
+            >
               {/* Team 1 */}
-              <div className={marginScale}>
+              <div className={marginScale} style={marginScaleStyle}>
                 <div className="flex items-center justify-between justify-center px-0">
                   <div className="flex items-center space-x-2">
                     <div>
@@ -556,17 +529,30 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                         <div className="flex items-center space-x-3">
                           {matchData.teamA.logo && (
                             <img
-                            src={matchData.teamA.logo}
-                            alt=""
-                            className={`${isMultiView ? "w-25 h-25" : "w-25 h-25"} rounded-lg  shadow-lgx border-2x border-gray-200`}
-                            style={{
-                              objectFit: "cover",
-                              marginRight: "10px",
-                              backgroundColor: "#fff"
-                            }}
-                          />
+                              src={matchData.teamA.logo}
+                              alt=""
+                              className="rounded-lg"
+                              style={{
+                                objectFit: "contain",
+                                width: "var(--display-logo-team-size)",
+                                height: "var(--display-logo-team-size)",
+                                marginRight: "10px",
+                                backgroundColor: "#fff",
+                                flexShrink: 0,
+                              }}
+                            />
                           )}
-                          <span className={`${isMultiView ? "text-4xl" : "text-4xl"} font-bold text-gray-900`} style={{ letterSpacing: "1px" }}>
+                          <span
+                            className="font-bold text-gray-900"
+                            style={{
+                              letterSpacing: "1px",
+                              fontSize: "var(--display-player-name-size)",
+                              maxWidth: "clamp(200px, 28vw, 1060px)",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
                             {getTeamName(matchData.teamA)}
                           </span>
                         </div>
@@ -615,7 +601,8 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
               <div
                 className={`text-center ${
                   isMultiView ? "text-2xl" : "text-2xl"
-                } font-bold ${marginScale}`}
+                } font-bold ${marginScale ?? ""}`}
+                style={marginScaleStyle}
               >
                 VS
               </div>
@@ -635,16 +622,28 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                             <img
                               src={matchData.teamB.logo}
                               alt=""
-                              className={`${isMultiView ? "w-25 h-25" : "w-25 h-25"} rounded-lg  shadow-lgx border-2x border-gray-200`}
+                              className="rounded-lg"
                               style={{
-                                objectFit: "cover",
+                                objectFit: "contain",
+                                width: "var(--display-logo-team-size)",
+                                height: "var(--display-logo-team-size)",
                                 marginRight: "10px",
-                                backgroundColor: "#fff"
+                                backgroundColor: "#fff",
+                                flexShrink: 0,
                               }}
                             />
                           )}
-                    
-                          <span className={`${isMultiView ? "text-4xl" : "text-4xl"} font-bold text-gray-900`} style={{ letterSpacing: "1px" }}>
+                          <span
+                            className="font-bold text-gray-900"
+                            style={{
+                              letterSpacing: "1px",
+                              fontSize: "var(--display-player-name-size)",
+                              maxWidth: "clamp(200px, 28vw, 1060px)",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
                             {getTeamName(matchData.teamB)}
                           </span>
                         </div>
@@ -694,7 +693,8 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
               <div key={setIndex} className="text-center">
                 <div
-                  className={`space-y-${isMultiView ? "2" : "8"} text-black`}
+                  className={isMultiView ? "space-y-2 text-black" : "text-black"}
+                  style={!isMultiView ? { display: "flex", flexDirection: "column", gap: "clamp(12px, 2vh, 32px)" } : {}}
                 >
                   <div
                     className={`${textScaleLarge} font-bold set-score-style`}
@@ -721,9 +721,8 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             {/* Current Game/Points Score */}
             <div className="text-center bg-[var(--color-accent)]">
               <div
-                className={`space-y-${isMultiView ? "1" : "4"} ${
-                  isMultiView ? "py-2 px-2" : "pt-[25px] pb-[25px]"
-                }`}
+                className={isMultiView ? "space-y-1 py-2 px-2" : "space-y-4"}
+                style={!isMultiView ? { padding: "clamp(12px, 1.5vh, 25px) 0" } : {}}
               >
                 <div
                   className={`${textScaleXL} font-bold text-black game-score-style`}
@@ -751,30 +750,28 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
       {/* Bottom indicator */}
       <div
-        className={`flex justify-between items-center ${
-          isMultiView ? "mt-2 px-2" : "mt-8 px-8"
-        }`}
+        className={`flex justify-between items-center ${isMultiView ? "mt-2 px-2" : ""}`}
+        style={!isMultiView ? { marginTop: "clamp(10px, 2vh, 32px)", padding: "0 clamp(16px, 4vw, 48px)" } : {}}
       >
         <div
           style={{ fontSize: "var(--font-3xl)" }}
-          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold ${
-            isMultiView ? "text-sm" : "text-xl"
+          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis ${
+            isMultiView ? "text-sm max-w-[40vw]" : "text-xl max-w-[30vw]"
           }`}
         >
           {matchStatus.current == "completed" ? "COMPLETED" : getMatchFormat()}
         </div>
 
         <div
-          className={`font-bold ${
-            isMultiView ? "text-sm" : "text-xl"
-          } text-white`}
+          className="font-bold text-white whitespace-nowrap overflow-hidden text-ellipsis max-w-[20vw] text-center"
+          style={{ fontSize: "var(--display-court-name-size)" }}
         >
           {matchData.court?.name || "LIVE SCOREBOARD"}
         </div>
         <div
           style={{ fontSize: "var(--font-3xl)" }}
-          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold ${
-            isMultiView ? "text-sm" : "text-xl"
+          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis ${
+            isMultiView ? "text-sm max-w-[40vw]" : "text-xl max-w-[30vw]"
           }`}
         >
           <p className="text">
@@ -812,6 +809,9 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
 // Main Multi-Court Component
 const MultiCourtLive = () => {
+  // Apply persisted display settings on mount and subscribe to live master updates
+  useDisplaySettings(true);
+
   const images = useTournamentImages();
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
@@ -941,7 +941,7 @@ const MultiCourtLive = () => {
         {!isMultiView && (
           <div className="relative z-10">
             <Header />
-            <div className="px-[100px] mt-[100px]">
+            <div style={{ marginTop: "var(--display-margin-top)" }}>
               <SingleCourtDisplay
                 tournamentId={tournamentId}
                 courtId={courtIds[0]}
@@ -953,7 +953,14 @@ const MultiCourtLive = () => {
 
         {/* Multi-court grid */}
         {isMultiView && (
-          <div className={`relative z-10 grid ${getGridLayout()} gap-4 p-4`}>
+          <div
+            className={`relative z-10 grid ${getGridLayout()} gap-4 p-4`}
+            style={{
+              paddingTop: "var(--display-margin-top)",
+              paddingLeft: "var(--display-margin-h)",
+              paddingRight: "var(--display-margin-h)",
+            }}
+          >
             {courtIds.map((courtId, index) => {
               const isLastItem = index === courtIds.length - 1;
               const isOddCount = courtIds.length % 2 !== 0;
@@ -1047,23 +1054,11 @@ const MultiCourtLive = () => {
           }
 
           .marquee-image {
-            height: 80px;
+            height: var(--display-sponsor-h);
             width: auto;
             margin: 0 0px;
             object-fit: contain;
             flex-shrink: 0;
-          }
-
-          @media (min-width: 1920px) {
-            .marquee-image {
-              height: 100px;
-            }
-          }
-
-          @media (min-width: 2560px) {
-            .marquee-image {
-              height: 120px;
-            }
           }
         `}</style>
       </div>

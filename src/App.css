@@ -67,32 +67,32 @@ body {
 
 .game-score-style {
   font-size: var(--font-game-score-lg);
-  line-height: 103px;
-  font-weight: 900
+  line-height: 1.1;
+  font-weight: 900;
 }
 
 
 
 .set-score-style {
   font-size: var(--font-score);
-  line-height: 80px;
+  line-height: 1.1;
   font-weight: 700;
   border-left: solid;
   margin: 0px;
-  padding: 25px 0px;
+  padding: clamp(12px, 1.3vw, 25px) 0;
 }
 
 /* 3D Animated Score Styles */
 .animated-game-score {
   font-size: var(--font-game-score-lg);
-  line-height: 103px;
+  line-height: 1.1;
   font-weight: 900;
-  padding: 11px 3px;
+  padding: clamp(5px, 0.57vw, 11px) 3px;
 }
 
 .animated-set-score {
   font-size: var(--font-score);
-  line-height: 80px;
+  line-height: 1.1;
   font-weight: 700;
 }
 

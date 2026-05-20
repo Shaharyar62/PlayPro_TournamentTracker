@@ -42,12 +42,24 @@
   --font-xl: 24px;
   --font-2xl: 28px;
   --font-2xl-md: 30px;
-  --font-3xl: 35px;
-  --font-4xl: 40px;
-  --font-score: 80px;
-  --font-game-score: 110px;
-  --font-game-score-lg: 130px;
+  --font-3xl: clamp(22px, 1.82vw, 35px);
+  --font-4xl: clamp(26px, 2.08vw, 40px);
+  --font-score: clamp(50px, 4.17vw, 80px);
+  --font-game-score: clamp(70px, 5.73vw, 110px);
+  --font-game-score-lg: clamp(85px, 6.77vw, 130px);
   --font-heading: 3rem;
   --font-heading-sm: 1.2rem;
   --font-heading-md: 1.8rem;
+
+  /* ========== Display Master Control Variables ========== */
+  /* These defaults are overridden at runtime by useDisplaySettings via
+     document.documentElement.style.setProperty() — no CSS file edit needed */
+  --display-player-name-size: clamp(26px, 2.08vw, 36px);
+  --display-logo-header-h: clamp(70px, 10vh, 100px);
+  --display-logo-cup-h: clamp(80px, 12vh, 120px);
+  --display-logo-team-size: clamp(50px, 4vw, 70px);
+  --display-margin-h: 5vw;
+  --display-margin-top: 3vh;
+  --display-court-name-size: 20px;
+  --display-sponsor-h: 80px;
 }

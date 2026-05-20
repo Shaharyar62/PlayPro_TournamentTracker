@@ -39,6 +39,7 @@ import MMI from "./pages/mmi";
 import ShamsiPadelOpen from "./pages/ShamsiPadelOpen";
 import OGS from "./pages/ogs";
 import Centenary from "./pages/centenary";
+import DisplayMaster from "./pages/DisplayMaster";
 
 function App() {
   const isLoaded = useRef(false);
@@ -97,6 +98,7 @@ function App() {
                   element={<LiveCourt />}
                 />
                 <Route path="multi-court-live" element={<MultiCourtLive />} />
+                <Route path="display-master" element={<DisplayMaster />} />
                 <Route
                   path="multi-court-schedule"
                   element={<MultiCourtSchedule />}
