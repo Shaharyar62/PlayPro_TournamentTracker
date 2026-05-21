@@ -34,22 +34,49 @@ const Links = () => {
     },
   ];
 
-  const pagestmp = [
+  const centenary = [
     {
-      path: "/streaming-live-court?tournamentId=57&courtId=108",
-      name: "Court 1",
+      path: "/streaming-live-court?tournamentId=65&courtId=260",
+      name: "MejorSet 1",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=57&courtId=109",
-      name: "Court 2",
+      path: "/streaming-live-court?tournamentId=65&courtId=248",
+      name: "MejorSet 2",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=57&courtId=110",
-      name: "Court 3",
+      path: "/streaming-live-court?tournamentId=65&courtId=144",
+      name: "Cherry 2",
       color: "#2e55b9",
     },
+    {
+      path: "/streaming-live-court?tournamentId=65&courtId=143",
+      name: "Cherry 1",
+      color: "#2e55b9",
+    },
+    {
+      path: "/streaming-live-court?tournamentId=65&courtId=142",
+      name: "Tera 2",
+      color: "#2e55b9",
+    },
+    {
+      path: "/streaming-live-court?tournamentId=65&courtId=141",
+      name: "Tera 1",
+      color: "#2e55b9",
+    },
+    {
+      path: "/streaming-live-court?tournamentId=65&courtId=140",
+      name: "Ocean 2",
+      color: "#2e55b9",
+    },
+    {
+      path: "/streaming-live-court?tournamentId=65&courtId=139",
+      name: "Ocean 1",
+      color: "#2e55b9",
+    },
+     
+  
   ];
 
   return (
@@ -58,10 +85,10 @@ const Links = () => {
         <img width={300} src={images.playpro} alt="logo" />
       </div>
 
-      <h1 className="text-2xl  font-bold text-black mb-5">MMI</h1>
+      <h1 className="text-2xl  font-bold text-black mb-5">Centenary</h1>
 
       <div className="buttons-grid">
-        {pagestmp.map((page, index) => (
+        {centenary.map((page, index) => (
           <motion.div
             key={index}
             className="button-wrapper"
