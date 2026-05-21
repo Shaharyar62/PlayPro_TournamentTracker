@@ -3,7 +3,13 @@ import { useTournamentImages } from "../../context/TournamentImagesContext";
 export const Header = () => {
   const images = useTournamentImages();
   return (
-    <div className="flex px-[5vw] mb-5 justify-between items-center">
+    <div
+      className="flex mb-5 justify-between items-center"
+      style={{
+        paddingLeft: "var(--display-header-padding-h)",
+        paddingRight: "var(--display-header-padding-h)",
+      }}
+    >
       <div
         className="flex-1 text-center"
         style={{ maxWidth: "clamp(260px, 26vw, 1500px)" }}
@@ -15,7 +21,7 @@ export const Header = () => {
           style={{
             objectFit: "contain",
             maxHeight: "var(--display-logo-header-h)",
-            width: "100%",
+            
           }}
         />
       </div>
@@ -47,7 +53,7 @@ export const Header = () => {
           style={{
             objectFit: "contain",
             maxHeight: "var(--display-logo-header-h)",
-            width: "100%",
+            
           }}
         />
       </div>

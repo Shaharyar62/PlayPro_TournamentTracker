@@ -87,12 +87,12 @@ export const TOURNAMENT_IMAGES = {
     sponsor2: "sponsor-appt",
   },
   65: {
-    leftLogo: "meydan-logo",
-    cupLogo: "ogs-logo",
+    leftLogo: "centenary-logo",
+    cupLogo: "centenary-cup",
     rightLogo: "playpro-w",
-    bg: "ogs-bg",
-    sponsor1: "sponsor-appt",
-    sponsor2: "sponsor-appt",
+    bg: "appt-bg",
+    sponsor1: "sponsor-centenary",
+    sponsor2: "sponsor-centenary",
   },
 };
 

@@ -124,6 +124,15 @@ const SLIDER_GROUPS = [
         step: 0.5,
         hint: "Vertical gap between the header logos and the scoreboard",
       },
+      {
+        key: "headerPaddingVw",
+        label: "Header Left/Right Spacing",
+        unit: "vw",
+        min: 0,
+        max: 20,
+        step: 0.5,
+        hint: "Horizontal padding on the tournament header logo row (left & right logos)",
+      },
     ],
   },
 ];

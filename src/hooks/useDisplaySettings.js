@@ -15,6 +15,7 @@ export const DEFAULT_SETTINGS = {
   marginTopVh: 3,       // vh  --display-margin-top
   courtNameSize: 20,    // px  --display-court-name-size
   sponsorH: 80,         // px  --display-sponsor-h
+  headerPaddingVw: 5,   // vw  --display-header-padding-h
 };
 
 export function applySettings(settings) {
@@ -30,6 +31,7 @@ export function applySettings(settings) {
   root.style.setProperty("--display-margin-top", settings.marginTopVh + "vh");
   root.style.setProperty("--display-court-name-size", settings.courtNameSize + "px");
   root.style.setProperty("--display-sponsor-h", settings.sponsorH + "px");
+  root.style.setProperty("--display-header-padding-h", settings.headerPaddingVw + "vw");
 }
 
 function loadSettings() {

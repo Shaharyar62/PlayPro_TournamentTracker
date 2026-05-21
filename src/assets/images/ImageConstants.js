@@ -44,6 +44,7 @@ import meydanLogo from "./fix/meydan-logo.png";
 import centenaryLogo from "./fix/centenary.png";
 // import centenaryBg from "./centenary-bg.jpg";
 import centenaryCup from "./fix/centenary-cup.png";
+import sponsorCentenary from "./fix/sponsor-centenary.png";
 
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
 /**
@@ -95,6 +96,7 @@ export const ALL_IMAGES = {
   "centenary-logo": centenaryLogo,
   // "centenary-bg": centenaryBg,
   "centenary-cup": centenaryCup,
+  "sponsor-centenary": sponsorCentenary,
 };
 
 /**
