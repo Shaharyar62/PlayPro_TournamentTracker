@@ -40,6 +40,7 @@ import ShamsiPadelOpen from "./pages/ShamsiPadelOpen";
 import OGS from "./pages/ogs";
 import Centenary from "./pages/centenary";
 import DisplayMaster from "./pages/DisplayMaster";
+import Indolj from "./pages/indolj";
 
 function App() {
   const isLoaded = useRef(false);
@@ -93,6 +94,7 @@ function App() {
                 <Route path="shamsi-padel-open" element={<ShamsiPadelOpen />} />
                 <Route path="ogs" element={<OGS />} />
                 <Route path="centenary" element={<Centenary />} />
+                <Route path="indolj" element={<Indolj />} />
                 <Route
                   path="live-court/:tournamentId/:matchId"
                   element={<LiveCourt />}

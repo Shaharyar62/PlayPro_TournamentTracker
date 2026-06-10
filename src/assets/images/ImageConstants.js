@@ -19,7 +19,7 @@ import adsS1 from "./ads_s1.png";
 import adsS2 from "./ads_s2.png";
 import adsS3 from "./ads_s3.png";
 import adsS4 from "./ads_s4.png";
-import playpro from "./playpro.png";
+// import playpro from "./playpro.png";
 import playproColorVertical from "./playpro_logo_vertical.png";
 import gkLogo from "./fix/kg-logo.png";
 import tmpLogo from "./tmp-logo.png";
@@ -46,6 +46,14 @@ import centenaryLogo from "./fix/centenary.png";
 import centenaryCup from "./fix/centenary-cup.png";
 import sponsorCentenary from "./fix/sponsor-centenary.png";
 
+import indoljLogo from "./fix/indolj-logo.png";
+import indoljCup from "./fix/indolj-cup.png";
+import indoljBg from "./indolj-bg.png"; 
+import playpro from "./fix/playpro.png";
+import sponsorIndolj from "./sponsor-indolj.png";
+
+
+
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
 /**
  * Flat map of all imported images by key.
@@ -68,7 +76,7 @@ export const ALL_IMAGES = {
   ads_s2: adsS2,
   ads_s3: adsS3,
   ads_s4: adsS4,
-  playpro: playpro,
+  // playpro: playpro,
   padel_collective: padelCollective,
   "premier-white": premierWhite,
   "pvc-4": pvc4,
@@ -97,6 +105,13 @@ export const ALL_IMAGES = {
   // "centenary-bg": centenaryBg,
   "centenary-cup": centenaryCup,
   "sponsor-centenary": sponsorCentenary,
+
+
+  "indolj-logo": indoljLogo,
+  "indolj-cup": indoljCup,
+  "indolj-bg": indoljBg,
+  "sponsor-indolj": sponsorIndolj,
+  playpro: playpro,
 };
 
 /**
