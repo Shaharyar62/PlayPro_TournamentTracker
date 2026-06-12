@@ -17,6 +17,7 @@ import Header from "../components/layout/header";
 import matchDataTransformer from "../umpireScoring/helpers/matchDataTransformer";
 import AnimatedScore from "../components/AnimatedScore";
 import { SERVER_URL } from "../umpireScoring/utils/constants.js";
+import { useDisplaySettings } from "../hooks/useDisplaySettings";
 const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
@@ -37,6 +38,9 @@ const MatchScoreCard = () => {
   const matchStatus = useRef();
   const socketRef = useRef(null);
   const [timerDisplay, setTimerDisplay] = useState("00:00");
+
+  // Subscribe to DisplayMaster settings (BroadcastChannel + localStorage)
+  useDisplaySettings(true);
 
   // Match timer display - syncs from liveMatchData.matchTimer (WebSocket)
   useEffect(() => {
@@ -514,7 +518,14 @@ const MatchScoreCard = () => {
             </div> */}
             <Header />
             {/* Main scoreboard */}
-            <div className="bg-white rounded-lg ml-[100px] mr-[100px] mt-[100px] mb-[60px] shadow-2xl overflow-hidden">
+            <div
+              className="bg-white rounded-lg mb-[60px] shadow-2xl overflow-hidden"
+              style={{
+                marginLeft: "var(--display-margin-h)",
+                marginRight: "var(--display-margin-h)",
+                marginTop: "var(--display-margin-top)",
+              }}
+            >
               {/* Header row - Dynamic based on number of sets */}
               <div className="  text-white py-4  bg-[var(--color-accent)]">
                 <div
@@ -526,11 +537,11 @@ const MatchScoreCard = () => {
                   }}
                 >
                   <div className="text-center">
-                    <h2 className="text-4xl font-bold">PLAYERS</h2>
+                    <h2 className="font-bold" style={{ fontSize: "var(--font-3xl)" }}>PLAYERS</h2>
                   </div>
                   {Array.from({ length: getNumberOfSets() }, (_, index) => (
                     <div key={index} className="text-center">
-                      <h2 className="text-4xl font-bold">
+                      <h2 className="font-bold" style={{ fontSize: "var(--font-3xl)" }}>
                         {liveMatchData?.matchSettings?.matchFormat === 2 &&
                         index === 2 &&
                         liveMatchData?.status === "completed"
@@ -540,7 +551,7 @@ const MatchScoreCard = () => {
                     </div>
                   ))}
                   <div className="text-center">
-                    <h2 className="text-4xl font-bold">{getHeaderText()} </h2>
+                    <h2 className="font-bold" style={{ fontSize: "var(--font-3xl)" }}>{getHeaderText()} </h2>
                   </div>
                 </div>
               </div>
@@ -562,7 +573,7 @@ const MatchScoreCard = () => {
                       <div className="flex items-center justify-between  justify-center px-4">
                         <div className="flex items-center space-x-4">
                           <div>
-                            <div className="text-5xl  font-bold text-gray-800 mb-1">
+                            <div className="font-bold text-gray-800 mb-1" style={{ fontSize: "var(--display-player-name-size)" }}>
                               {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamA) : getPlayerName(1, 0) + " & " + getPlayerName(1, 1)} */}
                               {getTeamName(matchData.teamA)}
                               {/* {getPlayerName(1, 0)} & {getPlayerName(1, 1)} */}
@@ -620,7 +631,7 @@ const MatchScoreCard = () => {
                       <div className="flex items-center justify-between justify-center px-4">
                         <div className="flex items-center space-x-4">
                           <div>
-                            <div className="text-5xl font-bold text-gray-800 mb-1">
+                            <div className="font-bold text-gray-800 mb-1" style={{ fontSize: "var(--display-player-name-size)" }}>
                               {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamB) : getPlayerName(2, 0) + " & " + getPlayerName(2, 1)} */}
                               {getTeamName(matchData.teamB)}
                               {/* {getTeamName(matchData.teamB)} */}
@@ -673,14 +684,14 @@ const MatchScoreCard = () => {
                   {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
                     <div key={setIndex} className="text-center">
                       <div className="space-y-8 text-black">
-                        <div className="text-6xl font-bold">
+                        <div className="font-bold" style={{ fontSize: "var(--font-score)" }}>
                           <AnimatedScore
                             score={getSetScore(1, setIndex)}
                             isGameScore={false}
                             textColor="text-black"
                           />
                         </div>
-                        <div className="text-6xl font-bold">
+                        <div className="font-bold" style={{ fontSize: "var(--font-score)" }}>
                           <AnimatedScore
                             score={getSetScore(2, setIndex)}
                             isGameScore={false}
@@ -694,14 +705,14 @@ const MatchScoreCard = () => {
                   {/* Current Game/Points Score */}
                   <div className="text-center bg-[var(--color-accent)]">
                     <div className="space-y-4 pt-[25px] pb-[25px]">
-                      <div className="text-8xl font-bold text-white">
+                      <div className="font-bold text-white" style={{ fontSize: "var(--font-game-score-lg)" }}>
                         <AnimatedScore
                           score={getCurrentGameScore(1)}
                           isGameScore={true}
                           textColor="text-white"
                         />
                       </div>
-                      <div className="text-8xl font-bold text-white">
+                      <div className="font-bold text-white" style={{ fontSize: "var(--font-game-score-lg)" }}>
                         <AnimatedScore
                           score={getCurrentGameScore(2)}
                           isGameScore={true}
@@ -729,12 +740,24 @@ const MatchScoreCard = () => {
         `}</style>
       </div>
       {/* Bottom indicator and Upcoming Match */}
-      <div className="grid grid-cols-12 gap-4 items-center mt-[80px] mb-[20px] mr-[100px] ml-[100px]">
-        <div className="bg-[var(--color-accent)]  col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
+      <div
+        className="grid grid-cols-12 gap-4 items-center mt-[80px] mb-[20px]"
+        style={{
+          marginLeft: "var(--display-margin-h)",
+          marginRight: "var(--display-margin-h)",
+        }}
+      >
+        <div
+          className="bg-[var(--color-accent)] col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold"
+          style={{ fontSize: "var(--display-court-name-size)" }}
+        >
           {/*   {matchStatus.current == "completed" ? "COMPLETED" : "Live"} */}
           {matchStatus.current == "completed" ? "COMPLETED" : getMatchFormat()}
         </div>
-        <div className="bg-[var(--color-accent)] m-auto col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold text-4xl">
+        <div
+          className="bg-[var(--color-accent)] m-auto col-span-4 text-white w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold"
+          style={{ fontSize: "var(--display-court-name-size)" }}
+        >
           {/* {matchData.court?.name || "LIVE SCOREBOARD"}{" "} */}
           {/* <p className="text">Men B (Group Stage) </p> */}
           {/* <p className="text">{mapStageType(matchData.stageType)} </p> */}
@@ -743,7 +766,10 @@ const MatchScoreCard = () => {
             {matchData.tournamentName || "LIVE SCOREBOARD"}{" "}
           </p>
         </div>
-        <div className="bg-[var(--color-accent)] col-span-4 ml-auto text-white  px-[20px]  py-3 rounded-lg font-bold text-4xl">
+        <div
+          className="bg-[var(--color-accent)] col-span-4 ml-auto text-white px-[20px] py-3 rounded-lg font-bold"
+          style={{ fontSize: "var(--display-court-name-size)" }}
+        >
           {matchData.court?.name || "LIVE SCOREBOARD"}{" "}
           {/* {upcomingMatch ? (
                   <div>

@@ -777,7 +777,7 @@ const TournamentStandings = () => {
                 </div> */}
                 <div className="p-[50px] pb-[10px] pt-[0px] grid grid-cols-1 gap-6 items-center">
                   <div className="col-span-1 text-center">
-                    <div className="text-4xl text-white font-bold   mb-2 ">
+                    <div className="text-4xl text-white font-bold   mb-2 " style={{ color: "var(--color-primary)" }}>
                       {currentTournament?.name || "Tournament"}
                     </div>
                   </div>

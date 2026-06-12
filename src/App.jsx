@@ -41,6 +41,7 @@ import OGS from "./pages/ogs";
 import Centenary from "./pages/centenary";
 import DisplayMaster from "./pages/DisplayMaster";
 import Indolj from "./pages/indolj";
+import PadelverseTams from "./pages/PadelverseTams";
 
 function App() {
   const isLoaded = useRef(false);
@@ -95,6 +96,7 @@ function App() {
                 <Route path="ogs" element={<OGS />} />
                 <Route path="centenary" element={<Centenary />} />
                 <Route path="indolj" element={<Indolj />} />
+                <Route path="padelverse-tams" element={<PadelverseTams />} />
                 <Route
                   path="live-court/:tournamentId/:matchId"
                   element={<LiveCourt />}

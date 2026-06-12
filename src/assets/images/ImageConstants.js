@@ -50,7 +50,15 @@ import indoljLogo from "./fix/indolj-logo.png";
 import indoljCup from "./fix/indolj-cup.png";
 import indoljBg from "./indolj-bg.png"; 
 import playpro from "./fix/playpro.png";
-import sponsorIndolj from "./sponsor-indolj.png";
+
+import ads_indolj_1 from "./fix/ads_indolj-1.png";
+import ads_indolj_2 from "./fix/ads_indolj-2.png";
+import ads_indolj_3 from "./fix/ads_indolj-3.png";
+import ads_indolj_4 from "./fix/ads_indolj-4.png";
+
+import tampsLogo from "./fix/tamps-logo.png";
+import tampsCup from "./fix/tamps-cup.png";
+
 
 
 
@@ -110,8 +118,13 @@ export const ALL_IMAGES = {
   "indolj-logo": indoljLogo,
   "indolj-cup": indoljCup,
   "indolj-bg": indoljBg,
-  "sponsor-indolj": sponsorIndolj,
   playpro: playpro,
+  "ads_indolj_1": ads_indolj_1,
+  "ads_indolj_2": ads_indolj_2,
+  "ads_indolj_3": ads_indolj_3,
+  "ads_indolj_4": ads_indolj_4,
+  "tamps-logo": tampsLogo,
+  "tamps-cup": tampsCup,
 };
 
 /**

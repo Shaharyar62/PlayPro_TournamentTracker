@@ -194,7 +194,7 @@ const DisplayMaster = () => {
 
   const handleCopyUrl = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.origin + "/home/multi-court-live");
+      await navigator.clipboard.writeText(window.location.origin + "/home/live-court?tournamentId=67&courtId=79");
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -263,7 +263,7 @@ const DisplayMaster = () => {
           Move any slider — changes appear <strong className="text-white">instantly</strong> on
           the TV display tab without refreshing.&nbsp;
           Open <code className="px-1 rounded text-xs" style={{ backgroundColor: "#21262d" }}>
-            /home/multi-court-live
+            /home/live-court?tournamentId=67&amp;courtId=79
           </code> in another tab, then adjust here.
           Settings are saved to your browser and survive page refreshes.
         </div>

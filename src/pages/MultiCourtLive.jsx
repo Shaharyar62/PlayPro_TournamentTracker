@@ -441,7 +441,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             }}
           >
             <div
-              className="flex items-center justify-center gap-2 leading-none "
+              className="flex items-center text-white justify-center gap-2 leading-none "
               style={{ position: "relative" }}
             >
               {liveMatchData?.matchTimer &&
@@ -474,7 +474,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
               </h2>
             </div>
             {Array.from({ length: getNumberOfSets() }, (_, index) => (
-              <div key={index} className="text-center">
+              <div key={index} className="text-center text-white">
                 <h2
                   style={{ fontSize: "var(--font-3xl)" }}
                   className={`${textScale} font-bold`}
@@ -486,7 +486,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 </h2>
               </div>
             ))}
-            <div className="text-center">
+            <div className="text-center text-white">
               <h2
                 style={
                   getHeaderText() === "SUPER TIE BREAK"
@@ -763,7 +763,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         </div>
 
         <div
-          className="font-bold text-white whitespace-nowrap overflow-hidden text-ellipsis max-w-[20vw] text-center"
+          className="font-bold text-black  whitespace-nowrap overflow-hidden text-ellipsis max-w-[20vw] text-center"
           style={{ fontSize: "var(--display-court-name-size)" }}
         >
           {matchData.court?.name || "LIVE SCOREBOARD"}

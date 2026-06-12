@@ -99,9 +99,17 @@ export const TOURNAMENT_IMAGES = {
     cupLogo: "indolj-cup",
     rightLogo: "playpro",
     bg: "indolj-bg",
-    sponsor1: "sponsor-indolj",
-    sponsor2: "sponsor-indolj",
+    sponsor1: "ads_indolj_1",
+    sponsor2: "ads_indolj_2", 
   },  
+  67: {
+    leftLogo: "tamps-logo",
+  cupLogo: "tamps-cup",
+  rightLogo: "playpro-w",
+  bg: "pvc-4-bg",
+  sponsor1: "ads_s1",
+  sponsor2: "ads_s2",
+  },
 };
 
 /**

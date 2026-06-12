@@ -4,53 +4,67 @@ import { motion } from "framer-motion";
 import "../assets/css/home.css";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 
-const indolj = () => {
+const PadelverseTams = () => {
   const images = useTournamentImages();
   const pages = [
     {
-      path: "/home/live-court?tournamentId=68&courtId=135",
-      name: "Red 2",
+      path: "/home/live-court?tournamentId=67&courtId=79",
+      name: "Galaxy 1",
       color: "#2e55b9",
     },
     {
-      path: "/home/live-court?tournamentId=68&courtId=134",
-      name: "Red 1",
-      color: "#2e55b9",
-    },
- 
-    {
-      path: "/home/live-court?tournamentId=68&courtId=133",
-      name: "Blue 2",
+      path: "/home/live-court?tournamentId=67&courtId=80",
+      name: "Galaxy 2",
       color: "#2e55b9",
     },
     {
-      path: "/home/live-court?tournamentId=68&courtId=132",
-      name: "Blue 1",
+      path: "/home/live-court?tournamentId=67&courtId=81",
+      name: "Galaxy 3",
       color: "#2e55b9",
     },
-   
 
-    
- 
- 
     {
-      path: "/home/multi-court-live?tournamentId=68&courtId=135,134,133,132",
-      name: "SMD Live Courts",
+      path: "/home/live-court?tournamentId=67&courtId=82",
+      name: "Galaxy 4",
+      color: "#2e55b9",
+    },
+
+    {
+      path: "/home/live-court?tournamentId=67&courtId=83",
+      name: "Black Star 1",
+      color: "#2e55b9",
+    },
+
+    {
+      path: "/home/live-court?tournamentId=67&courtId=84",
+      name: "Black Star 2",
+      color: "#2e55b9",
+    },
+
+    {
+      path: "/home/live-court?tournamentId=67&courtId=85",
+      name: "Infinity",
+      color: "#2e55b9",
+    },
+
+    {
+      path: "/home/multi-court-live?tournamentId=67&courtId=79,80,81,82,83,84,85",
+      name: "Multi Court Live",
       color: "#2e55b9",
     },
     {
-      path: "/home/multi-court-schedule?masterTournamentId=63&courtId=79,80,81,82,83,84,85",
+      path: "/home/multi-court-schedule?masterTournamentId=67&courtId=253,252,251,250",
       name: "Multi Court Schedule",
       color: "#2e55b9",
     },
 
     {
-      path: "/home/score-table?tournamentIds=254,255&groupDisplayTime=5&refreshInterval=10&masterTournamentId=68",
+      path: "/home/score-table?tournamentIds=253,252,251,250&groupDisplayTime=5&refreshInterval=10",
       name: "Score Table",
       color: "#2e55b9",
     },
     {
-      path: "/home/today-match?tournamentId=46",
+      path: "/home/today-match?tournamentId=67",
       name: "Today's Matches",
       color: "#2e55b9",
     },
@@ -97,6 +111,5 @@ const indolj = () => {
     </div>
   );
 };
- 
 
-export default indolj;
+export default PadelverseTams;
