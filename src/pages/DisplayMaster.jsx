@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { useDisplaySettings, DEFAULT_SETTINGS } from "../hooks/useDisplaySettings";
+import { useSearchParams } from "react-router-dom";
+import {
+  useDisplaySettings,
+  DEFAULT_SETTINGS,
+} from "../hooks/useDisplaySettings";
 
 // ─── Slider config ────────────────────────────────────────────────────────────
 const SLIDER_GROUPS = [
@@ -138,7 +142,7 @@ const SLIDER_GROUPS = [
 ];
 
 // ─── Single Slider Row ────────────────────────────────────────────────────────
-const SliderRow = ({ config, value, onChange }) => {
+const SliderRow = ({ config, value, onChange, disabled }) => {
   const pct = ((value - config.min) / (config.max - config.min)) * 100;
 
   return (
@@ -156,7 +160,9 @@ const SliderRow = ({ config, value, onChange }) => {
         </span>
       </div>
       {config.hint && (
-        <p className="text-xs text-gray-500 mb-2 leading-tight">{config.hint}</p>
+        <p className="text-xs text-gray-500 mb-2 leading-tight">
+          {config.hint}
+        </p>
       )}
       <div className="relative flex items-center">
         <input
@@ -165,8 +171,9 @@ const SliderRow = ({ config, value, onChange }) => {
           max={config.max}
           step={config.step}
           value={value}
+          disabled={disabled}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="w-full h-2 rounded-full appearance-none cursor-pointer"
+          className="w-full h-2 rounded-full appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           style={{
             background: `linear-gradient(to right, var(--color-accent, #aacb32) ${pct}%, #374151 ${pct}%)`,
             outline: "none",
@@ -189,16 +196,42 @@ const SliderRow = ({ config, value, onChange }) => {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 const DisplayMaster = () => {
-  const { settings, updateSetting, resetSettings } = useDisplaySettings(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const displayId = searchParams.get("displayId");
+  const tournamentId = searchParams.get("tournamentId") ?? "67";
+  const courtId = searchParams.get("courtId") ?? "79";
+
+  const [inputId, setInputId] = useState(displayId ?? "");
   const [copied, setCopied] = useState(false);
 
+  const { settings, updateSetting, resetSettings, isConnected } =
+    useDisplaySettings({ displayId, listenOnly: false });
+
+  const slidersEnabled = Boolean(displayId);
+
+  const handleSetDisplayId = (e) => {
+    e.preventDefault();
+    const trimmed = inputId.trim();
+    if (!trimmed) return;
+    const next = new URLSearchParams(searchParams);
+    next.set("displayId", trimmed);
+    setSearchParams(next);
+  };
+
   const handleCopyUrl = async () => {
+    if (!displayId) return;
+    const params = new URLSearchParams({
+      tournamentId,
+      courtId,
+      displayId,
+    });
+    const url = `${window.location.origin}/home/live-court?${params.toString()}`;
     try {
-      await navigator.clipboard.writeText(window.location.origin + "/home/live-court?tournamentId=67&courtId=79");
+      await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // fallback: select a temp input
+      // clipboard unavailable
     }
   };
 
@@ -214,22 +247,41 @@ const DisplayMaster = () => {
       >
         <div className="flex items-center gap-3">
           <div
-            className="w-3 h-3 rounded-full animate-pulse"
-            style={{ backgroundColor: "var(--color-accent, #aacb32)" }}
+            className="w-3 h-3 rounded-full"
+            style={{
+              backgroundColor: isConnected
+                ? "var(--color-accent, #aacb32)"
+                : "#6b7280",
+              animation: isConnected ? "pulse 2s infinite" : "none",
+            }}
           />
           <h1 className="text-lg font-bold tracking-wide text-white">
             Display Master Control
           </h1>
-          <span className="text-xs px-2 py-0.5 rounded-full font-medium"
-            style={{ backgroundColor: "#1e2d0e", color: "var(--color-accent, #aacb32)" }}>
-            LIVE
+          {displayId && (
+            <span
+              className="text-xs px-2 py-0.5 rounded-full font-medium font-mono"
+              style={{ backgroundColor: "#21262d", color: "#8b949e" }}
+            >
+              {displayId}
+            </span>
+          )}
+          <span
+            className="text-xs px-2 py-0.5 rounded-full font-medium"
+            style={{
+              backgroundColor: isConnected ? "#1e2d0e" : "#2d1a1a",
+              color: isConnected ? "var(--color-accent, #aacb32)" : "#f85149",
+            }}
+          >
+            {isConnected ? "CONNECTED" : "OFFLINE"}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={handleCopyUrl}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+            disabled={!displayId}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             style={{
               backgroundColor: copied ? "#1a3a1a" : "#21262d",
               color: copied ? "#4ade80" : "#8b949e",
@@ -240,7 +292,8 @@ const DisplayMaster = () => {
           </button>
           <button
             onClick={resetSettings}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+            disabled={!displayId}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             style={{
               backgroundColor: "#21262d",
               color: "#f85149",
@@ -254,19 +307,76 @@ const DisplayMaster = () => {
 
       {/* ── Content ── */}
       <div className="max-w-4xl mx-auto px-4 py-6">
-
-        {/* Intro card */}
-        <div
-          className="mb-6 px-4 py-3 rounded-lg text-sm leading-relaxed"
-          style={{ backgroundColor: "#161b22", border: "1px solid #30363d", color: "#8b949e" }}
-        >
-          Move any slider — changes appear <strong className="text-white">instantly</strong> on
-          the TV display tab without refreshing.&nbsp;
-          Open <code className="px-1 rounded text-xs" style={{ backgroundColor: "#21262d" }}>
-            /home/live-court?tournamentId=67&amp;courtId=79
-          </code> in another tab, then adjust here.
-          Settings are saved to your browser and survive page refreshes.
-        </div>
+        {/* Display ID setup */}
+        {!displayId ? (
+          <div
+            className="mb-6 px-4 py-5 rounded-lg"
+            style={{ backgroundColor: "#161b22", border: "1px solid #30363d" }}
+          >
+            <h2 className="text-sm font-bold text-white mb-2">
+              Connect to a Display Screen
+            </h2>
+            <p className="text-sm text-gray-400 mb-4 leading-relaxed">
+              Enter the same Display ID shown on the TV screen. Each screen has
+              its own ID (e.g.{" "}
+              <code
+                className="px-1 rounded text-xs"
+                style={{ backgroundColor: "#21262d" }}
+              >
+                court-79
+              </code>
+              ). Only that screen will receive your changes.
+            </p>
+            <form onSubmit={handleSetDisplayId} className="flex gap-2">
+              <input
+                type="text"
+                value={inputId}
+                onChange={(e) => setInputId(e.target.value)}
+                placeholder="e.g. court-79"
+                className="flex-1 px-3 py-2 rounded-lg text-sm font-mono"
+                style={{
+                  backgroundColor: "#0d1117",
+                  border: "1px solid #30363d",
+                  color: "#e5e7eb",
+                }}
+              />
+              <button
+                type="submit"
+                disabled={!inputId.trim()}
+                className="px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-40"
+                style={{
+                  backgroundColor: "var(--color-accent, #aacb32)",
+                  color: "#0f1117",
+                }}
+              >
+                Connect
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div
+            className="mb-6 px-4 py-3 rounded-lg text-sm leading-relaxed"
+            style={{
+              backgroundColor: "#161b22",
+              border: "1px solid #30363d",
+              color: "#8b949e",
+            }}
+          >
+            Move any slider — changes appear{" "}
+            <strong className="text-white">instantly</strong> on the TV display
+            with ID{" "}
+            <code
+              className="px-1 rounded text-xs"
+              style={{ backgroundColor: "#21262d" }}
+            >
+              {displayId}
+            </code>
+            . Open this page on your phone and the display on the TV — both sync
+            via WebSocket. Use{" "}
+            <strong className="text-white">Copy Display URL</strong> to share
+            the TV link.
+          </div>
+        )}
 
         {/* Slider groups */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -274,7 +384,10 @@ const DisplayMaster = () => {
             <div
               key={group.label}
               className="rounded-xl p-5"
-              style={{ backgroundColor: "#161b22", border: "1px solid #30363d" }}
+              style={{
+                backgroundColor: "#161b22",
+                border: "1px solid #30363d",
+              }}
             >
               <h2 className="flex items-center gap-2 text-sm font-bold text-white mb-4 uppercase tracking-widest">
                 <span>{group.icon}</span>
@@ -285,6 +398,7 @@ const DisplayMaster = () => {
                   key={cfg.key}
                   config={cfg}
                   value={settings[cfg.key]}
+                  disabled={!slidersEnabled}
                   onChange={(val) => updateSetting(cfg.key, val)}
                 />
               ))}
@@ -293,42 +407,48 @@ const DisplayMaster = () => {
         </div>
 
         {/* Current values summary */}
-        <div
-          className="mt-6 rounded-xl p-5"
-          style={{ backgroundColor: "#161b22", border: "1px solid #30363d" }}
-        >
-          <h2 className="text-sm font-bold text-white mb-3 uppercase tracking-widest">
-            Current Values
-          </h2>
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
-            {Object.entries(settings).map(([key, val]) => {
-              const allSliders = SLIDER_GROUPS.flatMap((g) => g.sliders);
-              const cfg = allSliders.find((s) => s.key === key);
-              const isDefault = DEFAULT_SETTINGS[key] === val;
-              return (
-                <div
-                  key={key}
-                  className="rounded-lg p-2 text-center"
-                  style={{
-                    backgroundColor: isDefault ? "#0d1117" : "#1a2a0a",
-                    border: `1px solid ${isDefault ? "#21262d" : "var(--color-accent, #aacb32)"}`,
-                  }}
-                >
-                  <div className="text-[9px] text-gray-500 leading-none mb-1 truncate">
-                    {cfg?.label?.split(" ").slice(0, 2).join(" ") ?? key}
-                  </div>
+        {displayId && (
+          <div
+            className="mt-6 rounded-xl p-5"
+            style={{ backgroundColor: "#161b22", border: "1px solid #30363d" }}
+          >
+            <h2 className="text-sm font-bold text-white mb-3 uppercase tracking-widest">
+              Current Values
+            </h2>
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+              {Object.entries(settings).map(([key, val]) => {
+                const allSliders = SLIDER_GROUPS.flatMap((g) => g.sliders);
+                const cfg = allSliders.find((s) => s.key === key);
+                const isDefault = DEFAULT_SETTINGS[key] === val;
+                return (
                   <div
-                    className="text-sm font-bold font-mono"
-                    style={{ color: isDefault ? "#8b949e" : "var(--color-accent, #aacb32)" }}
+                    key={key}
+                    className="rounded-lg p-2 text-center"
+                    style={{
+                      backgroundColor: isDefault ? "#0d1117" : "#1a2a0a",
+                      border: `1px solid ${isDefault ? "#21262d" : "var(--color-accent, #aacb32)"}`,
+                    }}
                   >
-                    {val}
-                    {cfg?.unit ?? ""}
+                    <div className="text-[9px] text-gray-500 leading-none mb-1 truncate">
+                      {cfg?.label?.split(" ").slice(0, 2).join(" ") ?? key}
+                    </div>
+                    <div
+                      className="text-sm font-bold font-mono"
+                      style={{
+                        color: isDefault
+                          ? "#8b949e"
+                          : "var(--color-accent, #aacb32)",
+                      }}
+                    >
+                      {val}
+                      {cfg?.unit ?? ""}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Range input thumb style */}

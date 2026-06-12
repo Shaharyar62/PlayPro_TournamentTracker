@@ -1,6 +1,6 @@
 import { MatchFormat } from "../types/match.types.js";
 
-const isLocal = false;
+const isLocal = true;
 
 export const SERVER_URL = isLocal
   ? "http://localhost:3000"

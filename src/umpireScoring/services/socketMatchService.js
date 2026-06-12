@@ -339,6 +339,78 @@ class SocketMatchService {
       this.socket.off(eventName);
     }
   }
+
+  /**
+   * Request current display settings for a screen
+   * @param {string} displayId
+   * @returns {Promise<Object|null>} Settings object or null on timeout
+   */
+  async requestDisplaySettings(displayId) {
+    await this.connect();
+
+    return new Promise((resolve) => {
+      const id = displayId.toString();
+
+      const timeout = setTimeout(() => {
+        this.socket.off("display_settings_response", handler);
+        console.warn("Display settings request timeout");
+        resolve(null);
+      }, MATCH_STATE_TIMEOUT);
+
+      const handler = (response) => {
+        if (response?.displayId !== id) return;
+        clearTimeout(timeout);
+        this.socket.off("display_settings_response", handler);
+        resolve(response.settings ?? null);
+      };
+
+      this.socket.on("display_settings_response", handler);
+      this.socket.emit("get_display_settings", { displayId: id });
+    });
+  }
+
+  /**
+   * Emit display settings update for a screen
+   * @param {string} displayId
+   * @param {Object} settings
+   */
+  emitUpdateDisplaySettings(displayId, settings) {
+    if (!this.socket?.connected) {
+      console.warn(
+        "[SOCKET] Cannot emit update_display_settings: socket not connected",
+      );
+      return;
+    }
+    this.socket.emit("update_display_settings", {
+      displayId: displayId.toString(),
+      settings,
+    });
+  }
+
+  /**
+   * Listen to display settings updates for a screen
+   * @param {string} displayId
+   * @param {Function} onUpdate
+   */
+  async listenToDisplaySettings(displayId, onUpdate) {
+    await this.connect();
+
+    const eventName = `display_settings_update_${displayId.toString()}`;
+    this.socket.on(eventName, (data) => {
+      onUpdate(data);
+    });
+  }
+
+  /**
+   * Stop listening to display settings updates
+   * @param {string} displayId
+   */
+  stopListeningToDisplaySettings(displayId) {
+    if (this.socket) {
+      const eventName = `display_settings_update_${displayId.toString()}`;
+      this.socket.off(eventName);
+    }
+  }
 }
 
 // Create singleton instance

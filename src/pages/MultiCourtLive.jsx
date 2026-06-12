@@ -384,7 +384,9 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
   const textScaleXL = isMultiView ? "text-3xl" : "text-8xl";
   const paddingScale = isMultiView ? "py-2" : "py-4";
   const marginScale = isMultiView ? "mb-2" : undefined;
-  const marginScaleStyle = !isMultiView ? { marginBottom: "clamp(10px, 1.5vh, 24px)" } : {};
+  const marginScaleStyle = !isMultiView
+    ? { marginBottom: "clamp(10px, 1.5vh, 24px)" }
+    : {};
 
   return (
     <div className="h-full w-full flex flex-col">
@@ -514,7 +516,9 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             {/* Team Names and Players */}
             <div
               className={isMultiView ? "py-2" : undefined}
-              style={!isMultiView ? { padding: "clamp(12px, 2.5vh, 32px) 0" } : {}}
+              style={
+                !isMultiView ? { padding: "clamp(12px, 2.5vh, 32px) 0" } : {}
+              }
             >
               {/* Team 1 */}
               <div className={marginScale} style={marginScaleStyle}>
@@ -556,7 +560,6 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                             {getTeamName(matchData.teamA)}
                           </span>
                         </div>
-                  
                       </div>
                     </div>
                     {isServingTeam(1) && (
@@ -647,7 +650,6 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                             {getTeamName(matchData.teamB)}
                           </span>
                         </div>
-                  
                       </div>
                     </div>
                     {isServingTeam(2) && (
@@ -693,8 +695,18 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
               <div key={setIndex} className="text-center">
                 <div
-                  className={isMultiView ? "space-y-2 text-black" : "text-black"}
-                  style={!isMultiView ? { display: "flex", flexDirection: "column", gap: "clamp(12px, 2vh, 32px)" } : {}}
+                  className={
+                    isMultiView ? "space-y-2 text-black" : "text-black"
+                  }
+                  style={
+                    !isMultiView
+                      ? {
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "clamp(12px, 2vh, 32px)",
+                        }
+                      : {}
+                  }
                 >
                   <div
                     className={`${textScaleLarge} font-bold set-score-style`}
@@ -722,7 +734,9 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             <div className="text-center bg-[var(--color-accent)]">
               <div
                 className={isMultiView ? "space-y-1 py-2 px-2" : "space-y-4"}
-                style={!isMultiView ? { padding: "clamp(12px, 1.5vh, 25px) 0" } : {}}
+                style={
+                  !isMultiView ? { padding: "clamp(12px, 1.5vh, 25px) 0" } : {}
+                }
               >
                 <div
                   className={`${textScaleXL} font-bold text-black game-score-style`}
@@ -751,7 +765,14 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
       {/* Bottom indicator */}
       <div
         className={`flex justify-between items-center ${isMultiView ? "mt-2 px-2" : ""}`}
-        style={!isMultiView ? { marginTop: "clamp(10px, 2vh, 32px)", padding: "0 clamp(16px, 4vw, 48px)" } : {}}
+        style={
+          !isMultiView
+            ? {
+                marginTop: "clamp(10px, 2vh, 32px)",
+                padding: "0 clamp(16px, 4vw, 48px)",
+              }
+            : {}
+        }
       >
         <div
           style={{ fontSize: "var(--font-3xl)" }}
@@ -809,13 +830,17 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
 // Main Multi-Court Component
 const MultiCourtLive = () => {
-  // Apply persisted display settings on mount and subscribe to live master updates
-  useDisplaySettings(true);
-
   const images = useTournamentImages();
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
   const courtIdsParam = searchParams.get("courtId");
+  const displayId =
+    searchParams.get("displayId") ??
+    (tournamentId ? `multi-${tournamentId}` : null);
+
+  // Apply persisted display settings on mount and subscribe to live master updates
+  useDisplaySettings({ displayId, listenOnly: true });
+
   const [displayTime, setDisplayTime] = useState(moment().tz("Asia/Karachi"));
   const [zoomLevel, setZoomLevel] = useState(1);
   const [showZoomBar, setShowZoomBar] = useState(true);
