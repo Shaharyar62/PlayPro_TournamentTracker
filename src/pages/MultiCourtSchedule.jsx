@@ -7,6 +7,7 @@ import moment from "moment-timezone";
 import Header from "../components/layout/header";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 import { umpireAPI } from "../umpireScoring/services/umpireAPI";
+import { useDisplaySettings } from "../hooks/useDisplaySettings";
 
 // Configuration constants
 const MAX_MATCHES_DISPLAY = 5; // Maximum number of matches to display per court
@@ -885,7 +886,12 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
     <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
       {/* Court Header */}
       <div className="bg-[var(--color-accent)] text-white py-4 px-6">
-        <h2 className="text-3xl font-bold text-center">{courtName}</h2>
+        <h2
+          className="font-bold text-center"
+          style={{ fontSize: "var(--display-court-name-size)" }}
+        >
+          {courtName}
+        </h2>
       </div>
 
       {/* Table */}
@@ -893,9 +899,22 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
         <table className="w-full">
           <thead>
             <tr className="bg-[var(--color-primary-blue)] text-white">
-              <th className="py-3 px-4 text-left font-bold text-lg">Time</th>
-              <th className="py-3 px-4 text-left font-bold text-lg">Match</th>
-              <th className="py-3 px-4 text-center font-bold text-lg">
+              <th
+                className="py-3 px-4 text-left font-bold"
+                style={{ fontSize: "var(--font-3xl)" }}
+              >
+                Time
+              </th>
+              <th
+                className="py-3 px-4 text-left font-bold"
+                style={{ fontSize: "var(--font-3xl)" }}
+              >
+                Match
+              </th>
+              <th
+                className="py-3 px-4 text-center font-bold"
+                style={{ fontSize: "var(--font-3xl)" }}
+              >
                 Category
               </th>
             </tr>
@@ -925,7 +944,10 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
                   <td className="py-4 px-4">
                     <div className="flex items-center">
                       <Clock className="w-5 h-5 mr-2 text-[var(--color-primary-blue)]" />
-                      <span className="font-bold text-[var(--color-primary-blue)] text-lg">
+                      <span
+                        className="font-bold text-[var(--color-primary-blue)]"
+                        style={{ fontSize: "var(--display-player-name-size)" }}
+                      >
                         {formatTime(match.matchStartDateTime)}
                       </span>
                       {isLiveMatch(match) && (
@@ -936,7 +958,10 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
                     </div>
                   </td>
                   <td className="py-4 px-4">
-                    <div className="font-semibold text-lg text-gray-800">
+                    <div
+                      className="font-semibold text-gray-800"
+                      style={{ fontSize: "var(--display-player-name-size)" }}
+                    >
                       <span className="text-[var(--color-primary-blue)]">
                         {getTeamName(match.teamA)}
                       </span>
@@ -988,6 +1013,14 @@ const MultiCourtSchedule = () => {
   const [searchParams] = useSearchParams();
   const masterTournamentId = searchParams.get("masterTournamentId");
   const courtIdsParam = searchParams.get("courtId");
+
+  const displayId =
+    searchParams.get("displayId") ??
+    (masterTournamentId
+      ? `schedule-${masterTournamentId}-${(courtIdsParam || "all").replace(/,/g, "-")}`
+      : null);
+
+  useDisplaySettings({ displayId, listenOnly: true });
 
   const [courtsData, setCourtsData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -1167,8 +1200,13 @@ const MultiCourtSchedule = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-8"
         >
-          <h1 className="text-5xl font-bold text-white mb-2">Court Schedule</h1>
-          <p className="text-xl text-gray-300">
+          <h1
+            className="font-bold text-white mb-2"
+            style={{ fontSize: "var(--font-3xl)" }}
+          >
+            Court Schedule
+          </h1>
+          <p className="text-gray-300" style={{ fontSize: "var(--font-3xl)" }}>
             {currentTime.format("dddd, MMMM D, YYYY - HH:mm")}
           </p>
         </motion.div>

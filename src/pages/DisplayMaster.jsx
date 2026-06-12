@@ -198,8 +198,14 @@ const SliderRow = ({ config, value, onChange, disabled }) => {
 const DisplayMaster = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const displayId = searchParams.get("displayId");
+  const targetPage = searchParams.get("targetPage") ?? "live-court";
   const tournamentId = searchParams.get("tournamentId") ?? "67";
   const courtId = searchParams.get("courtId") ?? "79";
+  const tournamentIds = searchParams.get("tournamentIds") ?? "253,252,251,250";
+  const groupDisplayTime = searchParams.get("groupDisplayTime") ?? "5";
+  const refreshInterval = searchParams.get("refreshInterval") ?? "10";
+  const masterTournamentId = searchParams.get("masterTournamentId") ?? "67";
+  const scheduleCourtIds = searchParams.get("courtId") ?? "253,252,251,250";
 
   const [inputId, setInputId] = useState(displayId ?? "");
   const [copied, setCopied] = useState(false);
@@ -220,12 +226,32 @@ const DisplayMaster = () => {
 
   const handleCopyUrl = async () => {
     if (!displayId) return;
-    const params = new URLSearchParams({
-      tournamentId,
-      courtId,
-      displayId,
-    });
-    const url = `${window.location.origin}/home/live-court?${params.toString()}`;
+
+    let url;
+    if (targetPage === "score-table") {
+      const params = new URLSearchParams({
+        tournamentIds,
+        groupDisplayTime,
+        refreshInterval,
+        displayId,
+      });
+      url = `${window.location.origin}/home/score-table?${params.toString()}`;
+    } else if (targetPage === "multi-court-schedule") {
+      const params = new URLSearchParams({
+        masterTournamentId,
+        courtId: scheduleCourtIds,
+        displayId,
+      });
+      url = `${window.location.origin}/home/multi-court-schedule?${params.toString()}`;
+    } else {
+      const params = new URLSearchParams({
+        tournamentId,
+        courtId,
+        displayId,
+      });
+      url = `${window.location.origin}/home/live-court?${params.toString()}`;
+    }
+
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -325,6 +351,20 @@ const DisplayMaster = () => {
               >
                 court-79
               </code>
+              ,{" "}
+              <code
+                className="px-1 rounded text-xs"
+                style={{ backgroundColor: "#21262d" }}
+              >
+                score-table-253-252-251-250
+              </code>
+              ,{" "}
+              <code
+                className="px-1 rounded text-xs"
+                style={{ backgroundColor: "#21262d" }}
+              >
+                schedule-67-253-252-251-250
+              </code>
               ). Only that screen will receive your changes.
             </p>
             <form onSubmit={handleSetDisplayId} className="flex gap-2">
@@ -372,9 +412,24 @@ const DisplayMaster = () => {
               {displayId}
             </code>
             . Open this page on your phone and the display on the TV — both sync
-            via WebSocket. Use{" "}
+            via WebSocket. Works with live-court, score-table, and
+            multi-court-schedule pages. Use{" "}
             <strong className="text-white">Copy Display URL</strong> to share
-            the TV link.
+            the TV link
+            {targetPage !== "live-court" && (
+              <>
+                {" "}
+                (target:{" "}
+                <code
+                  className="px-1 rounded text-xs"
+                  style={{ backgroundColor: "#21262d" }}
+                >
+                  {targetPage}
+                </code>
+                )
+              </>
+            )}
+            .
           </div>
         )}
 

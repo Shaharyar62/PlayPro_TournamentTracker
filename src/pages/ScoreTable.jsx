@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 import Common from "../helper/common";
 import Header from "../components/layout/header";
+import { useDisplaySettings } from "../hooks/useDisplaySettings";
 const TournamentStandings = () => {
   const images = useTournamentImages();
   const [highlightedRow, setHighlightedRow] = useState(null);
@@ -56,6 +57,14 @@ const TournamentStandings = () => {
     console.log("Using default tournament IDs");
     return [76, 77, 78];
   }, [params]);
+
+  const displayId =
+    params.get("displayId") ??
+    (tournamentIds.length > 0
+      ? `score-table-${tournamentIds.join("-")}`
+      : null);
+
+  useDisplaySettings({ displayId, listenOnly: true });
 
   // Get display time for each set of groups (in seconds) - REQUIRED
   const groupDisplayTime = parseInt(params.get("groupDisplayTime"));
@@ -777,7 +786,10 @@ const TournamentStandings = () => {
                 </div> */}
                 <div className="p-[50px] pb-[10px] pt-[0px] grid grid-cols-1 gap-6 items-center">
                   <div className="col-span-1 text-center">
-                    <div className="text-4xl text-white font-bold   mb-2 " style={{ color: "var(--color-primary)" }}>
+                    <div
+                      className="text-4xl text-white font-bold   mb-2 "
+                      style={{ color: "var(--color-primary)" }}
+                    >
                       {currentTournament?.name || "Tournament"}
                     </div>
                   </div>
@@ -935,7 +947,8 @@ const TournamentStandings = () => {
                                           </td> */}
                                           <td
                                             style={{
-                                              fontSize: "var(--font-2xl-md)",
+                                              fontSize:
+                                                "var(--display-player-name-size)",
                                             }}
                                             className="py-1 px-1 text-center font-bold"
                                           >
@@ -943,7 +956,8 @@ const TournamentStandings = () => {
                                           </td>
                                           <td
                                             style={{
-                                              fontSize: "var(--font-2xl-md)",
+                                              fontSize:
+                                                "var(--display-player-name-size)",
                                             }}
                                             className="py-1 px-1 text-center text-red-600"
                                           >
@@ -957,7 +971,8 @@ const TournamentStandings = () => {
                                           </td> */}
                                           <td
                                             style={{
-                                              fontSize: "var(--font-2xl-md)",
+                                              fontSize:
+                                                "var(--display-player-name-size)",
                                             }}
                                             className="py-1 px-1 text-center text-[#000] font-mono"
                                           >
@@ -968,7 +983,8 @@ const TournamentStandings = () => {
                                           </td>
                                           <td
                                             style={{
-                                              fontSize: "var(--font-2xl-md)",
+                                              fontSize:
+                                                "var(--display-player-name-size)",
                                             }}
                                             className="py-1 px-1 text-center text-[#000] font-bold"
                                           >
@@ -976,7 +992,8 @@ const TournamentStandings = () => {
                                           </td>
                                           <td
                                             style={{
-                                              fontSize: "var(--font-2xl-md)",
+                                              fontSize:
+                                                "var(--display-player-name-size)",
                                             }}
                                             className="py-1 px-1 text-center"
                                           >
@@ -984,7 +1001,8 @@ const TournamentStandings = () => {
                                           </td>
                                           <td
                                             style={{
-                                              fontSize: "var(--font-2xl-md)",
+                                              fontSize:
+                                                "var(--display-player-name-size)",
                                             }}
                                             className={`py-1 px-1 text-center font-bold ${
                                               team.pd > 0
@@ -999,7 +1017,8 @@ const TournamentStandings = () => {
                                           </td>
                                           <td
                                             style={{
-                                              fontSize: "var(--font-2xl-md)",
+                                              fontSize:
+                                                "var(--display-player-name-size)",
                                             }}
                                             className="py-1 px-1 text-center"
                                           >
