@@ -1067,6 +1067,7 @@ const TournamentStandings = () => {
                 </div>
               </div>
               {/* Bottom indicator */}
+              {images.sponsor1 && (
               <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
                 <div className="marquee-wrapper">
                   <div className="marquee-content-scroll">
@@ -1093,6 +1094,7 @@ const TournamentStandings = () => {
                   </div>
                 </div>
               </div>
+              )}
               {/* <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent overflow-hidden">
                 <div className="flex animate-scrollLeft">
                   <img

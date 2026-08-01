@@ -1271,6 +1271,7 @@ const MultiCourtSchedule = () => {
         }
       `}</style>
 
+      {images.sponsor1 && (
       <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
         <div className="marquee-wrapper">
           <div className="marquee-content-scroll">
@@ -1297,6 +1298,7 @@ const MultiCourtSchedule = () => {
           </div>
         </div>
       </div>
+      )}
 
       <style jsx>{`
         @keyframes twinkle {

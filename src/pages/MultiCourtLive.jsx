@@ -1015,6 +1015,7 @@ const MultiCourtLive = () => {
               );
             })}
             {/* Bottom indicator - Fixed to bottom */}
+            {images.sponsor1 && (
             <div className="fixed bottom-0 left-0 right-0 z-20 bg-whitex overflow-hidden">
               <div className="marquee-wrapper">
                 <div className="marquee-content-scroll">
@@ -1041,6 +1042,7 @@ const MultiCourtLive = () => {
                 </div>
               </div>
             </div>
+            )}
           </div>
         )}
 

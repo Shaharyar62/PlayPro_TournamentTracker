@@ -42,6 +42,7 @@ import Centenary from "./pages/centenary";
 import DisplayMaster from "./pages/DisplayMaster";
 import Indolj from "./pages/indolj";
 import PadelverseTams from "./pages/PadelverseTams";
+import LegendsPadelOpen from "./pages/LegendsPadelOpen";
 
 function App() {
   const isLoaded = useRef(false);
@@ -97,6 +98,11 @@ function App() {
                 <Route path="centenary" element={<Centenary />} />
                 <Route path="indolj" element={<Indolj />} />
                 <Route path="padelverse-tams" element={<PadelverseTams />} />
+                <Route path="legends" element={<LegendsPadelOpen />} />
+                <Route
+                  path="legends-padel-open"
+                  element={<LegendsPadelOpen />}
+                />
                 <Route
                   path="live-court/:tournamentId/:matchId"
                   element={<LiveCourt />}

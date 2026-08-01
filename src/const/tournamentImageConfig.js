@@ -100,15 +100,23 @@ export const TOURNAMENT_IMAGES = {
     rightLogo: "playpro",
     bg: "indolj-bg",
     sponsor1: "ads_indolj_1",
-    sponsor2: "ads_indolj_2", 
-  },  
+    sponsor2: "ads_indolj_2",
+  },
   67: {
     leftLogo: "tamps-logo",
-  cupLogo: "tamps-cup",
-  rightLogo: "playpro-w",
-  bg: "pvc-4-bg",
-  sponsor1: "ads_s1",
-  sponsor2: "ads_s2",
+    cupLogo: "tamps-cup",
+    rightLogo: "playpro-w",
+    bg: "pvc-4-bg",
+    sponsor1: "ads_s1",
+    sponsor2: "ads_s2",
+  },
+  75: {
+    leftLogo: "legends-logo",
+    cupLogo: "legends-cup",
+    rightLogo: "playpro-w",
+    bg: "legends-bg",
+    sponsor1: null,
+    sponsor2: null,
   },
 };
 
@@ -125,8 +133,10 @@ export function getImagesForTournament(tournamentId, allImages) {
     DEFAULT_IMAGES;
   const merged = { ...DEFAULT_IMAGES, ...config };
 
-  const defaultImg = (key) =>
-    allImages[merged[key]] || allImages[DEFAULT_IMAGES[key]];
+  const defaultImg = (key) => {
+    if (config[key] === null) return null;
+    return allImages[merged[key]] || allImages[DEFAULT_IMAGES[key]];
+  };
 
   return {
     leftLogo: defaultImg("leftLogo"),

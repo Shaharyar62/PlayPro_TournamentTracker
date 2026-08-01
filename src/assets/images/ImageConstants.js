@@ -48,7 +48,7 @@ import sponsorCentenary from "./fix/sponsor-centenary.png";
 
 import indoljLogo from "./fix/indolj-logo.png";
 import indoljCup from "./fix/indolj-cup.png";
-import indoljBg from "./indolj-bg.png"; 
+import indoljBg from "./indolj-bg.png";
 import playpro from "./fix/playpro.png";
 
 import ads_indolj_1 from "./fix/ads_indolj-1.png";
@@ -59,8 +59,9 @@ import ads_indolj_4 from "./fix/ads_indolj-4.png";
 import tampsLogo from "./fix/tamps-logo.png";
 import tampsCup from "./fix/tamps-cup.png";
 
-
-
+import legendsCup from "./fix/legends-cup.png";
+import legendsBg from "./legends-bg.png";
+// import sponsorLegends from "./fix/sponsor-legends.png";
 
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
 /**
@@ -114,17 +115,19 @@ export const ALL_IMAGES = {
   "centenary-cup": centenaryCup,
   "sponsor-centenary": sponsorCentenary,
 
-
   "indolj-logo": indoljLogo,
   "indolj-cup": indoljCup,
   "indolj-bg": indoljBg,
   playpro: playpro,
-  "ads_indolj_1": ads_indolj_1,
-  "ads_indolj_2": ads_indolj_2,
-  "ads_indolj_3": ads_indolj_3,
-  "ads_indolj_4": ads_indolj_4,
+  ads_indolj_1: ads_indolj_1,
+  ads_indolj_2: ads_indolj_2,
+  ads_indolj_3: ads_indolj_3,
+  ads_indolj_4: ads_indolj_4,
   "tamps-logo": tampsLogo,
   "tamps-cup": tampsCup,
+  "legends-cup": legendsCup,
+  "legends-bg": legendsBg,
+  // "sponsor-legends": sponsorLegends,
 };
 
 /**
