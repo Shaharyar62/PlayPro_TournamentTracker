@@ -61,6 +61,8 @@ import tampsCup from "./fix/tamps-cup.png";
 
 import legendsCup from "./fix/legends-cup.png";
 import legendsBg from "./legends-bg.png";
+import sponsorLagends from "./fix/sponsor-lagends.png";
+
 // import sponsorLegends from "./fix/sponsor-legends.png";
 
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
@@ -127,6 +129,7 @@ export const ALL_IMAGES = {
   "tamps-cup": tampsCup,
   "legends-cup": legendsCup,
   "legends-bg": legendsBg,
+  "sponsor-lagends": sponsorLagends,
   // "sponsor-legends": sponsorLegends,
 };
 

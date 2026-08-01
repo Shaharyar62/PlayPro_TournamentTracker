@@ -115,8 +115,8 @@ export const TOURNAMENT_IMAGES = {
     cupLogo: "legends-cup",
     rightLogo: "playpro-w",
     bg: "legends-bg",
-    sponsor1: null,
-    sponsor2: null,
+    sponsor1: "sponsor-lagends",
+    sponsor2: "sponsor-lagends",
   },
 };
 
