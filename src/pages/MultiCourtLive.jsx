@@ -470,7 +470,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 )}
               <h2
                 style={{ fontSize: "var(--font-3xl)" }}
-                className={`${textScale} font-bold`}
+                className={`${textScale} font-bold text-black`}
               >
                 &nbsp;&nbsp;&nbsp;&nbsp; PLAYERS
               </h2>
@@ -479,7 +479,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
               <div key={index} className="text-center text-white">
                 <h2
                   style={{ fontSize: "var(--font-3xl)" }}
-                  className={`${textScale} font-bold`}
+                  className={`${textScale} font-bold text-black`}
                 >
                   {liveMatchData?.matchSettings?.matchFormat === 2 &&
                   index === 2
@@ -495,7 +495,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                     ? { fontSize: "27px", lineHeight: "23px" }
                     : { fontSize: "var(--font-3xl)" }
                 }
-                className={`${textScale} font-bold`}
+                className={`${textScale} font-bold text-black`}
               >
                 {getHeaderText()}
               </h2>
@@ -776,7 +776,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
       >
         <div
           style={{ fontSize: "var(--font-3xl)" }}
-          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis ${
+          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis text-black ${
             isMultiView ? "text-sm max-w-[40vw]" : "text-xl max-w-[30vw]"
           }`}
         >
@@ -784,14 +784,14 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         </div>
 
         <div
-          className="font-bold text-black  whitespace-nowrap overflow-hidden text-ellipsis max-w-[20vw] text-center"
+          className="font-bold text-black  whitespace-nowrap overflow-hidden text-ellipsis max-w-[20vw] text-center text-white"
           style={{ fontSize: "var(--display-court-name-size)" }}
         >
           {matchData.court?.name || "LIVE SCOREBOARD"}
         </div>
         <div
           style={{ fontSize: "var(--font-3xl)" }}
-          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis ${
+          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis text-black ${
             isMultiView ? "text-sm max-w-[40vw]" : "text-xl max-w-[30vw]"
           }`}
         >
@@ -1069,8 +1069,9 @@ const MultiCourtLive = () => {
           .marquee-wrapper {
             width: 100%;
             overflow: hidden;
-            background: transparent;
-            padding: 10px 0;
+                background: #1068ed;
+    padding: 10px 0;
+    border-top: 1px solid;
           }
 
           .marquee-content-scroll {

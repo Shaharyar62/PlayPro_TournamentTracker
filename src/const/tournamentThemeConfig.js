@@ -146,8 +146,36 @@ export const TOURNAMENT_THEMES = {
     gradientPrimary: "#0d57a7",
     gradientAccent: "#3d8fd9",
   },
+  76: {
+    primary: "white",
+    accent: "#abcf37",
+    background: "red",
+    backgroundStart: "#red",
+    backgroundEnd: "red",
+    backgroundMid: "red",
+    primaryBlue: "black",
+    button: "#red",
+    link: "red",
+    linkHover: "red",
+    success: "#red",
+    warning: "#red",
+    danger: "#red",
+    bodyBg: "#red",
+    statusBar: "#red",
+    gradientPrimary: "#b8ee12",
+    gradientAccent: "#b8ee12",
+  },
   // "appt": { primary: "#093337", accent: "#aacb32", ... },
   // "pvc": { primary: "#003184", accent: "#A8CE08", ... },
+};
+
+/** Category tournamentIds that should use a master theme (Score Table URLs) */
+const THEME_ALIASES = {
+  279: 76,
+  280: 76,
+  281: 76,
+  282: 76,
+  283: 76,
 };
 
 /**
@@ -161,9 +189,11 @@ export function getThemeForTournament(tournamentId) {
   }
   const id =
     typeof tournamentId === "string" ? tournamentId : String(tournamentId);
+  const aliased = THEME_ALIASES[id] ?? THEME_ALIASES[Number(id)];
+  const resolvedId = aliased != null ? String(aliased) : id;
   const theme =
-    TOURNAMENT_THEMES[tournamentId] ||
-    TOURNAMENT_THEMES[id] ||
-    TOURNAMENT_THEMES[id.toLowerCase?.()];
+    TOURNAMENT_THEMES[resolvedId] ||
+    TOURNAMENT_THEMES[Number(resolvedId)] ||
+    TOURNAMENT_THEMES[resolvedId.toLowerCase?.()];
   return theme ? { ...DEFAULT_THEME, ...theme } : DEFAULT_THEME;
 }

@@ -118,6 +118,14 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "sponsor-lagends",
     sponsor2: "sponsor-lagends",
   },
+  76: {
+    leftLogo: "tmpwmoLeft",
+    cupLogo: "tmpwmoCup",
+    rightLogo: "playproWhite",
+    bg: "tmpwmoBg",
+    sponsor1: "tmpwmoSponsor",
+    sponsor2: "tmpwmoSponsor",
+  },
 };
 
 /**

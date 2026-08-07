@@ -1323,8 +1323,9 @@ const MultiCourtSchedule = () => {
         .marquee-wrapper {
           width: 100%;
           overflow: hidden;
-          background: white;
-          padding: 10px 0;
+                background: #1068ed;
+    padding: 10px 0;
+    border-top: 1px solid;
         }
 
         .marquee-content-scroll {

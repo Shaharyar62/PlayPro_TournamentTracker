@@ -62,7 +62,12 @@ import tampsCup from "./fix/tamps-cup.png";
 import legendsCup from "./fix/legends-cup.png";
 import legendsBg from "./legends-bg.png";
 import sponsorLagends from "./fix/sponsor-lagends.png";
+import tmpwmoSponsor from "./fix/tmpwmosponser.png";
 
+import tmpwmoBg from "./tmpwmobg.png";
+import tmpwmoRight from "./fix/tmpwmoright.png";
+import tmpwmoLeft from "./fix/tmpwmoleft.png";
+import tmpwmoCup from "./fix/tmpwmo.png";
 // import sponsorLegends from "./fix/sponsor-legends.png";
 
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
@@ -130,6 +135,11 @@ export const ALL_IMAGES = {
   "legends-cup": legendsCup,
   "legends-bg": legendsBg,
   "sponsor-lagends": sponsorLagends,
+  tmpwmoLeft,
+  tmpwmoCup,
+  tmpwmoRight,
+  tmpwmoBg,
+  tmpwmoSponsor,
   // "sponsor-legends": sponsorLegends,
 };
 
@@ -153,4 +163,9 @@ export const ImageConstants = {
   playproColorVertical,
   padelverse_W,
   premierCup,
+  tmpwmoBg,
+  tmpwmoRight,
+  tmpwmoLeft,
+  tmpwmoCup,
+  tmpwmoSponsor,
 };

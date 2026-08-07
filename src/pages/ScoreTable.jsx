@@ -747,7 +747,7 @@ const TournamentStandings = () => {
             <div className="relative z-10    items-center justify-center min-h-screen">
               <div
                 style={{ position: "absolute" }}
-                className="text-white bg-[var(--color-gradient-primary)] text-3xl font-bold px-6 py-2 rounded-lg rotate-[-90deg]  top-[500px] left-[-40px]   "
+                className="text-black bg-[var(--color-gradient-primary)] text-3xl font-bold px-6 py-2 rounded-lg rotate-[-90deg]  top-[500px] left-[-40px]   "
               >
                 GROUPS
               </div>
@@ -822,7 +822,7 @@ const TournamentStandings = () => {
                               className="max-w-[1024px]   mx-auto rounded-lg shadow-lg overflow-hidden bg-white"
                             >
                               {/* Header with glow effect */}
-                              <div className="relative bg-gradient-to-r from-[var(--color-gradient-primary)] via-[var(--color-gradient-accent)] to-[var(--color-gradient-primary)] px-6 py-1 text-white">
+                              <div className="relative bg-gradient-to-r from-[var(--color-gradient-primary)] via-[var(--color-gradient-accent)] to-[var(--color-gradient-primary)] px-6 py-1 text-black border-b border-[#ffffff66]">
                                 <div className="flex justify-between items-center relative z-10">
                                   <div className="flex items-center space-x-1">
                                     <motion.div
@@ -830,13 +830,13 @@ const TournamentStandings = () => {
                                       animate={{ rotate: 0 }}
                                       transition={{ duration: 0.5 }}
                                     >
-                                      <Trophy className="h-5 w-5 text-yellow-300" />
+                                      <Trophy className="h-5 w-5 text-black" />
                                     </motion.div>
-                                    <h2 className="text-lg font-bold tracking-wider">
+                                    <h2 className="text-lg font-bold tracking-wider text-black">
                                       Group {groupName}
                                     </h2>
                                   </div>
-                                  <div className="text-sm text-green-100">
+                                  <div className="text-sm text-black">
                                     {currentTournament?.tournamentMasterName ||
                                       currentTournament?.name}
                                   </div>
@@ -848,7 +848,7 @@ const TournamentStandings = () => {
                               <div className="bg-gradient-to-b text-black from-gray-50 to-white">
                                 <table className="w-full">
                                   <thead>
-                                    <tr className="bg-gradient-to-r from-[var(--color-gradient-primary)] to-[var(--color-gradient-accent)] text-white">
+                                    <tr className="bg-gradient-to-r from-[var(--color-gradient-primary)] to-[var(--color-gradient-accent)] text-black">
                                       <th className="py-1 px-4 text-left">#</th>
                                       <th className="py-1 px-4 text-left">
                                         Team Name
@@ -1044,16 +1044,16 @@ const TournamentStandings = () => {
                               <div className="px-4 py-1 bg-gradient-to-r from-[var(--color-gradient-primary)] to-[var(--color-gradient-accent)] text-white text-xs">
                                 <div className="flex justify-between items-center">
                                   <div className="flex items-center space-x-2">
-                                    <Trophy className="h-4 w-4 text-yellow-400" />
-                                    <span>Champion</span>
+                                    <Trophy className="h-4 w-4 text-orange-400" />
+                                    <span className="text-black">Champion</span>
                                   </div>
                                   <div className="flex items-center space-x-2">
-                                    <Award className="h-4 w-4 text-[#fff]" />
-                                    <span>Qualified</span>
+                                    <Award className="h-4 w-4 text-orange-400" />
+                                    <span className="text-black">Qualified</span>
                                   </div>
                                   <div className="flex items-center space-x-2">
-                                    <Shield className="h-4 w-4 text-[#fff]" />
-                                    <span className="text-[#fff]">
+                                    <Shield className="h-4 w-4 text-orange-400" />
+                                    <span className="text-black">
                                       Eliminated
                                     </span>
                                   </div>
@@ -1185,8 +1185,9 @@ const TournamentStandings = () => {
               .marquee-wrapper {
                 width: 100%;
                 overflow: hidden;
-                background: white;
-                padding: 10px 0;
+                    background: #1068ed;
+    padding: 10px 0;
+    border-top: 1px solid;
               }
 
               .marquee-content-scroll {

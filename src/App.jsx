@@ -32,6 +32,7 @@ import { TournamentImagesProvider } from "./context/TournamentImagesContext";
 
 import Padelverse from "./pages/Padelverse";
 import TMP from "./pages/TMP";
+import TMPWMO from "./pages/TMPWMO";
 import GK from "./pages/GK";
 import Links from "./pages/live/Links";
 import Appt from "./pages/Appt";
@@ -90,6 +91,7 @@ function App() {
                 <Route path="live-court" element={<LiveCourt />} />
                 <Route path="padelverse" element={<Padelverse />} />
                 <Route path="tmp" element={<TMP />} />
+                <Route path="tmpwmo" element={<TMPWMO />} />
                 <Route path="gk" element={<GK />} />
                 <Route path="appt" element={<Appt />} />
                 <Route path="mmi" element={<MMI />} />
