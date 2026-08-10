@@ -12,6 +12,9 @@ const StreamingLiveCourt = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
   const courtId = searchParams.get("courtId");
+  // Optional: &vmix=1 or &opaque=1 for vMix Browser (solid bg). OBS URLs stay transparent.
+  const isVmixMode =
+    searchParams.get("vmix") === "1" || searchParams.get("opaque") === "1";
 
   // State management
   const [matchData, setMatchData] = useState(null);
@@ -123,9 +126,9 @@ const StreamingLiveCourt = () => {
       socketRef.current.disconnect();
     }
 
-    // Initialize socket connection
+    // websocket first, polling fallback (helps older CEF / vMix Browser)
     const socket = io(SERVER_URL, {
-      transports: ["websocket"],
+      transports: ["websocket", "polling"],
       timeout: 20000,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
@@ -147,8 +150,11 @@ const StreamingLiveCourt = () => {
 
     socket.on("connect_error", (error) => {
       console.error("WebSocket connection error:", error);
-      setError("Failed to connect to live match server");
       setIsConnected(false);
+      // Keep API scoreboard visible — do not blank overlay if match already loaded
+      if (!currentMatch) {
+        setError("Failed to connect to live match server");
+      }
     });
 
     // Prefix match and tournament IDs for environment separation
@@ -266,50 +272,40 @@ const StreamingLiveCourt = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Set transparent background for OBS streaming
+  // OBS: transparent. vMix (&vmix=1 / &opaque=1): solid white only — no other routes affected.
   useEffect(() => {
-    // Set body and html background to transparent
-    document.body.style.background = "transparent";
-    document.body.style.backgroundColor = "transparent";
-    document.documentElement.style.background = "transparent";
-    document.documentElement.style.backgroundColor = "transparent";
+    const bg = isVmixMode ? "#ffffff" : "transparent";
+    document.body.style.background = bg;
+    document.body.style.backgroundColor = bg;
+    document.documentElement.style.background = bg;
+    document.documentElement.style.backgroundColor = bg;
 
-    // Find and set root element background
     const root = document.getElementById("root");
     if (root) {
-      root.style.background = "transparent";
-      root.style.backgroundColor = "transparent";
+      root.style.background = bg;
+      root.style.backgroundColor = bg;
     }
 
     return () => {
-      // Optional: cleanup on unmount
-      // You can remove these lines if you want the background to stay transparent
+      document.body.style.background = "";
+      document.body.style.backgroundColor = "";
+      document.documentElement.style.background = "";
+      document.documentElement.style.backgroundColor = "";
+      if (root) {
+        root.style.background = "";
+        root.style.backgroundColor = "";
+      }
     };
-  }, []);
+  }, [isVmixMode]);
 
+  // Transparent-strip logic is OBS-only. Skip entirely for vMix so score box bg stays visible.
   useLayoutEffect(() => {
+    if (isVmixMode) return;
+
     const BODY_CLASS = "route-clean-remove-bg";
     const STYLE_ID = "route-clean-remove-bg-style";
 
-    // optional whitelist: selectors that SHOULD KEEP their backgrounds
-    const whitelistSelectors = [
-      // example: ".keep-bg", "header .logo", "img.logo"
-      // add selectors here if you want to preserve backgrounds for some elements
-    ];
-
-    // Create CSS that forces transparent backgrounds for everything under .route-clean-remove-bg
-    // but then re-enables backgrounds for anything matching whitelistSelectors.
     let whitelistCSS = "";
-    // if (whitelistSelectors.length) {
-    //   whitelistCSS = whitelistSelectors
-    //     .map(
-    //       (sel) =>
-    //         `.route-clean-remove-bg ${sel} { background: initial !important; background-color: initial !important; background-image: initial !important; }
-    //          .route-clean-remove-bg ${sel}::before,
-    //          .route-clean-remove-bg ${sel}::after { background: initial !important; background-color: initial !important; background-image: initial !important; }`
-    //     )
-    //     .join("\n");
-    // }
 
     const css = `
       /* Scope to the body class so other pages are unaffected */
@@ -413,7 +409,7 @@ const StreamingLiveCourt = () => {
       const existing = document.getElementById(STYLE_ID);
       if (existing) existing.remove();
     };
-  }, []);
+  }, [isVmixMode]);
 
   // Loading state
   if (loading) {
@@ -591,7 +587,7 @@ const StreamingLiveCourt = () => {
                       <div>
                         <div
                           style={{ color: "#000000" }}
-                          className="text-5xl  font-bold text-gray-800 mb-1"
+                          className="text-4xl  font-bold text-gray-800 mb-1"
                         >
                           {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamA) : getPlayerName(1, 0) + " & " + getPlayerName(1, 1)} */}
                           {getTeamName(matchData.teamA)}
@@ -650,7 +646,7 @@ const StreamingLiveCourt = () => {
                       <div>
                         <div
                           style={{ color: "#000000" }}
-                          className="text-5xl font-bold text-gray-800 mb-1"
+                          className="text-4xl font-bold text-gray-800 mb-1"
                         >
                           {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamB) : getPlayerName(2, 0) + " & " + getPlayerName(2, 1)} */}
                           {getTeamName(matchData.teamB)}
@@ -735,22 +731,22 @@ const StreamingLiveCourt = () => {
         <style jsx>{`
           /* OBS Streaming Optimized Styles */
           body {
-            background: transparent !important;
+            background: ${isVmixMode ? "#ffffff" : "transparent"} !important;
             margin: 0 !important;
             padding: 0 !important;
             overflow: hidden !important;
           }
 
           html {
-            background: transparent !important;
+            background: ${isVmixMode ? "#ffffff" : "transparent"} !important;
           }
 
           .bg-cover.bg-center.main-body {
-            background: transparent !important;
+            background: ${isVmixMode ? "#ffffff" : "transparent"} !important;
           }
 
           .obs-streaming-container {
-            background: transparent !important;
+            background: ${isVmixMode ? "#ffffff" : "transparent"} !important;
             margin: 0;
             padding: 0;
             display: flex;
@@ -770,7 +766,7 @@ const StreamingLiveCourt = () => {
 
           /* Remove any default backgrounds */
           #root {
-            background: transparent !important;
+            background: ${isVmixMode ? "#ffffff" : "transparent"} !important;
           }
         `}</style>
       </div>
