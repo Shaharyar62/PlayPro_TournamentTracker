@@ -22,6 +22,7 @@ import { UmpireApp } from "./umpireScoring";
 import ScorePage from "./pages/ScoreViewer/ScorePage";
 import StreamingHome from "./pages/streaming/SteamingHome";
 import StreamingLiveCourt from "./pages/streaming/StreamingLiveCourt";
+import ScorebugSetup from "./pages/streaming/ScorebugSetup";
 import AdminNavigation from "./pages/AdminNavigation";
 import LoginPage from "./umpireScoring/pages/LoginPage";
 import MatchListPage from "./umpireScoring/pages/MatchListPage";
@@ -111,6 +112,7 @@ function App() {
                 />
                 <Route path="multi-court-live" element={<MultiCourtLive />} />
                 <Route path="display-master" element={<DisplayMaster />} />
+                <Route path="scorebug-setup" element={<ScorebugSetup />} />
                 <Route
                   path="multi-court-schedule"
                   element={<MultiCourtSchedule />}

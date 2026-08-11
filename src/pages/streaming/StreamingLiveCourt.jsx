@@ -4,14 +4,18 @@ import io from "socket.io-client";
 import Common from "../../helper/common";
 import moment from "moment-timezone";
 import { TournamentRuleMatchFormatTypeEnum } from "../../const/Constants";
-import { getScoreDisplayString } from "../../umpireScoring/utils/scoringRules.js";
 import MatchIdHelper from "../../umpireScoring/utils/matchIdHelper.js";
 import { SERVER_URL } from "../../umpireScoring/utils/constants.js";
+import { useScorebugSettings } from "../../hooks/useScorebugSettings.js";
+import "./scorebug.css";
+import ScorebugOverlay from "./ScorebugOverlay.jsx";
 
 const StreamingLiveCourt = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
   const courtId = searchParams.get("courtId");
+  const displayId = searchParams.get("displayId");
+  useScorebugSettings({ displayId, listenOnly: true });
   // Optional: &vmix=1 or &opaque=1 for vMix Browser (solid bg). OBS URLs stay transparent.
   const isVmixMode =
     searchParams.get("vmix") === "1" || searchParams.get("opaque") === "1";
@@ -347,6 +351,13 @@ const StreamingLiveCourt = () => {
     // MutationObserver to strip inline backgrounds (including those set with !important)
     const stripBackgroundFromElement = (el) => {
       if (!el || !el.style) return;
+      if (
+        el.classList?.contains("scorebug-panel") ||
+        el.classList?.contains("scorebug-footer") ||
+        el.closest?.(".scorebug-bar")
+      ) {
+        return;
+      }
       try {
         // remove the properties (works even if they were set !important)
         el.style.removeProperty("background");
@@ -448,288 +459,18 @@ const StreamingLiveCourt = () => {
     );
   }
 
-  // Get display data - use WebSocket data if available, otherwise use API data
-  const displayMatch = liveMatchData || matchData;
-
-  const getTeamName = (team) => {
-    return team?.teamName || team?.name || "Team";
-  };
-
-  // Helper functions for JSON data binding
-  const getNumberOfSets = () => {
-    // For 2-sets + super tiebreak, show 3 set columns (SET 1, SET 2, STB)
-    if (liveMatchData?.matchSettings?.matchFormat === 2) {
-      return 3;
-    }
-    if (liveMatchData?.matchSettings?.numberOfSets) {
-      return liveMatchData.matchSettings.numberOfSets;
-    }
-    return 3; // Default
-  };
-
-  const getSetScore = (teamIndex, setIndex) => {
-    if (liveMatchData?.sets?.[setIndex.toString()]) {
-      const teamKey = teamIndex === 1 ? "team1Games" : "team2Games";
-      return liveMatchData.sets[setIndex.toString()][teamKey] || 0;
-    }
-    // Fallback to API data
-    if (matchData?.results?.sets?.[setIndex]) {
-      return matchData.results.sets[setIndex][`team${teamIndex}`] || "0";
-    }
-    return setIndex === 0 ? "0" : "-";
-  };
-
-  const getCurrentGameScore = (teamIndex) => {
-    if (liveMatchData) {
-      const teamKey = teamIndex === 1 ? "team1" : "team2";
-      const opponentKey = teamIndex === 1 ? "team2" : "team1";
-      const teamScore = liveMatchData[teamKey]?.score || 0;
-      const opponentScore = liveMatchData[opponentKey]?.score || 0;
-      const isInTiebreak =
-        liveMatchData.isInTiebreak || liveMatchData.isInSuperTiebreak;
-
-      // Handle tiebreak scoring
-      if (isInTiebreak) {
-        return liveMatchData[teamKey]?.tiebreakScore || 0;
-      }
-
-      // Calculate total advantage exchanges for golden point display
-      const totalAdvantageExchanges =
-        (liveMatchData.team1?.advantageCount || 0) +
-        (liveMatchData.team2?.advantageCount || 0);
-
-      // Use getScoreDisplayString for consistent scoring display
-      return getScoreDisplayString(teamScore, opponentScore, {
-        isInTiebreak: false,
-        matchSettings: liveMatchData.matchSettings,
-        teamAdvantageCount: liveMatchData[teamKey]?.advantageCount || 0,
-        totalAdvantageExchanges,
-      });
-    }
-
-    // Fallback to API data
-    if (matchData?.results?.currentGame) {
-      return matchData.results.currentGame[`team${teamIndex}`] || "0";
-    }
-    return "0";
-  };
-
-  const getPlayerName = (teamIndex, playerIndex) => {
-    if (liveMatchData) {
-      const teamKey = teamIndex === 1 ? "team1" : "team2";
-      const players = liveMatchData[teamKey]?.players || [];
-      return players[playerIndex]?.name || "";
-    }
-
-    // Fallback to API data
-    const team = teamIndex === 1 ? matchData?.teamA : matchData?.teamB;
-    const players = team?.players || [];
-    return players[playerIndex]?.name || players[playerIndex]?.playerName || "";
-  };
-
-  const isServingTeam = (teamIndex) => {
-    if (!liveMatchData?.currentServe) return false;
-    const isServingTeam1 = liveMatchData.currentServe.isServingTeam1;
-    return teamIndex === 1 ? isServingTeam1 : !isServingTeam1;
-  };
-
-  const getServingPlayerName = () => {
-    return liveMatchData?.currentServe?.servingPlayer || null;
-  };
-
-  const getTeamWarnings = (teamIndex) => {
-    if (liveMatchData) {
-      const teamKey = teamIndex === 1 ? "team1" : "team2";
-      return liveMatchData[teamKey]?.warnings || [];
-    }
-    return [];
-  };
-
-  const getHeaderText = () => {
-    if (liveMatchData?.isInSuperTiebreak) return "SUPER TIE BREAK";
-    if (liveMatchData?.isInTiebreak) return "TIE BREAK";
-    return "SCORE";
-  };
-
   return (
     <>
-      <style jsx>{`
-        .obs-streaming-container .set-score-style {
-          color: black !important;
-        }
-        .powered-by-text {
-          padding-top: 0px;
-          padding-bottom: 18px;
-          font-weight: 700;
-        }
-      `}</style>
       <div className="obs-streaming-container">
-        {/* Main content */}
-        <div className="live-live-box bg-white overflow-hidden">
-          {/* Header row - Dynamic based on number of sets */}
+        {showResetNotification && (
+          <div className="scorebug-reset-toast">Match reset</div>
+        )}
 
-          {/* Score content - Dynamic layout */}
-          <div className="p-0">
-            <div
-              className="grid gap-1 items-center"
-              style={{
-                gridTemplateColumns: `2fr ${Array(getNumberOfSets())
-                  .fill("1fr")
-                  .join(" ")} 1fr`,
-              }}
-            >
-              {/* Team Names and Players */}
-              <div className="py-8 w-[500px]">
-                {/* Team 1 */}
-                <div className="mb-2">
-                  <div className="flex items-center justify-between  justify-center px-1">
-                    <div className="flex items-center space-x-1">
-                      <div>
-                        <div
-                          style={{ color: "#000000" }}
-                          className="text-4xl  font-bold text-gray-800 mb-1"
-                        >
-                          {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamA) : getPlayerName(1, 0) + " & " + getPlayerName(1, 1)} */}
-                          {getTeamName(matchData.teamA)}
-                          {/* {getPlayerName(1, 0)} & {getPlayerName(1, 1)} */}
-                        </div>
-                        {/* <div className="text-lg text-gray-600">
-                              {getTeamName(matchData.teamA)}
-                            </div> */}
-                      </div>
-                      {isServingTeam(1) && (
-                        <div className="flex items-center text-[#2e7ebb]">
-                          <span className="text-xl">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                fill="#00619a"
-                                d="M9.406 17.421q-.642 0-1.267-.242t-1.123-.74L2.983 12.4q-.498-.498-.74-1.11T2 10.017t.242-1.272t.74-1.11l2.691-2.69q.498-.499 1.116-.741t1.267-.242q.642 0 1.254.242q.611.242 1.11.74l4.038 4.033q.498.498.74 1.114q.243.615.243 1.275t-.243 1.272t-.74 1.11l-1.008 1.008l5.177 5.177q.146.146.156.347t-.156.366t-.357.166t-.356-.166l-5.158-5.196l-.989.989q-.498.498-1.109.74q-.61.242-1.252.242m-.02-.98q.453 0 .891-.176t.777-.515l2.696-2.715q.339-.333.515-.78q.175-.447.175-.894t-.175-.89t-.515-.78L9.712 5.658q-.333-.339-.766-.518q-.432-.178-.884-.178t-.885.179q-.433.178-.771.517l-2.69 2.69q-.339.339-.515.777t-.176.891t.176.896t.515.78l4.019 4.058q.332.339.765.515t.886.175m-3.868-5.379q.232 0 .387-.151q.155-.152.155-.384t-.152-.386t-.384-.155t-.386.151t-.155.384t.151.387t.384.155m1.523-1.518q.232 0 .387-.151q.155-.152.155-.384t-.152-.387t-.384-.155q-.231 0-.386.152t-.155.384t.152.387q.151.154.383.154m.156 3.216q.232 0 .387-.152t.155-.384t-.152-.396t-.384-.164t-.387.164q-.154.164-.154.396t.151.384t.384.152m1.342-4.74q.232 0 .387-.151t.155-.384t-.152-.387t-.384-.155t-.386.152t-.155.384t.152.386t.383.155m.181 3.221q.232 0 .387-.151q.154-.152.154-.384t-.151-.387t-.384-.154t-.387.151t-.155.384t.152.387t.384.154m.15 3.197q.232 0 .396-.152q.165-.152.165-.384t-.165-.387t-.396-.154t-.384.151t-.152.384t.152.387q.152.155.384.155m1.367-4.72q.232 0 .387-.164t.155-.396t-.152-.384t-.384-.152t-.386.152t-.155.384t.151.396t.384.164m.156 3.197q.232 0 .387-.152t.154-.384t-.151-.387t-.384-.154t-.387.151t-.154.384t.151.387t.384.155m1.504-1.524q.232 0 .396-.151q.165-.152.165-.384t-.165-.387t-.396-.155t-.384.152t-.151.384t.151.387t.384.154M19.13 8.77q-1.197 0-2.029-.846q-.833-.846-.833-2.042t.833-2.039T19.131 3t2.043.846t.845 2.042t-.845 2.039t-2.043.842m.005-1q.778 0 1.33-.548q.553-.549.553-1.332t-.548-1.336T19.139 4t-1.326.548q-.544.549-.544 1.332q0 .784.545 1.336q.544.553 1.322.553m.018-1.884"
-                              />
-                            </svg>
-                          </span>
-                          {/* <span className="ml-1 text-sm font-medium">
-                                {getServingPlayerName()}
-                              </span> */}
-                        </div>
-                      )}
-                    </div>
-                    {/* Warning cards for Team 1 */}
-                    <div className="flex space-x-1">
-                      {getTeamWarnings(1).map((warning, index) => (
-                        <span
-                          key={index}
-                          className={`px-2 py-1 text-xs font-bold rounded ${
-                            warning === "W1"
-                              ? "bg-yellow-400 text-black"
-                              : "bg-red-500 text-white"
-                          }`}
-                        >
-                          {warning}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* VS Divider */}
-                <div className="text-center text-2xl font-bold  mb-1">VS</div>
-
-                {/* Team 2 */}
-                <div>
-                  <div className="flex items-center justify-between justify-center px-4">
-                    <div className="flex items-center space-x-4">
-                      <div>
-                        <div
-                          style={{ color: "#000000" }}
-                          className="text-4xl font-bold text-gray-800 mb-1"
-                        >
-                          {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamB) : getPlayerName(2, 0) + " & " + getPlayerName(2, 1)} */}
-                          {getTeamName(matchData.teamB)}
-                          {/* {getTeamName(matchData.teamB)} */}
-                        </div>
-                        {/* <div className="text-lg text-gray-600">
-                              {getTeamName(matchData.teamB)}
-                            </div> */}
-                      </div>
-                      {isServingTeam(2) && (
-                        <div className="flex items-center ">
-                          <span className="text-2xl">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                fill="#00619a"
-                                d="M9.406 17.421q-.642 0-1.267-.242t-1.123-.74L2.983 12.4q-.498-.498-.74-1.11T2 10.017t.242-1.272t.74-1.11l2.691-2.69q.498-.499 1.116-.741t1.267-.242q.642 0 1.254.242q.611.242 1.11.74l4.038 4.033q.498.498.74 1.114q.243.615.243 1.275t-.243 1.272t-.74 1.11l-1.008 1.008l5.177 5.177q.146.146.156.347t-.156.366t-.357.166t-.356-.166l-5.158-5.196l-.989.989q-.498.498-1.109.74q-.61.242-1.252.242m-.02-.98q.453 0 .891-.176t.777-.515l2.696-2.715q.339-.333.515-.78q.175-.447.175-.894t-.175-.89t-.515-.78L9.712 5.658q-.333-.339-.766-.518q-.432-.178-.884-.178t-.885.179q-.433.178-.771.517l-2.69 2.69q-.339.339-.515.777t-.176.891t.176.896t.515.78l4.019 4.058q.332.339.765.515t.886.175m-3.868-5.379q.232 0 .387-.151q.155-.152.155-.384t-.152-.386t-.384-.155t-.386.151t-.155.384t.151.387t.384.155m1.523-1.518q.232 0 .387-.151q.155-.152.155-.384t-.152-.387t-.384-.155q-.231 0-.386.152t-.155.384t.152.387q.151.154.383.154m.156 3.216q.232 0 .387-.152t.155-.384t-.152-.396t-.384-.164t-.387.164q-.154.164-.154.396t.151.384t.384.152m1.342-4.74q.232 0 .387-.151t.155-.384t-.152-.387t-.384-.155t-.386.152t-.155.384t.152.386t.383.155m.181 3.221q.232 0 .387-.151q.154-.152.154-.384t-.151-.387t-.384-.154t-.387.151t-.155.384t.152.387t.384.154m.15 3.197q.232 0 .396-.152q.165-.152.165-.384t-.165-.387t-.396-.154t-.384.151t-.152.384t.152.387q.152.155.384.155m1.367-4.72q.232 0 .387-.164t.155-.396t-.152-.384t-.384-.152t-.386.152t-.155.384t.151.396t.384.164m.156 3.197q.232 0 .387-.152t.154-.384t-.151-.387t-.384-.154t-.387.151t-.154.384t.151.387t.384.155m1.504-1.524q.232 0 .396-.151q.165-.152.165-.384t-.165-.387t-.396-.155t-.384.152t-.151.384t.151.387t.384.154M19.13 8.77q-1.197 0-2.029-.846q-.833-.846-.833-2.042t.833-2.039T19.131 3t2.043.846t.845 2.042t-.845 2.039t-2.043.842m.005-1q.778 0 1.33-.548q.553-.549.553-1.332t-.548-1.336T19.139 4t-1.326.548q-.544.549-.544 1.332q0 .784.545 1.336q.544.553 1.322.553m.018-1.884"
-                              />
-                            </svg>
-                          </span>
-                          {/* <span className="ml-1 text-sm font-medium">
-                                {getServingPlayerName()}
-                              </span> */}
-                        </div>
-                      )}
-                    </div>
-                    {/* Warning cards for Team 2 */}
-                    <div className="flex space-x-1">
-                      {getTeamWarnings(2).map((warning, index) => (
-                        <span
-                          key={index}
-                          className={`px-2 py-1 text-xs font-bold rounded ${
-                            warning === "W1"
-                              ? "bg-yellow-400 text-black"
-                              : "bg-red-500 text-white"
-                          }`}
-                        >
-                          {warning}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Dynamic Set Scores */}
-              {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
-                <div key={setIndex} className="text-center">
-                  <div className="space-y-1">
-                    <div className="text-8xl font-bold set-score-style">
-                      {getSetScore(1, setIndex)}
-                    </div>
-                    <div className="text-8xl font-bold set-score-style">
-                      {getSetScore(2, setIndex)}
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {/* Current Game/Points Score */}
-              <div className="text-center bg-[#015d9c]">
-                <div className="space-y-1 pt-[20px] pb-[25px]">
-                  <div className="text-8xl font-bold text-white game-score-style">
-                    {getCurrentGameScore(1)}
-                  </div>
-                  <div className="text-8xl font-bold text-white game-score-style">
-                    {getCurrentGameScore(2)}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <p className="powered-by-text text-center text-6xl text-bold mt-[-3px] pt-[10px] pb-[10px] text-white bg-[#015d9c]">
-              Live Scoring by PlayPro
-            </p>
-          </div>
+        <div className="scorebug-stage">
+          <ScorebugOverlay matchData={matchData} liveMatchData={liveMatchData} />
         </div>
 
-        <style jsx>{`
-          /* OBS Streaming Optimized Styles */
+        <style>{`
           body {
             background: ${isVmixMode ? "#ffffff" : "transparent"} !important;
             margin: 0 !important;
@@ -741,31 +482,11 @@ const StreamingLiveCourt = () => {
             background: ${isVmixMode ? "#ffffff" : "transparent"} !important;
           }
 
-          .bg-cover.bg-center.main-body {
+          #root {
             background: ${isVmixMode ? "#ffffff" : "transparent"} !important;
           }
 
           .obs-streaming-container {
-            background: ${isVmixMode ? "#ffffff" : "transparent"} !important;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding-top: 20px;
-          }
-
-          .live-live-box {
-            margin: 0;
-            padding: 0;
-            max-width: 1200px;
-            width: auto;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          }
-
-          /* Remove any default backgrounds */
-          #root {
             background: ${isVmixMode ? "#ffffff" : "transparent"} !important;
           }
         `}</style>

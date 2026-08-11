@@ -6,51 +6,58 @@ import { useTournamentImages } from "../../context/TournamentImagesContext";
 
 const StreamingHome = () => {
   const images = useTournamentImages();
+  const defaultDisplayId = "court-79";
+
   const pages = [
     {
-      path: "/streaming-live-court?tournamentId=25&courtId=79",
+      tournamentId: "25",
+      courtId: "79",
       name: "Galaxy 1 -",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=25&courtId=80",
+      tournamentId: "25",
+      courtId: "80",
       name: "Galaxy 2",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=25&courtId=81",
+      tournamentId: "25",
+      courtId: "81",
       name: "Galaxy 3",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=25&courtId=82",
+      tournamentId: "25",
+      courtId: "82",
       name: "Galaxy 4",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=25&courtId=83",
+      tournamentId: "25",
+      courtId: "83",
       name: "Black Star 1 -",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=25&courtId=84",
+      tournamentId: "25",
+      courtId: "84",
       name: "Black Star 2",
       color: "#2e55b9",
     },
     {
-      path: "/streaming-live-court?tournamentId=25&courtId=85",
+      tournamentId: "25",
+      courtId: "85",
       name: "Infinity -",
       color: "#2e55b9",
     },
-
-    // { path: "/live-score", name: "Live Score", color: "#2e55b9" },
-    // { path: "/time-table", name: "Time Table", color: "#2e55b9" },
-    // { path: "/score-table", name: "Score Table", color: "#2e55b9" },
-    // { path: "/score-card", name: "Score Card", color: "#2e55b9" },
-    // { path: "/today-match", name: "Today's Matches", color: "#2e55b9" },
-    // { path: "/live-court", name: "Live Court", color: "#2e55b9" },
-    // { path: "/matches-timetable", name: "7 Day Schedule", color: "#2e55b9" },
   ];
+
+  const buildOverlayPath = (tournamentId, courtId) =>
+    `/streaming-live-court?tournamentId=${tournamentId}&courtId=${courtId}&displayId=${defaultDisplayId}`;
+
+  const buildSetupPath = (tournamentId, courtId) =>
+    `/home/scorebug-setup?displayId=${defaultDisplayId}&tournamentId=${tournamentId}&courtId=${courtId}`;
 
   return (
     <div className="home-container">
@@ -70,7 +77,7 @@ const StreamingHome = () => {
             whileTap={{ scale: 0.95 }}
           >
             <Link
-              to={page.path}
+              to={buildOverlayPath(page.tournamentId, page.courtId)}
               className="nav-button"
               style={{ backgroundColor: page.color }}
             >
@@ -81,6 +88,17 @@ const StreamingHome = () => {
               >
                 {page.name}
               </motion.div>
+            </Link>
+            <Link
+              to={buildSetupPath(page.tournamentId, page.courtId)}
+              className="nav-button"
+              style={{
+                backgroundColor: "#1a2744",
+                marginTop: "8px",
+                fontSize: "0.85rem",
+              }}
+            >
+              Setup
             </Link>
           </motion.div>
         ))}

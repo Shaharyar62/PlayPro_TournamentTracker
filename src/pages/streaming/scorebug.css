@@ -1,0 +1,289 @@
+/* Slant scorebug overlay — global CSS vars set by useScorebugSettings on :root */
+
+.obs-streaming-container {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+.scorebug-stage {
+  display: flex;
+  justify-content: var(--sb-justify, center);
+  align-items: var(--sb-align-items, flex-start);
+  min-height: 100vh;
+  width: 100%;
+  padding-top: var(--sb-pad-top, 24px);
+  padding-bottom: var(--sb-pad-bottom, 0px);
+  box-sizing: border-box;
+}
+
+.scorebug-wrap {
+  max-width: var(--sb-width, 920px);
+  width: 100%;
+  transform: translateX(var(--sb-translate-x, 0px));
+}
+
+.scorebug-stack {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: stretch;
+}
+
+.scorebug-bar {
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  width: 100%;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+}
+
+.scorebug-panel {
+  transform: skewX(calc(-1 * var(--sb-skew, 12deg)));
+  overflow: hidden;
+  flex-shrink: 0;
+  transform-origin: bottom left;
+  transition: filter 0.35s ease;
+}
+
+.scorebug-panel--flash {
+  animation: scorebug-panel-flash 0.65s ease-out;
+}
+
+@keyframes scorebug-panel-flash {
+  0% {
+    filter: brightness(1);
+    box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+  35% {
+    filter: brightness(1.35);
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.45);
+  }
+  100% {
+    filter: brightness(1);
+    box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+.scorebug-panel--names {
+  flex: 1 1 42%;
+  min-width: 200px;
+  background-color: var(--sb-panel-bg, #0b1220) !important;
+}
+
+.scorebug-panel--set {
+  flex: 0 0 72px;
+  background-color: var(--sb-panel-bg, #0b1220) !important;
+}
+
+.scorebug-panel--points {
+  flex: 0 0 88px;
+  background-color: var(--sb-accent, #015d9c) !important;
+}
+
+.scorebug-panel-inner {
+  transform: skewX(var(--sb-skew, 12deg));
+  padding: 10px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  min-height: 88px;
+  box-sizing: border-box;
+}
+
+.scorebug-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: calc(var(--sb-font-name, 28px) + 8px);
+}
+
+.scorebug-row--serving .scorebug-serve {
+  filter: drop-shadow(0 0 5px var(--sb-serve, #38bdf8));
+}
+
+.scorebug-name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.scorebug-serve {
+  color: var(--sb-serve, #38bdf8);
+  display: flex;
+  flex-shrink: 0;
+}
+
+.scorebug-name {
+  color: var(--sb-text, #ffffff);
+  font-size: var(--sb-font-name, 28px);
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scorebug-warnings {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.scorebug-warning {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.scorebug-warning--yellow {
+  background: #facc15;
+  color: #000;
+}
+
+.scorebug-warning--red {
+  background: #ef4444;
+  color: #fff;
+}
+
+.scorebug-set-inner,
+.scorebug-points-inner {
+  align-items: center;
+  text-align: center;
+  padding: 8px 10px;
+  gap: 4px;
+}
+
+.scorebug-set-label,
+.scorebug-points-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sb-muted, #9ca3af);
+  line-height: 1;
+}
+
+.scorebug-points-label {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.scorebug-set-score {
+  color: var(--sb-text, #ffffff);
+  font-size: var(--sb-font-set, 36px);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.scorebug-score-slot {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-width: 1.1em;
+  min-height: 1em;
+  vertical-align: middle;
+}
+
+.scorebug-score-slot.scorebug-set-score {
+  font-size: var(--sb-font-set, 36px);
+  font-weight: 700;
+  color: var(--sb-text, #ffffff);
+}
+
+.scorebug-score-slot.scorebug-points-score {
+  font-size: var(--sb-font-points, 42px);
+  font-weight: 800;
+  color: var(--sb-text, #ffffff);
+}
+
+.scorebug-score-value {
+  display: inline-block;
+  line-height: 1;
+}
+
+.scorebug-points-score {
+  color: var(--sb-text, #ffffff);
+  font-size: var(--sb-font-points, 42px);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.scorebug-footer {
+  width: 100%;
+  margin-top: 3px;
+  transform: skewX(calc(-1 * var(--sb-skew, 12deg)));
+  transform-origin: bottom left;
+  background-color: var(--sb-accent, #015d9c) !important;
+  color: var(--sb-text, #ffffff);
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 6px 20px;
+  text-transform: uppercase;
+  box-sizing: border-box;
+  animation: scorebug-footer-shimmer 4s ease-in-out infinite;
+}
+
+.scorebug-footer-inner {
+  display: block;
+  transform: skewX(var(--sb-skew, 12deg));
+}
+
+@keyframes scorebug-footer-shimmer {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.12);
+  }
+}
+
+.scorebug-reset-toast {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fef3c7;
+  color: #92400e;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 14px;
+  z-index: 100;
+  animation: scorebug-toast-in 0.4s ease-out;
+}
+
+@keyframes scorebug-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* OBS transparent route — preserve scorebug panel backgrounds */
+body.route-clean-remove-bg .scorebug-panel--names,
+body.route-clean-remove-bg .scorebug-panel--set,
+body.route-clean-remove-bg .scorebug-panel--points,
+body.route-clean-remove-bg .scorebug-footer {
+  background-color: var(--sb-panel-bg, #0b1220) !important;
+}
+
+body.route-clean-remove-bg .scorebug-panel--points,
+body.route-clean-remove-bg .scorebug-footer {
+  background-color: var(--sb-accent, #015d9c) !important;
+}
