@@ -68,6 +68,12 @@ import tmpwmoBg from "./tmpwmobg.png";
 import tmpwmoRight from "./fix/tmpwmoright.png";
 import tmpwmoLeft from "./fix/tmpwmoleft.png";
 import tmpwmoCup from "./fix/tmpwmo.png";
+
+import heritageCupBg from "./heritage-cup-bg.png";
+import heritageCupRight from "./fix/heritage-cup-right.png";
+import heritageCupLeft from "./fix/heritage-cup-left.png";
+import heritageCupCup from "./fix/heritage-cup.png";
+import heritageCupSponsor from "./fix/heritage-cup-sponsor.png";
 // import sponsorLegends from "./fix/sponsor-legends.png";
 
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
@@ -140,6 +146,11 @@ export const ALL_IMAGES = {
   tmpwmoRight,
   tmpwmoBg,
   tmpwmoSponsor,
+  heritageCupLeft,
+  heritageCupCup,
+  heritageCupRight,
+  heritageCupBg,
+  heritageCupSponsor,
   // "sponsor-legends": sponsorLegends,
 };
 
@@ -168,4 +179,9 @@ export const ImageConstants = {
   tmpwmoLeft,
   tmpwmoCup,
   tmpwmoSponsor,
+  heritageCupBg,
+  heritageCupRight,
+  heritageCupLeft,
+  heritageCupCup,
+  heritageCupSponsor,
 };

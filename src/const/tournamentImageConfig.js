@@ -126,6 +126,14 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "tmpwmoSponsor",
     sponsor2: "tmpwmoSponsor",
   },
+  73: {
+    leftLogo: "heritageCupLeft",
+    cupLogo: "heritageCupCup",
+    rightLogo: "playproWhite",
+    bg: "heritageCupBg",
+    sponsor1: "heritageCupSponsor",
+    sponsor2: "heritageCupSponsor",
+  },
 };
 
 /**
