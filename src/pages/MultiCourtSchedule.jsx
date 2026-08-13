@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
 import moment from "moment-timezone";
 import Header from "../components/layout/header";
+import SponsorMarquee from "../components/SponsorMarquee";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 import { umpireAPI } from "../umpireScoring/services/umpireAPI";
 import { useDisplaySettings } from "../hooks/useDisplaySettings";
@@ -885,7 +886,7 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
   return (
     <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
       {/* Court Header */}
-      <div className="bg-[var(--color-accent)] text-white py-4 px-6">
+      <div className="bg-[var(--color-accent)] text-[var(--color-accent-text)] py-4 px-6">
         <h2
           className="font-bold text-center"
           style={{ fontSize: "var(--display-court-name-size)" }}
@@ -898,7 +899,7 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="bg-[var(--color-primary-blue)] text-white">
+            <tr className="bg-gradient-to-r from-[var(--color-gradient-primary)] to-[var(--color-gradient-accent)] text-[var(--color-gradient-text)]">
               <th
                 className="py-3 px-4 text-left font-bold"
                 style={{ fontSize: "var(--font-3xl)" }}
@@ -943,9 +944,9 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
                 >
                   <td className="py-4 px-4">
                     <div className="flex items-center">
-                      <Clock className="w-5 h-5 mr-2 text-[var(--color-primary-blue)]" />
+                      <Clock className="w-5 h-5 mr-2 text-[var(--color-accent)]" />
                       <span
-                        className="font-bold text-[var(--color-primary-blue)]"
+                        className="font-bold text-[var(--color-accent)]"
                         style={{ fontSize: "var(--display-player-name-size)" }}
                       >
                         {formatTime(match.matchStartDateTime)}
@@ -962,17 +963,17 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
                       className="font-semibold text-gray-800"
                       style={{ fontSize: "var(--display-player-name-size)" }}
                     >
-                      <span className="text-[var(--color-primary-blue)]">
+                      <span className="text-[var(--color-accent)]">
                         {getTeamName(match.teamA)}
                       </span>
                       <span className="mx-2 text-gray-500">vs</span>
-                      <span className="text-[var(--color-primary-blue)]">
+                      <span className="text-[var(--color-accent)]">
                         {getTeamName(match.teamB)}
                       </span>
                     </div>
                   </td>
                   <td className="py-4 px-4 text-center">
-                    <span className="inline-block bg-[var(--color-accent)] text-white px-3 py-1 rounded-full font-bold text-sm">
+                    <span className="inline-block bg-[var(--color-accent)] text-[var(--color-accent-text)] px-3 py-1 rounded-full font-bold text-sm">
                       {match.tournament?.name ||
                         match.tournamentName ||
                         match.tournamentId ||
@@ -1192,7 +1193,7 @@ const MultiCourtSchedule = () => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 container-fluid mx-auto px-4 py-8">
+      <div className="relative z-10 container-fluid mx-auto px-4 py-8 pb-[120px]">
         {/* Page Title */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -1201,12 +1202,15 @@ const MultiCourtSchedule = () => {
           className="text-center mb-8"
         >
           <h1
-            className="font-bold text-white mb-2"
+            className="font-bold text-[var(--color-today-match-text)] mb-2"
             style={{ fontSize: "var(--font-3xl)" }}
           >
             Court Schedule
           </h1>
-          <p className="text-gray-300" style={{ fontSize: "var(--font-3xl)" }}>
+          <p
+            className="text-[var(--color-today-match-text)] opacity-90"
+            style={{ fontSize: "var(--font-3xl)" }}
+          >
             {currentTime.format("dddd, MMMM D, YYYY - HH:mm")}
           </p>
         </motion.div>
@@ -1272,89 +1276,13 @@ const MultiCourtSchedule = () => {
       `}</style>
 
       {images.sponsor1 && (
-      <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
-        <div className="marquee-wrapper">
-          <div className="marquee-content-scroll">
-            <img
-              src={images.sponsor2}
-              alt="Sponsor"
-              className="marquee-image"
-            />
-            <img
-              src={images.sponsor1}
-              alt="Sponsor"
-              className="marquee-image"
-            />
-            <img
-              src={images.sponsor2}
-              alt="Sponsor"
-              className="marquee-image"
-            />
-            <img
-              src={images.sponsor1}
-              alt="Sponsor"
-              className="marquee-image"
-            />
-          </div>
+        <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
+          <SponsorMarquee
+            sponsor1={images.sponsor1}
+            sponsor2={images.sponsor2}
+          />
         </div>
-      </div>
       )}
-
-      <style jsx>{`
-        @keyframes twinkle {
-          0%,
-          100% {
-            opacity: 0.3;
-          }
-          50% {
-            opacity: 1;
-          }
-        }
-
-        @keyframes marqueeScroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-
-        .marquee-wrapper {
-          width: 100%;
-          overflow: hidden;
-                background: #1068ed;
-    padding: 10px 0;
-    border-top: 1px solid;
-        }
-
-        .marquee-content-scroll {
-          display: flex;
-          width: fit-content;
-          animation: marqueeScroll 30s linear infinite;
-          will-change: transform;
-        }
-
-        .marquee-image {
-          height: 80px;
-          width: auto;
-          margin: 0 !important;
-          object-fit: contain;
-          flex-shrink: 0;
-        }
-
-        @media (min-width: 1920px) {
-          .marquee-image {
-            height: 100px;
-          }
-        }
-
-        @media (min-width: 2560px) {
-          .marquee-image {
-            height: 120px;
-          }
-        }
-      `}</style>
     </div>
   );
 };

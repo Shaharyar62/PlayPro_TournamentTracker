@@ -5,6 +5,8 @@ import { useTournamentImages } from "../context/TournamentImagesContext";
 import Common from "../helper/common";
 import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
 import Header from "../components/layout/header";
+import SponsorMarquee from "../components/SponsorMarquee";
+import "../assets/css/today-match.css";
 
 const MatchScoreCard = () => {
   const images = useTournamentImages();
@@ -75,50 +77,40 @@ const MatchScoreCard = () => {
     return team.teamName || "Unknown Team";
   };
 
-  const getCourtBackgroundColor = (courtName) => {
-    if (!courtName) return "bg-[#737373]";
-
-    const name = courtName.toLowerCase();
-    if (name.includes("galaxy")) return "bg-[#737373]";
-    if (name.includes("black") || name.includes("star")) return "bg-[#000000]";
-    if (name.includes("infinity")) return "bg-[#430750]";
-    return "bg-[#84a55d]"; // default
-  };
 
   const renderMatchInfo = (match, type) => {
+    const badgeClass =
+      "col-span-2 flex justify-center items-center today-match-badge-outline text-lg font-bold";
+
     if (!match) {
       return (
-        <div className="grid grid-cols-11 gap-4 items-center">
-          <div
-            className={`col-span-2 text-center text-lg text-black bg-[#d9d9db] py-1 rounded-lg font-bold`}
-          >
-            {type.toUpperCase()}
-          </div>
-          <div className="col-span-9 text-center text-white text-2xl font-bold">
-            No Match Scheduled
+        <div className="grid grid-cols-11 gap-4 items-stretch">
+          <div className={badgeClass}>{type.toUpperCase()}</div>
+          <div className="col-span-9 today-match-glass flex items-center justify-center py-4 px-5">
+            <span className="today-match-glass-content text-2xl font-bold">
+              No Match Scheduled
+            </span>
           </div>
         </div>
       );
     }
 
     return (
-      <div className="grid grid-cols-11 gap-4 items-center">
-        <div
-          className={`col-span-2 text-center text-lg text-black bg-[#d9d9db] py-1 rounded-lg font-bold`}
-        >
-          {type.toUpperCase()}
-        </div>
-        <div className="col-span-4 text-end text-white text-2xl font-bold break-words overflow-hidden">
-          <div className="truncate" title={getTeamDisplayName(match.teamA)}>
-            {getTeamDisplayName(match.teamA)}
+      <div className="grid grid-cols-11 gap-4 items-stretch">
+        <div className={badgeClass}>{type.toUpperCase()}</div>
+        <div className="col-span-9 today-match-glass grid grid-cols-9 gap-3 items-center py-4 px-5">
+          <div className="col-span-4 text-end today-match-glass-content text-2xl font-bold break-words overflow-hidden">
+            <div className="truncate" title={getTeamDisplayName(match.teamA)}>
+              {getTeamDisplayName(match.teamA)}
+            </div>
           </div>
-        </div>
-        <div className="col-span-1 text-center text-white text-2xl font-bold">
-          VS
-        </div>
-        <div className="col-span-4 text-start text-white text-2xl font-bold break-words overflow-hidden">
-          <div className="truncate" title={getTeamDisplayName(match.teamB)}>
-            {getTeamDisplayName(match.teamB)}
+          <div className="col-span-1 text-center today-match-glass-content text-2xl font-bold">
+            VS
+          </div>
+          <div className="col-span-4 text-start today-match-glass-content text-2xl font-bold break-words overflow-hidden">
+            <div className="truncate" title={getTeamDisplayName(match.teamB)}>
+              {getTeamDisplayName(match.teamB)}
+            </div>
           </div>
         </div>
       </div>
@@ -184,7 +176,7 @@ const MatchScoreCard = () => {
             <Header />
             <div className="p-[50px] pt-[20px] pb-[120px] grid grid-cols-1 gap-6 items-center">
               <div className="col-span-1 text-center">
-                <div className="text-4xl text-white font-bold mt-[-20px] mb-2 ">
+                <div className="inline-block bg-[var(--color-accent)] text-[var(--color-accent-text)] text-4xl font-bold mt-[-20px] mb-2 px-8 py-3 rounded-lg">
                   HAPPENING NOW
                 </div>
               </div>
@@ -193,14 +185,10 @@ const MatchScoreCard = () => {
               {tournamentData.courts.map((court, index) => (
                 <div
                   key={court.courtId || index}
-                  className="grid grid-cols-11 gap-4 items-center"
+                  className="grid grid-cols-11 gap-4 items-center rounded-xl px-4 py-3"
                 >
                   <div className="col-span-3 text-center">
-                    <h2
-                      className={`text-4xl text-white ${getCourtBackgroundColor(
-                        court.courtName,
-                      )} py-1 mr-[70px] rounded-lg font-bold break-words overflow-hidden`}
-                    >
+                    <h2 className="text-4xl text-[var(--color-accent-text)] bg-[var(--color-accent)] py-2 px-3 mr-[70px] rounded-lg font-bold break-words overflow-hidden">
                       <div
                         className="truncate"
                         title={court.courtName || `Court ${court.courtId}`}
@@ -221,92 +209,16 @@ const MatchScoreCard = () => {
           </div>
           {/* Bottom indicator - Fixed to bottom */}
           {images.sponsor1 && (
-          <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
-            <div className="marquee-wrapper">
-              <div className="marquee-content-scroll">
-                <img
-                  src={images.sponsor2}
-                  alt="Sponsor"
-                  className="marquee-image"
-                />
-                <img
-                  src={images.sponsor1}
-                  alt="Sponsor"
-                  className="marquee-image"
-                />
-                <img
-                  src={images.sponsor2}
-                  alt="Sponsor"
-                  className="marquee-image"
-                />
-                <img
-                  src={images.sponsor1}
-                  alt="Sponsor"
-                  className="marquee-image"
-                />
-              </div>
+            <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
+              <SponsorMarquee
+                sponsor1={images.sponsor1}
+                sponsor2={images.sponsor2}
+              />
             </div>
-          </div>
           )}
 
           {/* Live indicator */}
         </div>
-        <style jsx>{`
-          @keyframes twinkle {
-            0%,
-            100% {
-              opacity: 0.3;
-            }
-            50% {
-              opacity: 1;
-            }
-          }
-
-          @keyframes marqueeScroll {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-50%);
-            }
-          }
-
-          .marquee-wrapper {
-            width: 100%;
-            overflow: hidden;
-                background: #1068ed;
-    padding: 10px 0;
-    border-top: 1px solid;
-            
-          }
-
-          .marquee-content-scroll {
-            display: flex;
-            width: fit-content;
-            animation: marqueeScroll 30s linear infinite;
-            will-change: transform;
-          }
-
-          .marquee-image {
-            height: 80px;
-            width: auto;
-            margin: 0 50px;
-            object-fit: contain;
-            flex-shrink: 0;
-          }
-
-          @media (min-width: 1920px) {
-            .marquee-image {
-              height: 100px;
-            }
-          }
-
-          @media (min-width: 2560px) {
-            .marquee-image {
-              height: 120px;
-            }
-          }
-        `}</style>
         <style jsx>{`
           @keyframes twinkle {
             0%,

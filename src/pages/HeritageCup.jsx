@@ -10,64 +10,64 @@ const HeritageCup = () => {
     {
       path: "/home/live-court?tournamentId=73&courtId=139&displayId=25",
       name: "Ocean 1",
-      color: "#2e55b9",
+      color: "#373735",
     },
     {
       path: "/home/live-court?tournamentId=73&courtId=140&displayId=25",
       name: "Ocean 2",
-      color: "#2e55b9",
+      color: "#373735",
     },
     {
       path: "/home/live-court?tournamentId=73&courtId=141&displayId=25",
       name: "Tera 1",
-      color: "#2e55b9",
+      color: "#373735",
     },
     {
       path: "/home/live-court?tournamentId=73&courtId=142&displayId=25",
       name: "Tera 2",
-      color: "#2e55b9",
+      color: "#373735",
     },
     {
       path: "/home/live-court?tournamentId=73&courtId=143&displayId=25",
       name: "Cherry 1",
-      color: "#2e55b9",
+      color: "#373735",
     },
     {
       path: "/home/live-court?tournamentId=73&courtId=144&displayId=25",
       name: "Cherry 2",
-      color: "#2e55b9",
+      color: "#373735",
     },
     {
       path: "/home/live-court?tournamentId=73&courtId=260&displayId=25",
       name: "MejorSet 1",
-      color: "#2e55b9",
+      color: "#373735",
     },
     {
       path: "/home/live-court?tournamentId=73&courtId=248&displayId=25",
       name: "MejorSet 2",
-      color: "#2e55b9",
+      color: "#373735",
     },
 
     {
       path: "/home/multi-court-live?tournamentId=73&courtId=139,140,141,142,143,144,260,248&displayId=25",
       name: "Multi Court Live",
-      color: "#2e55b9",
+      color: "#373735",
     },
     {
       path: "/home/multi-court-schedule?masterTournamentId=73&courtId=139,140,141,142,143,144,260,248&displayId=25",
       name: "Multi Court Schedule",
-      color: "#2e55b9",
+      color: "#373735",
     },
 
     {
       path: "/home/score-table?tournamentIds=264,265,266,267,268,269,270&groupDisplayTime=5&refreshInterval=10&tournamentId=73&displayId=25",
       name: "Score Table",
-      color: "#2e55b9",
+      color: "#373735",
     },
     {
       path: "/home/today-match?tournamentId=73&displayId=25",
       name: "Today's Matches",
-      color: "#2e55b9",
+      color: "#373735",
     },
 
     // { path: "/live-score", name: "Live Score", color: "#2e55b9" },

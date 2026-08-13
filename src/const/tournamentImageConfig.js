@@ -129,10 +129,26 @@ export const TOURNAMENT_IMAGES = {
   73: {
     leftLogo: "heritageCupLeft",
     cupLogo: "heritageCupCup",
-    rightLogo: "playproWhite",
+    rightLogo: "playpro",
     bg: "heritageCupBg",
     sponsor1: "heritageCupSponsor",
     sponsor2: "heritageCupSponsor",
+  },
+  99: {
+    leftLogo: "padAzadiCupLeft",
+    cupLogo: "padAzadiCupCup",
+    rightLogo: "playproWhite",
+    bg: "padAzadiCupBg",
+    sponsor1: "padAzadiCupSponsor",
+    sponsor2: "padAzadiCupSponsor",
+  },
+  81: {
+    leftLogo: "padAzadiCupLeft",
+    cupLogo: "padAzadiCupCup",
+    rightLogo: "playproWhite",
+    bg: "padAzadiCupBg",
+    sponsor1: "padAzadiCupSponsor",
+    sponsor2: "padAzadiCupSponsor",
   },
 };
 

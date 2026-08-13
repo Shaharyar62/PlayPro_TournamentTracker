@@ -23,6 +23,7 @@ import { TournamentRuleMatchFormatTypeEnum } from "../const/Constants";
 import MatchIdHelper from "../umpireScoring/utils/matchIdHelper.js";
 import { getScoreDisplayString } from "../umpireScoring/utils/scoringRules.js";
 import Header from "../components/layout/header";
+import SponsorMarquee from "../components/SponsorMarquee";
 import AnimatedScore from "../components/AnimatedScore";
 import matchDataTransformer from "../umpireScoring/helpers/matchDataTransformer";
 import { SERVER_URL } from "../umpireScoring/utils/constants.js";
@@ -433,7 +434,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         style={!isMultiView ? { margin: "0 var(--display-margin-h)" } : {}}
       >
         {/* Header row */}
-        <div className={`bg-[var(--color-accent)] text-black ${paddingScale}`}>
+        <div className={`bg-[var(--color-accent)] text-[var(--color-accent-text)] ${paddingScale}`}>
           <div
             className="grid gap-2 items-center"
             style={{
@@ -470,7 +471,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 )}
               <h2
                 style={{ fontSize: "var(--font-3xl)" }}
-                className={`${textScale} font-bold text-black`}
+                className={`${textScale} font-bold text-[var(--color-accent-text)]`}
               >
                 &nbsp;&nbsp;&nbsp;&nbsp; PLAYERS
               </h2>
@@ -479,7 +480,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
               <div key={index} className="text-center text-white">
                 <h2
                   style={{ fontSize: "var(--font-3xl)" }}
-                  className={`${textScale} font-bold text-black`}
+                  className={`${textScale} font-bold text-[var(--color-accent-text)]`}
                 >
                   {liveMatchData?.matchSettings?.matchFormat === 2 &&
                   index === 2
@@ -495,7 +496,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                     ? { fontSize: "27px", lineHeight: "23px" }
                     : { fontSize: "var(--font-3xl)" }
                 }
-                className={`${textScale} font-bold text-black`}
+                className={`${textScale} font-bold text-[var(--color-accent-text)]`}
               >
                 {getHeaderText()}
               </h2>
@@ -776,7 +777,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
       >
         <div
           style={{ fontSize: "var(--font-3xl)" }}
-          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis text-black ${
+          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis text-[var(--color-accent-text)] ${
             isMultiView ? "text-sm max-w-[40vw]" : "text-xl max-w-[30vw]"
           }`}
         >
@@ -791,7 +792,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         </div>
         <div
           style={{ fontSize: "var(--font-3xl)" }}
-          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis text-black ${
+          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis text-[var(--color-accent-text)] ${
             isMultiView ? "text-sm max-w-[40vw]" : "text-xl max-w-[30vw]"
           }`}
         >
@@ -1016,32 +1017,12 @@ const MultiCourtLive = () => {
             })}
             {/* Bottom indicator - Fixed to bottom */}
             {images.sponsor1 && (
-            <div className="fixed bottom-0 left-0 right-0 z-20 bg-whitex overflow-hidden">
-              <div className="marquee-wrapper">
-                <div className="marquee-content-scroll">
-                  <img
-                    src={images.sponsor2}
-                    alt="Sponsor"
-                    className="marquee-image"
-                  />
-                  <img
-                    src={images.sponsor1}
-                    alt="Sponsor"
-                    className="marquee-image"
-                  />
-                  <img
-                    src={images.sponsor2}
-                    alt="Sponsor"
-                    className="marquee-image"
-                  />
-                  <img
-                    src={images.sponsor1}
-                    alt="Sponsor"
-                    className="marquee-image"
-                  />
-                </div>
+              <div className="fixed bottom-0 left-0 right-0 z-20 overflow-hidden">
+                <SponsorMarquee
+                  sponsor1={images.sponsor1}
+                  sponsor2={images.sponsor2}
+                />
               </div>
-            </div>
             )}
           </div>
         )}
@@ -1057,37 +1038,6 @@ const MultiCourtLive = () => {
             }
           }
 
-          @keyframes marqueeScroll {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-50%);
-            }
-          }
-
-          .marquee-wrapper {
-            width: 100%;
-            overflow: hidden;
-                background: #1068ed;
-    padding: 10px 0;
-    border-top: 1px solid;
-          }
-
-          .marquee-content-scroll {
-            display: flex;
-            width: fit-content;
-            animation: marqueeScroll 30s linear infinite;
-            will-change: transform;
-          }
-
-          .marquee-image {
-            height: var(--display-sponsor-h);
-            width: auto;
-            margin: 0 0px;
-            object-fit: contain;
-            flex-shrink: 0;
-          }
         `}</style>
       </div>
 

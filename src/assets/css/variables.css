@@ -8,6 +8,7 @@
   --color-primary: #093337;
   --color-primary-dark: #061f22;
   --color-accent: #aacb32;
+  --color-accent-text: #000000;
   --color-background: #2b2b8a;
   --color-background-start: #093337;
   --color-background-end: #093337;
@@ -32,6 +33,10 @@
   --color-info-dark: #1976d2;
   --color-gradient-primary: #2e55b9;
   --color-gradient-accent: #67b3fd;
+  --color-gradient-text: #000000;
+  --color-today-match-text: #1e293b;
+  --color-title-text: #093337;
+  --color-sponsor-bar-bg: #092619;
 
   /* ========== Font Size Variables ========== */
   --font-xs: 12px;

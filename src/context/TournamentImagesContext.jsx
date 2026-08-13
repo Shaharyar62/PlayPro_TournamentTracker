@@ -11,6 +11,7 @@ export function TournamentImagesProvider({ children }) {
 
   // Support tournamentId, masterTournamentId, or first ID from tournamentIds (for ScoreTable)
   let tournamentId =
+    searchParams.get("themeId") ||
     searchParams.get("tournamentId") ||
     searchParams.get("masterTournamentId") ||
     params?.tournamentId ||

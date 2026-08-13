@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 import Common from "../helper/common";
 import Header from "../components/layout/header";
+import SponsorMarquee from "../components/SponsorMarquee";
 import { useDisplaySettings } from "../hooks/useDisplaySettings";
 const TournamentStandings = () => {
   const images = useTournamentImages();
@@ -747,7 +748,7 @@ const TournamentStandings = () => {
             <div className="relative z-10    items-center justify-center min-h-screen">
               <div
                 style={{ position: "absolute" }}
-                className="text-black bg-[var(--color-gradient-primary)] text-3xl font-bold px-6 py-2 rounded-lg rotate-[-90deg]  top-[500px] left-[-40px]   "
+                className="text-[var(--color-gradient-text)] bg-[var(--color-gradient-primary)] text-3xl font-bold px-6 py-2 rounded-lg rotate-[-90deg]  top-[500px] left-[-40px]   "
               >
                 GROUPS
               </div>
@@ -788,7 +789,7 @@ const TournamentStandings = () => {
                   <div className="col-span-1 text-center">
                     <div
                       className="text-4xl text-white font-bold   mb-2 "
-                      style={{ color: "var(--color-primary)" }}
+                      style={{ color: "var(--color-title-text)" }}
                     >
                       {currentTournament?.name || "Tournament"}
                     </div>
@@ -822,7 +823,7 @@ const TournamentStandings = () => {
                               className="max-w-[1024px]   mx-auto rounded-lg shadow-lg overflow-hidden bg-white"
                             >
                               {/* Header with glow effect */}
-                              <div className="relative bg-gradient-to-r from-[var(--color-gradient-primary)] via-[var(--color-gradient-accent)] to-[var(--color-gradient-primary)] px-6 py-1 text-black border-b border-[#ffffff66]">
+                              <div className="relative bg-gradient-to-r from-[var(--color-gradient-primary)] via-[var(--color-gradient-accent)] to-[var(--color-gradient-primary)] px-6 py-1 text-[var(--color-gradient-text)] border-b border-[#ffffff66]">
                                 <div className="flex justify-between items-center relative z-10">
                                   <div className="flex items-center space-x-1">
                                     <motion.div
@@ -830,13 +831,13 @@ const TournamentStandings = () => {
                                       animate={{ rotate: 0 }}
                                       transition={{ duration: 0.5 }}
                                     >
-                                      <Trophy className="h-5 w-5 text-black" />
+                                      <Trophy className="h-5 w-5 text-[var(--color-gradient-text)]" />
                                     </motion.div>
-                                    <h2 className="text-lg font-bold tracking-wider text-black">
+                                    <h2 className="text-lg font-bold tracking-wider text-[var(--color-gradient-text)]">
                                       Group {groupName}
                                     </h2>
                                   </div>
-                                  <div className="text-sm text-black">
+                                  <div className="text-sm text-[var(--color-gradient-text)]">
                                     {currentTournament?.tournamentMasterName ||
                                       currentTournament?.name}
                                   </div>
@@ -848,7 +849,7 @@ const TournamentStandings = () => {
                               <div className="bg-gradient-to-b text-black from-gray-50 to-white">
                                 <table className="w-full">
                                   <thead>
-                                    <tr className="bg-gradient-to-r from-[var(--color-gradient-primary)] to-[var(--color-gradient-accent)] text-black">
+                                    <tr className="bg-gradient-to-r from-[var(--color-gradient-primary)] to-[var(--color-gradient-accent)] text-[var(--color-gradient-text)]">
                                       <th className="py-1 px-4 text-left">#</th>
                                       <th className="py-1 px-4 text-left">
                                         Team Name
@@ -1041,19 +1042,19 @@ const TournamentStandings = () => {
                                   </tbody>
                                 </table>
                               </div>
-                              <div className="px-4 py-1 bg-gradient-to-r from-[var(--color-gradient-primary)] to-[var(--color-gradient-accent)] text-white text-xs">
+                              <div className="px-4 py-1 bg-gradient-to-r from-[var(--color-gradient-primary)] to-[var(--color-gradient-accent)] text-[var(--color-gradient-text)] text-xs">
                                 <div className="flex justify-between items-center">
                                   <div className="flex items-center space-x-2">
                                     <Trophy className="h-4 w-4 text-orange-400" />
-                                    <span className="text-black">Champion</span>
+                                    <span className="text-[var(--color-gradient-text)]">Champion</span>
                                   </div>
                                   <div className="flex items-center space-x-2">
                                     <Award className="h-4 w-4 text-orange-400" />
-                                    <span className="text-black">Qualified</span>
+                                    <span className="text-[var(--color-gradient-text)]">Qualified</span>
                                   </div>
                                   <div className="flex items-center space-x-2">
                                     <Shield className="h-4 w-4 text-orange-400" />
-                                    <span className="text-black">
+                                    <span className="text-[var(--color-gradient-text)]">
                                       Eliminated
                                     </span>
                                   </div>
@@ -1068,32 +1069,12 @@ const TournamentStandings = () => {
               </div>
               {/* Bottom indicator */}
               {images.sponsor1 && (
-              <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
-                <div className="marquee-wrapper">
-                  <div className="marquee-content-scroll">
-                    <img
-                      src={images.sponsor2}
-                      alt="Sponsor"
-                      className="marquee-image"
-                    />
-                    <img
-                      src={images.sponsor1}
-                      alt="Sponsor"
-                      className="marquee-image"
-                    />
-                    <img
-                      src={images.sponsor2}
-                      alt="Sponsor"
-                      className="marquee-image"
-                    />
-                    <img
-                      src={images.sponsor1}
-                      alt="Sponsor"
-                      className="marquee-image"
-                    />
-                  </div>
+                <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
+                  <SponsorMarquee
+                    sponsor1={images.sponsor1}
+                    sponsor2={images.sponsor2}
+                  />
                 </div>
-              </div>
               )}
               {/* <div className="fixed bottom-0 left-0 right-0 z-20 bg-transparent overflow-hidden">
                 <div className="flex animate-scrollLeft">
@@ -1173,49 +1154,6 @@ const TournamentStandings = () => {
                 }
               }
 
-              @keyframes marqueeScroll {
-                0% {
-                  transform: translateX(0);
-                }
-                100% {
-                  transform: translateX(-50%);
-                }
-              }
-
-              .marquee-wrapper {
-                width: 100%;
-                overflow: hidden;
-                    background: #1068ed;
-    padding: 10px 0;
-    border-top: 1px solid;
-              }
-
-              .marquee-content-scroll {
-                display: flex;
-                width: fit-content;
-                animation: marqueeScroll 30s linear infinite;
-                will-change: transform;
-              }
-
-              .marquee-image {
-                height: 80px;
-                width: auto;
-                margin: 0 50px;
-                object-fit: contain;
-                flex-shrink: 0;
-              }
-
-              @media (min-width: 1920px) {
-                .marquee-image {
-                  height: 100px;
-                }
-              }
-
-              @media (min-width: 2560px) {
-                .marquee-image {
-                  height: 120px;
-                }
-              }
             `}</style>
             <style jsx>{`
               @keyframes twinkle {

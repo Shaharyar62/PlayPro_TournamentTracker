@@ -74,6 +74,12 @@ import heritageCupRight from "./fix/heritage-cup-right.png";
 import heritageCupLeft from "./fix/heritage-cup-left.png";
 import heritageCupCup from "./fix/heritage-cup.png";
 import heritageCupSponsor from "./fix/heritage-cup-sponsor.png";
+
+import padAzadiCupBg from "./pad-azadi-cup-bg.png";
+import padAzadiCupRight from "./fix/pad-azadi-cup-right.png";
+import padAzadiCupLeft from "./fix/pad-azadi-cup-left.png";
+import padAzadiCupCup from "./fix/pad-azadi-cup.png";
+import padAzadiCupSponsor from "./fix/pad-azadi-cup-sponsor.png";
 // import sponsorLegends from "./fix/sponsor-legends.png";
 
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
@@ -151,6 +157,11 @@ export const ALL_IMAGES = {
   heritageCupRight,
   heritageCupBg,
   heritageCupSponsor,
+  padAzadiCupLeft,
+  padAzadiCupCup,
+  padAzadiCupRight,
+  padAzadiCupBg,
+  padAzadiCupSponsor,
   // "sponsor-legends": sponsorLegends,
 };
 
@@ -184,4 +195,9 @@ export const ImageConstants = {
   heritageCupLeft,
   heritageCupCup,
   heritageCupSponsor,
+  padAzadiCupBg,
+  padAzadiCupRight,
+  padAzadiCupLeft,
+  padAzadiCupCup,
+  padAzadiCupSponsor,
 };

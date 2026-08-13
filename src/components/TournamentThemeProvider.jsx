@@ -6,6 +6,7 @@ const CSS_VAR_MAP = {
   primary: "--color-primary",
   primaryDark: "--color-primary-dark",
   accent: "--color-accent",
+  accentText: "--color-accent-text",
   background: "--color-background",
   backgroundStart: "--color-background-start",
   backgroundEnd: "--color-background-end",
@@ -21,6 +22,10 @@ const CSS_VAR_MAP = {
   statusBar: "--color-status-bar",
   gradientPrimary: "--color-gradient-primary",
   gradientAccent: "--color-gradient-accent",
+  gradientText: "--color-gradient-text",
+  todayMatchText: "--color-today-match-text",
+  titleText: "--color-title-text",
+  sponsorBarBg: "--color-sponsor-bar-bg",
 };
 
 /**
@@ -32,7 +37,9 @@ export default function TournamentThemeProvider({ children }) {
   const params = useParams();
 
   // Support tournamentId, masterTournamentId, or first ID from tournamentIds (for ScoreTable)
+  // themeId overrides theme/images while tournamentId is used for API data
   let tournamentId =
+    searchParams.get("themeId") ||
     searchParams.get("tournamentId") ||
     searchParams.get("masterTournamentId") ||
     params?.tournamentId ||

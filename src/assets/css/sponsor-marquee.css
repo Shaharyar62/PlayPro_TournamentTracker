@@ -1,0 +1,48 @@
+.marquee-wrapper {
+  width: 100%;
+  overflow: hidden;
+  background: var(--color-sponsor-bar-bg, #092619);
+  padding: 10px 0;
+}
+
+.marquee-content-scroll {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 60s linear infinite;
+  will-change: transform;
+}
+
+.marquee-group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.marquee-image {
+  height: 80px;
+  width: auto;
+  margin: 0;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (min-width: 1920px) {
+  .marquee-image {
+    height: 100px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .marquee-image {
+    height: 120px;
+  }
+}
