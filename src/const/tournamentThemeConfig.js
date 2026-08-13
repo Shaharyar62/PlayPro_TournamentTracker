@@ -197,6 +197,8 @@ export const TOURNAMENT_THEMES = {
     primary: "#0d3d1f",
     titleText: "#ffffff",
     sponsorBarBg: "#ffffff",
+    scheduleTitleText: "#ffffff",
+    scheduleMatchText: "#000000",
   },
   // "appt": { primary: "#093337", accent: "#aacb32", ... },
   // "pvc": { primary: "#003184", accent: "#A8CE08", ... },

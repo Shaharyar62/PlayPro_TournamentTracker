@@ -963,11 +963,11 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
                       className="font-semibold text-gray-800"
                       style={{ fontSize: "var(--display-player-name-size)" }}
                     >
-                      <span className="text-[var(--color-accent)]">
+                      <span className="text-[var(--color-schedule-match-text,var(--color-accent))]">
                         {getTeamName(match.teamA)}
                       </span>
                       <span className="mx-2 text-gray-500">vs</span>
-                      <span className="text-[var(--color-accent)]">
+                      <span className="text-[var(--color-schedule-match-text,var(--color-accent))]">
                         {getTeamName(match.teamB)}
                       </span>
                     </div>
@@ -1202,13 +1202,13 @@ const MultiCourtSchedule = () => {
           className="text-center mb-8"
         >
           <h1
-            className="font-bold text-[var(--color-today-match-text)] mb-2"
+            className="font-bold text-[var(--color-schedule-title-text,var(--color-today-match-text))] mb-2"
             style={{ fontSize: "var(--font-3xl)" }}
           >
             Court Schedule
           </h1>
           <p
-            className="text-[var(--color-today-match-text)] opacity-90"
+            className="text-[var(--color-schedule-title-text,var(--color-today-match-text))] opacity-90"
             style={{ fontSize: "var(--font-3xl)" }}
           >
             {currentTime.format("dddd, MMMM D, YYYY - HH:mm")}

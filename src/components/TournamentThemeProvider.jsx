@@ -26,6 +26,8 @@ const CSS_VAR_MAP = {
   todayMatchText: "--color-today-match-text",
   titleText: "--color-title-text",
   sponsorBarBg: "--color-sponsor-bar-bg",
+  scheduleTitleText: "--color-schedule-title-text",
+  scheduleMatchText: "--color-schedule-match-text",
 };
 
 /**

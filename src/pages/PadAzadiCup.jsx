@@ -5,72 +5,54 @@ import "../assets/css/home.css";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 
 const TOURNAMENT_ID = "81";
-const DISPLAY_ID = "81";
+const COURT_DISPLAY_ID = "81";
+const MULTI_COURT_LIVE_DISPLAY_ID = "811";
+const MULTI_COURT_SCHEDULE_DISPLAY_ID = "812";
+const SCORE_TABLE_DISPLAY_ID = "813";
+const TODAY_MATCH_DISPLAY_ID = "814";
 const BUTTON_COLOR = "#aacb32";
 
-
 const COURT_IDS = "418,419,420,421,422,423";
+const SCORE_TABLE_TOURNAMENT_IDS =
+  "313,314,315,316,317,318,319,320";
+
+const COURTS = [
+  { courtId: "418", name: "Court 1" },
+  { courtId: "419", name: "Court 2" },
+  { courtId: "420", name: "Court 3" },
+  { courtId: "421", name: "Court 4" },
+  { courtId: "422", name: "Court 5" },
+  { courtId: "423", name: "Court 6" },
+];
 
 const PadAzadiCup = () => {
   const images = useTournamentImages();
+
+  const courtPages = COURTS.map(({ courtId, name }) => ({
+    path: `/home/live-court?tournamentId=${TOURNAMENT_ID}&courtId=${courtId}&displayId=${COURT_DISPLAY_ID}`,
+    name,
+    color: BUTTON_COLOR,
+  }));
+
   const pages = [
+    ...courtPages,
     {
-      path: `/home/live-court?tournamentId=${TOURNAMENT_ID}&courtId=139&displayId=${DISPLAY_ID}`,
-      name: "Court 1",
-      color: BUTTON_COLOR,
-    },
-    {
-      path: `/home/live-court?tournamentId=${TOURNAMENT_ID}&courtId=140&displayId=${DISPLAY_ID}`,
-      name: "Court 2",
-      color: BUTTON_COLOR,
-    },
-    {
-      path: `/home/live-court?tournamentId=${TOURNAMENT_ID}&courtId=141&displayId=${DISPLAY_ID}`,
-      name: "Court 3",
-      color: BUTTON_COLOR,
-    },
-    {
-      path: `/home/live-court?tournamentId=${TOURNAMENT_ID}&courtId=142&displayId=${DISPLAY_ID}`,
-      name: "Court 4",
-      color: BUTTON_COLOR,
-    },
-    {
-      path: `/home/live-court?tournamentId=${TOURNAMENT_ID}&courtId=143&displayId=${DISPLAY_ID}`,
-      name: "Court 5",
-      color: BUTTON_COLOR,
-    },
-    {
-      path: `/home/live-court?tournamentId=${TOURNAMENT_ID}&courtId=144&displayId=${DISPLAY_ID}`,
-      name: "Court 6",
-      color: BUTTON_COLOR,
-    },
-    // {
-    //   path: `/home/live-court?tournamentId=${TOURNAMENT_ID}&courtId=260&displayId=${DISPLAY_ID}`,
-    //   name: "MejorSet 1",
-    //   color: BUTTON_COLOR,
-    // },
-    // {
-    //   path: `/home/live-court?tournamentId=${TOURNAMENT_ID}&courtId=248&displayId=${DISPLAY_ID}`,
-    //   name: "MejorSet 2",
-    //   color: BUTTON_COLOR,
-    // },
-    {
-      path: `/home/multi-court-live?tournamentId=${TOURNAMENT_ID}&courtId=${COURT_IDS}&displayId=${DISPLAY_ID}`,
+      path: `/home/multi-court-live?tournamentId=${TOURNAMENT_ID}&courtId=${COURT_IDS}&displayId=${MULTI_COURT_LIVE_DISPLAY_ID}`,
       name: "Multi Court Live",
       color: BUTTON_COLOR,
     },
     {
-      path: `/home/multi-court-schedule?masterTournamentId=${TOURNAMENT_ID}&courtId=${COURT_IDS}&displayId=${DISPLAY_ID}`,
+      path: `/home/multi-court-schedule?masterTournamentId=${TOURNAMENT_ID}&courtId=${COURT_IDS}&displayId=${MULTI_COURT_SCHEDULE_DISPLAY_ID}`,
       name: "Multi Court Schedule",
       color: BUTTON_COLOR,
     },
     {
-      path: `/home/score-table?tournamentIds=313,314,315,316,317,318,319,320&groupDisplayTime=5&refreshInterval=10&tournamentId=${TOURNAMENT_ID}&displayId=${DISPLAY_ID}`,
+      path: `/home/score-table?tournamentIds=${SCORE_TABLE_TOURNAMENT_IDS}&groupDisplayTime=5&refreshInterval=10&tournamentId=${TOURNAMENT_ID}&displayId=${SCORE_TABLE_DISPLAY_ID}`,
       name: "Score Table",
       color: BUTTON_COLOR,
     },
     {
-      path: `/home/today-match?tournamentId=${TOURNAMENT_ID}&displayId=${DISPLAY_ID}`,
+      path: `/home/today-match?tournamentId=${TOURNAMENT_ID}&displayId=${TODAY_MATCH_DISPLAY_ID}`,
       name: "Today's Matches",
       color: BUTTON_COLOR,
     },
@@ -85,7 +67,7 @@ const PadAzadiCup = () => {
       <div className="buttons-grid">
         {pages.map((page, index) => (
           <motion.div
-            key={index}
+            key={page.path}
             className="button-wrapper"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

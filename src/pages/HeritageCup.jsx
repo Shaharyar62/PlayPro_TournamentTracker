@@ -4,76 +4,60 @@ import { motion } from "framer-motion";
 import "../assets/css/home.css";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 
+const TOURNAMENT_ID = "73";
+const COURT_DISPLAY_ID = "73";
+const MULTI_COURT_LIVE_DISPLAY_ID = "731";
+const MULTI_COURT_SCHEDULE_DISPLAY_ID = "732";
+const SCORE_TABLE_DISPLAY_ID = "733";
+const TODAY_MATCH_DISPLAY_ID = "734";
+const BUTTON_COLOR = "#373735";
+
+const COURT_IDS = "139,140,141,142,143,144,260,248";
+const SCORE_TABLE_TOURNAMENT_IDS =
+  "264,265,266,267,268,269,270";
+
+const COURTS = [
+  { courtId: "139", name: "Ocean 1" },
+  { courtId: "140", name: "Ocean 2" },
+  { courtId: "141", name: "Tera 1" },
+  { courtId: "142", name: "Tera 2" },
+  { courtId: "143", name: "Cherry 1" },
+  { courtId: "144", name: "Cherry 2" },
+  { courtId: "260", name: "MejorSet 1" },
+  { courtId: "248", name: "MejorSet 2" },
+];
+
 const HeritageCup = () => {
   const images = useTournamentImages();
+
+  const courtPages = COURTS.map(({ courtId, name }) => ({
+    path: `/home/live-court?tournamentId=${TOURNAMENT_ID}&courtId=${courtId}&displayId=${COURT_DISPLAY_ID}`,
+    name,
+    color: BUTTON_COLOR,
+  }));
+
   const pages = [
+    ...courtPages,
     {
-      path: "/home/live-court?tournamentId=73&courtId=139&displayId=25",
-      name: "Ocean 1",
-      color: "#373735",
-    },
-    {
-      path: "/home/live-court?tournamentId=73&courtId=140&displayId=25",
-      name: "Ocean 2",
-      color: "#373735",
-    },
-    {
-      path: "/home/live-court?tournamentId=73&courtId=141&displayId=25",
-      name: "Tera 1",
-      color: "#373735",
-    },
-    {
-      path: "/home/live-court?tournamentId=73&courtId=142&displayId=25",
-      name: "Tera 2",
-      color: "#373735",
-    },
-    {
-      path: "/home/live-court?tournamentId=73&courtId=143&displayId=25",
-      name: "Cherry 1",
-      color: "#373735",
-    },
-    {
-      path: "/home/live-court?tournamentId=73&courtId=144&displayId=25",
-      name: "Cherry 2",
-      color: "#373735",
-    },
-    {
-      path: "/home/live-court?tournamentId=73&courtId=260&displayId=25",
-      name: "MejorSet 1",
-      color: "#373735",
-    },
-    {
-      path: "/home/live-court?tournamentId=73&courtId=248&displayId=25",
-      name: "MejorSet 2",
-      color: "#373735",
-    },
-
-    {
-      path: "/home/multi-court-live?tournamentId=73&courtId=139,140,141,142,143,144,260,248&displayId=25",
+      path: `/home/multi-court-live?tournamentId=${TOURNAMENT_ID}&courtId=${COURT_IDS}&displayId=${MULTI_COURT_LIVE_DISPLAY_ID}`,
       name: "Multi Court Live",
-      color: "#373735",
+      color: BUTTON_COLOR,
     },
     {
-      path: "/home/multi-court-schedule?masterTournamentId=73&courtId=139,140,141,142,143,144,260,248&displayId=25",
+      path: `/home/multi-court-schedule?masterTournamentId=${TOURNAMENT_ID}&courtId=${COURT_IDS}&displayId=${MULTI_COURT_SCHEDULE_DISPLAY_ID}`,
       name: "Multi Court Schedule",
-      color: "#373735",
+      color: BUTTON_COLOR,
     },
-
     {
-      path: "/home/score-table?tournamentIds=264,265,266,267,268,269,270&groupDisplayTime=5&refreshInterval=10&tournamentId=73&displayId=25",
+      path: `/home/score-table?tournamentIds=${SCORE_TABLE_TOURNAMENT_IDS}&groupDisplayTime=5&refreshInterval=10&tournamentId=${TOURNAMENT_ID}&displayId=${SCORE_TABLE_DISPLAY_ID}`,
       name: "Score Table",
-      color: "#373735",
+      color: BUTTON_COLOR,
     },
     {
-      path: "/home/today-match?tournamentId=73&displayId=25",
+      path: `/home/today-match?tournamentId=${TOURNAMENT_ID}&displayId=${TODAY_MATCH_DISPLAY_ID}`,
       name: "Today's Matches",
-      color: "#373735",
+      color: BUTTON_COLOR,
     },
-
-    // { path: "/live-score", name: "Live Score", color: "#2e55b9" },
-    // { path: "/time-table", name: "Time Table", color: "#2e55b9" },
-    // { path: "/matches-timetable", name: "7 Day Schedule", color: "#2e55b9" },
-    // { path: "/score-card", name: "Score Card", color: "#2e55b9" },
   ];
 
   return (
@@ -85,7 +69,7 @@ const HeritageCup = () => {
       <div className="buttons-grid">
         {pages.map((page, index) => (
           <motion.div
-            key={index}
+            key={page.path}
             className="button-wrapper"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
