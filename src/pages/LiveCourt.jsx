@@ -18,6 +18,7 @@ import matchDataTransformer from "../umpireScoring/helpers/matchDataTransformer"
 import AnimatedScore from "../components/AnimatedScore";
 import { SERVER_URL } from "../umpireScoring/utils/constants.js";
 import { useDisplaySettings } from "../hooks/useDisplaySettings";
+import "../assets/css/live-score-card.css";
 const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
@@ -521,7 +522,7 @@ const MatchScoreCard = () => {
             <Header />
             {/* Main scoreboard */}
             <div
-              className="bg-white rounded-lg mb-[60px] shadow-2xl overflow-hidden"
+              className="bg-white rounded-lg mb-[60px] shadow-2xl overflow-hidden live-score-card"
               style={{
                 marginLeft: "var(--display-margin-h)",
                 marginRight: "var(--display-margin-h)",

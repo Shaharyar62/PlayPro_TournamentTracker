@@ -1276,7 +1276,10 @@ const MultiCourtSchedule = () => {
       `}</style>
 
       {images.sponsor1 && (
-        <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
+        <div
+          className="fixed bottom-0 left-0 right-0 z-20 overflow-hidden"
+          style={{ background: "var(--color-sponsor-bar-bg, #092619)" }}
+        >
           <SponsorMarquee
             sponsor1={images.sponsor1}
             sponsor2={images.sponsor2}

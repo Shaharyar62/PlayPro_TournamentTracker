@@ -150,6 +150,15 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "padAzadiCupSponsor",
     sponsor2: "padAzadiCupSponsor",
   },
+  83: {
+    leftLogo: "alNadiAlBurhaniLeft",
+    cupLogo: "alNadiAlBurhaniCup",
+    rightLogo: "playpro-ww",
+    playproWhite: "playpro-ww",
+    bg: "alNadiAlBurhaniBg",
+    sponsor1: "alNadiAlBurhaniSponsor",
+    sponsor2: "alNadiAlBurhaniSponsor",
+  },
 };
 
 /**

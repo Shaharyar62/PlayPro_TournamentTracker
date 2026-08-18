@@ -8,6 +8,8 @@ import Common from "../helper/common";
 import Header from "../components/layout/header";
 import SponsorMarquee from "../components/SponsorMarquee";
 import { useDisplaySettings } from "../hooks/useDisplaySettings";
+import { getThemeForTournament } from "../const/tournamentThemeConfig";
+import "../assets/css/score-table.css";
 const TournamentStandings = () => {
   const images = useTournamentImages();
   const [highlightedRow, setHighlightedRow] = useState(null);
@@ -38,8 +40,12 @@ const TournamentStandings = () => {
     if (tournamentIdsParam) {
       try {
         const parsed = JSON.parse(tournamentIdsParam);
-        console.log("Parsed tournament IDs:", parsed);
-        return parsed;
+        const ids = Array.isArray(parsed) ? parsed : [parsed];
+        const normalized = ids
+          .map((id) => parseInt(id, 10))
+          .filter((id) => !isNaN(id));
+        console.log("Parsed tournament IDs:", normalized);
+        return normalized;
       } catch (e) {
         // If JSON parsing fails, try comma-separated values
         const csvParsed = tournamentIdsParam
@@ -66,6 +72,19 @@ const TournamentStandings = () => {
       : null);
 
   useDisplaySettings({ displayId, listenOnly: true });
+
+  const themeTournamentId = useMemo(() => {
+    return (
+      params.get("themeId") ||
+      params.get("tournamentId") ||
+      params.get("masterTournamentId") ||
+      (tournamentIds.length > 0 ? String(tournamentIds[0]) : null)
+    );
+  }, [params, tournamentIds]);
+
+  const useGlassCards = useMemo(() => {
+    return Boolean(getThemeForTournament(themeTournamentId).scoreTableGlass);
+  }, [themeTournamentId]);
 
   // Get display time for each set of groups (in seconds) - REQUIRED
   const groupDisplayTime = parseInt(params.get("groupDisplayTime"));
@@ -465,12 +484,29 @@ const TournamentStandings = () => {
     }
   };
 
-  const getRowGradient = (id) => {
-    if (id === 1)
-      return "bg-gradient-to-r from-green-100 via-green-50 to-green-100 border-l-4 border-yellow-400";
-    if (id === 2)
-      return "bg-gradient-to-r from-green-50 to-white border-l-4 border-[var(--color-gradient-accent)]";
-    return "bg-white border-l-4 border-gray-200";
+  const getRowStyle = (id) => {
+    const championBg =
+      "var(--color-score-row-champion-bg, linear-gradient(to right, #dcfce7, #f0fdf4, #dcfce7))";
+    const qualifiedBg =
+      "var(--color-score-row-qualified-bg, linear-gradient(to right, #f0fdf4, #ffffff))";
+    const defaultBg = "var(--color-score-row-default-bg, #ffffff)";
+
+    if (id === 1) {
+      return {
+        background: championBg,
+        borderLeft: "4px solid #facc15",
+      };
+    }
+    if (id === 2) {
+      return {
+        background: qualifiedBg,
+        borderLeft: "4px solid var(--color-score-table-card-header-bg, var(--color-gradient-accent))",
+      };
+    }
+    return {
+      background: defaultBg,
+      borderLeft: "4px solid #e5e7eb",
+    };
   };
 
   // Loading state
@@ -748,7 +784,7 @@ const TournamentStandings = () => {
             <div className="relative z-10    items-center justify-center min-h-screen">
               <div
                 style={{ position: "absolute" }}
-                className="text-[var(--color-gradient-text)] bg-[var(--color-gradient-primary)] text-3xl font-bold px-6 py-2 rounded-lg rotate-[-90deg]  top-[500px] left-[-40px]   "
+                className="score-table-groups-tab text-[var(--color-gradient-text)] text-3xl font-bold px-6 py-2 rounded-lg rotate-[-90deg] top-[500px] left-[-40px]"
               >
                 GROUPS
               </div>
@@ -820,10 +856,14 @@ const TournamentStandings = () => {
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               style={{ zoom: 1.3 }}
-                              className="max-w-[1024px]   mx-auto rounded-lg shadow-lg overflow-hidden bg-white"
+                              className={`max-w-[1024px] mx-auto rounded-xl shadow-lg overflow-hidden score-table-card ${
+                                useGlassCards
+                                  ? "score-table-card--glass"
+                                  : "bg-white"
+                              }`}
                             >
                               {/* Header with glow effect */}
-                              <div className="relative bg-gradient-to-r from-[var(--color-gradient-primary)] via-[var(--color-gradient-accent)] to-[var(--color-gradient-primary)] px-6 py-1 text-[var(--color-gradient-text)] border-b border-[#ffffff66]">
+                              <div className="relative score-table-card-header px-6 py-1 text-[var(--color-gradient-text)]">
                                 <div className="flex justify-between items-center relative z-10">
                                   <div className="flex items-center space-x-1">
                                     <motion.div
@@ -846,10 +886,19 @@ const TournamentStandings = () => {
             
           </div> */}
                               </div>
-                              <div className="bg-gradient-to-b text-black from-gray-50 to-white">
+                              <div
+                                className={`text-black ${
+                                  useGlassCards ? "score-table-card-body--glass bg-white" : ""
+                                }`}
+                                style={{
+                                  background: useGlassCards
+                                    ? "var(--color-score-table-body-bg, #ffffff)"
+                                    : "var(--color-score-table-body-bg, linear-gradient(to bottom, #f9fafb, #ffffff))",
+                                }}
+                              >
                                 <table className="w-full">
                                   <thead>
-                                    <tr className="bg-gradient-to-r from-[var(--color-gradient-primary)] to-[var(--color-gradient-accent)] text-[var(--color-gradient-text)]">
+                                    <tr className="score-table-card-header text-[var(--color-gradient-text)]">
                                       <th className="py-1 px-4 text-left">#</th>
                                       <th className="py-1 px-4 text-left">
                                         Team Name
@@ -897,13 +946,15 @@ const TournamentStandings = () => {
                                       return (
                                         <motion.tr
                                           key={team.id}
-                                          className={`${getRowGradient(
-                                            index + 1,
-                                          )} ${
-                                            highlightedRow === team.id
-                                              ? "bg-green-50"
-                                              : ""
-                                          }`}
+                                          style={{
+                                            ...getRowStyle(index + 1),
+                                            ...(highlightedRow === team.id
+                                              ? {
+                                                  background:
+                                                    "var(--color-score-row-hover-bg, #f0fdf4)",
+                                                }
+                                              : {}),
+                                          }}
                                           onMouseEnter={() =>
                                             setHighlightedRow(team.id)
                                           }
@@ -1042,7 +1093,7 @@ const TournamentStandings = () => {
                                   </tbody>
                                 </table>
                               </div>
-                              <div className="px-4 py-1 bg-gradient-to-r from-[var(--color-gradient-primary)] to-[var(--color-gradient-accent)] text-[var(--color-gradient-text)] text-xs">
+                              <div className="score-table-card-header px-4 py-1 text-[var(--color-gradient-text)] text-xs">
                                 <div className="flex justify-between items-center">
                                   <div className="flex items-center space-x-2">
                                     <Trophy className="h-4 w-4 text-orange-400" />
@@ -1069,7 +1120,10 @@ const TournamentStandings = () => {
               </div>
               {/* Bottom indicator */}
               {images.sponsor1 && (
-                <div className="fixed bottom-0 left-0 right-0 z-20 bg-white overflow-hidden">
+                <div
+                  className="fixed bottom-0 left-0 right-0 z-20 overflow-hidden"
+                  style={{ background: "var(--color-sponsor-bar-bg, #092619)" }}
+                >
                   <SponsorMarquee
                     sponsor1={images.sponsor1}
                     sponsor2={images.sponsor2}

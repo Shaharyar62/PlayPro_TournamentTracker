@@ -1,0 +1,7 @@
+.live-score-card {
+  border: var(--color-card-outline, none);
+  box-shadow: var(
+    --color-card-shadow,
+    0 25px 50px -12px rgba(0, 0, 0, 0.25)
+  );
+}

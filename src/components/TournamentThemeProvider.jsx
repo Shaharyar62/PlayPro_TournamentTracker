@@ -28,6 +28,16 @@ const CSS_VAR_MAP = {
   sponsorBarBg: "--color-sponsor-bar-bg",
   scheduleTitleText: "--color-schedule-title-text",
   scheduleMatchText: "--color-schedule-match-text",
+  scoreTableBodyBg: "--color-score-table-body-bg",
+  scoreTableRowChampionBg: "--color-score-row-champion-bg",
+  scoreTableRowQualifiedBg: "--color-score-row-qualified-bg",
+  scoreTableRowDefaultBg: "--color-score-row-default-bg",
+  scoreTableRowHoverBg: "--color-score-row-hover-bg",
+  scoreTableCardHeaderBg: "--color-score-table-card-header-bg",
+  scoreTableGlass: "--score-table-glass",
+  scoreTableGlassBg: "--color-score-table-glass-bg",
+  cardOutline: "--color-card-outline",
+  cardShadow: "--color-card-shadow",
 };
 
 /**

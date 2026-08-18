@@ -8,6 +8,7 @@ import mmiBg from "./mmi-bg.png";
 import sponsorMMI1 from "./fix/sponsor-mmi-1.png";
 import sponsorMMI2 from "./fix/sponsor-mmi-2.png";
 import playproWhite from "./fix/playpro-w.png";
+import playproWW from "./fix/playpro-ww.png";
 import legendsLogo from "./fix/legends-logo.png";
 import gkBg from "./gk-bg.png";
 import sponsorAppt from "./fix/sponsor-appt.png";
@@ -80,6 +81,12 @@ import padAzadiCupRight from "./fix/pad-azadi-cup-right.png";
 import padAzadiCupLeft from "./fix/pad-azadi-cup-left.png";
 import padAzadiCupCup from "./fix/pad-azadi-cup.png";
 import padAzadiCupSponsor from "./fix/pad-azadi-cup-sponsor.png";
+
+import alNadiAlBurhaniBg from "./al-nadi-al-burhani-bg.png";
+import alNadiAlBurhaniRight from "./fix/al-nadi-al-burhani-right.png";
+import alNadiAlBurhaniLeft from "./fix/al-nadi-al-burhani-left.png";
+import alNadiAlBurhaniCup from "./fix/al-nadi-al-burhanivv.png";
+import alNadiAlBurhaniSponsor from "./fix/al-nadi-al-burhani-sponsor.png";
 // import sponsorLegends from "./fix/sponsor-legends.png";
 
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
@@ -90,6 +97,7 @@ import padAzadiCupSponsor from "./fix/pad-azadi-cup-sponsor.png";
 export const ALL_IMAGES = {
   "tmp-logo": tmpLogo,
   "playpro-w": playproWhite,
+  "playpro-ww": playproWW,
   "kg-logo": gkLogo,
   "tmp-cup": tmpCup,
   "gk-cup": gkCup,
@@ -162,6 +170,11 @@ export const ALL_IMAGES = {
   padAzadiCupRight,
   padAzadiCupBg,
   padAzadiCupSponsor,
+  alNadiAlBurhaniLeft,
+  alNadiAlBurhaniCup,
+  alNadiAlBurhaniRight,
+  alNadiAlBurhaniBg,
+  alNadiAlBurhaniSponsor,
   // "sponsor-legends": sponsorLegends,
 };
 
@@ -200,4 +213,9 @@ export const ImageConstants = {
   padAzadiCupLeft,
   padAzadiCupCup,
   padAzadiCupSponsor,
+  alNadiAlBurhaniBg,
+  alNadiAlBurhaniRight,
+  alNadiAlBurhaniLeft,
+  alNadiAlBurhaniCup,
+  alNadiAlBurhaniSponsor,
 };

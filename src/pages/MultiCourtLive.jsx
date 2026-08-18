@@ -28,6 +28,7 @@ import AnimatedScore from "../components/AnimatedScore";
 import matchDataTransformer from "../umpireScoring/helpers/matchDataTransformer";
 import { SERVER_URL } from "../umpireScoring/utils/constants.js";
 import { useDisplaySettings } from "../hooks/useDisplaySettings";
+import "../assets/css/live-score-card.css";
 
 const ZOOM_MIN = 0.1;
 const ZOOM_MAX = 2;
@@ -430,7 +431,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
       {/* Main scoreboard */}
       <div
-        className={`bg-white rounded-lg shadow-2xl overflow-hidden ${isMultiView ? "m-2" : ""}`}
+        className={`bg-white rounded-lg shadow-2xl overflow-hidden live-score-card ${isMultiView ? "m-2" : ""}`}
         style={!isMultiView ? { margin: "0 var(--display-margin-h)" } : {}}
       >
         {/* Header row */}
@@ -785,7 +786,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         </div>
 
         <div
-          className="font-bold text-black  whitespace-nowrap overflow-hidden text-ellipsis max-w-[20vw] text-center text-white"
+          className="font-bold text-black whitespace-nowrap overflow-hidden text-ellipsis max-w-[20vw] text-center text-white"
           style={{ fontSize: "var(--display-court-name-size)" }}
         >
           {matchData.court?.name || "LIVE SCOREBOARD"}
@@ -801,29 +802,6 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             {matchData.tournamentName || "LIVE SCOREBOARD"}{" "}
           </p>
         </div>
-
-        {/* <div
-          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold ${
-            isMultiView ? "text-sm" : "text-xl"
-          }`}
-        >
-          <p className="text">{matchData.tournamentName || "LIVE SCOREBOARD"} </p>
-        </div> */}
-
-        {/* <div
-          className={`bg-[var(--color-accent)]  px-4 py-1 rounded-lg font-bold ${
-            isMultiView ? "text-xs" : "text-sm"
-          }`}
-        >
-          {upcomingMatch ? (
-            <div>
-              UPCOMING: {getTeamName(upcomingMatch.teamA)} VS{" "}
-              {getTeamName(upcomingMatch.teamB)}
-            </div>
-          ) : (
-            <div>UPCOMING</div>
-          )}
-        </div> */}
       </div>
     </div>
   );

@@ -1,0 +1,46 @@
+.score-table-card--glass {
+  background: var(
+    --color-score-table-glass-bg,
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.96) 0%,
+      rgba(255, 255, 255, 0.94) 45%,
+      rgba(255, 255, 255, 0.92) 100%
+    )
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 16px 48px rgba(1, 15, 37, 0.2),
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.score-table-card-header {
+  background: var(
+    --color-score-table-card-header-bg,
+    linear-gradient(
+      to right,
+      var(--color-gradient-primary),
+      var(--color-gradient-accent),
+      var(--color-gradient-primary)
+    )
+  );
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.score-table-card-body--glass {
+  background: transparent;
+}
+
+.score-table-groups-tab {
+  background: var(
+    --color-score-table-card-header-bg,
+    var(--color-gradient-primary)
+  );
+  box-shadow:
+    0 4px 16px rgba(1, 15, 37, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
