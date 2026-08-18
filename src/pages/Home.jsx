@@ -50,6 +50,11 @@ const Home = () => {
       name: "Today's Matches",
       color: "#2e55b9",
     },
+    {
+      path: "/home/fixture?tournamentIds=177,176,175,174,173,172&categoryDisplayTime=15&refreshInterval=5&tournamentId=49",
+      name: "Fixture",
+      color: "#2e55b9",
+    },
 
     // { path: "/live-score", name: "Live Score", color: "#2e55b9" },
     // { path: "/time-table", name: "Time Table", color: "#2e55b9" },

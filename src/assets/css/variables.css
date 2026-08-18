@@ -38,6 +38,15 @@
   --color-title-text: #093337;
   --color-sponsor-bar-bg: #092619;
 
+  /* ========== Bracket / Fixture Variables ========== */
+  --color-bracket-card-bg: rgba(0, 0, 0, 0.52);
+  --color-bracket-card-border: rgba(255, 255, 255, 0.18);
+  --color-bracket-text: rgba(255, 255, 255, 0.92);
+  --color-bracket-text-muted: rgba(255, 255, 255, 0.55);
+  --color-bracket-connector: rgba(255, 255, 255, 0.28);
+  --color-bracket-score-won: #e6b84d;
+  --color-bracket-canvas: transparent;
+
   /* ========== Font Size Variables ========== */
   --font-xs: 12px;
   --font-sm: 14px;

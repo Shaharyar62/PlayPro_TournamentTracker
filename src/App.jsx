@@ -49,6 +49,7 @@ import DisplayMaster from "./pages/DisplayMaster";
 import Indolj from "./pages/indolj";
 import PadelverseTams from "./pages/PadelverseTams";
 import LegendsPadelOpen from "./pages/LegendsPadelOpen";
+import Fixture from "./pages/Fixture";
 
 function App() {
   const isLoaded = useRef(false);
@@ -103,7 +104,10 @@ function App() {
                   element={<PadelverseOnedayTounament />}
                 />
                 <Route path="pad-azadi-cup" element={<PadAzadiCup />} />
-                <Route path="al-nadi-al-burhani" element={<AlNadiAlBurhani />} />
+                <Route
+                  path="al-nadi-al-burhani"
+                  element={<AlNadiAlBurhani />}
+                />
                 <Route path="gk" element={<GK />} />
                 <Route path="appt" element={<Appt />} />
                 <Route path="mmi" element={<MMI />} />
@@ -131,6 +135,7 @@ function App() {
                 <Route path="live-score" element={<LiveScore />} />
                 <Route path="time-table" element={<TimeTable />} />
                 <Route path="score-table" element={<ScoreTable />} />
+                <Route path="fixture" element={<Fixture />} />
                 <Route path="score-card" element={<ScoreCard />} />
                 <Route path="today-match" element={<TodayMatch />} />
                 <Route path="umpire" element={<UmpirePage />} />

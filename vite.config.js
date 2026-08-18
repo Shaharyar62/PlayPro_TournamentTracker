@@ -5,8 +5,12 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  test: {
+    environment: "node",
+    include: ["src/**/*.test.js"],
+  },
   server: {
-    host: '0.0.0.0', // Listen on all network interfaces
+    host: "0.0.0.0", // Listen on all network interfaces
     port: 5173,
   },
   build: {

@@ -1,13 +1,13 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import { loader } from "react-global-loader";
-import Cookies from "js-cookie";
 import AppConstant, {
   ResultStatus,
   CustomTimeoutUrlEnum,
 } from "../const/appConstant";
 import { removeUselessValues } from "../helper/utilityHelper";
 import common from "../helper/common";
+import { resolveAuthToken } from "../helper/authTokenHelper";
 
 class HttpServiceManager {
   log = console.log;
@@ -47,40 +47,18 @@ class HttpServiceManager {
     //    return Promise.reject(error);
     //  }
     //  );
-    debugger;
     this.axiosInstance.interceptors.request.use(
       (config) => {
-        // debugger;
-        let token = Cookies.get("token");
-        // let currentPath = window.location.pathname.toLowerCase(); // Normalize path
-
-        // if (!token && currentPath !== "/login") {
-        //   redirectToLogin();
-        //   return Promise.reject(
-        //     "User not authenticated. Redirecting to login."
-        //   );
-        // }
-
-        // if (token && currentPath !== "/login") {
-        //   //try {
-        //   let payload = JSON.parse(atob(token.split(".")[1])); // Decode JWT
-        //   if (common.Utility.isTokenExpired(payload.exp)) {
-        //     redirectToLogin();
-        //     return Promise.reject("Token expired. Redirecting to login.");
-        //   }
-        //   //} catch (e) {
-        //   //    redirectToLogin();
-        //   //    return Promise.reject("Invalid token. Redirecting to login.");
-        //   // }
-        // }
-
-        config.headers.Authorization = `Bearer ${token}`;
+        const token = resolveAuthToken();
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
         return config;
       },
       (error) => {
         this.log("header Config err:", error);
         return Promise.reject(error);
-      }
+      },
     );
 
     // function redirectToLogin() {
@@ -96,7 +74,7 @@ class HttpServiceManager {
         this.log(error.response.data);
         HttpServiceManager.customcheckError(error, true);
         return Promise.reject(error);
-      }
+      },
     );
   }
 
@@ -109,7 +87,7 @@ class HttpServiceManager {
       });
     } else {
       console.warn(
-        'HttpServiceManager method "initialize" is not called, call it in App.js componentDidMount'
+        'HttpServiceManager method "initialize" is not called, call it in App.js componentDidMount',
       );
       return {};
     }
@@ -120,7 +98,7 @@ class HttpServiceManager {
     parameters,
     method = "Get",
     showLoader = true,
-    showMessage = true
+    showMessage = true,
   ) {
     let axiosInstance = HttpServiceManager.getInstance().axiosInstance;
     if (axiosInstance !== null) {
@@ -131,7 +109,7 @@ class HttpServiceManager {
         /* let customTimeout = requestName.includes(CustomTimeoutUrlEnum.SendPushNotificationToUsers) ? 0 : 60000;*/
 
         let customTimeout = Object.values(CustomTimeoutUrlEnum).includes(
-          requestName
+          requestName,
         )
           ? 0
           : 60000;
@@ -150,7 +128,7 @@ class HttpServiceManager {
           "--------------------------------------------------------------------------------------",
           "\n- REQUEST : ",
           reqParam,
-          "\n--------------------------------------------------------------------------------------"
+          "\n--------------------------------------------------------------------------------------",
         );
 
         axiosInstance
@@ -160,7 +138,7 @@ class HttpServiceManager {
               "--------------------------------------------------------------------------------------",
               "\n- RESPONSE123 : ",
               response.data,
-              "\n--------------------------------------------------------------------------------------"
+              "\n--------------------------------------------------------------------------------------",
             );
             if (response.data.status == ResultStatus.Success) {
               resolve(response.data);
@@ -170,7 +148,7 @@ class HttpServiceManager {
               response.data.status == ResultStatus.Unauthorized
             ) {
               resolve(
-                HttpServiceManager.customcheckError(response, showMessage)
+                HttpServiceManager.customcheckError(response, showMessage),
               );
 
               if (response.data.status == ResultStatus.Unauthorized) {
@@ -196,7 +174,7 @@ class HttpServiceManager {
       });
     } else {
       console.warn(
-        'HttpServiceManager method "initialize" is not called, call it in App.js componentDidMount'
+        'HttpServiceManager method "initialize" is not called, call it in App.js componentDidMount',
       );
 
       if (showLoader) {
@@ -211,7 +189,7 @@ class HttpServiceManager {
       "--------------------------------------------------------------------------------------",
       "\n-CUSTOM ERROR : ",
       response,
-      "\n--------------------------------------------------------------------------------------"
+      "\n--------------------------------------------------------------------------------------",
     );
     let error = response?.data?.message;
     if (showMessage && error) {

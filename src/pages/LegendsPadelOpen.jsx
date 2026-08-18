@@ -79,6 +79,11 @@ const Padelverse = () => {
       name: "Today's Matches",
       color: "#2e55b9",
     },
+    {
+      path: "/home/fixture?tournamentIds=271,272,273,274,275,276,277,278&categoryDisplayTime=15&refreshInterval=5&tournamentId=75&displayId=25",
+      name: "Fixture",
+      color: "#2e55b9",
+    },
 
     // { path: "/live-score", name: "Live Score", color: "#2e55b9" },
     // { path: "/time-table", name: "Time Table", color: "#2e55b9" },

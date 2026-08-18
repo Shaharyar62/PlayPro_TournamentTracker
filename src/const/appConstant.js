@@ -5,30 +5,40 @@ const getEnviromentConfig = (config) => {
         baseUrl: "https://localhost:7094/",
         serviceUrl: "https://localhost:7094/api/Service",
         imgBaseurl: "https://localhost:7094/img/upload/",
+        serviceAuthToken:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MTciLCJqdGkiOiI1MmQ5MGE2YS1kNmZiLTQzYjAtYTkxOS00NGU1ODcwY2Q1ZWQiLCJleHAiOjQ5NDU0MDQ4NzUsImlzcyI6Imh0dHA6Ly9uYXNjZW50aW5vdm8uY28uemEiLCJhdWQiOiJodHRwOi8vbmFzY2VudGlub3ZvLmNvLnphIn0.A7KlPgvYLC1yXWlvXF_BMJMzPRQfb_qpqBPlRwjtN8k",
       };
     case EnviromentTypeEnum.QA:
       return {
         baseUrl: "http://qa_playpro.nascentinnovations.com/",
         serviceUrl: "http://qa_playpro.nascentinnovations.com/api/Service",
         imgBaseurl: "http://qa_playpro.nascentinnovations.com/img/upload/",
+        serviceAuthToken:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MTciLCJqdGkiOiI1MmQ5MGE2YS1kNmZiLTQzYjAtYTkxOS00NGU1ODcwY2Q1ZWQiLCJleHAiOjQ5NDU0MDQ4NzUsImlzcyI6Imh0dHA6Ly9uYXNjZW50aW5vdm8uY28uemEiLCJhdWQiOiJodHRwOi8vbmFzY2VudGlub3ZvLmNvLnphIn0.A7KlPgvYLC1yXWlvXF_BMJMzPRQfb_qpqBPlRwjtN8k",
       };
     case EnviromentTypeEnum.Dev:
       return {
         baseUrl: "https://dev3playpro.nascentinnovations.com/",
         serviceUrl: "https://dev3playpro.nascentinnovations.com/api/Service",
         imgBaseurl: "https://dev3playpro.nascentinnovations.com/img/upload/",
+        serviceAuthToken:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MTciLCJqdGkiOiI1MmQ5MGE2YS1kNmZiLTQzYjAtYTkxOS00NGU1ODcwY2Q1ZWQiLCJleHAiOjQ5NDU0MDQ4NzUsImlzcyI6Imh0dHA6Ly9uYXNjZW50aW5vdm8uY28uemEiLCJhdWQiOiJodHRwOi8vbmFzY2VudGlub3ZvLmNvLnphIn0.A7KlPgvYLC1yXWlvXF_BMJMzPRQfb_qpqBPlRwjtN8k",
       };
     case EnviromentTypeEnum.Production:
       return {
         baseUrl: "https://playpro.nascentinnovations.com/",
         serviceUrl: "https://playpro.nascentinnovations.com/api/Service",
         imgBaseurl: "https://playpro.nascentinnovations.com/img/upload/",
+        serviceAuthToken:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MTciLCJqdGkiOiI1MmQ5MGE2YS1kNmZiLTQzYjAtYTkxOS00NGU1ODcwY2Q1ZWQiLCJleHAiOjQ5NDU0MDQ4NzUsImlzcyI6Imh0dHA6Ly9uYXNjZW50aW5vdm8uY28uemEiLCJhdWQiOiJodHRwOi8vbmFzY2VudGlub3ZvLmNvLnphIn0.A7KlPgvYLC1yXWlvXF_BMJMzPRQfb_qpqBPlRwjtN8k",
       };
     case EnviromentTypeEnum.Demo:
       return {
         baseUrl: "https://playprodemo.nascentinnovations.com",
         serviceUrl: "https://playprodemo.nascentinnovations.com/api/Service",
         imgBaseurl: "https://playprodemo.nascentinnovations.com/img/upload/",
+        serviceAuthToken:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MTciLCJqdGkiOiI1MmQ5MGE2YS1kNmZiLTQzYjAtYTkxOS00NGU1ODcwY2Q1ZWQiLCJleHAiOjQ5NDU0MDQ4NzUsImlzcyI6Imh0dHA6Ly9uYXNjZW50aW5vdm8uY28uemEiLCJhdWQiOiJodHRwOi8vbmFzY2VudGlub3ZvLmNvLnphIn0.A7KlPgvYLC1yXWlvXF_BMJMzPRQfb_qpqBPlRwjtN8k",
       };
   }
 };
@@ -266,7 +276,25 @@ export const TournamentMatchStageEnum = Object.freeze({
   Quarter_Final: 2,
   Semi_Final: 3,
   Final: 4,
+  Knockout: 5,
+  Third_Position: 6,
+  Round_Of_16: 7,
+  Exhibition_Match: 8,
 });
+
+export function getMatchStageLabel(stageType) {
+  const labels = {
+    [TournamentMatchStageEnum.Group_Match]: "Group Matches",
+    [TournamentMatchStageEnum.Quarter_Final]: "Quarter Final",
+    [TournamentMatchStageEnum.Semi_Final]: "Semi Final",
+    [TournamentMatchStageEnum.Final]: "Final",
+    [TournamentMatchStageEnum.Knockout]: "Knockout",
+    [TournamentMatchStageEnum.Third_Position]: "3rd Place",
+    [TournamentMatchStageEnum.Round_Of_16]: "Round of 16",
+    [TournamentMatchStageEnum.Exhibition_Match]: "Exhibition",
+  };
+  return labels[stageType] ?? "Match";
+}
 
 export const SlotStatusEnum = Object.freeze({
   Available: 1,
