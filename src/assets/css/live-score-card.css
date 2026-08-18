@@ -1,7 +1,29 @@
 .live-score-card {
+  background: var(--color-score-table-glass-bg, #ffffff);
+  backdrop-filter: var(--score-table-glass-blur, none);
+  -webkit-backdrop-filter: var(--score-table-glass-blur, none);
   border: var(--color-card-outline, none);
   box-shadow: var(
     --color-card-shadow,
     0 25px 50px -12px rgba(0, 0, 0, 0.25)
   );
+}
+
+.live-score-card-header {
+  position: relative;
+  background: var(--color-score-table-card-header-bg, var(--color-accent));
+  color: var(--color-gradient-text, var(--color-accent-text));
+  backdrop-filter: var(--score-table-header-blur, none);
+  -webkit-backdrop-filter: var(--score-table-header-blur, none);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22);
+}
+
+.live-score-card-header-text {
+  color: var(--color-gradient-text, var(--color-accent-text));
+}
+
+.live-score-card-body {
+  background: var(--color-score-table-body-bg, #ffffff);
 }

@@ -4,28 +4,26 @@ import { motion } from "framer-motion";
 import "../assets/css/home.css";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 
-const TOURNAMENT_ID = "81";
-const COURT_DISPLAY_ID = "81";
-const MULTI_COURT_LIVE_DISPLAY_ID = "811";
-const MULTI_COURT_SCHEDULE_DISPLAY_ID = "812";
-const SCORE_TABLE_DISPLAY_ID = "813";
-const TODAY_MATCH_DISPLAY_ID = "814";
-const BUTTON_COLOR = "#aacb32";
+const TOURNAMENT_ID = "84";
+const COURT_DISPLAY_ID = "84";
+const MULTI_COURT_LIVE_DISPLAY_ID = "841";
+const MULTI_COURT_SCHEDULE_DISPLAY_ID = "842";
+const SCORE_TABLE_DISPLAY_ID = "843";
+const TODAY_MATCH_DISPLAY_ID = "844";
+const BUTTON_COLOR = "#2e55b9";
 
-const COURT_IDS = "418,419,420,421,422,423";
-const SCORE_TABLE_TOURNAMENT_IDS =
-  "314,315,316,317,318,319,320";
+const COURT_IDS = "82,83,84,85";
+const SCORE_TABLE_TOURNAMENT_IDS = "313";
 
 const COURTS = [
-  { courtId: "418", name: "Court 1" },
-  { courtId: "419", name: "Court 2" },
-  { courtId: "420", name: "Court 3" },
-  { courtId: "421", name: "Court 4" },
-  { courtId: "422", name: "Court 5" },
-  { courtId: "423", name: "Court 6" },
+ 
+  { courtId: "82", name: "Galaxy 4" },
+  { courtId: "83", name: "Black Star 1" },
+  { courtId: "84", name: "Black Star 2" },
+  { courtId: "85", name: "Infinity" },
 ];
 
-const PadAzadiCup = () => {
+const PadelverseOnedayTounament = () => {
   const images = useTournamentImages();
 
   const courtPages = COURTS.map(({ courtId, name }) => ({
@@ -95,4 +93,4 @@ const PadAzadiCup = () => {
   );
 };
 
-export default PadAzadiCup;
+export default PadelverseOnedayTounament;

@@ -87,6 +87,12 @@ import alNadiAlBurhaniRight from "./fix/al-nadi-al-burhani-right.png";
 import alNadiAlBurhaniLeft from "./fix/al-nadi-al-burhani-left.png";
 import alNadiAlBurhaniCup from "./fix/al-nadi-al-burhanivv.png";
 import alNadiAlBurhaniSponsor from "./fix/al-nadi-al-burhani-sponsor.png";
+
+import padelverseOnedayBg from "./padelverse-oneday-bg.png";
+import padelverseOnedayRight from "./fix/padelverse-oneday-right.png";
+import padelverseOnedayLeft from "./fix/padelverse-oneday-left.png";
+import padelverseOnedayCup from "./fix/padelverse-oneday.png";
+import padelverseOnedaySponsor from "./fix/padelverse-oneday-sponsor.png";
 // import sponsorLegends from "./fix/sponsor-legends.png";
 
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
@@ -175,6 +181,11 @@ export const ALL_IMAGES = {
   alNadiAlBurhaniRight,
   alNadiAlBurhaniBg,
   alNadiAlBurhaniSponsor,
+  padelverseOnedayLeft,
+  padelverseOnedayCup,
+  padelverseOnedayRight,
+  padelverseOnedayBg,
+  padelverseOnedaySponsor,
   // "sponsor-legends": sponsorLegends,
 };
 
@@ -218,4 +229,9 @@ export const ImageConstants = {
   alNadiAlBurhaniLeft,
   alNadiAlBurhaniCup,
   alNadiAlBurhaniSponsor,
+  padelverseOnedayBg,
+  padelverseOnedayRight,
+  padelverseOnedayLeft,
+  padelverseOnedayCup,
+  padelverseOnedaySponsor,
 };

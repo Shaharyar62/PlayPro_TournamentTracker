@@ -863,7 +863,7 @@ const TournamentStandings = () => {
                               }`}
                             >
                               {/* Header with glow effect */}
-                              <div className="relative score-table-card-header px-6 py-1 text-[var(--color-gradient-text)]">
+                              <div className="relative score-table-card-header score-table-card-header--title px-6 py-1 text-[var(--color-gradient-text)]">
                                 <div className="flex justify-between items-center relative z-10">
                                   <div className="flex items-center space-x-1">
                                     <motion.div
@@ -898,7 +898,7 @@ const TournamentStandings = () => {
                               >
                                 <table className="w-full">
                                   <thead>
-                                    <tr className="score-table-card-header text-[var(--color-gradient-text)]">
+                                    <tr className="score-table-card-header score-table-card-header--cols text-[var(--color-gradient-text)]">
                                       <th className="py-1 px-4 text-left">#</th>
                                       <th className="py-1 px-4 text-left">
                                         Team Name
@@ -1093,7 +1093,7 @@ const TournamentStandings = () => {
                                   </tbody>
                                 </table>
                               </div>
-                              <div className="score-table-card-header px-4 py-1 text-[var(--color-gradient-text)] text-xs">
+                              <div className="score-table-card-header score-table-card-header--title px-4 py-1 text-[var(--color-gradient-text)] text-xs">
                                 <div className="flex justify-between items-center">
                                   <div className="flex items-center space-x-2">
                                     <Trophy className="h-4 w-4 text-orange-400" />

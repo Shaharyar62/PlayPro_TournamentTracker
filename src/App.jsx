@@ -35,7 +35,9 @@ import Padelverse from "./pages/Padelverse";
 import TMP from "./pages/TMP";
 import TMPWMO from "./pages/TMPWMO";
 import HeritageCup from "./pages/HeritageCup";
+import PadelverseOnedayTounament from "./pages/PadelverseOnedayTounament";
 import PadAzadiCup from "./pages/PadAzadiCup";
+import AlNadiAlBurhani from "./pages/AlNadiAlBurhani";
 import GK from "./pages/GK";
 import Links from "./pages/live/Links";
 import Appt from "./pages/Appt";
@@ -96,7 +98,12 @@ function App() {
                 <Route path="tmp" element={<TMP />} />
                 <Route path="tmpwmo" element={<TMPWMO />} />
                 <Route path="heritage-cup" element={<HeritageCup />} />
+                <Route
+                  path="padelverse-oneday-tounament"
+                  element={<PadelverseOnedayTounament />}
+                />
                 <Route path="pad-azadi-cup" element={<PadAzadiCup />} />
+                <Route path="al-nadi-al-burhani" element={<AlNadiAlBurhani />} />
                 <Route path="gk" element={<GK />} />
                 <Route path="appt" element={<Appt />} />
                 <Route path="mmi" element={<MMI />} />

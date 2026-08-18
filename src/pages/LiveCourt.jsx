@@ -522,7 +522,7 @@ const MatchScoreCard = () => {
             <Header />
             {/* Main scoreboard */}
             <div
-              className="bg-white rounded-lg mb-[60px] shadow-2xl overflow-hidden live-score-card"
+              className="rounded-lg mb-[60px] overflow-hidden live-score-card"
               style={{
                 marginLeft: "var(--display-margin-h)",
                 marginRight: "var(--display-margin-h)",
@@ -530,7 +530,7 @@ const MatchScoreCard = () => {
               }}
             >
               {/* Header row - Dynamic based on number of sets */}
-              <div className="text-[var(--color-accent-text)] py-4 bg-[var(--color-accent)]">
+              <div className="live-score-card-header py-4">
                 <div
                   className="grid gap-4 items-center"
                   style={{
@@ -541,7 +541,7 @@ const MatchScoreCard = () => {
                 >
                   <div className="text-center">
                     <h2
-                      className="font-bold text-[var(--color-accent-text)]"
+                      className="font-bold live-score-card-header-text"
                       style={{ fontSize: "var(--font-3xl)" }}
                     >
                       PLAYERS
@@ -550,7 +550,7 @@ const MatchScoreCard = () => {
                   {Array.from({ length: getNumberOfSets() }, (_, index) => (
                     <div key={index} className="text-center">
                       <h2
-                        className="font-bold text-[var(--color-accent-text)]"
+                        className="font-bold live-score-card-header-text"
                         style={{ fontSize: "var(--font-3xl)" }}
                       >
                         {liveMatchData?.matchSettings?.matchFormat === 2 &&
@@ -563,7 +563,7 @@ const MatchScoreCard = () => {
                   ))}
                   <div className="text-center">
                     <h2
-                      className="font-bold text-[var(--color-accent-text)]"
+                      className="font-bold live-score-card-header-text"
                       style={{ fontSize: "var(--font-3xl)" }}
                     >
                       {getHeaderText()}{" "}
@@ -573,7 +573,7 @@ const MatchScoreCard = () => {
               </div>
 
               {/* Score content - Dynamic layout */}
-              <div className="p-0">
+              <div className="p-0 live-score-card-body">
                 <div
                   className="grid gap-4 items-center"
                   style={{
@@ -729,7 +729,7 @@ const MatchScoreCard = () => {
                   ))}
 
                   {/* Current Game/Points Score */}
-                  <div className="text-center bg-[var(--color-accent)]">
+                  <div className="text-center live-score-card-header">
                     <div className="space-y-4 pt-[25px] pb-[25px]">
                       <div
                         className="font-bold text-white"
@@ -774,21 +774,21 @@ const MatchScoreCard = () => {
       </div>
       {/* Bottom indicator and Upcoming Match */}
       <div
-        className="grid grid-cols-12 gap-4 items-center mt-[80px] mb-[20px]"
+        className="grid grid-cols-12 gap-4 items-center mb-[20px]"
         style={{
           marginLeft: "var(--display-margin-h)",
           marginRight: "var(--display-margin-h)",
         }}
       >
         <div
-          className="bg-[var(--color-accent)] col-span-4 text-[var(--color-accent-text)] w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold"
+          className="live-score-card-header col-span-4 w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold"
           style={{ fontSize: "var(--display-court-name-size)" }}
         >
           {/*   {matchStatus.current == "completed" ? "COMPLETED" : "Live"} */}
           {matchStatus.current == "completed" ? "COMPLETED" : getMatchFormat()}
         </div>
         <div
-          className="bg-[var(--color-accent)] m-auto col-span-4 text-[var(--color-accent-text)] w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold"
+          className="live-score-card-header m-auto col-span-4 w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold"
           style={{ fontSize: "var(--display-court-name-size)" }}
         >
           {/* {matchData.court?.name || "LIVE SCOREBOARD"}{" "} */}
@@ -800,7 +800,7 @@ const MatchScoreCard = () => {
           </p>
         </div>
         <div
-          className="bg-[var(--color-accent)] col-span-4 ml-auto text-[var(--color-accent-text)] px-[20px] py-3 rounded-lg font-bold"
+          className="live-score-card-header col-span-4 ml-auto px-[20px] py-3 rounded-lg font-bold"
           style={{ fontSize: "var(--display-court-name-size)" }}
         >
           {matchData.court?.name || "LIVE SCOREBOARD"}{" "}

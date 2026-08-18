@@ -159,6 +159,14 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "alNadiAlBurhaniSponsor",
     sponsor2: "alNadiAlBurhaniSponsor",
   },
+  84: {
+    leftLogo: "padelverseOnedayLeft",
+    cupLogo: "padelverseOnedayCup",
+    rightLogo: "padelverseOnedayRight",
+    bg: "padelverseOnedayBg",
+    sponsor1: null,
+    sponsor2: null,
+  },
 };
 
 /**

@@ -34,8 +34,11 @@ const CSS_VAR_MAP = {
   scoreTableRowDefaultBg: "--color-score-row-default-bg",
   scoreTableRowHoverBg: "--color-score-row-hover-bg",
   scoreTableCardHeaderBg: "--color-score-table-card-header-bg",
+  scoreTableCardHeaderColsBg: "--color-score-table-card-header-cols-bg",
   scoreTableGlass: "--score-table-glass",
   scoreTableGlassBg: "--color-score-table-glass-bg",
+  scoreTableGlassBlur: "--score-table-glass-blur",
+  scoreTableHeaderBlur: "--score-table-header-blur",
   cardOutline: "--color-card-outline",
   cardShadow: "--color-card-shadow",
 };
