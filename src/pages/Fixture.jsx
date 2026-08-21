@@ -5,7 +5,7 @@ import SponsorMarquee from "../components/SponsorMarquee";
 import Common from "../helper/common";
 import { getTokenFromUrl } from "../helper/authTokenHelper";
 import { useDisplaySettings } from "../hooks/useDisplaySettings";
-import useTournamentBracket from "../bracket/hooks/useTournamentBracket";
+import useFixtureBracketBatch from "../bracket/hooks/useFixtureBracketBatch";
 import TournamentBracketView from "../bracket/components/TournamentBracketView";
 import "../assets/css/fixture.css";
 
@@ -72,15 +72,16 @@ export default function Fixture() {
 
   const activeTournamentId = tournamentIds[currentTournamentIndex] ?? null;
 
+  const { getBracketState, loading, error, hasAnyContent } =
+    useFixtureBracketBatch(tournamentIds, { refreshInterval });
+
   const {
     graph,
     scheduleImage,
     scheduleUrl,
     tournamentName,
-    loading,
-    error,
     hasContent,
-  } = useTournamentBracket(activeTournamentId, { refreshInterval });
+  } = getBracketState(activeTournamentId);
 
   useEffect(() => {
     if (tournamentIds.length <= 1 || !categoryDisplayTime) return;
@@ -130,7 +131,7 @@ export default function Fixture() {
   }
 
   const renderContent = () => {
-    if (loading && !hasContent) {
+    if (loading && !hasContent && !hasAnyContent) {
       return <div className="fixture-page__loading">Loading fixture...</div>;
     }
 
