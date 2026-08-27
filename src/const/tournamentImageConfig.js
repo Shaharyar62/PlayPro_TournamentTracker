@@ -167,6 +167,22 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: null,
     sponsor2: null,
   },
+  "fip-promises": {
+    leftLogo: "fipPromisesLeft",
+    cupLogo: "fipPromisesCup",
+    rightLogo: "fipPromisesRight",
+    bg: "fipPromisesBg",
+    sponsor1: "fipPromisesSponsor",
+    sponsor2: "fipPromisesSponsor",
+  },
+  89: {
+    leftLogo: "fipPromisesLeft",
+    cupLogo: "fipPromisesCup",
+    rightLogo: "fipPromisesRight",
+    bg: "fipPromisesBg",
+    sponsor1: "fipPromisesSponsor",
+    sponsor2: "fipPromisesSponsor",
+  },
 };
 
 /**

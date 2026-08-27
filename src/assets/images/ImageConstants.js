@@ -93,6 +93,12 @@ import padelverseOnedayRight from "./fix/padelverse-oneday-right.png";
 import padelverseOnedayLeft from "./fix/padelverse-oneday-left.png";
 import padelverseOnedayCup from "./fix/padelverse-oneday.png";
 import padelverseOnedaySponsor from "./fix/padelverse-oneday-sponsor.png";
+
+import fipPromisesBg from "./fip-promises-bg.png";
+import fipPromisesRight from "./fix/fip-promises-right.png";
+import fipPromisesLeft from "./fix/fip-promises-left.png";
+import fipPromisesCup from "./fix/fip-promises.png";
+import fipPromisesSponsor from "./fix/fip-promises-sponsorp.png";
 // import sponsorLegends from "./fix/sponsor-legends.png";
 
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
@@ -186,6 +192,11 @@ export const ALL_IMAGES = {
   padelverseOnedayRight,
   padelverseOnedayBg,
   padelverseOnedaySponsor,
+  fipPromisesLeft,
+  fipPromisesCup,
+  fipPromisesRight,
+  fipPromisesBg,
+  fipPromisesSponsor,
   // "sponsor-legends": sponsorLegends,
 };
 
@@ -234,4 +245,9 @@ export const ImageConstants = {
   padelverseOnedayLeft,
   padelverseOnedayCup,
   padelverseOnedaySponsor,
+  fipPromisesBg,
+  fipPromisesRight,
+  fipPromisesLeft,
+  fipPromisesCup,
+  fipPromisesSponsor,
 };

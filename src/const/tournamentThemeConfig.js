@@ -246,6 +246,58 @@ export const TOURNAMENT_THEMES = {
     cardShadow:
       "0 24px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.22)",
   },
+  "fip-promises": {
+    primary: "#0b1a3a",
+    accent: "#2e55b9",
+    gradientPrimary: "#071226",
+    gradientAccent: "#0d1f44",
+    gradientText: "#ffffff",
+    titleText: "#ffffff",
+    accentText: "#ffffff",
+    todayMatchText: "#ffffff",
+    scheduleTitleText: "#ffffff",
+    scoreTableCardHeaderBg:
+      "linear-gradient(180deg, #2b5c96 0%, #1c4578 48%, #143560 100%)",
+    scoreTableCardHeaderColsBg:
+      "linear-gradient(180deg, #3d6eaa 0%, #2d5a90 52%, #234e80 100%)",
+    scoreTableHeaderBlur: "blur(16px) saturate(1.35)",
+    scoreTableGlass: "1",
+    scoreTableGlassBg:
+      "linear-gradient(160deg, rgba(12, 22, 48, 0.62) 0%, rgba(6, 12, 32, 0.48) 48%, rgba(8, 16, 40, 0.58) 100%)",
+    scoreTableGlassBlur: "blur(22px) saturate(1.55)",
+    scoreTableBodyBg: "#ffffff",
+    scoreTableRowQualifiedBg: "#ffffff",
+    scoreTableRowDefaultBg: "#ffffff",
+    cardOutline: "1px solid rgba(255, 255, 255, 0.28)",
+    cardShadow:
+      "0 24px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.22)",
+  },
+  89: {
+    primary: "#0b1a3a",
+    accent: "#2e55b9",
+    gradientPrimary: "#071226",
+    gradientAccent: "#0d1f44",
+    gradientText: "#ffffff",
+    titleText: "#ffffff",
+    accentText: "#ffffff",
+    todayMatchText: "#ffffff",
+    scheduleTitleText: "#ffffff",
+    scoreTableCardHeaderBg:
+      "linear-gradient(180deg, #2b5c96 0%, #1c4578 48%, #143560 100%)",
+    scoreTableCardHeaderColsBg:
+      "linear-gradient(180deg, #3d6eaa 0%, #2d5a90 52%, #234e80 100%)",
+    scoreTableHeaderBlur: "blur(16px) saturate(1.35)",
+    scoreTableGlass: "1",
+    scoreTableGlassBg:
+      "linear-gradient(160deg, rgba(12, 22, 48, 0.62) 0%, rgba(6, 12, 32, 0.48) 48%, rgba(8, 16, 40, 0.58) 100%)",
+    scoreTableGlassBlur: "blur(22px) saturate(1.55)",
+    scoreTableBodyBg: "#ffffff",
+    scoreTableRowQualifiedBg: "#ffffff",
+    scoreTableRowDefaultBg: "#ffffff",
+    cardOutline: "1px solid rgba(255, 255, 255, 0.28)",
+    cardShadow:
+      "0 24px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.22)",
+  },
   // "appt": { primary: "#093337", accent: "#aacb32", ... },
   // "pvc": { primary: "#003184", accent: "#A8CE08", ... },
 };
@@ -261,6 +313,10 @@ const THEME_ALIASES = {
   270: 73,
   323: 83,
   313: 84,
+  332: 89,
+  333: 89,
+  334: 89,
+  335: 89,
   314: 81,
   315: 81,
   316: 81,

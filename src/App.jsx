@@ -36,6 +36,7 @@ import TMP from "./pages/TMP";
 import TMPWMO from "./pages/TMPWMO";
 import HeritageCup from "./pages/HeritageCup";
 import PadelverseOnedayTounament from "./pages/PadelverseOnedayTounament";
+import FipPromises from "./pages/FipPromises";
 import PadAzadiCup from "./pages/PadAzadiCup";
 import AlNadiAlBurhani from "./pages/AlNadiAlBurhani";
 import GK from "./pages/GK";
@@ -103,6 +104,7 @@ function App() {
                   path="padelverse-oneday-tounament"
                   element={<PadelverseOnedayTounament />}
                 />
+                <Route path="fip-promises" element={<FipPromises />} />
                 <Route path="pad-azadi-cup" element={<PadAzadiCup />} />
                 <Route
                   path="al-nadi-al-burhani"

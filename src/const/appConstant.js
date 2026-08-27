@@ -10,9 +10,9 @@ const getEnviromentConfig = (config) => {
       };
     case EnviromentTypeEnum.QA:
       return {
-        baseUrl: "http://qa_playpro.nascentinnovations.com/",
-        serviceUrl: "http://qa_playpro.nascentinnovations.com/api/Service",
-        imgBaseurl: "http://qa_playpro.nascentinnovations.com/img/upload/",
+        baseUrl: "https://qaplaypro.nascentinnovations.com/",
+        serviceUrl: "https://qaplaypro.nascentinnovations.com/api/Service",
+        imgBaseurl: "https://qaplaypro.nascentinnovations.com/img/upload/",
         serviceAuthToken:
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MTciLCJqdGkiOiI1MmQ5MGE2YS1kNmZiLTQzYjAtYTkxOS00NGU1ODcwY2Q1ZWQiLCJleHAiOjQ5NDU0MDQ4NzUsImlzcyI6Imh0dHA6Ly9uYXNjZW50aW5vdm8uY28uemEiLCJhdWQiOiJodHRwOi8vbmFzY2VudGlub3ZvLmNvLnphIn0.A7KlPgvYLC1yXWlvXF_BMJMzPRQfb_qpqBPlRwjtN8k",
       };

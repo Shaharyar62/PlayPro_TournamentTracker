@@ -28,14 +28,38 @@ import AnimatedScore from "../components/AnimatedScore";
 import matchDataTransformer from "../umpireScoring/helpers/matchDataTransformer";
 import { SERVER_URL } from "../umpireScoring/utils/constants.js";
 import { useDisplaySettings } from "../hooks/useDisplaySettings";
+import { getThemeForTournament } from "../const/tournamentThemeConfig";
 import "../assets/css/live-score-card.css";
+import "../assets/css/score-table.css";
 
 const ZOOM_MIN = 0.1;
 const ZOOM_MAX = 2;
 const ZOOM_STEP = 0.1;
 
+function CourtCardPlaceholder({ message }) {
+  return (
+    <div className="h-full w-full flex flex-col">
+      <div className="rounded-lg overflow-hidden min-h-[280px] flex flex-col live-score-card">
+        <div className="live-score-card-header px-4 py-2">
+          <div className="text-center font-bold tracking-wider live-score-card-header-text">
+            PLAYERS
+          </div>
+        </div>
+        <div className="live-score-card-body flex-1 flex items-center justify-center">
+          <span className="text-gray-400 font-semibold text-xl">{message}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Single Court Component
-const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
+const SingleCourtDisplay = ({
+  tournamentId,
+  courtId,
+  isMultiView,
+  useGlassCards = false,
+}) => {
   const [matchData, setMatchData] = useState(null);
   const [upcomingMatch, setUpcomingMatch] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -336,44 +360,13 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
   if (loading) {
     return (
-      <></>
-      // <div className="flex items-center justify-center h-full">
-      //   <div
-      //     className={`${
-      //       isMultiView ? "text-xl" : "text-4xl"
-      //     } font-bold text-white`}
-      //   >
-      //     Loading...
-      //   </div>
-      // </div>
+      <CourtCardPlaceholder message="" />
     );
   }
 
-  if (error) {
+  if (error || (!liveMatchData && !matchData)) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div
-          className={`${
-            isMultiView ? "text-lg" : "text-2xl"
-          } font-bold text-red-400`}
-        >
-          Error: {error}
-        </div>
-      </div>
-    );
-  }
-
-  if (!liveMatchData && !matchData) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div
-          className={`${
-            isMultiView ? "text-lg" : "text-2xl"
-          } font-bold text-gray-400`}
-        >
-          No match data available
-        </div>
-      </div>
+      <CourtCardPlaceholder message="No live match" />
     );
   }
 
@@ -431,11 +424,25 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
 
       {/* Main scoreboard */}
       <div
-        className={`bg-white rounded-lg shadow-2xl overflow-hidden live-score-card ${isMultiView ? "m-2" : ""}`}
+        className={`overflow-hidden ${
+          isMultiView
+            ? "rounded-lg live-score-card"
+            : useGlassCards
+              ? "rounded-xl shadow-lg score-table-card score-table-card--glass"
+              : `bg-white rounded-lg shadow-2xl live-score-card`
+        }`}
         style={!isMultiView ? { margin: "0 var(--display-margin-h)" } : {}}
       >
         {/* Header row */}
-        <div className={`bg-[var(--color-accent)] text-[var(--color-accent-text)] ${paddingScale}`}>
+        <div
+          className={`${paddingScale} ${
+            isMultiView
+              ? "live-score-card-header"
+              : useGlassCards
+                ? "score-table-card-header score-table-card-header--cols text-[var(--color-gradient-text)]"
+                : "bg-[var(--color-accent)] text-[var(--color-accent-text)]"
+          }`}
+        >
           <div
             className="grid gap-2 items-center"
             style={{
@@ -472,7 +479,13 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                 )}
               <h2
                 style={{ fontSize: "var(--font-3xl)" }}
-                className={`${textScale} font-bold text-[var(--color-accent-text)]`}
+                className={`${textScale} font-bold ${
+                  isMultiView
+                    ? "live-score-card-header-text"
+                    : useGlassCards
+                      ? "text-[var(--color-gradient-text)]"
+                      : "text-[var(--color-accent-text)]"
+                }`}
               >
                 &nbsp;&nbsp;&nbsp;&nbsp; PLAYERS
               </h2>
@@ -481,7 +494,13 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
               <div key={index} className="text-center text-white">
                 <h2
                   style={{ fontSize: "var(--font-3xl)" }}
-                  className={`${textScale} font-bold text-[var(--color-accent-text)]`}
+                  className={`${textScale} font-bold ${
+                    isMultiView
+                      ? "live-score-card-header-text"
+                      : useGlassCards
+                        ? "text-[var(--color-gradient-text)]"
+                        : "text-[var(--color-accent-text)]"
+                  }`}
                 >
                   {liveMatchData?.matchSettings?.matchFormat === 2 &&
                   index === 2
@@ -497,7 +516,13 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
                     ? { fontSize: "27px", lineHeight: "23px" }
                     : { fontSize: "var(--font-3xl)" }
                 }
-                className={`${textScale} font-bold text-[var(--color-accent-text)]`}
+                className={`${textScale} font-bold ${
+                  isMultiView
+                    ? "live-score-card-header-text"
+                    : useGlassCards
+                      ? "text-[var(--color-gradient-text)]"
+                      : "text-[var(--color-accent-text)]"
+                }`}
               >
                 {getHeaderText()}
               </h2>
@@ -506,7 +531,15 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         </div>
 
         {/* Score content */}
-        <div className="p-0">
+        <div
+          className={`p-0 ${
+            isMultiView
+              ? "live-score-card-body"
+              : useGlassCards
+                ? "score-table-card-body--glass bg-white"
+                : ""
+          }`}
+        >
           <div
             className="grid gap-2 items-center"
             style={{
@@ -517,7 +550,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
           >
             {/* Team Names and Players */}
             <div
-              className={isMultiView ? "py-2" : undefined}
+              className={isMultiView ? "py-2 px-3" : undefined}
               style={
                 !isMultiView ? { padding: "clamp(12px, 2.5vh, 32px) 0" } : {}
               }
@@ -606,7 +639,7 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
               <div
                 className={`text-center ${
                   isMultiView ? "text-2xl" : "text-2xl"
-                } font-bold ${marginScale ?? ""}`}
+                } font-bold text-gray-400 ${marginScale ?? ""}`}
                 style={marginScaleStyle}
               >
                 VS
@@ -733,7 +766,13 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
             ))}
 
             {/* Current Game/Points Score */}
-            <div className="text-center bg-[var(--color-accent)]">
+            <div
+              className={`text-center ${
+                isMultiView
+                  ? "live-score-card-header"
+                  : "bg-[var(--color-accent)]"
+              }`}
+            >
               <div
                 className={isMultiView ? "space-y-1 py-2 px-2" : "space-y-4"}
                 style={
@@ -778,7 +817,11 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
       >
         <div
           style={{ fontSize: "var(--font-3xl)" }}
-          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis text-[var(--color-accent-text)] ${
+          className={`${
+            isMultiView
+              ? "live-score-card-header"
+              : "bg-[var(--color-accent)] text-[var(--color-accent-text)]"
+          } px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis ${
             isMultiView ? "text-sm max-w-[40vw]" : "text-xl max-w-[30vw]"
           }`}
         >
@@ -793,7 +836,11 @@ const SingleCourtDisplay = ({ tournamentId, courtId, isMultiView }) => {
         </div>
         <div
           style={{ fontSize: "var(--font-3xl)" }}
-          className={`bg-[var(--color-accent)] px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis text-[var(--color-accent-text)] ${
+          className={`${
+            isMultiView
+              ? "live-score-card-header"
+              : "bg-[var(--color-accent)] text-[var(--color-accent-text)]"
+          } px-4 py-1 rounded-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis ${
             isMultiView ? "text-sm max-w-[40vw]" : "text-xl max-w-[30vw]"
           }`}
         >
@@ -819,6 +866,14 @@ const MultiCourtLive = () => {
 
   // Apply persisted display settings on mount and subscribe to live master updates
   useDisplaySettings({ displayId, listenOnly: true });
+
+  const themeTournamentId =
+    searchParams.get("themeId") ||
+    searchParams.get("tournamentId") ||
+    tournamentId;
+  const useGlassCards = Boolean(
+    getThemeForTournament(themeTournamentId).scoreTableGlass,
+  );
 
   const [displayTime, setDisplayTime] = useState(moment().tz("Asia/Karachi"));
   const [zoomLevel, setZoomLevel] = useState(1);
@@ -905,13 +960,18 @@ const MultiCourtLive = () => {
   }
 
   // Determine layout based on number of courts
+  const getGridCols = () => {
+    const n = courtIds.length;
+    if (n <= 1) return 1;
+    if (n <= 4) return 2;
+    return 3;
+  };
+
   const getGridLayout = () => {
-    if (courtIds.length === 1) return "grid-cols-1";
-    if (courtIds.length === 2) return "grid-cols-2";
-    if (courtIds.length === 3) return "grid-cols-2";
-    if (courtIds.length === 4) return "grid-cols-2 grid-rows-2";
-    if (courtIds.length <= 6) return "grid-cols-2 grid-rows-2";
-    return "grid-cols-3"; // Default for more than 6
+    const cols = getGridCols();
+    if (cols === 1) return "grid-cols-1";
+    if (cols === 2) return "grid-cols-2";
+    return "grid-cols-3";
   };
 
   const isMultiView = courtIds.length > 1;
@@ -950,6 +1010,7 @@ const MultiCourtLive = () => {
                 tournamentId={tournamentId}
                 courtId={courtIds[0]}
                 isMultiView={false}
+                useGlassCards={useGlassCards}
               />
             </div>
           </div>
@@ -958,36 +1019,42 @@ const MultiCourtLive = () => {
         {/* Multi-court grid */}
         {isMultiView && (
           <div
-            className={`relative z-10 grid ${getGridLayout()} gap-4 p-4`}
+            className={`relative z-10 grid ${getGridLayout()} gap-5 px-[50px] items-stretch`}
             style={{
               paddingTop: "var(--display-margin-top)",
               paddingLeft: "var(--display-margin-h)",
               paddingRight: "var(--display-margin-h)",
+              paddingBottom: "90px",
             }}
           >
             {courtIds.map((courtId, index) => {
+              const cols = getGridCols();
+              const leftover = courtIds.length % cols;
               const isLastItem = index === courtIds.length - 1;
-              const isOddCount = courtIds.length % 2 !== 0;
-              const shouldCenter = isLastItem && isOddCount;
+              const shouldCenter = isLastItem && leftover === 1 && cols > 1;
+              const spanClass = cols === 3 ? "col-span-3" : "col-span-2";
 
               return (
                 <div
                   key={courtId}
-                  className={`min-h-[350px] ${
-                    shouldCenter ? "col-span-2 flex justify-center" : ""
+                  className={`min-h-[320px] ${
+                    shouldCenter ? `${spanClass} flex justify-center` : ""
                   }`}
                 >
                   <div
                     className={
                       shouldCenter
-                        ? "w-full max-w-[calc(50%-0.5rem)]"
-                        : "w-full"
+                        ? cols === 3
+                          ? "w-full max-w-[calc(33.333%-0.83rem)]"
+                          : "w-full max-w-[calc(50%-0.625rem)]"
+                        : "w-full h-full"
                     }
                   >
                     <SingleCourtDisplay
                       tournamentId={tournamentId}
                       courtId={courtId}
                       isMultiView={true}
+                      useGlassCards={useGlassCards}
                     />
                   </div>
                 </div>
@@ -995,7 +1062,10 @@ const MultiCourtLive = () => {
             })}
             {/* Bottom indicator - Fixed to bottom */}
             {images.sponsor1 && (
-              <div className="fixed bottom-0 left-0 right-0 z-20 overflow-hidden">
+              <div
+                className="fixed bottom-0 left-0 right-0 z-20 overflow-hidden"
+                style={{ background: "var(--color-sponsor-bar-bg, #ffffff)" }}
+              >
                 <SponsorMarquee
                   sponsor1={images.sponsor1}
                   sponsor2={images.sponsor2}
