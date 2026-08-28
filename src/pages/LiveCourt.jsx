@@ -19,6 +19,7 @@ import AnimatedScore from "../components/AnimatedScore";
 import { SERVER_URL } from "../umpireScoring/utils/constants.js";
 import { useDisplaySettings } from "../hooks/useDisplaySettings";
 import "../assets/css/live-score-card.css";
+import "../assets/css/live-court.css";
 const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
@@ -534,7 +535,7 @@ const MatchScoreCard = () => {
                 <div
                   className="grid gap-4 items-center"
                   style={{
-                    gridTemplateColumns: `10fr ${Array(getNumberOfSets())
+                    gridTemplateColumns: `9fr ${Array(getNumberOfSets())
                       .fill("1fr")
                       .join(" ")} 2fr`,
                   }}
@@ -577,7 +578,7 @@ const MatchScoreCard = () => {
                 <div
                   className="grid gap-4 items-center"
                   style={{
-                    gridTemplateColumns: `10fr ${Array(getNumberOfSets())
+                    gridTemplateColumns: `9fr ${Array(getNumberOfSets())
                       .fill("1fr")
                       .join(" ")} 2fr`,
                   }}
@@ -590,7 +591,7 @@ const MatchScoreCard = () => {
                         <div className="flex items-center space-x-4">
                           <div>
                             <div
-                              className="font-bold text-gray-800 mb-1"
+                              className="team-name-z text-gray-800 mb-1"
                               style={{
                                 fontSize: "var(--display-player-name-size)",
                               }}
@@ -653,7 +654,7 @@ const MatchScoreCard = () => {
                         <div className="flex items-center space-x-4">
                           <div>
                             <div
-                              className="font-bold text-gray-800 mb-1"
+                              className="team-name-z text-gray-800 mb-1"
                               style={{
                                 fontSize: "var(--display-player-name-size)",
                               }}

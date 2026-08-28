@@ -446,7 +446,7 @@ const SingleCourtDisplay = ({
           <div
             className="grid gap-2 items-center"
             style={{
-              gridTemplateColumns: `10fr ${Array(getNumberOfSets())
+              gridTemplateColumns: `9fr ${Array(getNumberOfSets())
                 .fill("1fr")
                 .join(" ")} 2fr`,
             }}
@@ -505,7 +505,7 @@ const SingleCourtDisplay = ({
                   {liveMatchData?.matchSettings?.matchFormat === 2 &&
                   index === 2
                     ? "STB"
-                    : `SET ${index + 1}`}
+                    : `SET-${index + 1}`}
                 </h2>
               </div>
             ))}
@@ -543,7 +543,7 @@ const SingleCourtDisplay = ({
           <div
             className="grid gap-2 items-center"
             style={{
-              gridTemplateColumns: `10fr ${Array(getNumberOfSets())
+              gridTemplateColumns: `9fr ${Array(getNumberOfSets())
                 .fill("1fr")
                 .join(" ")} 2fr`,
             }}
@@ -582,14 +582,12 @@ const SingleCourtDisplay = ({
                             />
                           )}
                           <span
-                            className="font-bold text-gray-900"
+                            className="font-bold team-name-z text-gray-900"
                             style={{
-                              letterSpacing: "1px",
+                              
                               fontSize: "var(--display-player-name-size)",
-                              maxWidth: "clamp(200px, 28vw, 1060px)",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
+                             
+                              
                             }}
                           >
                             {getTeamName(matchData.teamA)}
@@ -672,14 +670,10 @@ const SingleCourtDisplay = ({
                             />
                           )}
                           <span
-                            className="font-bold text-gray-900"
+                            className="team-name-z font-bold text-gray-900"
                             style={{
-                              letterSpacing: "1px",
                               fontSize: "var(--display-player-name-size)",
-                              maxWidth: "clamp(200px, 28vw, 1060px)",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
+                             
                             }}
                           >
                             {getTeamName(matchData.teamB)}
