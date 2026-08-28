@@ -237,30 +237,28 @@ export function useScorebugSettings({
 
         setIsConnected(socketMatchService.isConnected);
 
-        // Setup page is master — do NOT listen to socket echoes (TV settings were resetting scorebug)
-        if (listenOnly) {
-          const onUpdate = (data) => {
-            const next = extractScorebugSettings(data, settingsRef.current);
-            if (!next) return;
-            applyAndPersist(next);
-          };
+        const onUpdate = (data) => {
+          const next = extractScorebugSettings(data, settingsRef.current);
+          if (!next) return;
+          applyAndPersist(next);
+          if (!listenOnly) {
+            setSettings(next);
+          }
+        };
 
-          await socketMatchService.listenToDisplaySettings(wireId, onUpdate);
+        await socketMatchService.listenToDisplaySettings(wireId, onUpdate);
 
-          const serverSettings =
-            await socketMatchService.requestDisplaySettings(wireId);
-          if (
-            !cancelled &&
-            serverSettings &&
-            isScorebugSettings(serverSettings)
-          ) {
-            const cached = loadSettingsFromStorage(wireId);
-            const hasLocal =
-              localStorage.getItem(getStorageKey(wireId)) !== null;
-            const next = hasLocal
-              ? cached
-              : { ...DEFAULT_SCOREBUG_SETTINGS, ...serverSettings };
-            applyAndPersist(next);
+        const serverSettings =
+          await socketMatchService.requestDisplaySettings(wireId);
+        if (
+          !cancelled &&
+          serverSettings &&
+          isScorebugSettings(serverSettings)
+        ) {
+          const next = { ...DEFAULT_SCOREBUG_SETTINGS, ...serverSettings };
+          applyAndPersist(next);
+          if (!listenOnly) {
+            setSettings(next);
           }
         }
       } catch {
@@ -279,9 +277,7 @@ export function useScorebugSettings({
     return () => {
       cancelled = true;
       clearInterval(interval);
-      if (listenOnly) {
-        socketMatchService.stopListeningToDisplaySettings(wireId);
-      }
+      socketMatchService.stopListeningToDisplaySettings(wireId);
     };
   }, [wireId, listenOnly, applyAndPersist]);
 
