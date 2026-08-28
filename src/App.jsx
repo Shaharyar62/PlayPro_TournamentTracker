@@ -37,6 +37,8 @@ import TMPWMO from "./pages/TMPWMO";
 import HeritageCup from "./pages/HeritageCup";
 import PadelverseOnedayTounament from "./pages/PadelverseOnedayTounament";
 import FipPromises from "./pages/FipPromises";
+import PremierPadelLeague from "./pages/PremierPadelLeague";
+import MultiClub from "./pages/MultiClub";
 import PadAzadiCup from "./pages/PadAzadiCup";
 import AlNadiAlBurhani from "./pages/AlNadiAlBurhani";
 import GK from "./pages/GK";
@@ -105,6 +107,11 @@ function App() {
                   element={<PadelverseOnedayTounament />}
                 />
                 <Route path="fip-promises" element={<FipPromises />} />
+                <Route
+                  path="ppl"
+                  element={<PremierPadelLeague />}
+                />
+                <Route path="multiclub" element={<MultiClub />} />
                 <Route path="pad-azadi-cup" element={<PadAzadiCup />} />
                 <Route
                   path="al-nadi-al-burhani"

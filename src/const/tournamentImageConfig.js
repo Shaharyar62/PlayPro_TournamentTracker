@@ -183,6 +183,24 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "fipPromisesSponsor",
     sponsor2: "fipPromisesSponsor",
   },
+  "premier-padel-league": {
+    leftLogo: "ppllogo",
+    cupLogo: "ppllogo",
+    rightLogo: "playpro-ww",
+    playproWhite: "playpro-ww",
+    bg: "alNadiAlBurhaniBg",
+    sponsor1: null,
+    sponsor2: null,
+  },
+  87: {
+    leftLogo: "ppllogo",
+    cupLogo: "ppllogo",
+    rightLogo: "playpro-ww",
+    playproWhite: "playpro-ww",
+    bg: "alNadiAlBurhaniBg",
+    sponsor1: null,
+    sponsor2: null,
+  },
 };
 
 /**

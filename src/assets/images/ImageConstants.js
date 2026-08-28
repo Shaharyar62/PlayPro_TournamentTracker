@@ -99,6 +99,8 @@ import fipPromisesRight from "./fix/fip-promises-right.png";
 import fipPromisesLeft from "./fix/fip-promises-left.png";
 import fipPromisesCup from "./fix/fip-promises.png";
 import fipPromisesSponsor from "./fix/fip-promises-sponsorp.png";
+
+import ppllogo from "./fix/ppllogo.png";
 // import sponsorLegends from "./fix/sponsor-legends.png";
 
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
@@ -197,6 +199,7 @@ export const ALL_IMAGES = {
   fipPromisesRight,
   fipPromisesBg,
   fipPromisesSponsor,
+  ppllogo,
   // "sponsor-legends": sponsorLegends,
 };
 
