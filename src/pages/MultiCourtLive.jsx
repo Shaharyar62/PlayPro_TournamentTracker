@@ -446,9 +446,9 @@ const SingleCourtDisplay = ({
           <div
             className="grid gap-2 items-center"
             style={{
-              gridTemplateColumns: `4fr ${Array(getNumberOfSets())
+              gridTemplateColumns: `10fr ${Array(getNumberOfSets())
                 .fill("1fr")
-                .join(" ")} 1fr`,
+                .join(" ")} 2fr`,
             }}
           >
             <div
@@ -543,9 +543,9 @@ const SingleCourtDisplay = ({
           <div
             className="grid gap-2 items-center"
             style={{
-              gridTemplateColumns: `4fr ${Array(getNumberOfSets())
+              gridTemplateColumns: `10fr ${Array(getNumberOfSets())
                 .fill("1fr")
-                .join(" ")} 1fr`,
+                .join(" ")} 2fr`,
             }}
           >
             {/* Team Names and Players */}
@@ -636,14 +636,14 @@ const SingleCourtDisplay = ({
               </div>
 
               {/* VS Divider */}
-              <div
+              {/* <div
                 className={`text-center ${
                   isMultiView ? "text-2xl" : "text-2xl"
                 } font-bold text-gray-400 ${marginScale ?? ""}`}
                 style={marginScaleStyle}
               >
                 VS
-              </div>
+              </div> */}
 
               {/* Team 2 */}
               <div>

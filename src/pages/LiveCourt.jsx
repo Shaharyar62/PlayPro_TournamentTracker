@@ -534,9 +534,9 @@ const MatchScoreCard = () => {
                 <div
                   className="grid gap-4 items-center"
                   style={{
-                    gridTemplateColumns: `4fr ${Array(getNumberOfSets())
+                    gridTemplateColumns: `10fr ${Array(getNumberOfSets())
                       .fill("1fr")
-                      .join(" ")} 1fr`,
+                      .join(" ")} 2fr`,
                   }}
                 >
                   <div className="text-center">
@@ -577,9 +577,9 @@ const MatchScoreCard = () => {
                 <div
                   className="grid gap-4 items-center"
                   style={{
-                    gridTemplateColumns: `4fr ${Array(getNumberOfSets())
+                    gridTemplateColumns: `10fr ${Array(getNumberOfSets())
                       .fill("1fr")
-                      .join(" ")} 1fr`,
+                      .join(" ")} 2fr`,
                   }}
                 >
                   {/* Team Names and Players */}
@@ -643,9 +643,9 @@ const MatchScoreCard = () => {
                     </div>
 
                     {/* VS Divider */}
-                    <div className="text-center text-4xl text-black font-bold  mb-8">
+                    {/* <div className="text-center text-4xl text-black font-bold  mb-8">
                       VS
-                    </div>
+                    </div> */}
 
                     {/* Team 2 */}
                     <div>
