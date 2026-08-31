@@ -21,7 +21,6 @@ const mapPlayStatusToUIStatus = (playStatus) => {
  * @returns {string} Stage type label
  */
 const mapStageType = (stageType) => {
-
   const stageTypeMap = {
     1: "Group Match",
     2: "Quarter Final",
@@ -95,7 +94,11 @@ const transformMatch = (apiMatch, tournament = null) => {
 
   // Get tournament name from match or tournament object
   const tournamentName =
-    tournament?.name || apiMatch.tournament?.name || "Tournament";
+    apiMatch.tournament_name ||
+    apiMatch.tournamentName ||
+    apiMatch.tournament?.name ||
+    tournament?.name ||
+    "Tournament";
 
   // Extract round/group information
   const round = apiMatch.group || mapStageType(apiMatch.stageType) || "Match";
@@ -177,6 +180,7 @@ const transformMatch = (apiMatch, tournament = null) => {
     tournamentId: apiMatch.tournamentId,
     status: status,
     tournament: tournamentName,
+    tournamentName,
     round: round,
     stageType: stageType,
     stageTypeValue: apiMatch.stageType,
@@ -223,7 +227,7 @@ const transformMatch = (apiMatch, tournament = null) => {
  */
 export const transformCourtsScheduleToMatches = (
   apiResponse,
-  tournament = null
+  tournament = null,
 ) => {
   if (!apiResponse || !apiResponse.data || !apiResponse.data.courts) {
     return [];
@@ -286,7 +290,7 @@ export const transformMatchToUIFormat = (apiMatch, tournament = null) => {
  */
 export const transform24HourScheduleToCourts = (
   apiResponse,
-  tournament = null
+  tournament = null,
 ) => {
   if (!apiResponse || !apiResponse.data || !apiResponse.data.courts) {
     return {
@@ -298,17 +302,19 @@ export const transform24HourScheduleToCourts = (
 
   const courts = apiResponse.data.courts.map((court) => {
     // Transform all matches in the court
-    const transformedMatches = (court.matches || []).map((match) => {
-      const transformedMatch = transformMatch(match, tournament);
-      if (transformedMatch) {
-        return {
-          ...transformedMatch,
-          courtId: court.courtId,
-          courtName: court.courtName,
-        };
-      }
-      return null;
-    }).filter(Boolean);
+    const transformedMatches = (court.matches || [])
+      .map((match) => {
+        const transformedMatch = transformMatch(match, tournament);
+        if (transformedMatch) {
+          return {
+            ...transformedMatch,
+            courtId: court.courtId,
+            courtName: court.courtName,
+          };
+        }
+        return null;
+      })
+      .filter(Boolean);
 
     // Sort matches by scheduled time
     transformedMatches.sort((a, b) => {

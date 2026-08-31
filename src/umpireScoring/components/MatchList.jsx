@@ -158,11 +158,15 @@ const MatchList = ({ matches, onMatchSelect, onGoLive, onPauseLive }) => {
                         </span>
                       </div>
                     )}
+                    {(match.tournamentName || match.tournament) && (
+                      <div className="flex items-center space-x-1">
+                        <Trophy className="w-4 h-4 text-amber-600" />
+                        <span className="font-medium text-gray-800">
+                          {match.tournamentName || match.tournament}
+                        </span>
+                      </div>
+                    )}
                   </div>
-
-                  {/* <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                    {match.tournament}
-                  </h3> */}
 
                   <div className="flex flex-row items-center gap-3 text-sm text-gray-600 mb-2">
                     {match.stageType && (
@@ -218,7 +222,7 @@ const MatchList = ({ matches, onMatchSelect, onGoLive, onPauseLive }) => {
                       <div className="text-sm text-gray-600">
                         {match.teamA.players
                           ?.map((p) =>
-                            typeof p === "string" ? p : p.name || p.playerName
+                            typeof p === "string" ? p : p.name || p.playerName,
                           )
                           .join(" • ") || "No players"}
                       </div>
@@ -263,7 +267,7 @@ const MatchList = ({ matches, onMatchSelect, onGoLive, onPauseLive }) => {
                       <div className="text-sm text-gray-600">
                         {match.teamB.players
                           ?.map((p) =>
-                            typeof p === "string" ? p : p.name || p.playerName
+                            typeof p === "string" ? p : p.name || p.playerName,
                           )
                           .join(" • ") || "No players"}
                       </div>
