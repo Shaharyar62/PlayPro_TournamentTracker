@@ -180,8 +180,8 @@ export const TOURNAMENT_IMAGES = {
     cupLogo: "kfcPadelCup",
     rightLogo: "playpro",
     bg: "kfcPadelBg",
-    sponsor1: "kfcPadelSponsor",
-    sponsor2: "kfcPadelSponsor",
+    sponsor1: null,
+    sponsor2: null,
   },
   appchallenger: {
     leftLogo: null,

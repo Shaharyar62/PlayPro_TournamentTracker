@@ -27,3 +27,34 @@
 .live-score-card-body {
   background: var(--color-score-table-body-bg, #ffffff);
 }
+
+.live-score-card-body:has(.set-score-col) > .grid {
+  align-items: stretch;
+}
+
+.set-score-col {
+  border-left: 1px solid
+    color-mix(
+      in srgb,
+      var(--color-set-score-tint, var(--color-accent)) 20%,
+      transparent
+    );
+  background: linear-gradient(
+    90deg,
+    color-mix(
+        in srgb,
+        var(--color-set-score-tint, var(--color-accent)) 6%,
+        transparent
+      )
+      0%,
+    color-mix(
+        in srgb,
+        var(--color-set-score-tint, var(--color-accent)) 2%,
+        transparent
+      )
+      100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

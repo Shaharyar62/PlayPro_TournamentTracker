@@ -722,7 +722,7 @@ const SingleCourtDisplay = ({
 
             {/* Dynamic Set Scores */}
             {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
-              <div key={setIndex} className="text-center">
+              <div key={setIndex} className="text-center set-score-col">
                 <div
                   className={
                     isMultiView ? "space-y-2 text-black" : "text-black"

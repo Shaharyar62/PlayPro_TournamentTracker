@@ -44,6 +44,12 @@ const CSS_VAR_MAP = {
   cardShadow: "--color-card-shadow",
 };
 
+function getHeaderTintColor(theme) {
+  const header = theme?.scoreTableCardHeaderBg || theme?.accent || "";
+  const hex = String(header).match(/#(?:[0-9a-fA-F]{3,8})/);
+  return hex ? hex[0] : theme?.accent || "";
+}
+
 /**
  * Applies tournament-specific theme colors to document.
  * Reads tournamentId from URL params (searchParams or route params).
@@ -75,12 +81,23 @@ export default function TournamentThemeProvider({ children }) {
     const theme = getThemeForTournament(tournamentId);
     const root = document.documentElement;
 
+    if (tournamentId != null && tournamentId !== "") {
+      root.dataset.tournamentTheme = String(tournamentId);
+    } else {
+      delete root.dataset.tournamentTheme;
+    }
+
     Object.entries(CSS_VAR_MAP).forEach(([key, cssVar]) => {
       const value = theme[key];
       if (value) {
         root.style.setProperty(cssVar, value);
       }
     });
+
+    const tint = getHeaderTintColor(theme);
+    if (tint) {
+      root.style.setProperty("--color-set-score-tint", tint);
+    }
   }, [tournamentId]);
 
   return children;

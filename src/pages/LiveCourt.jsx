@@ -709,7 +709,7 @@ const MatchScoreCard = () => {
 
                   {/* Dynamic Set Scores */}
                   {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
-                    <div key={setIndex} className="text-center">
+                    <div key={setIndex} className="text-center set-score-col">
                       <div className="space-y-8 text-black">
                         <div className="font-bold set-score-style">
                           <AnimatedScore
