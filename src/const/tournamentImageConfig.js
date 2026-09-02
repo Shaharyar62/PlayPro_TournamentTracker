@@ -191,6 +191,14 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "appchallengerSponsor3",
     sponsor2: "appchallengerSponsor4",
   },
+  80: {
+    leftLogo: null,
+    cupLogo: "appchallengerCup",
+    rightLogo: null,
+    bg: "appchallengerBg",
+    sponsor1: "appchallengerSponsor3",
+    sponsor2: "appchallengerSponsor4",
+  },
   89: {
     leftLogo: "fipPromisesLeft",
     cupLogo: "fipPromisesCup",

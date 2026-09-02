@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import "../assets/css/home.css";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 
-const TOURNAMENT_ID = "89";
+const TOURNAMENT_ID = "80";
 const COURT_DISPLAY_ID = "80";
 const MULTI_COURT_LIVE_DISPLAY_ID = "801";
 const MULTI_COURT_SCHEDULE_DISPLAY_ID = "802";
@@ -14,7 +14,7 @@ const THEME_ID = "appchallenger";
 const BUTTON_COLOR = "#2e55b9";
 
 const COURT_IDS = "81,83,84,85";
-const SCORE_TABLE_TOURNAMENT_IDS = "335,334,333,332";
+const SCORE_TABLE_TOURNAMENT_IDS = "305,306,307,308,309,310,311,312";
 
 const COURTS = [
   { courtId: "81", name: "Galaxy 3" },
