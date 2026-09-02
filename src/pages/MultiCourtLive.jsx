@@ -823,8 +823,11 @@ const SingleCourtDisplay = ({
         </div>
 
         <div
-          className="font-bold text-black whitespace-nowrap overflow-hidden text-ellipsis max-w-[20vw] text-center text-white"
-          style={{ fontSize: "var(--display-court-name-size)" }}
+          className="font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[20vw] text-center"
+          style={{
+            fontSize: "var(--display-court-name-size)",
+            color: "var(--color-court-name-text, #ffffff)",
+          }}
         >
           {matchData.court?.name || "LIVE SCOREBOARD"}
         </div>

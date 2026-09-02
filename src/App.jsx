@@ -37,6 +37,7 @@ import TMPWMO from "./pages/TMPWMO";
 import HeritageCup from "./pages/HeritageCup";
 import PadelverseOnedayTounament from "./pages/PadelverseOnedayTounament";
 import FipPromises from "./pages/FipPromises";
+import KfcPadel from "./pages/KfcPadel";
 import AppChallenger from "./pages/AppChallenger";
 import PremierPadelLeague from "./pages/PremierPadelLeague";
 import MultiClub from "./pages/MultiClub";
@@ -108,6 +109,7 @@ function App() {
                   element={<PadelverseOnedayTounament />}
                 />
                 <Route path="fip-promises" element={<FipPromises />} />
+                <Route path="kfcpadel" element={<KfcPadel />} />
                 <Route path="appt2026" element={<AppChallenger />} />
                 <Route
                   path="ppl"

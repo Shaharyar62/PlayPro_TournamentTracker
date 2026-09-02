@@ -175,6 +175,14 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "fipPromisesSponsor",
     sponsor2: "fipPromisesSponsor",
   },
+  kfcpadel: {
+    leftLogo: "kfcPadelLeft",
+    cupLogo: "kfcPadelCup",
+    rightLogo: "playpro",
+    bg: "kfcPadelBg",
+    sponsor1: "kfcPadelSponsor",
+    sponsor2: "kfcPadelSponsor",
+  },
   appchallenger: {
     leftLogo: null,
     cupLogo: "appchallengerCup",
