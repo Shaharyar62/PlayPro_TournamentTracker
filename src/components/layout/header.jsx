@@ -17,7 +17,7 @@ export const Header = () => {
         <img
           className="justify-self-start p-0"
           src={images.leftLogo}
-          alt="Greenwich Padel"
+          alt={null}
           style={{
             objectFit: "contain",
             maxHeight: "var(--display-logo-header-h)",
@@ -33,7 +33,7 @@ export const Header = () => {
         <img
           className="justify-self-end p-0"
           src={images.cupLogo}
-          alt="Greenwich Padel"
+          alt={null}
           style={{
             objectFit: "contain",
             maxHeight: "var(--display-logo-cup-h)",
@@ -49,7 +49,7 @@ export const Header = () => {
         <img
           className="justify-self-end p-0"
           src={images.rightLogo}
-          alt="Playpro"
+          alt={null}
           style={{
             objectFit: "contain",
             maxHeight: "var(--display-logo-header-h)",

@@ -505,7 +505,7 @@ const SingleCourtDisplay = ({
                   {liveMatchData?.matchSettings?.matchFormat === 2 &&
                   index === 2
                     ? "STB"
-                    : `SET-${index + 1}`}
+                    : `S ${index + 1}`}
                 </h2>
               </div>
             ))}

@@ -272,6 +272,32 @@ export const TOURNAMENT_THEMES = {
     cardShadow:
       "0 24px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.22)",
   },
+  appchallenger: {
+    primary: "#0b1a3a",
+    accent: "#2e55b9",
+    gradientPrimary: "#071226",
+    gradientAccent: "#0d1f44",
+    gradientText: "white",
+    titleText: "#ffffff",
+    accentText: "#ffffff",
+    todayMatchText: "#ffffff",
+    scheduleTitleText: "#ffffff",
+    scoreTableCardHeaderBg:
+      "linear-gradient(180deg, #104070 0%, #104070 48%, #104070 100%)",
+    scoreTableCardHeaderColsBg:
+      "linear-gradient(180deg, #104070 0%, #104070 52%, #104070 100%)",
+    scoreTableHeaderBlur: "blur(16px) saturate(1.35)",
+    scoreTableGlass: "1",
+    scoreTableGlassBg:
+      "linear-gradient(160deg, rgba(12, 22, 48, 0.62) 0%, rgba(6, 12, 32, 0.48) 48%, rgba(8, 16, 40, 0.58) 100%)",
+    scoreTableGlassBlur: "blur(22px) saturate(1.55)",
+    scoreTableBodyBg: "#ffffff",
+    scoreTableRowQualifiedBg: "#ffffff",
+    scoreTableRowDefaultBg: "#ffffff",
+    cardOutline: "1px solid rgba(255, 255, 255, 0.28)",
+    cardShadow:
+      "0 24px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.22)",
+  },
   89: {
     primary: "#0b1a3a",
     accent: "#2e55b9",

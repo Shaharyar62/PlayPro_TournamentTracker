@@ -9,6 +9,7 @@ import SponsorMarquee from "../components/SponsorMarquee";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 import { umpireAPI } from "../umpireScoring/services/umpireAPI";
 import { useDisplaySettings } from "../hooks/useDisplaySettings";
+import "../assets/css/live-score-card.css";
 
 // Configuration constants
 const MAX_MATCHES_DISPLAY = 5; // Maximum number of matches to display per court
@@ -884,11 +885,11 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
+    <div className="rounded-lg overflow-hidden live-score-card">
       {/* Court Header */}
-      <div className="bg-[var(--color-accent)] text-[var(--color-accent-text)] py-4 px-6">
+      <div className="live-score-card-header py-4 px-6">
         <h2
-          className="font-bold text-center"
+          className="font-bold text-center live-score-card-header-text"
           style={{ fontSize: "var(--display-court-name-size)" }}
         >
           {courtName}
@@ -896,24 +897,24 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto live-score-card-body">
         <table className="w-full">
           <thead>
-            <tr className="bg-gradient-to-r from-[var(--color-gradient-primary)] to-[var(--color-gradient-accent)] text-[var(--color-gradient-text)]">
+            <tr>
               <th
-                className="py-3 px-4 text-left font-bold"
+                className="live-score-card-header py-3 px-4 text-left font-bold live-score-card-header-text"
                 style={{ fontSize: "var(--font-3xl)" }}
               >
                 Time
               </th>
               <th
-                className="py-3 px-4 text-left font-bold"
+                className="live-score-card-header py-3 px-4 text-left font-bold live-score-card-header-text"
                 style={{ fontSize: "var(--font-3xl)" }}
               >
                 Match
               </th>
               <th
-                className="py-3 px-4 text-center font-bold"
+                className="live-score-card-header py-3 px-4 text-center font-bold live-score-card-header-text"
                 style={{ fontSize: "var(--font-3xl)" }}
               >
                 Category
@@ -973,7 +974,7 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
                     </div>
                   </td>
                   <td className="py-4 px-4 text-center">
-                    <span className="inline-block bg-[var(--color-accent)] text-[var(--color-accent-text)] px-3 py-1 rounded-full font-bold text-sm">
+                    <span className="inline-block live-score-card-header px-3 py-1 rounded-full font-bold text-sm">
                       {match.tournament?.name ||
                         match.tournamentName ||
                         match.tournamentId ||

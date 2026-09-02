@@ -175,6 +175,14 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "fipPromisesSponsor",
     sponsor2: "fipPromisesSponsor",
   },
+  appchallenger: {
+    leftLogo: null,
+    cupLogo: "appchallengerCup",
+    rightLogo: null,
+    bg: "appchallengerBg",
+    sponsor1: "appchallengerSponsor3",
+    sponsor2: "appchallengerSponsor4",
+  },
   89: {
     leftLogo: "fipPromisesLeft",
     cupLogo: "fipPromisesCup",
@@ -185,10 +193,10 @@ export const TOURNAMENT_IMAGES = {
   },
   "premier-padel-league": {
     leftLogo: "ppllogo",
-    cupLogo: "ppllogo",
+    cupLogo: null,
     rightLogo: "playpro-ww",
     playproWhite: "playpro-ww",
-    bg: "alNadiAlBurhaniBg",
+    bg: "pplBg",
     sponsor1: null,
     sponsor2: null,
   },

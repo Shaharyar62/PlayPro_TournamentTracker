@@ -558,7 +558,7 @@ const MatchScoreCard = () => {
                         index === 2 &&
                         liveMatchData?.status === "completed"
                           ? "STB"
-                          : `SET ${index + 1}`}
+                          : `S  ${index + 1}`}
                       </h2>
                     </div>
                   ))}
@@ -591,7 +591,7 @@ const MatchScoreCard = () => {
                         <div className="flex items-center space-x-4">
                           <div>
                             <div
-                              className="team-name-z text-gray-800 mb-1"
+                              className="team-name-z text-gray-800 mb-1 font-bold"
                               style={{
                                 fontSize: "var(--display-player-name-size)",
                               }}
@@ -654,7 +654,7 @@ const MatchScoreCard = () => {
                         <div className="flex items-center space-x-4">
                           <div>
                             <div
-                              className="team-name-z text-gray-800 mb-1"
+                              className="team-name-z text-gray-800 mb-1 font-bold"
                               style={{
                                 fontSize: "var(--display-player-name-size)",
                               }}
