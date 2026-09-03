@@ -51,6 +51,7 @@ import indoljLogo from "./fix/indolj-logo.png";
 import indoljCup from "./fix/indolj-cup.png";
 import indoljBg from "./indolj-bg.png";
 import playpro from "./fix/playpro.png";
+import playpronewlogo from "./playpronewlogo.png";
 
 import ads_indolj_1 from "./fix/ads_indolj-1.png";
 import ads_indolj_2 from "./fix/ads_indolj-2.png";
@@ -175,6 +176,7 @@ export const ALL_IMAGES = {
   "indolj-cup": indoljCup,
   "indolj-bg": indoljBg,
   playpro: playpro,
+  playpronewlogo,
   ads_indolj_1: ads_indolj_1,
   ads_indolj_2: ads_indolj_2,
   ads_indolj_3: ads_indolj_3,

@@ -13,14 +13,14 @@ const TODAY_MATCH_DISPLAY_ID = "804";
 const THEME_ID = "appchallenger";
 const BUTTON_COLOR = "#2e55b9";
 
-const COURT_IDS = "81,83,84,85";
+const COURT_IDS = "85,83,84,81";
 const SCORE_TABLE_TOURNAMENT_IDS = "305,306,307,308,309,310,311,312";
 
 const COURTS = [
-  { courtId: "81", name: "Galaxy 3" },
+  { courtId: "85", name: "Infinity 1" },
   { courtId: "83", name: "Black Star 1" },
   { courtId: "84", name: "Black Star 2" },
-  { courtId: "85", name: "Infinity" },
+  { courtId: "81", name: "Galaxy 3" },
 ];
 
 const AppChallenger = () => {
