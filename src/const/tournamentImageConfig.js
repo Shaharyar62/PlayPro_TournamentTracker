@@ -186,7 +186,7 @@ export const TOURNAMENT_IMAGES = {
   appchallenger: {
     leftLogo: "padelverselogo",
     cupLogo: "appchallengerCup",
-    rightLogo: "playpronewlogo",
+    rightLogo: "playprowhite",
     bg: "appchallengerBg",
     sponsor1: "appchallengerSponsor3",
     sponsor2: "appchallengerSponsor4",
