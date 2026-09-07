@@ -1,5 +1,6 @@
 import React from "react";
 import { getScoreDisplayString } from "../../umpireScoring/utils/scoringRules.js";
+import { ImageConstants } from "../../assets/images/ImageConstants";
 import {
   ScorebugWrap,
   ScorebugBar,
@@ -111,8 +112,8 @@ const ScorebugOverlay = ({ matchData, liveMatchData }) => {
   const renderTeamRow = (teamIndex, team) => (
     <AnimatedTeamRow key={teamIndex} serving={isServingTeam(teamIndex, liveMatchData)}>
       <div className="scorebug-name-wrap">
-        <AnimatedServeIndicator show={isServingTeam(teamIndex, liveMatchData)} />
         <span className="scorebug-name">{getTeamName(team)}</span>
+        <AnimatedServeIndicator show={isServingTeam(teamIndex, liveMatchData)} />
       </div>
       <div className="scorebug-warnings">
         {getTeamWarnings(teamIndex, liveMatchData).map((warning, index) => (
@@ -125,6 +126,16 @@ const ScorebugOverlay = ({ matchData, liveMatchData }) => {
   return (
     <ScorebugWrap visible={Boolean(matchData)}>
       <ScorebugBar>
+        <ScorebugPanel className="scorebug-panel--logo">
+          <div className="scorebug-panel-inner scorebug-logo-inner">
+            <img
+              src={ImageConstants.playproColorVertical}
+              alt="PlayPro"
+              className="scorebug-logo-img"
+            />
+          </div>
+        </ScorebugPanel>
+
         <ScorebugPanel className="scorebug-panel--names">
           <div className="scorebug-panel-inner">
             {renderTeamRow(1, matchData.teamA)}

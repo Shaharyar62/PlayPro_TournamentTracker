@@ -179,6 +179,7 @@ export const TOURNAMENT_IMAGES = {
     leftLogo: "kfcPadelLeft",
     cupLogo: "kfcPadelCup",
     rightLogo: "playpronewlogo",
+    playpro: "playpronewlogo",
     bg: "kfcPadelBg",
     sponsor1: null,
     sponsor2: null,
@@ -186,10 +187,12 @@ export const TOURNAMENT_IMAGES = {
   appchallenger: {
     leftLogo: "padelverselogo",
     cupLogo: "appchallengerCup",
-    rightLogo: "playprowhite",
+    rightLogo: "playpronewwhite",
+    playproWhite: "playpronewwhite",
     bg: "appchallengerBg",
     sponsor1: "appchallengerSponsor3",
     sponsor2: "appchallengerSponsor4",
+    sponsor3: "appchallengerSponsor5",
   },
   80: {
     leftLogo: "padelverselogo",
@@ -245,6 +248,14 @@ export function getImagesForTournament(tournamentId, allImages) {
     return allImages[merged[key]] || allImages[DEFAULT_IMAGES[key]];
   };
 
+  const explicitSponsorKeys = Object.keys(config)
+    .filter((key) => /^sponsor\d+$/.test(key) && config[key] !== null)
+    .sort((a, b) => Number(a.slice(7)) - Number(b.slice(7)));
+  const sponsorListKeys = explicitSponsorKeys.length
+    ? explicitSponsorKeys
+    : ["sponsor1", "sponsor2"];
+  const sponsors = sponsorListKeys.map((key) => defaultImg(key)).filter(Boolean);
+
   return {
     leftLogo: defaultImg("leftLogo"),
     rightLogo: defaultImg("rightLogo"),
@@ -254,6 +265,8 @@ export function getImagesForTournament(tournamentId, allImages) {
     sponsor2: defaultImg("sponsor2"),
     sponsor3: defaultImg("sponsor3"),
     sponsor4: defaultImg("sponsor4"),
+    sponsor5: defaultImg("sponsor5"),
+    sponsors,
     sponsor: defaultImg("sponsor1"),
     playproWhite: defaultImg("playproWhite"),
     playpro: defaultImg("playpro"),

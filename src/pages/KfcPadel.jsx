@@ -2,30 +2,27 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../assets/css/home.css";
-import { useTournamentImages } from "../context/TournamentImagesContext";
+import { ALL_IMAGES } from "../assets/images/ImageConstants";
 
-const TOURNAMENT_ID = "89";
-const COURT_DISPLAY_ID = "8999";
-const MULTI_COURT_LIVE_DISPLAY_ID = "8911";
-const MULTI_COURT_SCHEDULE_DISPLAY_ID = "8922";
-const SCORE_TABLE_DISPLAY_ID = "8933";
-const TODAY_MATCH_DISPLAY_ID = "894";
+const TOURNAMENT_ID = "91";
+const COURT_DISPLAY_ID = "91";
+const MULTI_COURT_LIVE_DISPLAY_ID = "911";
+const MULTI_COURT_SCHEDULE_DISPLAY_ID = "912";
+const SCORE_TABLE_DISPLAY_ID = "913";
+const TODAY_MATCH_DISPLAY_ID = "914";
 const THEME_ID = "kfcpadel";
 const BUTTON_COLOR = "#e4002b";
 
-const COURT_IDS = "81,83,84,85";
-const SCORE_TABLE_TOURNAMENT_IDS = "335,334,333,332";
+const COURT_IDS = "203,204,205";
+const SCORE_TABLE_TOURNAMENT_IDS = "342";
 
 const COURTS = [
-  { courtId: "81", name: "Galaxy 3" },
-  { courtId: "83", name: "Black Star 1" },
-  { courtId: "84", name: "Black Star 2" },
-  { courtId: "85", name: "Infinity" },
+  { courtId: "203", name: "Court 1" },
+  { courtId: "204", name: "Court 2" },
+  { courtId: "205", name: "Court 3" },
 ];
 
 const KfcPadel = () => {
-  const images = useTournamentImages();
-
   const courtPages = COURTS.map(({ courtId, name }) => ({
     path: `/home/live-court?tournamentId=${TOURNAMENT_ID}&courtId=${courtId}&displayId=${COURT_DISPLAY_ID}&themeId=${THEME_ID}`,
     name,
@@ -59,7 +56,7 @@ const KfcPadel = () => {
   return (
     <div className="home-container">
       <div className="home-header">
-        <img width={300} src={images.playpro} alt="logo" />
+        <img width={300} src={ALL_IMAGES.playpronewlogo} alt="logo" />
       </div>
 
       <div className="buttons-grid">

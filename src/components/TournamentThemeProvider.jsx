@@ -28,6 +28,7 @@ const CSS_VAR_MAP = {
   sponsorBarBg: "--color-sponsor-bar-bg",
   scheduleTitleText: "--color-schedule-title-text",
   scheduleMatchText: "--color-schedule-match-text",
+  scheduleCategoryBg: "--color-schedule-category-bg",
   courtNameText: "--color-court-name-text",
   scoreTableBodyBg: "--color-score-table-body-bg",
   scoreTableRowChampionBg: "--color-score-row-champion-bg",

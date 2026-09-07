@@ -216,6 +216,7 @@ const MatchScoreCard = () => {
               <SponsorMarquee
                 sponsor1={images.sponsor1}
                 sponsor2={images.sponsor2}
+                sponsors={images.sponsors}
               />
             </div>
           )}

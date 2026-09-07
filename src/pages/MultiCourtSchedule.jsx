@@ -887,7 +887,10 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
   return (
     <div className="rounded-lg overflow-hidden live-score-card">
       {/* Court Header */}
-      <div className="live-score-card-header py-4 px-6">
+      <div
+        className="live-score-card-header py-4 px-6"
+        style={{ borderBottom: "2px solid #ffffff94" }}
+      >
         <h2
           className="font-bold text-center live-score-card-header-text"
           style={{ fontSize: "var(--display-court-name-size)" }}
@@ -974,7 +977,13 @@ const CourtScheduleTable = ({ courtData, currentTime }) => {
                     </div>
                   </td>
                   <td className="py-4 px-4 text-center">
-                    <span className="inline-block live-score-card-header px-3 py-1 rounded-full font-bold text-sm">
+                    <span
+                      className="inline-block live-score-card-header px-3 py-1 rounded-full font-bold text-sm"
+                      style={{
+                        background:
+                          "var(--color-schedule-category-bg, var(--color-score-table-card-header-bg, var(--color-accent)))",
+                      }}
+                    >
                       {match.tournament?.name ||
                         match.tournamentName ||
                         match.tournamentId ||
@@ -1284,6 +1293,7 @@ const MultiCourtSchedule = () => {
           <SponsorMarquee
             sponsor1={images.sponsor1}
             sponsor2={images.sponsor2}
+            sponsors={images.sponsors}
           />
         </div>
       )}

@@ -821,7 +821,7 @@ const TournamentStandings = () => {
                     />
                   </div>
                 </div> */}
-                <div className="p-[50px] pb-[10px] pt-[0px] grid grid-cols-1 gap-6 items-center">
+                <div className="pb-[90px] pt-[0px] grid grid-cols-1 gap-6 items-center">
                   <div className="col-span-1 text-center">
                     <div
                       className="text-4xl text-white font-bold   mb-2 "
@@ -831,8 +831,11 @@ const TournamentStandings = () => {
                     </div>
                   </div>
                   <div
-                    style={{ zoom: 1.1 }}
-                    className="grid grid-cols-2 pr-[50px] pl-[50px] gap-5"
+                    className="score-table-groups"
+                    style={{
+                      paddingLeft: "var(--display-margin-h)",
+                      paddingRight: "var(--display-margin-h)",
+                    }}
                   >
                     {groupedTeams
                       .slice(
@@ -851,12 +854,11 @@ const TournamentStandings = () => {
                         var groupName = group[0]?.group || "Unknown";
                         console.log("group", group);
                         return (
-                          <div className="col-span-1 ">
+                          <div key={groupName} className="score-table-group">
                             <motion.div
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
-                              style={{ zoom: 1.3 }}
-                              className={`max-w-[1024px] mx-auto rounded-xl shadow-lg overflow-hidden score-table-card ${
+                              className={`w-full rounded-xl shadow-lg overflow-hidden score-table-card ${
                                 useGlassCards
                                   ? "score-table-card--glass"
                                   : "bg-white"
@@ -876,10 +878,6 @@ const TournamentStandings = () => {
                                     <h2 className="text-lg font-bold tracking-wider text-[var(--color-gradient-text)]">
                                       Group {groupName}
                                     </h2>
-                                  </div>
-                                  <div className="text-sm text-[var(--color-gradient-text)]">
-                                    {currentTournament?.tournamentMasterName ||
-                                      currentTournament?.name}
                                   </div>
                                 </div>
                                 {/* <div className="text-xs text-green-200 mt-1 relative z-10">
@@ -912,15 +910,12 @@ const TournamentStandings = () => {
                                       <th className="py-1 px-4 text-center">
                                         L
                                       </th>
-                                      {/* <th className="py-1 px-4 text-center">
+                                      <th className="py-1 px-4 text-center">
                                         D
                                       </th>
-                                      <th className="py-1 px-4 text-center">
+                                      {/* <th className="py-1 px-4 text-center">
                                         PTS
                                       </th> */}
-                                      <th className="py-1 px-4 text-center">
-                                        PCT
-                                      </th>
                                       <th className="py-1 px-4 text-center">
                                         PF
                                       </th>
@@ -1015,24 +1010,18 @@ const TournamentStandings = () => {
                                           >
                                             {team.lose ?? 0}
                                           </td>
-                                          {/* <td className="py-1 px-1 text-center text-gray-600">
-                                            {team.draw ?? 0}
-                                          </td> */}
-                                          {/* <td className="py-1 px-1 text-center font-bold text-[#000]">
-                                            {team.points ?? 0}
-                                          </td> */}
                                           <td
                                             style={{
                                               fontSize:
                                                 "var(--display-player-name-size)",
                                             }}
-                                            className="py-1 px-1 text-center text-[#000] font-mono"
+                                            className="py-1 px-1 text-center font-bold"
                                           >
-                                            {calculatePCT(
-                                              team.wins,
-                                              team.played,
-                                            ).toFixed(3)}
+                                            {team.draw ?? 0}
                                           </td>
+                                          {/* <td className="py-1 px-1 text-center font-bold text-[#000]">
+                                            {team.points ?? 0}
+                                          </td> */}
                                           <td
                                             style={{
                                               fontSize:
@@ -1127,6 +1116,7 @@ const TournamentStandings = () => {
                   <SponsorMarquee
                     sponsor1={images.sponsor1}
                     sponsor2={images.sponsor2}
+                    sponsors={images.sponsors}
                   />
                 </div>
               )}

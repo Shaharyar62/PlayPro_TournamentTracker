@@ -41,6 +41,8 @@
 }
 
 .scorebug-panel {
+  display: flex;
+  flex-direction: column;
   transform: skewX(calc(-1 * var(--sb-skew, 12deg)));
   overflow: hidden;
   flex-shrink: 0;
@@ -76,11 +78,41 @@
 .scorebug-panel--set {
   flex: 0 0 72px;
   background-color: var(--sb-panel-bg, #0b1220) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
 }
 
 .scorebug-panel--points {
   flex: 0 0 88px;
   background-color: var(--sb-accent, #015d9c) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.scorebug-panel--logo {
+  flex: 0 0 108px;
+  background-color: #ffffff !important;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08);
+}
+
+.scorebug-logo-inner {
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+}
+
+.scorebug-logo-img {
+  width: 96px;
+  height: 82px;
+  object-fit: contain;
+  transform: scale(1.48);
+  transform-origin: center center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: block;
+  pointer-events: none;
+  user-select: none;
 }
 
 .scorebug-panel-inner {
@@ -89,7 +121,11 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: stretch;
   gap: 6px;
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
   min-height: 88px;
   box-sizing: border-box;
 }
@@ -157,8 +193,28 @@
 .scorebug-points-inner {
   align-items: center;
   text-align: center;
-  padding: 8px 10px;
-  gap: 4px;
+  padding: 8px 8px;
+  gap: 5px;
+}
+
+.scorebug-set-inner .scorebug-score-slot.scorebug-set-score,
+.scorebug-points-inner .scorebug-score-slot.scorebug-points-score {
+  min-width: 1.45em;
+  padding: 2px 6px 3px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.scorebug-points-inner .scorebug-score-slot.scorebug-points-score {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 0 8px rgba(255, 255, 255, 0.08);
 }
 
 .scorebug-set-label,
@@ -218,6 +274,7 @@
 }
 
 .scorebug-footer {
+  display: none;
   width: 100%;
   margin-top: 3px;
   transform: skewX(calc(-1 * var(--sb-skew, 12deg)));
@@ -281,6 +338,10 @@ body.route-clean-remove-bg .scorebug-panel--set,
 body.route-clean-remove-bg .scorebug-panel--points,
 body.route-clean-remove-bg .scorebug-footer {
   background-color: var(--sb-panel-bg, #0b1220) !important;
+}
+
+body.route-clean-remove-bg .scorebug-panel--logo {
+  background-color: #ffffff !important;
 }
 
 body.route-clean-remove-bg .scorebug-panel--points,

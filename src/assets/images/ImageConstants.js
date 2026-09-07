@@ -9,6 +9,7 @@ import sponsorMMI1 from "./fix/sponsor-mmi-1.png";
 import sponsorMMI2 from "./fix/sponsor-mmi-2.png";
 import playproWhite from "./fix/playpro-w.png";
 import playproWW from "./fix/playpro-ww.png";
+import playpronewwhite from "./fix/playpronewwhite.png";
 import legendsLogo from "./fix/legends-logo.png";
 import gkBg from "./gk-bg.png";
 import sponsorAppt from "./fix/sponsor-appt.png";
@@ -113,6 +114,7 @@ import appchallengerRight from "./fix/appchallenger-right.png";
 import appchallengerSponsor from "./fix/appchallenger-sponsor.png";
 import appchallengerSponsor3 from "./fix/3.png";
 import appchallengerSponsor4 from "./fix/4.png";
+import appchallengerSponsor5 from "./fix/5.png";
 
 import appchallengerBg from "./apptchallengerbg.png";
 import ppllogo from "./fix/ppllogo.png";
@@ -128,6 +130,7 @@ export const ALL_IMAGES = {
   "tmp-logo": tmpLogo,
   "playpro-w": playproWhite,
   "playpro-ww": playproWW,
+  playpronewwhite,
   "kg-logo": gkLogo,
   "tmp-cup": tmpCup,
   "gk-cup": gkCup,
@@ -227,6 +230,7 @@ export const ALL_IMAGES = {
   appchallengerSponsor,
   appchallengerSponsor3,
   appchallengerSponsor4,
+  appchallengerSponsor5,
   ppllogo,
   pplBg,
   appchallengerBg,

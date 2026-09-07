@@ -1,8 +1,17 @@
 .marquee-wrapper {
+  position: relative;
   width: 100%;
   overflow: hidden;
   background: var(--color-sponsor-bar-bg, #092619);
   padding: 10px 0;
+}
+
+.marquee-measure {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .marquee-content-scroll {

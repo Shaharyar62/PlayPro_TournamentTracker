@@ -438,6 +438,10 @@ const MatchScoreCard = () => {
     return "SCORE";
   };
 
+  const scoreGridColumns = `minmax(0, 9fr) ${Array(getNumberOfSets())
+    .fill("minmax(0, 1fr)")
+    .join(" ")} minmax(0, 2fr)`;
+
   return (
     <>
       {/* <div className="min-h-screen bg-gradient-to-br from-[var(--color-primary)] via-[var(--color-accent)] to-[var(--color-primary)] relative overflow-hidden"> */}
@@ -458,7 +462,7 @@ const MatchScoreCard = () => {
         </div>
 
         {/* Connection Status and Match Timer */}
-        <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
+        <div className="fixed bottom-2 right-4 z-20 flex items-center gap-3">
           {liveMatchData?.matchTimer &&
             (liveMatchData.matchTimer.status === "running" ||
               liveMatchData.matchTimer.status === "paused" ||
@@ -533,14 +537,12 @@ const MatchScoreCard = () => {
               {/* Header row - Dynamic based on number of sets */}
               <div className="live-score-card-header py-4">
                 <div
-                  className="grid gap-4 items-center"
+                  className="live-score-grid grid gap-4 items-center"
                   style={{
-                    gridTemplateColumns: `9fr ${Array(getNumberOfSets())
-                      .fill("1fr")
-                      .join(" ")} 2fr`,
+                    gridTemplateColumns: scoreGridColumns,
                   }}
                 >
-                  <div className="text-center">
+                  <div className="text-center min-w-0">
                     <h2
                       className="font-bold live-score-card-header-text"
                       style={{ fontSize: "var(--font-3xl)" }}
@@ -549,7 +551,7 @@ const MatchScoreCard = () => {
                     </h2>
                   </div>
                   {Array.from({ length: getNumberOfSets() }, (_, index) => (
-                    <div key={index} className="text-center">
+                    <div key={index} className="set-score-header">
                       <h2
                         className="font-bold live-score-card-header-text"
                         style={{ fontSize: "var(--font-3xl)" }}
@@ -558,11 +560,11 @@ const MatchScoreCard = () => {
                         index === 2 &&
                         liveMatchData?.status === "completed"
                           ? "STB"
-                          : `S  ${index + 1}`}
+                          : `S${index + 1}`}
                       </h2>
                     </div>
                   ))}
-                  <div className="text-center">
+                  <div className="set-score-header">
                     <h2
                       className="font-bold live-score-card-header-text"
                       style={{ fontSize: "var(--font-3xl)" }}
@@ -576,22 +578,20 @@ const MatchScoreCard = () => {
               {/* Score content - Dynamic layout */}
               <div className="p-0 live-score-card-body">
                 <div
-                  className="grid gap-4 items-center"
+                  className="live-score-grid grid gap-4 items-center"
                   style={{
-                    gridTemplateColumns: `9fr ${Array(getNumberOfSets())
-                      .fill("1fr")
-                      .join(" ")} 2fr`,
+                    gridTemplateColumns: scoreGridColumns,
                   }}
                 >
                   {/* Team Names and Players */}
-                  <div className="py-8">
+                  <div className="h-full self-stretch flex flex-col">
                     {/* Team 1 */}
-                    <div className="mb-8">
-                      <div className="flex items-center justify-between  justify-center px-4">
+                    <div className="flex-1 flex items-center min-h-0">
+                      <div className="flex items-center justify-between justify-center px-4 w-full">
                         <div className="flex items-center space-x-4">
                           <div>
                             <div
-                              className="team-name-z text-gray-800 mb-1 font-bold"
+                              className="team-name-z text-gray-800 font-bold"
                               style={{
                                 fontSize: "var(--display-player-name-size)",
                               }}
@@ -649,12 +649,12 @@ const MatchScoreCard = () => {
                     </div> */}
 
                     {/* Team 2 */}
-                    <div>
-                      <div className="flex items-center justify-between justify-center px-4">
+                    <div className="flex-1 flex items-center min-h-0">
+                      <div className="flex items-center justify-between justify-center px-4 w-full">
                         <div className="flex items-center space-x-4">
                           <div>
                             <div
-                              className="team-name-z text-gray-800 mb-1 font-bold"
+                              className="team-name-z text-gray-800 font-bold"
                               style={{
                                 fontSize: "var(--display-player-name-size)",
                               }}

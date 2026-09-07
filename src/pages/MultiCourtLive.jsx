@@ -358,6 +358,10 @@ const SingleCourtDisplay = ({
     return "SCORE";
   };
 
+  const scoreGridColumns = `minmax(0, 9fr) ${Array(getNumberOfSets())
+    .fill("minmax(0, 1fr)")
+    .join(" ")} minmax(0, 2fr)`;
+
   if (loading) {
     return (
       <CourtCardPlaceholder message="" />
@@ -444,15 +448,13 @@ const SingleCourtDisplay = ({
           }`}
         >
           <div
-            className="grid gap-2 items-center"
+            className="live-score-grid grid gap-2 items-center"
             style={{
-              gridTemplateColumns: `9fr ${Array(getNumberOfSets())
-                .fill("1fr")
-                .join(" ")} 2fr`,
+              gridTemplateColumns: scoreGridColumns,
             }}
           >
             <div
-              className="flex items-center text-white justify-center gap-2 leading-none "
+              className="flex items-center text-white justify-center gap-2 leading-none min-w-0"
               style={{ position: "relative" }}
             >
               {liveMatchData?.matchTimer &&
@@ -491,7 +493,7 @@ const SingleCourtDisplay = ({
               </h2>
             </div>
             {Array.from({ length: getNumberOfSets() }, (_, index) => (
-              <div key={index} className="text-center text-white">
+              <div key={index} className="set-score-header text-white">
                 <h2
                   style={{ fontSize: "var(--font-3xl)" }}
                   className={`${textScale} font-bold ${
@@ -505,11 +507,11 @@ const SingleCourtDisplay = ({
                   {liveMatchData?.matchSettings?.matchFormat === 2 &&
                   index === 2
                     ? "STB"
-                    : `S ${index + 1}`}
+                    : `S${index + 1}`}
                 </h2>
               </div>
             ))}
-            <div className="text-center text-white">
+            <div className="set-score-header text-white min-w-0">
               <h2
                 style={
                   getHeaderText() === "SUPER TIE BREAK"
@@ -541,29 +543,24 @@ const SingleCourtDisplay = ({
           }`}
         >
           <div
-            className="grid gap-2 items-center"
+            className="live-score-grid grid gap-2 items-center"
             style={{
-              gridTemplateColumns: `9fr ${Array(getNumberOfSets())
-                .fill("1fr")
-                .join(" ")} 2fr`,
+              gridTemplateColumns: scoreGridColumns,
             }}
           >
             {/* Team Names and Players */}
             <div
-              className={isMultiView ? "py-2 px-3" : undefined}
-              style={
-                !isMultiView ? { padding: "clamp(12px, 2.5vh, 32px) 0" } : {}
-              }
+              className={`h-full self-stretch flex flex-col ${isMultiView ? "px-3" : ""}`}
             >
               {/* Team 1 */}
-              <div className={marginScale} style={marginScaleStyle}>
-                <div className="flex items-center justify-between justify-center px-0">
+              <div className="flex-1 flex items-center min-h-0">
+                <div className="flex items-center justify-between justify-center px-0 w-full">
                   <div className="flex items-center space-x-2">
                     <div>
                       <div
                         className={`${
                           isMultiView ? "text-3xl" : "text-3xl"
-                        } font-bold text-gray-800 mb-1`}
+                        } font-bold text-gray-800`}
                       >
                         <div className="flex items-center space-x-3">
                           {matchData.teamA.logo && (
@@ -644,14 +641,14 @@ const SingleCourtDisplay = ({
               </div> */}
 
               {/* Team 2 */}
-              <div>
-                <div className="flex items-center justify-between justify-center px-0">
+              <div className="flex-1 flex items-center min-h-0">
+                <div className="flex items-center justify-between justify-center px-0 w-full">
                   <div className="flex items-center space-x-2">
                     <div>
                       <div
                         className={`${
                           isMultiView ? "text-3xl" : "text-3xl"
-                        } font-bold text-gray-800 mb-1`}
+                        } font-bold text-gray-800`}
                       >
                         <div className="flex items-center space-x-3">
                           {matchData.teamB.logo && (
@@ -964,13 +961,6 @@ const MultiCourtLive = () => {
     return 3;
   };
 
-  const getGridLayout = () => {
-    const cols = getGridCols();
-    if (cols === 1) return "grid-cols-1";
-    if (cols === 2) return "grid-cols-2";
-    return "grid-cols-3";
-  };
-
   const isMultiView = courtIds.length > 1;
 
   return (
@@ -1015,49 +1005,30 @@ const MultiCourtLive = () => {
 
         {/* Multi-court grid */}
         {isMultiView && (
-          <div
-            className={`relative z-10 grid ${getGridLayout()} gap-5 px-[50px] items-stretch`}
-            style={{
-              paddingTop: "var(--display-margin-top)",
-              paddingLeft: "var(--display-margin-h)",
-              paddingRight: "var(--display-margin-h)",
-              paddingBottom: "90px",
-            }}
-          >
-            {courtIds.map((courtId, index) => {
-              const cols = getGridCols();
-              const leftover = courtIds.length % cols;
-              const isLastItem = index === courtIds.length - 1;
-              const shouldCenter = isLastItem && leftover === 1 && cols > 1;
-              const spanClass = cols === 3 ? "col-span-3" : "col-span-2";
-
-              return (
+          <>
+            <div
+              className={`relative z-10 multi-court-cards-grid multi-court-cards-grid--cols-${getGridCols()}`}
+              style={{
+                paddingTop: "var(--display-margin-top)",
+                paddingLeft: "var(--display-margin-h)",
+                paddingRight: "var(--display-margin-h)",
+                paddingBottom: "90px",
+              }}
+            >
+              {courtIds.map((courtId) => (
                 <div
                   key={courtId}
-                  className={`min-h-[320px] ${
-                    shouldCenter ? `${spanClass} flex justify-center` : ""
-                  }`}
+                  className="multi-court-cards-grid__item min-h-[320px]"
                 >
-                  <div
-                    className={
-                      shouldCenter
-                        ? cols === 3
-                          ? "w-full max-w-[calc(33.333%-0.83rem)]"
-                          : "w-full max-w-[calc(50%-0.625rem)]"
-                        : "w-full h-full"
-                    }
-                  >
-                    <SingleCourtDisplay
-                      tournamentId={tournamentId}
-                      courtId={courtId}
-                      isMultiView={true}
-                      useGlassCards={useGlassCards}
-                    />
-                  </div>
+                  <SingleCourtDisplay
+                    tournamentId={tournamentId}
+                    courtId={courtId}
+                    isMultiView={true}
+                    useGlassCards={useGlassCards}
+                  />
                 </div>
-              );
-            })}
-            {/* Bottom indicator - Fixed to bottom */}
+              ))}
+            </div>
             {images.sponsor1 && (
               <div
                 className="fixed bottom-0 left-0 right-0 z-20 overflow-hidden"
@@ -1066,10 +1037,11 @@ const MultiCourtLive = () => {
                 <SponsorMarquee
                   sponsor1={images.sponsor1}
                   sponsor2={images.sponsor2}
+                  sponsors={images.sponsors}
                 />
               </div>
             )}
-          </div>
+          </>
         )}
 
         <style jsx>{`

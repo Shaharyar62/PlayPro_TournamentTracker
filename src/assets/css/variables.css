@@ -70,7 +70,7 @@
      document.documentElement.style.setProperty() — no CSS file edit needed */
   --display-player-name-size: clamp(26px, 2.08vw, 36px);
   --display-logo-header-h: clamp(70px, 10vh, 100px);
-  --display-logo-cup-h: clamp(80px, 12vh, 120px);
+  --display-logo-cup-h: clamp(80px, 16vh, 80vh);
   --display-logo-team-size: clamp(50px, 4vw, 70px);
   --display-margin-h: 5vw;
   --display-margin-top: 3vh;

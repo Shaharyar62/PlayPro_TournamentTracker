@@ -1,3 +1,27 @@
+.score-table-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+  justify-items: stretch;
+}
+
+.score-table-group {
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+}
+
+.score-table-group > .score-table-card {
+  width: 100%;
+}
+
+.score-table-groups > .score-table-group:last-child:nth-child(odd):not(:only-child) {
+  grid-column: 1 / -1;
+  width: calc((100% - 1.25rem) / 2);
+  justify-self: center;
+}
+
 .score-table-card--glass {
   background: var(
     --color-score-table-glass-bg,
