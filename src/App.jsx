@@ -40,6 +40,7 @@ import FipPromises from "./pages/FipPromises";
 import KfcPadel from "./pages/KfcPadel";
 import AppChallenger from "./pages/AppChallenger";
 import PremierPadelLeague from "./pages/PremierPadelLeague";
+import Ignite from "./pages/Ignite";
 import MultiClub from "./pages/MultiClub";
 import PadAzadiCup from "./pages/PadAzadiCup";
 import AlNadiAlBurhani from "./pages/AlNadiAlBurhani";
@@ -115,6 +116,7 @@ function App() {
                   path="ppl"
                   element={<PremierPadelLeague />}
                 />
+                <Route path="ignite" element={<Ignite />} />
                 <Route path="multiclub" element={<MultiClub />} />
                 <Route path="pad-azadi-cup" element={<PadAzadiCup />} />
                 <Route

@@ -14,15 +14,18 @@ import { TournamentRuleMatchFormatTypeEnum } from "../const/Constants";
 import MatchIdHelper from "../umpireScoring/utils/matchIdHelper.js";
 import { getScoreDisplayString } from "../umpireScoring/utils/scoringRules.js";
 import Header from "../components/layout/header";
+import SponsorMarquee from "../components/SponsorMarquee";
 import matchDataTransformer from "../umpireScoring/helpers/matchDataTransformer";
 import AnimatedScore from "../components/AnimatedScore";
 import { SERVER_URL } from "../umpireScoring/utils/constants.js";
 import { useDisplaySettings } from "../hooks/useDisplaySettings";
+import { useTournamentImages } from "../context/TournamentImagesContext";
 import "../assets/css/live-score-card.css";
 import "../assets/css/live-court.css";
 const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
+  const images = useTournamentImages();
   const courtId = searchParams.get("courtId");
   const displayId =
     searchParams.get("displayId") ?? (courtId ? `court-${courtId}` : null);
@@ -328,9 +331,18 @@ const MatchScoreCard = () => {
   if (!liveMatchData && !matchData) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        {/* <div className="text-4xl font-bold text-gray-600">
-          No match data available
-        </div> */}
+        {images.sponsor1 && (
+          <div
+            className="fixed bottom-0 left-0 right-0 z-20 overflow-hidden"
+            style={{ background: "var(--color-sponsor-bar-bg, #092619)" }}
+          >
+            <SponsorMarquee
+              sponsor1={images.sponsor1}
+              sponsor2={images.sponsor2}
+              sponsors={images.sponsors}
+            />
+          </div>
+        )}
       </div>
     );
   }
@@ -462,7 +474,12 @@ const MatchScoreCard = () => {
         </div>
 
         {/* Connection Status and Match Timer */}
-        <div className="fixed bottom-2 right-4 z-20 flex items-center gap-3">
+        <div
+          className="fixed right-4 z-30 flex items-center gap-3"
+          style={{
+            bottom: "calc(var(--display-sponsor-h, 80px) + 24px)",
+          }}
+        >
           {liveMatchData?.matchTimer &&
             (liveMatchData.matchTimer.status === "running" ||
               liveMatchData.matchTimer.status === "paused" ||
@@ -575,185 +592,106 @@ const MatchScoreCard = () => {
                 </div>
               </div>
 
-              {/* Score content - Dynamic layout */}
+              {/* Score content - premium team rows */}
               <div className="p-0 live-score-card-body">
-                <div
-                  className="live-score-grid grid gap-4 items-center"
-                  style={{
-                    gridTemplateColumns: scoreGridColumns,
-                  }}
-                >
-                  {/* Team Names and Players */}
-                  <div className="h-full self-stretch flex flex-col">
-                    {/* Team 1 */}
-                    <div className="flex-1 flex items-center min-h-0">
-                      <div className="flex items-center justify-between justify-center px-4 w-full">
-                        <div className="flex items-center space-x-4">
-                          <div>
-                            <div
-                              className="team-name-z text-gray-800 font-bold"
-                              style={{
-                                fontSize: "var(--display-player-name-size)",
-                              }}
+                <div className="live-score-team-stack">
+                  {[1, 2].map((teamIndex) => {
+                    const team =
+                      teamIndex === 1 ? matchData.teamA : matchData.teamB;
+                    const serving = isServingTeam(teamIndex);
+                    const teamLabel = getTeamName(team);
+                    const warnings = getTeamWarnings(teamIndex);
+
+                    return (
+                      <div
+                        key={teamIndex}
+                        className={`live-score-team-row live-score-grid gap-2 ${
+                          teamIndex === 1
+                            ? "live-score-team-row--a"
+                            : "live-score-team-row--b"
+                        } ${serving ? "live-score-team-row--serving" : ""}`}
+                        style={{ gridTemplateColumns: scoreGridColumns }}
+                      >
+                        <div className="live-score-team-identity">
+                          {team?.logo && (
+                            <img
+                              src={team.logo}
+                              alt=""
+                              className="live-score-team-logo"
+                            />
+                          )}
+                          <div className="live-score-player-names">
+                            <span
+                              className="live-score-player-name team-name-z font-bold"
+                              title={teamLabel}
                             >
-                              {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamA) : getPlayerName(1, 0) + " & " + getPlayerName(1, 1)} */}
-                              {getTeamName(matchData.teamA)}
-                              {/* {getPlayerName(1, 0)} & {getPlayerName(1, 1)} */}
-                            </div>
-                            {/* <div className="text-lg text-gray-600">
-                              {getTeamName(matchData.teamA)}
-                            </div> */}
+                              {teamLabel}
+                            </span>
                           </div>
-                          {isServingTeam(1) && (
-                            <div className="flex items-center text-[var(--color-accent)]">
-                              <span className="text-xl bg-[#2c2c2c] rounded-full p-1">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="34"
-                                  height="34"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    fill="#fff"
-                                    d="M9.406 17.421q-.642 0-1.267-.242t-1.123-.74L2.983 12.4q-.498-.498-.74-1.11T2 10.017t.242-1.272t.74-1.11l2.691-2.69q.498-.499 1.116-.741t1.267-.242q.642 0 1.254.242q.611.242 1.11.74l4.038 4.033q.498.498.74 1.114q.243.615.243 1.275t-.243 1.272t-.74 1.11l-1.008 1.008l5.177 5.177q.146.146.156.347t-.156.366t-.357.166t-.356-.166l-5.158-5.196l-.989.989q-.498.498-1.109.74q-.61.242-1.252.242m-.02-.98q.453 0 .891-.176t.777-.515l2.696-2.715q.339-.333.515-.78q.175-.447.175-.894t-.175-.89t-.515-.78L9.712 5.658q-.333-.339-.766-.518q-.432-.178-.884-.178t-.885.179q-.433.178-.771.517l-2.69 2.69q-.339.339-.515.777t-.176.891t.176.896t.515.78l4.019 4.058q.332.339.765.515t.886.175m-3.868-5.379q.232 0 .387-.151q.155-.152.155-.384t-.152-.386t-.384-.155t-.386.151t-.155.384t.151.387t.384.155m1.523-1.518q.232 0 .387-.151q.155-.152.155-.384t-.152-.387t-.384-.155q-.231 0-.386.152t-.155.384t.152.387q.151.154.383.154m.156 3.216q.232 0 .387-.152t.155-.384t-.152-.396t-.384-.164t-.387.164q-.154.164-.154.396t.151.384t.384.152m1.342-4.74q.232 0 .387-.151t.155-.384t-.152-.387t-.384-.155t-.386.152t-.155.384t.152.386t.383.155m.181 3.221q.232 0 .387-.151q.154-.152.154-.384t-.151-.387t-.384-.154t-.387.151t-.155.384t.152.387t.384.154m.15 3.197q.232 0 .396-.152q.165-.152.165-.384t-.165-.387t-.396-.154t-.384.151t-.152.384t.152.387q.152.155.384.155m1.367-4.72q.232 0 .387-.164t.155-.396t-.152-.384t-.384-.152t-.386.152t-.155.384t.151.396t.384.164m.156 3.197q.232 0 .387-.152t.154-.384t-.151-.387t-.384-.154t-.387.151t-.154.384t.151.387t.384.155m1.504-1.524q.232 0 .396-.151q.165-.152.165-.384t-.165-.387t-.396-.155t-.384.152t-.151.384t.151.387t.384.154M19.13 8.77q-1.197 0-2.029-.846q-.833-.846-.833-2.042t.833-2.039T19.131 3t2.043.846t.845 2.042t-.845 2.039t-2.043.842m.005-1q.778 0 1.33-.548q.553-.549.553-1.332t-.548-1.336T19.139 4t-1.326.548q-.544.549-.544 1.332q0 .784.545 1.336q.544.553 1.322.553m.018-1.884"
-                                  />
-                                </svg>
-                              </span>
-                              {/* <span className="ml-1 text-sm font-medium">
-                                {getServingPlayerName()}
-                              </span> */}
+                          {serving && (
+                            <div className="live-score-serve-pip">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  fill="#ffffff"
+                                  d="M9.406 17.421q-.642 0-1.267-.242t-1.123-.74L2.983 12.4q-.498-.498-.74-1.11T2 10.017t.242-1.272t.74-1.11l2.691-2.69q.498-.499 1.116-.741t1.267-.242q.642 0 1.254.242q.611.242 1.11.74l4.038 4.033q.498.498.74 1.114q.243.615.243 1.275t-.243 1.272t-.74 1.11l-1.008 1.008l5.177 5.177q.146.146.156.347t-.156.366t-.357.166t-.356-.166l-5.158-5.196l-.989.989q-.498.498-1.109.74q-.61.242-1.252.242m-.02-.98q.453 0 .891-.176t.777-.515l2.696-2.715q.339-.333.515-.78q.175-.447.175-.894t-.175-.89t-.515-.78L9.712 5.658q-.333-.339-.766-.518q-.432-.178-.884-.178t-.885.179q-.433.178-.771.517l-2.69 2.69q-.339.339-.515.777t-.176.891t.176.896t.515.78l4.019 4.058q.332.339.765.515t.886.175m-3.868-5.379q.232 0 .387-.151q.155-.152.155-.384t-.152-.386t-.384-.155t-.386.151t-.155.384t.151.387t.384.155m1.523-1.518q.232 0 .387-.151q.155-.152.155-.384t-.152-.387t-.384-.155q-.231 0-.386.152t-.155.384t.152.387q.151.154.383.154m.156 3.216q.232 0 .387-.152t.155-.384t-.152-.396t-.384-.164t-.387.164q-.154.164-.154.396t.151.384t.384.152m1.342-4.74q.232 0 .387-.151t.155-.384t-.152-.387t-.384-.155t-.386.152t-.155.384t.152.386t.383.155m.181 3.221q.232 0 .387-.151q.154-.152.154-.384t-.151-.387t-.384-.154t-.387.151t-.155.384t.152.387t.384.154m.15 3.197q.232 0 .396-.152q.165-.152.165-.384t-.165-.387t-.396-.154t-.384.151t-.152.384t.152.387q.152.155.384.155m1.367-4.72q.232 0 .387-.164t.155-.396t-.152-.384t-.384-.152t-.386.152t-.155.384t.151.396t.384.164m.156 3.197q.232 0 .387-.152t.154-.384t-.151-.387t-.384-.154t-.387.151t-.154.384t.151.387t.384.155m1.504-1.524q.232 0 .396-.151q.165-.152.165-.384t-.165-.387t-.396-.155t-.384.152t-.151.384t.151.387t.384.154M19.13 8.77q-1.197 0-2.029-.846q-.833-.846-.833-2.042t.833-2.039T19.131 3t2.043.846t.845 2.042t-.845 2.039t-2.043.842m.005-1q.778 0 1.33-.548q.553-.549.553-1.332t-.548-1.336T19.139 4t-1.326.548q-.544.549-.544 1.332q0 .784.545 1.336q.544.553 1.322.553m.018-1.884"
+                                />
+                              </svg>
                             </div>
                           )}
-                        </div>
-                        {/* Warning cards for Team 1 */}
-                        <div className="flex space-x-1">
-                          {getTeamWarnings(1).map((warning, index) => (
-                            <span
-                              key={index}
-                              className={`px-2 py-1 text-xs font-bold rounded ${
-                                warning === "W1"
-                                  ? "bg-yellow-400 text-black"
-                                  : "bg-red-500 text-black"
-                              }`}
-                            >
-                              {warning}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* VS Divider */}
-                    {/* <div className="text-center text-4xl text-black font-bold  mb-8">
-                      VS
-                    </div> */}
-
-                    {/* Team 2 */}
-                    <div className="flex-1 flex items-center min-h-0">
-                      <div className="flex items-center justify-between justify-center px-4 w-full">
-                        <div className="flex items-center space-x-4">
-                          <div>
-                            <div
-                              className="team-name-z text-gray-800 font-bold"
-                              style={{
-                                fontSize: "var(--display-player-name-size)",
-                              }}
-                            >
-                              {/* {teamNamesCatIds.some(id => id == matchData.tournamentId) ? getTeamName(matchData.teamB) : getPlayerName(2, 0) + " & " + getPlayerName(2, 1)} */}
-                              {getTeamName(matchData.teamB)}
-                              {/* {getTeamName(matchData.teamB)} */}
-                            </div>
-                            {/* <div className="text-lg text-gray-600">
-                              {getTeamName(matchData.teamB)}
-                            </div> */}
-                          </div>
-                          {isServingTeam(2) && (
-                            <div className="flex items-center ">
-                              <span className="text-xl bg-[#2c2c2c] rounded-full p-1">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="34"
-                                  height="34"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    fill="#fff"
-                                    d="M9.406 17.421q-.642 0-1.267-.242t-1.123-.74L2.983 12.4q-.498-.498-.74-1.11T2 10.017t.242-1.272t.74-1.11l2.691-2.69q.498-.499 1.116-.741t1.267-.242q.642 0 1.254.242q.611.242 1.11.74l4.038 4.033q.498.498.74 1.114q.243.615.243 1.275t-.243 1.272t-.74 1.11l-1.008 1.008l5.177 5.177q.146.146.156.347t-.156.366t-.357.166t-.356-.166l-5.158-5.196l-.989.989q-.498.498-1.109.74q-.61.242-1.252.242m-.02-.98q.453 0 .891-.176t.777-.515l2.696-2.715q.339-.333.515-.78q.175-.447.175-.894t-.175-.89t-.515-.78L9.712 5.658q-.333-.339-.766-.518q-.432-.178-.884-.178t-.885.179q-.433.178-.771.517l-2.69 2.69q-.339.339-.515.777t-.176.891t.176.896t.515.78l4.019 4.058q.332.339.765.515t.886.175m-3.868-5.379q.232 0 .387-.151q.155-.152.155-.384t-.152-.386t-.384-.155t-.386.151t-.155.384t.151.387t.384.155m1.523-1.518q.232 0 .387-.151q.155-.152.155-.384t-.152-.387t-.384-.155q-.231 0-.386.152t-.155.384t.152.387q.151.154.383.154m.156 3.216q.232 0 .387-.152t.155-.384t-.152-.396t-.384-.164t-.387.164q-.154.164-.154.396t.151.384t.384.152m1.342-4.74q.232 0 .387-.151t.155-.384t-.152-.387t-.384-.155t-.386.152t-.155.384t.152.386t.383.155m.181 3.221q.232 0 .387-.151q.154-.152.154-.384t-.151-.387t-.384-.154t-.387.151t-.155.384t.152.387t.384.154m.15 3.197q.232 0 .396-.152q.165-.152.165-.384t-.165-.387t-.396-.154t-.384.151t-.152.384t.152.387q.152.155.384.155m1.367-4.72q.232 0 .387-.164t.155-.396t-.152-.384t-.384-.152t-.386.152t-.155.384t.151.396t.384.164m.156 3.197q.232 0 .387-.152t.154-.384t-.151-.387t-.384-.154t-.387.151t-.154.384t.151.387t.384.155m1.504-1.524q.232 0 .396-.151q.165-.152.165-.384t-.165-.387t-.396-.155t-.384.152t-.151.384t.151.387t.384.154M19.13 8.77q-1.197 0-2.029-.846q-.833-.846-.833-2.042t.833-2.039T19.131 3t2.043.846t.845 2.042t-.845 2.039t-2.043.842m.005-1q.778 0 1.33-.548q.553-.549.553-1.332t-.548-1.336T19.139 4t-1.326.548q-.544.549-.544 1.332q0 .784.545 1.336q.544.553 1.322.553m.018-1.884"
-                                  />
-                                </svg>
+                          <div className="live-score-warnings">
+                            {warnings.map((warning, index) => (
+                              <span
+                                key={`${teamIndex}-warn-${index}`}
+                                className={`px-2 py-1 text-xs font-bold rounded ${
+                                  warning === "W1"
+                                    ? "bg-yellow-400 text-black"
+                                    : "bg-red-500 text-black"
+                                }`}
+                              >
+                                {warning}
                               </span>
-                              {/* <span className="ml-1 text-sm font-medium">
-                                {getServingPlayerName()}
-                              </span> */}
-                            </div>
-                          )}
+                            ))}
+                          </div>
                         </div>
-                        {/* Warning cards for Team 2 */}
-                        <div className="flex space-x-1">
-                          {getTeamWarnings(2).map((warning, index) => (
-                            <span
-                              key={index}
-                              className={`px-2 py-1 text-xs font-bold rounded ${
-                                warning === "W1"
-                                  ? "bg-yellow-400 text-black"
-                                  : "bg-red-500 text-black"
-                              }`}
+
+                        {Array.from(
+                          { length: getNumberOfSets() },
+                          (_, setIndex) => (
+                            <div
+                              key={setIndex}
+                              className="text-center set-score-col"
                             >
-                              {warning}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                              <div className="font-bold set-score-style">
+                                <AnimatedScore
+                                  score={getSetScore(teamIndex, setIndex)}
+                                  isGameScore={false}
+                                  textColor="text-black"
+                                />
+                              </div>
+                            </div>
+                          ),
+                        )}
 
-                  {/* Dynamic Set Scores */}
-                  {Array.from({ length: getNumberOfSets() }, (_, setIndex) => (
-                    <div key={setIndex} className="text-center set-score-col">
-                      <div className="space-y-8 text-black">
-                        <div className="font-bold set-score-style">
-                          <AnimatedScore
-                            score={getSetScore(1, setIndex)}
-                            isGameScore={false}
-                            textColor="text-black"
-                          />
-                        </div>
-                        <div className="font-bold set-score-style">
-                          <AnimatedScore
-                            score={getSetScore(2, setIndex)}
-                            isGameScore={false}
-                            textColor="text-black"
-                          />
+                        <div className="live-score-game-cell">
+                          <div
+                            className="font-bold game-score-style"
+                            style={{ fontSize: "var(--font-game-score-lg)" }}
+                          >
+                            <AnimatedScore
+                              score={getCurrentGameScore(teamIndex)}
+                              isGameScore={true}
+                              textColor="text-white"
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-
-                  {/* Current Game/Points Score */}
-                  <div className="text-center live-score-card-header">
-                    <div className="space-y-4 pt-[25px] pb-[25px]">
-                      <div
-                        className="font-bold text-white"
-                        style={{ fontSize: "var(--font-game-score-lg)" }}
-                      >
-                        <AnimatedScore
-                          score={getCurrentGameScore(1)}
-                          isGameScore={true}
-                          textColor="text-white"
-                        />
-                      </div>
-                      <div
-                        className="font-bold text-white"
-                        style={{ fontSize: "var(--font-game-score-lg)" }}
-                      >
-                        <AnimatedScore
-                          score={getCurrentGameScore(2)}
-                          isGameScore={true}
-                          textColor="text-white"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -789,7 +727,7 @@ const MatchScoreCard = () => {
           {matchStatus.current == "completed" ? "COMPLETED" : getMatchFormat()}
         </div>
         <div
-          className="live-score-card-header m-auto col-span-4 w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold"
+          className="live-score-bottom-stage live-score-card-header m-auto col-span-4 w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold"
           style={{ fontSize: "var(--display-court-name-size)" }}
         >
           {/* {matchData.court?.name || "LIVE SCOREBOARD"}{" "} */}
@@ -801,7 +739,7 @@ const MatchScoreCard = () => {
           </p>
         </div>
         <div
-          className="live-score-card-header col-span-4 ml-auto px-[20px] py-3 rounded-lg font-bold"
+          className="live-score-bottom-court live-score-card-header col-span-4 ml-auto px-[20px] py-3 rounded-lg font-bold"
           style={{ fontSize: "var(--display-court-name-size)" }}
         >
           {matchData.court?.name || "LIVE SCOREBOARD"}{" "}
@@ -815,6 +753,18 @@ const MatchScoreCard = () => {
                 )} */}
         </div>
       </div>
+      {images.sponsor1 && (
+        <div
+          className="fixed bottom-0 left-0 right-0 z-20 overflow-hidden"
+          style={{ background: "var(--color-sponsor-bar-bg, #092619)" }}
+        >
+          <SponsorMarquee
+            sponsor1={images.sponsor1}
+            sponsor2={images.sponsor2}
+            sponsors={images.sponsors}
+          />
+        </div>
+      )}
     </>
   );
 };

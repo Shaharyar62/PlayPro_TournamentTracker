@@ -28,7 +28,7 @@
 }
 
 .marquee-image {
-  height: 80px;
+  height: var(--display-sponsor-h, 80px);
   width: auto;
   margin: 0;
   object-fit: contain;
@@ -41,17 +41,5 @@
   }
   100% {
     transform: translateX(-50%);
-  }
-}
-
-@media (min-width: 1920px) {
-  .marquee-image {
-    height: 100px;
-  }
-}
-
-@media (min-width: 2560px) {
-  .marquee-image {
-    height: 120px;
   }
 }

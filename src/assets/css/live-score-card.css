@@ -311,3 +311,17 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.28),
     0 6px 14px rgba(15, 23, 42, 0.12);
 }
+
+/* PPL only — hide court name + stage on live / multi-court live */
+:is(
+    [data-tournament-theme="premier-padel-league"],
+    [data-tournament-theme="87"]
+  )
+  .live-score-bottom-stage,
+:is(
+    [data-tournament-theme="premier-padel-league"],
+    [data-tournament-theme="87"]
+  )
+  .live-score-bottom-court {
+  display: none;
+}

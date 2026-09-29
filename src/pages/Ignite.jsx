@@ -2,27 +2,33 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../assets/css/home.css";
-import { useTournamentImages } from "../context/TournamentImagesContext";
+import { ALL_IMAGES } from "../assets/images/ImageConstants";
+import { getImagesForTournament } from "../const/tournamentImageConfig";
 
-const TOURNAMENT_ID = "87";
-const COURT_DISPLAY_ID = "87";
-const MULTI_COURT_LIVE_DISPLAY_ID = "871";
-const MULTI_COURT_SCHEDULE_DISPLAY_ID = "872";
-const SCORE_TABLE_DISPLAY_ID = "873";
-const TODAY_MATCH_DISPLAY_ID = "874";
-const THEME_ID = "premier-padel-league";
-const BUTTON_COLOR = "#373735";
+const TOURNAMENT_ID = "92";
+const COURT_DISPLAY_ID = "92";
+const MULTI_COURT_LIVE_DISPLAY_ID = "921";
+const MULTI_COURT_SCHEDULE_DISPLAY_ID = "922";
+const SCORE_TABLE_DISPLAY_ID = "923";
+const TODAY_MATCH_DISPLAY_ID = "924";
+const THEME_ID = "ignite";
+const BUTTON_COLOR = "#00c5d4";
 
-const COURT_IDS = "157,158";
-const SCORE_TABLE_TOURNAMENT_IDS = "328,329,330,331";
+const COURT_IDS = "51,52,53,54,297,298";
+const SCORE_TABLE_TOURNAMENT_IDS =
+  "362,351,350,349,348,347,346,345,344,343";
 
 const COURTS = [
-  { courtId: "157", name: "Neo Maidan - Court 1" },
-  { courtId: "158", name: "Neo Maidan - Court 2" },
+  { courtId: "51", name: "Court 1" },
+  { courtId: "52", name: "Court 2" },
+  { courtId: "53", name: "Court 3" },
+  { courtId: "54", name: "Court 4" },
+  { courtId: "297", name: "Court 5" },
+  { courtId: "298", name: "Court 6" },
 ];
 
-const PremierPadelLeague = () => {
-  const images = useTournamentImages();
+const Ignite = () => {
+  const images = getImagesForTournament(THEME_ID, ALL_IMAGES);
 
   const courtPages = COURTS.map(({ courtId, name }) => ({
     path: `/home/live-court?tournamentId=${TOURNAMENT_ID}&courtId=${courtId}&displayId=${COURT_DISPLAY_ID}&themeId=${THEME_ID}`,
@@ -91,4 +97,4 @@ const PremierPadelLeague = () => {
   );
 };
 
-export default PremierPadelLeague;
+export default Ignite;

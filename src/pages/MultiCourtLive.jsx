@@ -682,7 +682,7 @@ const SingleCourtDisplay = ({
         </div>
 
         <div
-          className="font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[20vw] text-center"
+          className="live-score-bottom-court font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[20vw] text-center"
           style={{
             fontSize: "var(--display-court-name-size)",
             color: "var(--color-court-name-text, #ffffff)",
@@ -692,7 +692,7 @@ const SingleCourtDisplay = ({
         </div>
         <div
           style={{ fontSize: "var(--font-3xl)" }}
-          className={`live-score-meta-pill ${
+          className={`live-score-bottom-stage live-score-meta-pill ${
             isMultiView
               ? "live-score-card-header"
               : "bg-[var(--color-accent)] text-[var(--color-accent-text)]"
@@ -891,18 +891,6 @@ const MultiCourtLive = () => {
                 </div>
               ))}
             </div>
-            {images.sponsor1 && (
-              <div
-                className="fixed bottom-0 left-0 right-0 z-20 overflow-hidden"
-                style={{ background: "var(--color-sponsor-bar-bg, #ffffff)" }}
-              >
-                <SponsorMarquee
-                  sponsor1={images.sponsor1}
-                  sponsor2={images.sponsor2}
-                  sponsors={images.sponsors}
-                />
-              </div>
-            )}
           </>
         )}
 
@@ -920,8 +908,21 @@ const MultiCourtLive = () => {
         `}</style>
       </div>
 
+      {images.sponsor1 && (
+        <div
+          className="fixed bottom-0 left-0 right-0 z-20 overflow-hidden"
+          style={{ background: "var(--color-sponsor-bar-bg, #ffffff)" }}
+        >
+          <SponsorMarquee
+            sponsor1={images.sponsor1}
+            sponsor2={images.sponsor2}
+            sponsors={images.sponsors}
+          />
+        </div>
+      )}
+
       <div
-        className={`zoom-zain fixed bottom-[49px] right-4 z-50 flex items-center gap-1 rounded-lg bg-black/55 p-1.5 text-white shadow-lg backdrop-blur-sm transition-opacity duration-300 ${
+        className={`zoom-zain fixed right-4 z-50 flex items-center gap-1 rounded-lg bg-black/55 p-1.5 text-white shadow-lg backdrop-blur-sm transition-opacity duration-300 ${
           showZoomBar
             ? "opacity-100"
             : "pointer-events-none invisible opacity-0"
@@ -929,6 +930,9 @@ const MultiCourtLive = () => {
         role="toolbar"
         aria-hidden={!showZoomBar}
         aria-label="Page zoom"
+        style={{
+          bottom: "calc(var(--display-sponsor-h, 80px) + 16px)",
+        }}
       >
         <button
           type="button"
@@ -983,7 +987,10 @@ const MultiCourtLive = () => {
       {!showZoomBar && (
         <button
           type="button"
-          className="fixed opacity-10 bottom-[49px] right-4 z-50 rounded-full bg-black/55 p-3 text-white shadow-lg backdrop-blur-sm hover:bg-black/70"
+          className="fixed opacity-10 right-4 z-50 rounded-full bg-black/55 p-3 text-white shadow-lg backdrop-blur-sm hover:bg-black/70"
+          style={{
+            bottom: "calc(var(--display-sponsor-h, 80px) + 16px)",
+          }}
           aria-label="Show zoom controls"
           title="Show zoom controls"
           onClick={() => setShowZoomBar(true)}

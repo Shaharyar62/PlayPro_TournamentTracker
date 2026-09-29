@@ -118,7 +118,17 @@ import appchallengerSponsor5 from "./fix/5.png";
 
 import appchallengerBg from "./apptchallengerbg.png";
 import ppllogo from "./fix/ppllogo.png";
-import pplBg from "./bg-premier.png";
+import pplBg from "./pplbg.png";
+import tapmad from "./fix/tapmad.png";
+import pplSponsor from "./fix/ppl-sponser.png";
+import pplSponsor2 from "./fix/pplsponser2.png";
+
+import igniteLeft from "./fix/ignite-left.png";
+import igniteCup from "./fix/ignite-center.png";
+import igniteBg from "./ignitebg.png";
+import igniteSponsor1 from "./7.png";
+import igniteSponsor2 from "./8.png";
+import igniteSponsor3 from "./9.png";
 // import sponsorLegends from "./fix/sponsor-legends.png";
 
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
@@ -233,6 +243,15 @@ export const ALL_IMAGES = {
   appchallengerSponsor5,
   ppllogo,
   pplBg,
+  tapmad,
+  pplSponsor,
+  pplSponsor2,
+  igniteLeft,
+  igniteCup,
+  igniteBg,
+  igniteSponsor1,
+  igniteSponsor2,
+  igniteSponsor3,
   appchallengerBg,
   // "sponsor-legends": sponsorLegends,
 };
