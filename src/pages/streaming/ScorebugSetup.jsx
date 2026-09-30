@@ -85,6 +85,7 @@ const COLOR_FIELDS = [
   { key: "accentColor", label: "Accent / Points Panel" },
   { key: "panelBg", label: "Panel Background" },
   { key: "textColor", label: "Primary Text" },
+  { key: "scoreColor", label: "Score" },
   { key: "mutedTextColor", label: "Muted Text" },
 ];
 

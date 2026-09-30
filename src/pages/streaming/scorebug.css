@@ -228,7 +228,7 @@
 }
 
 .scorebug-points-label {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--sb-score, #ffffff);
 }
 
 .scorebug-set-score {
@@ -255,10 +255,11 @@
   color: var(--sb-text, #ffffff);
 }
 
-.scorebug-score-slot.scorebug-points-score {
+.scorebug-score-slot.scorebug-points-score,
+.scorebug-score-slot.scorebug-points-score .scorebug-score-value {
   font-size: var(--sb-font-points, 42px);
   font-weight: 800;
-  color: var(--sb-text, #ffffff);
+  color: var(--sb-score, #ffffff);
 }
 
 .scorebug-score-value {
@@ -267,7 +268,7 @@
 }
 
 .scorebug-points-score {
-  color: var(--sb-text, #ffffff);
+  color: var(--sb-score, #ffffff);
   font-size: var(--sb-font-points, 42px);
   font-weight: 800;
   line-height: 1;

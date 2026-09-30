@@ -6,6 +6,7 @@ export const DEFAULT_SCOREBUG_SETTINGS = {
   serveIndicatorColor: "#38bdf8",
   panelBg: "#0b1220",
   textColor: "#ffffff",
+  scoreColor: "#ffffff",
   mutedTextColor: "#9ca3af",
   fontName: 28,
   fontSet: 36,
@@ -32,6 +33,15 @@ export function isScorebugSettings(obj) {
   return SCOREBUG_SETTING_KEYS.some((key) => key in obj);
 }
 
+export function mergeScorebugSettings(source, base = DEFAULT_SCOREBUG_SETTINGS) {
+  const raw = source && typeof source === "object" ? source : {};
+  const merged = { ...base, ...raw };
+  if (!Object.prototype.hasOwnProperty.call(raw, "scoreColor")) {
+    merged.scoreColor = base.scoreColor ?? DEFAULT_SCOREBUG_SETTINGS.scoreColor;
+  }
+  return merged;
+}
+
 export function applyScorebugSettings(settings) {
   const root = document.documentElement;
   root.style.setProperty("--sb-accent", settings.accentColor);
@@ -41,6 +51,10 @@ export function applyScorebugSettings(settings) {
   );
   root.style.setProperty("--sb-panel-bg", settings.panelBg);
   root.style.setProperty("--sb-text", settings.textColor);
+  root.style.setProperty(
+    "--sb-score",
+    settings.scoreColor ?? DEFAULT_SCOREBUG_SETTINGS.scoreColor,
+  );
   root.style.setProperty("--sb-muted", settings.mutedTextColor);
   root.style.setProperty("--sb-font-name", `${settings.fontName}px`);
   root.style.setProperty("--sb-font-set", `${settings.fontSet}px`);
@@ -82,7 +96,7 @@ function loadSettingsFromStorage(wireId) {
   try {
     const raw = localStorage.getItem(getStorageKey(wireId));
     if (raw) {
-      return { ...DEFAULT_SCOREBUG_SETTINGS, ...JSON.parse(raw) };
+      return mergeScorebugSettings(JSON.parse(raw));
     }
   } catch {
     // ignore parse errors
@@ -110,7 +124,7 @@ function extractScorebugSettings(data, base = DEFAULT_SCOREBUG_SETTINGS) {
   const candidate = data.settings ?? data;
   if (!isScorebugSettings(candidate)) return null;
 
-  return { ...base, ...candidate };
+  return mergeScorebugSettings(candidate, base);
 }
 
 const noop = () => {};
@@ -141,6 +155,7 @@ export function useScorebugSettings({
 
   const applyAndPersist = useCallback(
     (next, { skipSave = false } = {}) => {
+      settingsRef.current = next;
       applyScorebugSettings(next);
       if (wireId && !skipSave) {
         ignorePollRef.current = true;
@@ -175,6 +190,7 @@ export function useScorebugSettings({
     channel.onmessage = (e) => {
       const next = extractScorebugSettings(e.data, settingsRef.current);
       if (!next) return;
+      settingsRef.current = next;
       applyScorebugSettings(next);
       if (!listenOnly) {
         setSettings(next);
@@ -189,6 +205,7 @@ export function useScorebugSettings({
           settingsRef.current,
         );
         if (!next) return;
+        settingsRef.current = next;
         applyScorebugSettings(next);
         if (!listenOnly) {
           setSettings(next);
@@ -218,6 +235,7 @@ export function useScorebugSettings({
       if (ts && ts !== lastTs) {
         lastTs = ts;
         const next = loadSettingsFromStorage(wireId);
+        settingsRef.current = next;
         applyScorebugSettings(next);
       }
     }, 400);
@@ -255,7 +273,10 @@ export function useScorebugSettings({
           serverSettings &&
           isScorebugSettings(serverSettings)
         ) {
-          const next = { ...DEFAULT_SCOREBUG_SETTINGS, ...serverSettings };
+          const next = mergeScorebugSettings(
+            serverSettings,
+            settingsRef.current,
+          );
           applyAndPersist(next);
           if (!listenOnly) {
             setSettings(next);
