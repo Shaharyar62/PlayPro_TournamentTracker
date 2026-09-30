@@ -354,6 +354,21 @@ const MatchScoreCard = () => {
     return team?.teamName || team?.name || "Team";
   };
 
+  const getTeamNameLines = (team) => {
+    const fromPlayers = (team?.players || [])
+      .map((p) => p?.playerName || p?.name)
+      .map((n) => (typeof n === "string" ? n.trim() : ""))
+      .filter(Boolean);
+    if (fromPlayers.length > 0) return fromPlayers;
+
+    const raw = getTeamName(team);
+    const parts = String(raw)
+      .split(/\s*(?:&|\/)\s*/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    return parts.length > 0 ? parts : [raw];
+  };
+
   // Helper functions for JSON data binding
   const getNumberOfSets = () => {
     // For 2-sets + super tiebreak, show 3 set columns (SET 1, SET 2, STB)
@@ -559,7 +574,7 @@ const MatchScoreCard = () => {
                     gridTemplateColumns: scoreGridColumns,
                   }}
                 >
-                  <div className="text-center min-w-0">
+                  <div className="live-score-players-label min-w-0">
                     <h2
                       className="font-bold live-score-card-header-text"
                       style={{ fontSize: "var(--font-3xl)" }}
@@ -599,7 +614,7 @@ const MatchScoreCard = () => {
                     const team =
                       teamIndex === 1 ? matchData.teamA : matchData.teamB;
                     const serving = isServingTeam(teamIndex);
-                    const teamLabel = getTeamName(team);
+                    const names = getTeamNameLines(team);
                     const warnings = getTeamWarnings(teamIndex);
 
                     return (
@@ -621,12 +636,15 @@ const MatchScoreCard = () => {
                             />
                           )}
                           <div className="live-score-player-names">
-                            <span
-                              className="live-score-player-name team-name-z font-bold"
-                              title={teamLabel}
-                            >
-                              {teamLabel}
-                            </span>
+                            {names.map((name, nameIndex) => (
+                              <span
+                                key={`${teamIndex}-${nameIndex}-${name}`}
+                                className="live-score-player-name team-name-z font-bold"
+                                title={name}
+                              >
+                                {name}
+                              </span>
+                            ))}
                           </div>
                           {serving && (
                             <div className="live-score-serve-pip">

@@ -465,7 +465,11 @@ const SingleCourtDisplay = ({
             }}
           >
             <div
-              className="flex items-center text-white justify-center gap-2 leading-none min-w-0"
+              className={`flex items-center leading-none min-w-0 ${
+                isMultiView
+                  ? "live-score-multi-players-label justify-start"
+                  : "text-white justify-center gap-2"
+              }`}
               style={{ position: "relative" }}
             >
               {liveMatchData?.matchTimer &&
@@ -500,7 +504,7 @@ const SingleCourtDisplay = ({
                       : "text-[var(--color-accent-text)]"
                 }`}
               >
-                &nbsp;&nbsp;&nbsp;&nbsp; PLAYERS
+                {isMultiView ? "PLAYERS" : "\u00A0\u00A0\u00A0\u00A0 PLAYERS"}
               </h2>
             </div>
             {Array.from({ length: getNumberOfSets() }, (_, index) => (

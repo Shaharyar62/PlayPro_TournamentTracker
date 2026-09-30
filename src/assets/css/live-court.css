@@ -8,18 +8,38 @@
   text-transform: uppercase;
 }
 
-/* Single-court: keep logo + name as one centered group */
+/* Single-court: PLAYERS label, logo, and names share one left edge */
+.live-score-card {
+  --live-players-inset: 2.15rem;
+}
+
+.live-score-players-label {
+  text-align: left;
+  padding-left: var(--live-players-inset);
+  padding-right: 0.75rem;
+}
+
 .live-score-team-stack:not(.live-score-team-stack--multi) .live-score-team-identity {
-  justify-content: center;
-  padding: 1.15rem 1.45rem;
-  gap: 0.95rem;
+  justify-content: flex-start;
+  padding: 1rem 1.25rem 1rem calc(var(--live-players-inset) - 1rem);
+  gap: 1rem;
 }
 
 .live-score-team-stack:not(.live-score-team-stack--multi) .live-score-player-names {
   flex: 0 1 auto;
   flex-grow: 0;
+  align-items: flex-start;
   width: max-content;
-  max-width: calc(100% - 8rem);
+  max-width: calc(100% - var(--display-logo-team-size) - 5rem);
+  text-align: left;
+}
+
+.live-score-team-stack:not(.live-score-team-stack--multi) .live-score-team-logo {
+  width: auto;
+  height: var(--display-logo-team-size);
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .live-score-team-stack:not(.live-score-team-stack--multi) .live-score-warnings:empty {
