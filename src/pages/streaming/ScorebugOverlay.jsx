@@ -129,8 +129,8 @@ const ScorebugOverlay = ({ matchData, liveMatchData }) => {
         <ScorebugPanel className="scorebug-panel--logo">
           <div className="scorebug-panel-inner scorebug-logo-inner">
             <img
-              src={ImageConstants.playproColorVertical}
-              alt="PlayPro"
+              src={ImageConstants.asiapadellogo}
+              alt="Asia Padel Logo"
               className="scorebug-logo-img"
             />
           </div>

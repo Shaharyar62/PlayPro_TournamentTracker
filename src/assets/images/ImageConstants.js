@@ -23,6 +23,7 @@ import adsS3 from "./ads_s3.png";
 import adsS4 from "./ads_s4.png";
 // import playpro from "./playpro.png";
 import playproColorVertical from "./playpro_logo_vertical.png";
+import asiapadellogo from "./asiapadellogo.png";
 import gkLogo from "./fix/kg-logo.png";
 import tmpLogo from "./tmp-logo.png";
 import tmpCup from "./fix/tmp-cup.png";
@@ -176,6 +177,7 @@ export const ALL_IMAGES = {
   apple: appStore,
   google: googlePlay,
   playpro_logo_vertical: playproColorVertical,
+  asiapadellogo: asiapadellogo,
   "mmi-cup": mmiCup,
   "mmi-bg": mmiBg,
   greenwich: greenwich,
@@ -289,6 +291,7 @@ export const ImageConstants = {
   appStore,
   googlePlay,
   playproColorVertical,
+  asiapadellogo,
   padelverse_W,
   premierCup,
   tmpwmoBg,
