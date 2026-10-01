@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import "../assets/css/home.css";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 
-const TOURNAMENT_ID = "89";
+const TOURNAMENT_ID = "98";
 const COURT_DISPLAY_ID = "93";
 const MULTI_COURT_LIVE_DISPLAY_ID = "931";
 const MULTI_COURT_SCHEDULE_DISPLAY_ID = "932";
@@ -13,11 +13,14 @@ const TODAY_MATCH_DISPLAY_ID = "934";
 const THEME_ID = "fip-bronze";
 const BUTTON_COLOR = "#2e55b9";
 
-const COURT_IDS = "81,83,84,85";
-const SCORE_TABLE_TOURNAMENT_IDS = "335,334,333,332";
+const COURT_IDS = "79,80,81,82,83,84,85";
+const SCORE_TABLE_TOURNAMENT_IDS = "365,364";
 
 const COURTS = [
+  { courtId: "79", name: "Galaxy 1" },
+  { courtId: "80", name: "Galaxy 2" },
   { courtId: "81", name: "Galaxy 3" },
+  { courtId: "82", name: "Galaxy 4" },
   { courtId: "83", name: "Black Star 1" },
   { courtId: "84", name: "Black Star 2" },
   { courtId: "85", name: "Infinity" },

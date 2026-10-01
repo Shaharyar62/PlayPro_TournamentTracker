@@ -1,5 +1,8 @@
 import React from "react";
-import { getScoreDisplayString } from "../../umpireScoring/utils/scoringRules.js";
+import {
+  getScoreDisplayString,
+  hasWonSet,
+} from "../../umpireScoring/utils/scoringRules.js";
 import { ImageConstants } from "../../assets/images/ImageConstants";
 import {
   ScorebugWrap,
@@ -20,6 +23,41 @@ function getNumberOfSets(liveMatchData) {
     return liveMatchData.matchSettings.numberOfSets;
   }
   return 3;
+}
+
+function isSetComplete(setIndex, liveMatchData) {
+  const set = liveMatchData?.sets?.[setIndex.toString()];
+  if (!set) return false;
+
+  const settings = liveMatchData.matchSettings;
+  const team1Games = Number(set.team1Games) || 0;
+  const team2Games = Number(set.team2Games) || 0;
+
+  if (
+    hasWonSet(team1Games, team2Games, settings) ||
+    hasWonSet(team2Games, team1Games, settings)
+  ) {
+    return true;
+  }
+
+  const isTiebreakSet = set.isTiebreak || set.isSuperTiebreak;
+  return isTiebreakSet && team1Games !== team2Games && (team1Games >= 6 || team2Games >= 6);
+}
+
+function getVisibleSetCount(setCount, liveMatchData) {
+  const team1Sets = liveMatchData?.team1?.sets;
+  const team2Sets = liveMatchData?.team2?.sets;
+
+  if (typeof team1Sets === "number" && typeof team2Sets === "number") {
+    return Math.min(team1Sets + team2Sets + 1, setCount);
+  }
+
+  let visible = 1;
+  for (let i = 0; i < setCount - 1; i++) {
+    if (!isSetComplete(i, liveMatchData)) break;
+    visible = i + 2;
+  }
+  return Math.min(visible, setCount);
 }
 
 function getSetScore(teamIndex, setIndex, liveMatchData, matchData) {
@@ -90,11 +128,12 @@ function getHeaderText(liveMatchData) {
 
 const ScorebugOverlay = ({ matchData, liveMatchData }) => {
   const setCount = getNumberOfSets(liveMatchData);
+  const visibleSetCount = getVisibleSetCount(setCount, liveMatchData);
   const pointScore1 = getCurrentGameScore(1, liveMatchData, matchData);
   const pointScore2 = getCurrentGameScore(2, liveMatchData, matchData);
 
   const setScores = {};
-  for (let i = 0; i < setCount; i++) {
+  for (let i = 0; i < visibleSetCount; i++) {
     setScores[`s${i}_t1`] = getSetScore(1, i, liveMatchData, matchData);
     setScores[`s${i}_t2`] = getSetScore(2, i, liveMatchData, matchData);
   }
@@ -143,7 +182,7 @@ const ScorebugOverlay = ({ matchData, liveMatchData }) => {
           </div>
         </ScorebugPanel>
 
-        {Array.from({ length: setCount }, (_, setIndex) => (
+        {Array.from({ length: visibleSetCount }, (_, setIndex) => (
           <ScorebugPanel
             key={setIndex}
             className="scorebug-panel--set"
