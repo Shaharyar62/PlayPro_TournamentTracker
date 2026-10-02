@@ -228,10 +228,7 @@
 
 .live-score-team-stack--multi .live-score-team-logo {
   width: auto;
-  height: min(
-    var(--display-logo-team-size),
-    calc(var(--display-player-name-size) * 1.35)
-  );
+  height: var(--display-logo-team-size);
   max-width: none;
   flex-shrink: 0;
   background-color: transparent;
