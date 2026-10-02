@@ -31,6 +31,7 @@ import { useDisplaySettings } from "../hooks/useDisplaySettings";
 import { getThemeForTournament } from "../const/tournamentThemeConfig";
 import "../assets/css/live-score-card.css";
 import "../assets/css/score-table.css";
+import { keepScoringState, isSuperTiebreakSet } from "../umpireScoring/utils/matchResultsHelper.js";
 
 const ZOOM_MIN = 0.1;
 const ZOOM_MAX = 2;
@@ -236,7 +237,7 @@ const SingleCourtDisplay = ({
       console.log(
         `Timeout waiting for match state for court ${courtId}, using API data`,
       );
-      setLiveMatchData(currentMatch);
+      setLiveMatchData((prev) => keepScoringState(prev, currentMatch));
     }, 5000);
 
     socket.on("get_match_state_response", (data) => {
@@ -248,7 +249,7 @@ const SingleCourtDisplay = ({
           console.log(
             "Ignoring match state response from different environment",
           );
-          setLiveMatchData(currentMatch);
+          setLiveMatchData((prev) => keepScoringState(prev, currentMatch));
           return;
         }
         matchStatus.current = data.status;
@@ -257,7 +258,7 @@ const SingleCourtDisplay = ({
         console.log(
           `No match state from server for court ${courtId}, using API data as fallback`,
         );
-        setLiveMatchData(currentMatch);
+        setLiveMatchData((prev) => keepScoringState(prev, currentMatch));
       }
     });
   };
@@ -519,8 +520,7 @@ const SingleCourtDisplay = ({
                         : "text-[var(--color-accent-text)]"
                   }`}
                 >
-                  {liveMatchData?.matchSettings?.matchFormat === 2 &&
-                  index === 2
+                  {isSuperTiebreakSet(liveMatchData, index)
                     ? "STB"
                     : `S${index + 1}`}
                 </h2>

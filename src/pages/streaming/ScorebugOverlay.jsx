@@ -16,6 +16,7 @@ import {
   AnimatedWarning,
   useScoreChangeFlash,
 } from "./ScorebugAnimations.jsx";
+import { isSuperTiebreakSet } from "../../umpireScoring/utils/matchResultsHelper.js";
 
 function getNumberOfSets(liveMatchData) {
   if (liveMatchData?.matchSettings?.matchFormat === 2) return 3;
@@ -190,7 +191,7 @@ const ScorebugOverlay = ({ matchData, liveMatchData }) => {
           >
             <div className="scorebug-panel-inner scorebug-set-inner">
               <span className="scorebug-set-label">
-                {setIndex === 2 && liveMatchData?.matchSettings?.matchFormat === 2
+                {isSuperTiebreakSet(liveMatchData, setIndex)
                   ? "STB"
                   : `S${setIndex + 1}`}
               </span>
