@@ -213,3 +213,21 @@ export function prepareMatchResults(matchData, winnerTeam, sets) {
     isReUploadResult: false,
   };
 }
+
+/** Whether a set column on the live court screens is the super tiebreak. */
+export const isSuperTiebreakSet = (liveMatchData, setIndex) =>
+  setIndex === 2 &&
+  (liveMatchData?.matchSettings?.matchFormat === 2 ||
+    !!liveMatchData?.sets?.["2"]?.isSuperTiebreak);
+
+/**
+ * API fallback that keeps scoring BE state (sets incl. STB) for the same
+ * match, so a finished match isn't replaced by API data that has no STB.
+ */
+export const keepScoringState = (prev, apiMatch) => {
+  if (!prev?.sets || !apiMatch) return apiMatch;
+  const sameMatch = prev.courtId
+    ? true
+    : String(prev.matchId).replace(/^(dev|prod)_/, "") === String(apiMatch.id);
+  return sameMatch ? prev : apiMatch;
+};

@@ -9,6 +9,7 @@ import { SERVER_URL } from "../../umpireScoring/utils/constants.js";
 import { useScorebugSettings } from "../../hooks/useScorebugSettings.js";
 import "./scorebug.css";
 import ScorebugOverlay from "./ScorebugOverlay.jsx";
+import { keepScoringState } from "../../umpireScoring/utils/matchResultsHelper.js";
 
 const StreamingLiveCourt = () => {
   const [searchParams] = useSearchParams();
@@ -215,7 +216,7 @@ const StreamingLiveCourt = () => {
     // Set a timeout to use API data if no response from server
     const fallbackTimeout = setTimeout(() => {
       console.log("Timeout waiting for match state, using API data");
-      setLiveMatchData(currentMatch);
+      setLiveMatchData((prev) => keepScoringState(prev, currentMatch));
     }, 5000); // 5 second timeout
 
     // Handle match state response
@@ -230,7 +231,7 @@ const StreamingLiveCourt = () => {
             "Ignoring match state response from different environment",
           );
           // Use API data as fallback when response is from different environment
-          setLiveMatchData(currentMatch);
+          setLiveMatchData((prev) => keepScoringState(prev, currentMatch));
           return;
         }
         matchStatus.current = data.status;
@@ -238,7 +239,7 @@ const StreamingLiveCourt = () => {
       } else {
         console.log("No match state from server, using API data as fallback");
         // Use API data as fallback when server doesn't have the match
-        setLiveMatchData(currentMatch);
+        setLiveMatchData((prev) => keepScoringState(prev, currentMatch));
       }
     });
   };

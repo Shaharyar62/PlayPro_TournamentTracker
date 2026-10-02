@@ -595,19 +595,13 @@ export function useMatchState(tournamentId, matchId) {
         if (won) {
           // Team won the tiebreak set
           if (matchState.isInSuperTiebreak) {
-            // Super tiebreak: store result in set 3 as 1-0 (winner) or 0-1 (loser)
-            // Sets 1 and 2 remain unchanged
+            // Super tiebreak: store the actual STB points (e.g. 10-8) in set 3
+            // so viewers can see the result after the match is finished
+            newState.team1.games = newState.team1.tiebreakScore;
+            newState.team2.games = newState.team2.tiebreakScore;
             if (isTeam1) {
-              newSetsData[activeSetKey].team1Games = 1;
-              newSetsData[activeSetKey].team2Games = 0;
-              newState.team1.games = 1;
-              newState.team2.games = 0;
               newState.team1.sets += 1;
             } else {
-              newSetsData[activeSetKey].team1Games = 0;
-              newSetsData[activeSetKey].team2Games = 1;
-              newState.team1.games = 0;
-              newState.team2.games = 1;
               newState.team2.sets += 1;
             }
           } else {

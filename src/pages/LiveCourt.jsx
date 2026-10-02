@@ -22,6 +22,7 @@ import { useDisplaySettings } from "../hooks/useDisplaySettings";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 import "../assets/css/live-score-card.css";
 import "../assets/css/live-court.css";
+import { keepScoringState, isSuperTiebreakSet } from "../umpireScoring/utils/matchResultsHelper.js";
 const MatchScoreCard = () => {
   const [searchParams] = useSearchParams();
   const tournamentId = searchParams.get("tournamentId");
@@ -246,7 +247,7 @@ const MatchScoreCard = () => {
     // Set a timeout to use API data if no response from server
     const fallbackTimeout = setTimeout(() => {
       console.log("Timeout waiting for match state, using API data");
-      setLiveMatchData(currentMatch);
+      setLiveMatchData((prev) => keepScoringState(prev, currentMatch));
     }, 5000); // 5 second timeout
 
     // Handle match state response
@@ -261,7 +262,7 @@ const MatchScoreCard = () => {
             "Ignoring match state response from different environment",
           );
           // Use API data as fallback when response is from different environment
-          setLiveMatchData(currentMatch);
+          setLiveMatchData((prev) => keepScoringState(prev, currentMatch));
           return;
         }
         matchStatus.current = data.status;
@@ -269,7 +270,7 @@ const MatchScoreCard = () => {
       } else {
         console.log("No match state from server, using API data as fallback");
         // Use API data as fallback when server doesn't have the match
-        setLiveMatchData(currentMatch);
+        setLiveMatchData((prev) => keepScoringState(prev, currentMatch));
       }
     });
   };
@@ -588,9 +589,7 @@ const MatchScoreCard = () => {
                         className="font-bold live-score-card-header-text"
                         style={{ fontSize: "var(--font-3xl)" }}
                       >
-                        {liveMatchData?.matchSettings?.matchFormat === 2 &&
-                        index === 2 &&
-                        liveMatchData?.status === "completed"
+                        {isSuperTiebreakSet(liveMatchData, index)
                           ? "STB"
                           : `S${index + 1}`}
                       </h2>
