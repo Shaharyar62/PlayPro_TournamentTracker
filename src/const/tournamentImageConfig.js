@@ -184,9 +184,9 @@ export const TOURNAMENT_IMAGES = {
     sponsor2: "fipBronzeSponsor2",
   },
   "padel-for-pink": {
-    leftLogo: "padelForPinkLeft",
+    leftLogo: "playpronewwhite",
     cupLogo: "padelForPinkCup",
-    rightLogo: "playpronewwhite",
+    rightLogo: "padelForPinkLeft",
     playproWhite: "playpronewwhite",
     bg: "padelForPinkBg",
     sponsor1: "padelForPinkSponsor1",

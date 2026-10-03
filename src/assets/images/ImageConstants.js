@@ -114,8 +114,8 @@ import fipBronzeSponsor2 from "./fix/11.png";
 import padelForPinkBg from "./padelforpinkbg.png";
 import padelForPinkLeft from "./fix/padelforpinkleft.png";
 import padelForPinkCup from "./fix/padel-for-pink-center.png";
-import padelForPinkSponsor1 from "./fix/padel-for-pink-sponsor-1.png";
-import padelForPinkSponsor2 from "./fix/padel-for-pink-sponsor-2.png";
+import padelForPinkSponsor1 from "./fix/padelpink1.png";
+import padelForPinkSponsor2 from "./fix/padelpink2.png";
 
 import kfcPadelBg from "./kfcpadel-bg.png";
 import kfcPadelRight from "./fix/kfcpadel-right.png";
