@@ -183,6 +183,14 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "fipBronzeSponsor1",
     sponsor2: "fipBronzeSponsor2",
   },
+  hoh: {
+    leftLogo: "hohLeft",
+    cupLogo: "hohCup",
+    rightLogo: "playpronewlogo",
+    bg: "hohBg",
+    sponsor1: "fipBronzeSponsor1",
+    sponsor2: "fipBronzeSponsor2",
+  },
   "padel-for-pink": {
     leftLogo: "playpronewwhite",
     cupLogo: "padelForPinkCup",
