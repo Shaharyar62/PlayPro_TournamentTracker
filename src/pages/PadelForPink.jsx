@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import "../assets/css/home.css";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 
-const TOURNAMENT_ID = "73";
+const TOURNAMENT_ID = "99";
 const COURT_DISPLAY_ID = "94";
 const MULTI_COURT_LIVE_DISPLAY_ID = "941";
 const MULTI_COURT_SCHEDULE_DISPLAY_ID = "942";
@@ -13,18 +13,20 @@ const TODAY_MATCH_DISPLAY_ID = "944";
 const THEME_ID = "padel-for-pink";
 const BUTTON_COLOR = "#2e55b9";
 
-const COURT_IDS = "141,142,143,144,260,248";
-const SCORE_TABLE_TOURNAMENT_IDS = "264,265,266,267,268,269,270";
+const COURT_IDS = "209,206,207,208,264,265,210,211,212,213";
+const SCORE_TABLE_TOURNAMENT_IDS = "370,369,368,367,366";
 
 const COURTS = [
-  { courtId: "139", name: "Ocean 1" },
-  { courtId: "140", name: "Ocean 2" },
-  { courtId: "141", name: "Tera 1" },
-  { courtId: "142", name: "Tera 2" },
-  { courtId: "143", name: "Cherry 1" },
-  { courtId: "144", name: "Cherry 2" },
-  { courtId: "260", name: "MejorSet 1" },
-  { courtId: "248", name: "MejorSet 2" },
+  { courtId: "209", name: "Court 1 (Padel 1)" },
+  { courtId: "206", name: "Court 2 (Padel R1)" },
+  { courtId: "207", name: "Court 3 (Padel R2)" },
+  { courtId: "208", name: "Court 4 (Padel X)" },
+  { courtId: "264", name: "Court 5 (Champion Court 1)" },
+  { courtId: "265", name: "Court 6 (Champion Court 2)" },
+  { courtId: "210", name: "Court 7 (Padel 2)" },
+  { courtId: "211", name: "Court 8 (Padel 3)" },
+  { courtId: "212", name: "Court 9 (Padel 4)" },
+  { courtId: "213", name: "Court 10 (Padel 5)" },
 ];
 
 const PadelForPink = () => {
