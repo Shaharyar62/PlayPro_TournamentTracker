@@ -175,19 +175,20 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "fipPromisesSponsor",
     sponsor2: "fipPromisesSponsor",
   },
+  
+  "apccl": {
+    leftLogo: "apccl-cup",
+    cupLogo: "appcllogo",
+    rightLogo: "playpro-w",
+    bg: "apccl-bg",
+    sponsor1: null,
+    sponsor2: null,
+  },
   "fip-bronze": {
     leftLogo: "fipBronzeLeft",
     cupLogo: "fipBronzeCup",
     rightLogo: "fipBronzeRight",
     bg: "fipBronzeBg",
-    sponsor1: "fipBronzeSponsor1",
-    sponsor2: "fipBronzeSponsor2",
-  },
-  hoh: {
-    leftLogo: "hohLeft",
-    cupLogo: "hohCup",
-    rightLogo: "playpronewlogo",
-    bg: "hohBg",
     sponsor1: "fipBronzeSponsor1",
     sponsor2: "fipBronzeSponsor2",
   },
