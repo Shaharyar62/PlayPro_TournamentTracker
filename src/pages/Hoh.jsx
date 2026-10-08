@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import "../assets/css/home.css";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 
-const TOURNAMENT_ID = "98";
+const TOURNAMENT_ID = "105";
 const COURT_DISPLAY_ID = "95";
 const MULTI_COURT_LIVE_DISPLAY_ID = "951";
 const MULTI_COURT_SCHEDULE_DISPLAY_ID = "952";
@@ -13,17 +13,20 @@ const TODAY_MATCH_DISPLAY_ID = "954";
 const THEME_ID = "hoh";
 const BUTTON_COLOR = "#2e55b9";
 
-const COURT_IDS = "79,80,81,82,83,84,85";
-const SCORE_TABLE_TOURNAMENT_IDS = "365,364";
+const COURT_IDS = "206,207,208,209,210,211,212,213,264,265";
+const SCORE_TABLE_TOURNAMENT_IDS = "385,384,383";
 
 const COURTS = [
-  { courtId: "79", name: "Galaxy 1" },
-  { courtId: "80", name: "Galaxy 2" },
-  { courtId: "81", name: "Galaxy 3" },
-  { courtId: "82", name: "Galaxy 4" },
-  { courtId: "83", name: "Black Star 1" },
-  { courtId: "84", name: "Black Star 2" },
-  { courtId: "85", name: "Infinity" },
+  { courtId: "206", name: "Court R1" },
+  { courtId: "207", name: "Court R2" },
+  { courtId: "208", name: "Court X" },
+  { courtId: "209", name: "Court 1" },
+  { courtId: "210", name: "Court 2" },
+  { courtId: "211", name: "Court 3" },
+  { courtId: "212", name: "Court 4" },
+  { courtId: "213", name: "Court 5" },
+  { courtId: "264", name: "Champion Court 1" },
+  { courtId: "265", name: "Champion Court 2" },
 ];
 
 const Hoh = () => {

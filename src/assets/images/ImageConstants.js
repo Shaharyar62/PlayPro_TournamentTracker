@@ -114,6 +114,8 @@ import fipBronzeSponsor2 from "./fix/11.png";
 import hohBg from "./hoh-bg.png";
 import hohLeft from "./hoh-left.png";
 import hohCup from "./hoh-centerr.png";
+import hohSponsor1 from "./fix/121.png";
+import hohSponsor2 from "./fix/131.png";
 
 import padelForPinkBg from "./padelforpinkbg.png";
 import padelForPinkLeft from "./fix/padelforpinkleft.png";
@@ -259,6 +261,8 @@ export const ALL_IMAGES = {
   hohLeft,
   hohCup,
   hohBg,
+  hohSponsor1,
+  hohSponsor2,
   padelForPinkLeft,
   padelForPinkCup,
   padelForPinkBg,
@@ -350,6 +354,8 @@ export const ImageConstants = {
   hohBg,
   hohLeft,
   hohCup,
+  hohSponsor1,
+  hohSponsor2,
   kfcPadelBg,
   kfcPadelRight,
   kfcPadelLeft,
