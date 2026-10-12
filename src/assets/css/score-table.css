@@ -85,6 +85,31 @@
   background: var(--color-score-table-body-bg, #ffffff);
 }
 
+.score-table-team {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.score-table-team-flag {
+  height: 1.15em;
+  width: auto;
+  max-width: 2.2em;
+  flex-shrink: 0;
+  object-fit: contain;
+  background: transparent;
+}
+
+.teamlogo {
+  display: none;
+}
+
+.score-table-team-name {
+  min-width: 0;
+  line-height: 1.15;
+}
+
 .score-table-groups-tab {
   background: var(
     --color-score-table-card-header-bg,

@@ -987,7 +987,23 @@ const TournamentStandings = () => {
                                             }}
                                             className="py-1 px-1 text-sm font-semibold"
                                           >
-                                            {team.teamName}
+                                            <div className="score-table-team">
+                                              {typeof team.logo === "string" &&
+                                              team.logo.trim() ? (
+                                                <img
+                                                  src={team.logo}
+                                                  alt=""
+                                                  className="score-table-team-flag teamlogo"
+                                                  onError={(event) => {
+                                                    event.currentTarget.style.display =
+                                                      "none";
+                                                  }}
+                                                />
+                                              ) : null}
+                                              <span className="score-table-team-name">
+                                                {team.teamName}
+                                              </span>
+                                            </div>
                                           </td>
                                           {/* <td className="py-1 px-1 text-center font-bold">
                                             {team.played ?? 0}

@@ -200,6 +200,22 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "hohSponsor1",
     sponsor2: "hohSponsor2",
   },
+  "dw-padel": {
+    leftLogo: "dwPadelLeft",
+    cupLogo: "dwPadelCup",
+    rightLogo: "dwPadelRight",
+    bg: "dwPadelBg",
+    sponsor1: "dwPadelSponsor",
+    sponsor2: "dwPadelSponsor2",
+  },
+  kbmc: {
+    leftLogo: "kbmcLeft",
+    cupLogo: "kbmcCup",
+    rightLogo: "kbmcRight",
+    bg: "kbmcBg",
+    sponsor1: "kbmcSponsor",
+    sponsor2: "kbmcSponsor",
+  },
   "padel-for-pink": {
     leftLogo: "playpronewwhite",
     cupLogo: "padelForPinkCup",

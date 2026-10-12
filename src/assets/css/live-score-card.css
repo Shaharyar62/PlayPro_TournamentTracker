@@ -33,6 +33,34 @@
   justify-self: center;
 }
 
+/* 5 cards: keep the top row of 3, center the last pair */
+.multi-court-cards-grid--cols-3:has(
+  > .multi-court-cards-grid__item:nth-child(5):last-child
+) {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.multi-court-cards-grid--cols-3:has(
+    > .multi-court-cards-grid__item:nth-child(5):last-child
+  )
+  > .multi-court-cards-grid__item {
+  grid-column: span 2;
+}
+
+.multi-court-cards-grid--cols-3:has(
+    > .multi-court-cards-grid__item:nth-child(5):last-child
+  )
+  > .multi-court-cards-grid__item:nth-child(4) {
+  grid-column: 2 / span 2;
+}
+
+.multi-court-cards-grid--cols-3:has(
+    > .multi-court-cards-grid__item:nth-child(5):last-child
+  )
+  > .multi-court-cards-grid__item:nth-child(5) {
+  grid-column: 4 / span 2;
+}
+
 .live-score-card {
   background: var(--color-score-table-glass-bg, #ffffff);
   backdrop-filter: var(--score-table-glass-blur, none);

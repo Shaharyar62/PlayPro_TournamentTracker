@@ -35,6 +35,8 @@ import Padelverse from "./pages/Padelverse";
 import TMP from "./pages/TMP";
 import TMPWMO from "./pages/TMPWMO";
 import HeritageCup from "./pages/HeritageCup";
+import DwPadel from "./pages/DwPadel";
+import Kbmc from "./pages/Kbmc";
 import PadelverseOnedayTounament from "./pages/PadelverseOnedayTounament";
 import FipPromises from "./pages/FipPromises";
 import FipBronze from "./pages/FipBronze";
@@ -108,6 +110,8 @@ function App() {
                 <Route path="tmp" element={<TMP />} />
                 <Route path="tmpwmo" element={<TMPWMO />} />
                 <Route path="heritage-cup" element={<HeritageCup />} />
+                <Route path="dw-padel" element={<DwPadel />} />
+                <Route path="kbmc" element={<Kbmc />} />
                 <Route
                   path="padelverse-oneday-tounament"
                   element={<PadelverseOnedayTounament />}

@@ -156,6 +156,19 @@ import apcclLogo from "./fix/apccl.png";
 import apcclCup from "./fix/apccl-cup.png";
 import apcclBg from "./apccl-bg.png";
 
+import dwPadelBg from "./dw-padel-bg.png";
+import dwPadelRight from "./fix/dw-padel-right.png";
+import dwPadelLeft from "./fix/dwleft.png";
+import dwPadelCup from "./fix/dw-padel-center.png";
+import dwPadelSponsor from "./fix/dw-padel-sponsor.png";
+import dwPadelSponsor2 from "./fix/dw-padel-sponsor2.png";
+
+import kbmcBg from "./kbmc-bg.png";
+import kbmcRight from "./fix/kbmc-right.png";
+import kbmcLeft from "./fix/kbmc-left.png";
+import kbmcCup from "./fix/kbmc-center.png";
+import kbmcSponsor from "./fix/kbmc-sponsor.png";
+
 // import sponsorLegends from "./fix/sponsor-legends.png";
 
 // import sponsorShamsiPadelOpen2 from "./fix/sponsor-shamsi-padel-open-2.png";
@@ -272,6 +285,17 @@ export const ALL_IMAGES = {
   hohBg,
   hohSponsor1,
   hohSponsor2,
+  dwPadelLeft,
+  dwPadelCup,
+  dwPadelRight,
+  dwPadelBg,
+  dwPadelSponsor,
+  dwPadelSponsor2,
+  kbmcLeft,
+  kbmcCup,
+  kbmcRight,
+  kbmcBg,
+  kbmcSponsor,
   padelForPinkLeft,
   padelForPinkCup,
   padelForPinkBg,
@@ -365,6 +389,17 @@ export const ImageConstants = {
   hohCup,
   hohSponsor1,
   hohSponsor2,
+  dwPadelBg,
+  dwPadelRight,
+  dwPadelLeft,
+  dwPadelCup,
+  dwPadelSponsor,
+  dwPadelSponsor2,
+  kbmcBg,
+  kbmcRight,
+  kbmcLeft,
+  kbmcCup,
+  kbmcSponsor,
   kfcPadelBg,
   kfcPadelRight,
   kfcPadelLeft,
