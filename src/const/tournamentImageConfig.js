@@ -211,9 +211,9 @@ export const TOURNAMENT_IMAGES = {
     sponsor2: "hohSponsor2",
   },
   "dw-padel": {
-    leftLogo: "dwPadelLeft",
-    cupLogo: "dwPadelCup",
-    rightLogo: "dwPadelRight",
+    leftLogo: null,
+    cupLogo: "dwPadelCup2",
+    rightLogo: null,
     bg: "dwPadelBg",
     sponsor1: "dwPadelSponsor",
     sponsor2: "dwPadelSponsor2",
@@ -337,7 +337,7 @@ export function getImagesForTournament(tournamentId, allImages) {
   const merged = { ...DEFAULT_IMAGES, ...config };
 
   const defaultImg = (key) => {
-    if (config[key] === null) return null;
+    if (config[key] === null || config[key] === "null") return null;
     return allImages[merged[key]] || allImages[DEFAULT_IMAGES[key]];
   };
 

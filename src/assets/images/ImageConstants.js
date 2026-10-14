@@ -163,6 +163,7 @@ import dwPadelBg from "./dw-padel-bg.png";
 import dwPadelRight from "./fix/dw-padel-right.png";
 import dwPadelLeft from "./fix/dwleft.png";
 import dwPadelCup from "./fix/dw-padel-center.png";
+import dwPadelCup2 from "./fix/dw-padel-center2.png"; 
 import dwPadelSponsor from "./fix/dw-padel-sponsor.png";
 import dwPadelSponsor2 from "./fix/dw-padel-sponsor2.png";
 
@@ -293,6 +294,7 @@ export const ALL_IMAGES = {
   hohSponsor2,
   dwPadelLeft,
   dwPadelCup,
+  dwPadelCup2,
   dwPadelRight,
   dwPadelBg,
   dwPadelSponsor,
