@@ -155,6 +155,9 @@ import igniteSponsor3 from "./9.png";
 import apcclLogo from "./fix/apccl.png";
 import apcclCup from "./fix/apccl-cup.png";
 import apcclBg from "./apccl-bg.png";
+import apcclSponsor1 from "./fix/apccl1.png";
+import apcclSponsor2 from "./fix/apccl2.png";
+import apcclSponsor3 from "./fix/apccl3.png";
 
 import dwPadelBg from "./dw-padel-bg.png";
 import dwPadelRight from "./fix/dw-padel-right.png";
@@ -194,6 +197,9 @@ export const ALL_IMAGES = {
   "appcllogo": apcclLogo,
   "apccl-cup": apcclCup,
   "apccl-bg": apcclBg,
+  apcclSponsor1,
+  apcclSponsor2,
+  apcclSponsor3,
   ads_s1: adsS1,
   ads_s2: adsS2,
   ads_s3: adsS3,

@@ -43,6 +43,7 @@ import FipBronze from "./pages/FipBronze";
 import PadelForPink from "./pages/PadelForPink";
 import Hoh from "./pages/Hoh";
 import KfcPadel from "./pages/KfcPadel";
+import Apccl from "./pages/Apccl";
 import AppChallenger from "./pages/AppChallenger";
 import PremierPadelLeague from "./pages/PremierPadelLeague";
 import Ignite from "./pages/Ignite";
@@ -121,6 +122,7 @@ function App() {
                 <Route path="padel-for-pink" element={<PadelForPink />} />
                 <Route path="hoh" element={<Hoh />} />
                 <Route path="kfcpadel" element={<KfcPadel />} />
+                <Route path="apccl" element={<Apccl />} />
                 <Route path="appt2026" element={<AppChallenger />} />
                 <Route
                   path="ppl"

@@ -77,4 +77,9 @@
   --display-court-name-size: 20px;
   --display-sponsor-h: 80px;
   --display-header-padding-h: 5vw;
+  --display-score-table-category: 36px;
+  --display-score-table-header: 18px;
+  --display-score-table-team: 35px;
+  --display-score-table-score: 36px;
+  --display-score-table-rank: 16px;
 }

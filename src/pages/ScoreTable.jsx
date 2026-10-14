@@ -824,8 +824,12 @@ const TournamentStandings = () => {
                 <div className="pb-[90px] pt-[0px] grid grid-cols-1 gap-6 items-center">
                   <div className="col-span-1 text-center">
                     <div
-                      className="text-4xl text-white font-bold   mb-2 "
-                      style={{ color: "var(--color-title-text)" }}
+                      className="text-white font-bold mb-2"
+                      style={{
+                        color: "var(--color-title-text)",
+                        fontSize: "var(--display-score-table-category)",
+                        lineHeight: 1.15,
+                      }}
                     >
                       {currentTournament?.name || "Tournament"}
                     </div>
@@ -875,7 +879,14 @@ const TournamentStandings = () => {
                                     >
                                       <Trophy className="h-5 w-5 text-[var(--color-gradient-text)]" />
                                     </motion.div>
-                                    <h2 className="text-lg font-bold tracking-wider text-[var(--color-gradient-text)]">
+                                    <h2
+                                      className="font-bold tracking-wider text-[var(--color-gradient-text)]"
+                                      style={{
+                                        fontSize:
+                                          "var(--display-score-table-header)",
+                                        lineHeight: 1.2,
+                                      }}
+                                    >
                                       Group {groupName}
                                     </h2>
                                   </div>
@@ -896,7 +907,13 @@ const TournamentStandings = () => {
                               >
                                 <table className="w-full">
                                   <thead>
-                                    <tr className="score-table-card-header score-table-card-header--cols text-[var(--color-gradient-text)]">
+                                    <tr
+                                      className="score-table-card-header score-table-card-header--cols text-[var(--color-gradient-text)]"
+                                      style={{
+                                        fontSize:
+                                          "var(--display-score-table-header)",
+                                      }}
+                                    >
                                       <th className="py-1 px-4 text-left">#</th>
                                       <th className="py-1 px-4 text-left">
                                         Team Name
@@ -962,7 +979,14 @@ const TournamentStandings = () => {
                                             stiffness: 300,
                                           }}
                                         >
-                                          <td className="py-1 px-1">
+                                          <td
+                                            className="py-1 px-1 font-bold"
+                                            style={{
+                                              fontSize:
+                                                "var(--display-score-table-rank)",
+                                              lineHeight: 1,
+                                            }}
+                                          >
                                             <motion.div
                                               initial={{
                                                 scale: animateRanks ? 1.5 : 1,
@@ -983,9 +1007,11 @@ const TournamentStandings = () => {
                                           </td>
                                           <td
                                             style={{
-                                              fontSize: "var(--font-3xl)",
+                                              fontSize:
+                                                "var(--display-score-table-team)",
+                                              lineHeight: 1.15,
                                             }}
-                                            className="py-1 px-1 text-sm font-semibold"
+                                            className="py-1 px-1 font-semibold"
                                           >
                                             <div className="score-table-team">
                                               {typeof team.logo === "string" &&
@@ -1011,7 +1037,7 @@ const TournamentStandings = () => {
                                           <td
                                             style={{
                                               fontSize:
-                                                "var(--display-player-name-size)",
+                                                "var(--display-score-table-score)",
                                             }}
                                             className="py-1 px-1 text-center font-bold"
                                           >
@@ -1020,7 +1046,7 @@ const TournamentStandings = () => {
                                           <td
                                             style={{
                                               fontSize:
-                                                "var(--display-player-name-size)",
+                                                "var(--display-score-table-score)",
                                             }}
                                             className="py-1 px-1 text-center text-red-600"
                                           >
@@ -1029,7 +1055,7 @@ const TournamentStandings = () => {
                                           <td
                                             style={{
                                               fontSize:
-                                                "var(--display-player-name-size)",
+                                                "var(--display-score-table-score)",
                                             }}
                                             className="py-1 px-1 text-center font-bold"
                                           >
@@ -1041,7 +1067,7 @@ const TournamentStandings = () => {
                                           <td
                                             style={{
                                               fontSize:
-                                                "var(--display-player-name-size)",
+                                                "var(--display-score-table-score)",
                                             }}
                                             className="py-1 px-1 text-center text-[#000] font-bold"
                                           >
@@ -1050,7 +1076,7 @@ const TournamentStandings = () => {
                                           <td
                                             style={{
                                               fontSize:
-                                                "var(--display-player-name-size)",
+                                                "var(--display-score-table-score)",
                                             }}
                                             className="py-1 px-1 text-center"
                                           >
@@ -1059,7 +1085,7 @@ const TournamentStandings = () => {
                                           <td
                                             style={{
                                               fontSize:
-                                                "var(--display-player-name-size)",
+                                                "var(--display-score-table-score)",
                                             }}
                                             className={`py-1 px-1 text-center font-bold ${
                                               team.pd > 0
@@ -1072,13 +1098,7 @@ const TournamentStandings = () => {
                                             {team.pd > 0 ? "+" : ""}
                                             {team.pd ?? 0}
                                           </td>
-                                          <td
-                                            style={{
-                                              fontSize:
-                                                "var(--display-player-name-size)",
-                                            }}
-                                            className="py-1 px-1 text-center"
-                                          >
+                                          <td className="py-1 px-1 text-center">
                                             <motion.div
                                               whileHover={{
                                                 scale: 1.2,

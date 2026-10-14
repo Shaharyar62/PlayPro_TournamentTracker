@@ -84,7 +84,7 @@ const SLIDER_GROUPS = [
         min: 40,
         max: 1000,
         step: 5,
-        hint: "Max-height of the tournament cup/title logo",
+        hint: "Height of the center header title logo, including the score table title (for example KFC PADEL)",
       },
       {
         key: "logoTeamSize",
@@ -139,6 +139,57 @@ const SLIDER_GROUPS = [
       },
     ],
   },
+  {
+    label: "Score Table",
+    icon: "📋",
+    sliders: [
+      {
+        key: "fontScoreTableCategory",
+        label: "Category Title (Open)",
+        unit: "px",
+        min: 16,
+        max: 96,
+        step: 1,
+        hint: "The title under the header logos, such as Open",
+      },
+      {
+        key: "fontScoreTableHeader",
+        label: "Table Header Text",
+        unit: "px",
+        min: 10,
+        max: 48,
+        step: 1,
+        hint: "Group name and column labels (Team Name, W, L, D, PF, PA, PD)",
+      },
+      {
+        key: "fontScoreTableTeam",
+        label: "Team / Player Name",
+        unit: "px",
+        min: 14,
+        max: 80,
+        step: 1,
+        hint: "Team name in each standings row",
+      },
+      {
+        key: "fontScoreTableScore",
+        label: "Score Numbers",
+        unit: "px",
+        min: 12,
+        max: 72,
+        step: 1,
+        hint: "W, L, D, PF, PA and PD numbers",
+      },
+      {
+        key: "fontScoreTableRank",
+        label: "Rank Numbers (1, 2, 3, 4)",
+        unit: "px",
+        min: 10,
+        max: 80,
+        step: 1,
+        hint: "The place number at the start of each standings row",
+      },
+    ],
+  },
 ];
 
 // ─── Single Slider Row ────────────────────────────────────────────────────────
@@ -153,7 +204,7 @@ const SliderRow = ({ config, value, onChange, disabled }) => {
         </label>
         <span
           className="ml-3 min-w-[4.5rem] text-right text-sm font-mono font-bold"
-          style={{ color: "var(--color-accent, #aacb32)" }}
+          style={{ color: "#aacb32" }}
         >
           {value}
           {config.unit}
@@ -175,7 +226,7 @@ const SliderRow = ({ config, value, onChange, disabled }) => {
           onChange={(e) => onChange(Number(e.target.value))}
           className="w-full h-2 rounded-full appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           style={{
-            background: `linear-gradient(to right, var(--color-accent, #aacb32) ${pct}%, #374151 ${pct}%)`,
+            background: `linear-gradient(to right, #aacb32 ${pct}%, #374151 ${pct}%)`,
             outline: "none",
           }}
         />
@@ -276,7 +327,7 @@ const DisplayMaster = () => {
             className="w-3 h-3 rounded-full"
             style={{
               backgroundColor: isConnected
-                ? "var(--color-accent, #aacb32)"
+                ? "#aacb32"
                 : "#6b7280",
               animation: isConnected ? "pulse 2s infinite" : "none",
             }}
@@ -296,7 +347,7 @@ const DisplayMaster = () => {
             className="text-xs px-2 py-0.5 rounded-full font-medium"
             style={{
               backgroundColor: isConnected ? "#1e2d0e" : "#2d1a1a",
-              color: isConnected ? "var(--color-accent, #aacb32)" : "#f85149",
+              color: isConnected ? "#aacb32" : "#f85149",
             }}
           >
             {isConnected ? "CONNECTED" : "OFFLINE"}
@@ -385,7 +436,7 @@ const DisplayMaster = () => {
                 disabled={!inputId.trim()}
                 className="px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-40"
                 style={{
-                  backgroundColor: "var(--color-accent, #aacb32)",
+                  backgroundColor: "#aacb32",
                   color: "#0f1117",
                 }}
               >
@@ -452,7 +503,13 @@ const DisplayMaster = () => {
                 <SliderRow
                   key={cfg.key}
                   config={cfg}
-                  value={settings[cfg.key]}
+                  value={
+                    cfg.key === "sponsorH"
+                      ? Math.round(settings[cfg.key])
+                      : cfg.key === "headerPaddingVw"
+                        ? Math.round(settings[cfg.key] * 2) / 2
+                        : settings[cfg.key]
+                  }
                   disabled={!slidersEnabled}
                   onChange={(val) => updateSetting(cfg.key, val)}
                 />
@@ -474,14 +531,20 @@ const DisplayMaster = () => {
               {Object.entries(settings).map(([key, val]) => {
                 const allSliders = SLIDER_GROUPS.flatMap((g) => g.sliders);
                 const cfg = allSliders.find((s) => s.key === key);
-                const isDefault = DEFAULT_SETTINGS[key] === val;
+                const shown =
+                  key === "sponsorH"
+                    ? Math.round(val)
+                    : key === "headerPaddingVw"
+                      ? Math.round(val * 2) / 2
+                      : val;
+                const isDefault = DEFAULT_SETTINGS[key] === shown;
                 return (
                   <div
                     key={key}
                     className="rounded-lg p-2 text-center"
                     style={{
                       backgroundColor: isDefault ? "#0d1117" : "#1a2a0a",
-                      border: `1px solid ${isDefault ? "#21262d" : "var(--color-accent, #aacb32)"}`,
+                      border: `1px solid ${isDefault ? "#21262d" : "#aacb32"}`,
                     }}
                   >
                     <div className="text-[9px] text-gray-500 leading-none mb-1 truncate">
@@ -492,10 +555,10 @@ const DisplayMaster = () => {
                       style={{
                         color: isDefault
                           ? "#8b949e"
-                          : "var(--color-accent, #aacb32)",
+                          : "#aacb32",
                       }}
                     >
-                      {val}
+                      {shown}
                       {cfg?.unit ?? ""}
                     </div>
                   </div>
@@ -513,7 +576,7 @@ const DisplayMaster = () => {
           width: 16px;
           height: 16px;
           border-radius: 50%;
-          background: var(--color-accent, #aacb32);
+          background: #aacb32;
           cursor: pointer;
           border: 2px solid #0f1117;
           box-shadow: 0 0 4px rgba(170,203,50,0.5);
@@ -522,7 +585,7 @@ const DisplayMaster = () => {
           width: 16px;
           height: 16px;
           border-radius: 50%;
-          background: var(--color-accent, #aacb32);
+          background: #aacb32;
           cursor: pointer;
           border: 2px solid #0f1117;
         }
