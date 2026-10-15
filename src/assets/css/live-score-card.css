@@ -85,6 +85,25 @@
     inset 0 -1px 0 rgba(0, 0, 0, 0.22);
 }
 
+/* Sind Club only — same header shade as the score table title bar */
+[data-tournament-theme="sind-club"] .live-score-card .live-score-card-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.05) 40%,
+    rgba(0, 0, 0, 0.16) 100%
+  );
+}
+
+[data-tournament-theme="sind-club"] .live-score-card .live-score-card-header > * {
+  position: relative;
+  z-index: 1;
+}
+
 .live-score-card-header-text {
   color: var(--color-gradient-text, var(--color-accent-text));
 }

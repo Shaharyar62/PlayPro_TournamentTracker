@@ -46,6 +46,7 @@ import KfcPadel from "./pages/KfcPadel";
 import Apccl from "./pages/Apccl";
 import AppChallenger from "./pages/AppChallenger";
 import PremierPadelLeague from "./pages/PremierPadelLeague";
+import SindClub from "./pages/SindClub";
 import Ignite from "./pages/Ignite";
 import MultiClub from "./pages/MultiClub";
 import PadAzadiCup from "./pages/PadAzadiCup";
@@ -128,6 +129,7 @@ function App() {
                   path="ppl"
                   element={<PremierPadelLeague />}
                 />
+                <Route path="sind-club" element={<SindClub />} />
                 <Route path="ignite" element={<Ignite />} />
                 <Route path="multiclub" element={<MultiClub />} />
                 <Route path="pad-azadi-cup" element={<PadAzadiCup />} />

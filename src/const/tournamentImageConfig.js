@@ -279,6 +279,15 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "pplSponsor",
     sponsor2: "pplSponsor2",
   },
+  "sind-club": {
+    leftLogo: "sindClubLeft",
+    cupLogo: "sindClubCup",
+    rightLogo: "sindClubRight",
+    playproWhite: "sindClubRight",
+    bg: "sindClubBg",
+    sponsor1: null,
+    sponsor2: null,
+  },
   87: {
     leftLogo: "tapmad",
     cupLogo: "ppllogo",
