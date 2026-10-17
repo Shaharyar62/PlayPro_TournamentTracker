@@ -280,7 +280,7 @@ export const TOURNAMENT_IMAGES = {
     sponsor2: "pplSponsor2",
   },
   "sind-club": {
-    leftLogo: "sindClubLeft",
+    leftLogo: null,
     cupLogo: "sindClubCup",
     rightLogo: "sindClubRight",
     playproWhite: "sindClubRight",

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import "../assets/css/home.css";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 
-const TOURNAMENT_ID = "87";
+const TOURNAMENT_ID = "109";
 const COURT_DISPLAY_ID = "98";
 const MULTI_COURT_LIVE_DISPLAY_ID = "981";
 const MULTI_COURT_SCHEDULE_DISPLAY_ID = "982";
@@ -13,13 +13,10 @@ const TODAY_MATCH_DISPLAY_ID = "984";
 const THEME_ID = "sind-club";
 const BUTTON_COLOR = "#111111";
 
-const COURT_IDS = "157,158";
-const SCORE_TABLE_TOURNAMENT_IDS = "328,329,330,331";
+const COURT_IDS = "58";
+const SCORE_TABLE_TOURNAMENT_IDS = "398";
 
-const COURTS = [
-  { courtId: "157", name: "Neo Maidan - Court 1" },
-  { courtId: "158", name: "Neo Maidan - Court 2" },
-];
+const COURTS = [{ courtId: "58", name: "Court 1" }];
 
 const SindClub = () => {
   const images = useTournamentImages();

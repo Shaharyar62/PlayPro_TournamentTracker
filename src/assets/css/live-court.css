@@ -112,6 +112,10 @@
   display: none;
 }
 
+[data-tournament-theme="sind-club"] .live-score-bottom-bar {
+  display: none;
+}
+
 /* Ignite — cyan poster look */
 :is(
     [data-tournament-theme="ignite"],

@@ -662,7 +662,7 @@ const SingleCourtDisplay = ({
 
       {/* Bottom indicator */}
       <div
-        className={`flex justify-between items-center ${isMultiView ? "mt-4 px-1" : ""}`}
+        className={`live-score-bottom-bar flex justify-between items-center ${isMultiView ? "mt-4 px-1" : ""}`}
         style={
           !isMultiView
             ? {

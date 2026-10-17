@@ -730,7 +730,7 @@ const MatchScoreCard = () => {
       </div>
       {/* Bottom indicator and Upcoming Match */}
       <div
-        className="grid grid-cols-12 gap-4 items-center mb-[20px]"
+        className="live-score-bottom-bar grid grid-cols-12 gap-4 items-center mb-[20px]"
         style={{
           marginLeft: "var(--display-margin-h)",
           marginRight: "var(--display-margin-h)",
