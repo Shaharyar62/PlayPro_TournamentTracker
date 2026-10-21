@@ -136,6 +136,7 @@ import appchallengerSponsor from "./fix/appchallenger-sponsor.png";
 import appchallengerSponsor3 from "./fix/3.png";
 import appchallengerSponsor4 from "./fix/4.png";
 import appchallengerSponsor5 from "./fix/5.png";
+import padelPark from "./fix/padelpark.png";
 
 import appchallengerBg from "./apptchallengerbg.png";
 import ppllogo from "./fix/ppllogo.png";
@@ -328,6 +329,7 @@ export const ALL_IMAGES = {
   appchallengerSponsor3,
   appchallengerSponsor4,
   appchallengerSponsor5,
+  padelPark,
   ppllogo,
   pplBg,
   tapmad,
