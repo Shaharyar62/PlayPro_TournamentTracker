@@ -289,6 +289,15 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: null,
     sponsor2: null,
   },
+  csc: {
+    leftLogo: "cscLeft",
+    cupLogo: "cscCup",
+    rightLogo: "cscRight",
+    playproWhite: "cscRight",
+    bg: "cscBg",
+    sponsor1: "cscSponsor",
+    sponsor2: null,
+  },
   87: {
     leftLogo: "tapmad",
     cupLogo: "ppllogo",

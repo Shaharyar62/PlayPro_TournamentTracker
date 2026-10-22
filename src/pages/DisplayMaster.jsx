@@ -137,6 +137,15 @@ const SLIDER_GROUPS = [
         step: 0.5,
         hint: "Horizontal padding on the tournament header logo row (left & right logos)",
       },
+      {
+        key: "logoTopVh",
+        label: "Space Above Logos",
+        unit: "vh",
+        min: 0,
+        max: 12,
+        step: 0.5,
+        hint: "Space between the top of the screen and the header logos",
+      },
     ],
   },
   {
@@ -506,7 +515,7 @@ const DisplayMaster = () => {
                   value={
                     cfg.key === "sponsorH"
                       ? Math.round(settings[cfg.key])
-                      : cfg.key === "headerPaddingVw"
+                      : cfg.key === "headerPaddingVw" || cfg.key === "marginHVw"
                         ? Math.round(settings[cfg.key] * 2) / 2
                         : settings[cfg.key]
                   }
@@ -534,7 +543,7 @@ const DisplayMaster = () => {
                 const shown =
                   key === "sponsorH"
                     ? Math.round(val)
-                    : key === "headerPaddingVw"
+                    : key === "headerPaddingVw" || key === "marginHVw"
                       ? Math.round(val * 2) / 2
                       : val;
                 const isDefault = DEFAULT_SETTINGS[key] === shown;

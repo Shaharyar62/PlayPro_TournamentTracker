@@ -560,7 +560,7 @@ const MatchScoreCard = () => {
             <Header />
             {/* Main scoreboard */}
             <div
-              className="rounded-lg mb-[60px] overflow-hidden live-score-card"
+              className="rounded-lg mb-3 overflow-hidden live-score-card"
               style={{
                 marginLeft: "var(--display-margin-h)",
                 marginRight: "var(--display-margin-h)",
@@ -712,6 +712,36 @@ const MatchScoreCard = () => {
                 </div>
               </div>
             </div>
+
+            <div
+              className="live-score-bottom-bar grid grid-cols-12 gap-4 items-center mb-[20px]"
+              style={{
+                marginLeft: "var(--display-margin-h)",
+                marginRight: "var(--display-margin-h)",
+              }}
+            >
+              <div
+                className="live-score-card-header col-span-4 w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold"
+                style={{ fontSize: "var(--display-court-name-size)" }}
+              >
+                {matchStatus.current == "completed" ? "COMPLETED" : getMatchFormat()}
+              </div>
+              <div
+                className="live-score-bottom-stage live-score-card-header m-auto col-span-4 w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold"
+                style={{ fontSize: "var(--display-court-name-size)" }}
+              >
+                <p className="text">
+                  {mapStageType(matchData.stageType)} -{" "}
+                  {matchData.tournamentName || "LIVE SCOREBOARD"}{" "}
+                </p>
+              </div>
+              <div
+                className="live-score-bottom-court live-score-card-header col-span-4 ml-auto px-[20px] py-3 rounded-lg font-bold"
+                style={{ fontSize: "var(--display-court-name-size)" }}
+              >
+                {matchData.court?.name || "LIVE SCOREBOARD"}{" "}
+              </div>
+            </div>
           </div>
         </div>
         
@@ -727,48 +757,6 @@ const MatchScoreCard = () => {
             }
           }
         `}</style>
-      </div>
-      {/* Bottom indicator and Upcoming Match */}
-      <div
-        className="live-score-bottom-bar grid grid-cols-12 gap-4 items-center mb-[20px]"
-        style={{
-          marginLeft: "var(--display-margin-h)",
-          marginRight: "var(--display-margin-h)",
-        }}
-      >
-        <div
-          className="live-score-card-header col-span-4 w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold"
-          style={{ fontSize: "var(--display-court-name-size)" }}
-        >
-          {/*   {matchStatus.current == "completed" ? "COMPLETED" : "Live"} */}
-          {matchStatus.current == "completed" ? "COMPLETED" : getMatchFormat()}
-        </div>
-        <div
-          className="live-score-bottom-stage live-score-card-header m-auto col-span-4 w-min px-[50px] whitespace-nowrap py-3 rounded-lg font-bold"
-          style={{ fontSize: "var(--display-court-name-size)" }}
-        >
-          {/* {matchData.court?.name || "LIVE SCOREBOARD"}{" "} */}
-          {/* <p className="text">Men B (Group Stage) </p> */}
-          {/* <p className="text">{mapStageType(matchData.stageType)} </p> */}
-          <p className="text">
-            {mapStageType(matchData.stageType)} -{" "}
-            {matchData.tournamentName || "LIVE SCOREBOARD"}{" "}
-          </p>
-        </div>
-        <div
-          className="live-score-bottom-court live-score-card-header col-span-4 ml-auto px-[20px] py-3 rounded-lg font-bold"
-          style={{ fontSize: "var(--display-court-name-size)" }}
-        >
-          {matchData.court?.name || "LIVE SCOREBOARD"}{" "}
-          {/* {upcomingMatch ? (
-                  <div>
-                    UPCOMING: {getTeamName(upcomingMatch.teamA)} VS{" "}
-                    {getTeamName(upcomingMatch.teamB)}
-                  </div>
-                ) : (
-                  <div>UPCOMING</div>
-                )} */}
-        </div>
       </div>
       {images.sponsor1 && (
         <div

@@ -11,6 +11,7 @@ export const DEFAULT_SETTINGS = {
   logoTeamSize: 70, // px  --display-logo-team-size
   marginHVw: 5, // vw  --display-margin-h
   marginTopVh: 3, // vh  --display-margin-top
+  logoTopVh: 0, // vh  --display-logo-top (space above header logos)
   courtNameSize: 20, // px  --display-court-name-size
   sponsorH: 80, // px  --display-sponsor-h
   headerPaddingVw: 5, // vw  --display-header-padding-h
@@ -33,6 +34,8 @@ function mergeSettings(settings) {
   }
   const rank = unpackScoreTableRank(merged.headerPaddingVw);
   if (rank) merged.fontScoreTableRank = rank;
+  const logoTop = unpackLogoTop(merged.marginHVw);
+  if (logoTop) merged.logoTopVh = logoTop;
   return merged;
 }
 
@@ -77,14 +80,14 @@ function packScoreTableSizes(settings) {
     next.fontScoreTableScore === DEFAULT_SETTINGS.fontScoreTableScore;
   if (atDefaults) {
     next.sponsorH = base;
-    return packScoreTableRank(next);
+    return packLogoTop(packScoreTableRank(next));
   }
   const cat = next.fontScoreTableCategory;
   const header = next.fontScoreTableHeader;
   const team = next.fontScoreTableTeam;
   const score = next.fontScoreTableScore;
   next.sponsorH = base + cat / 1000 + header / 1e6 + team / 1e9 + score / 1e12;
-  return packScoreTableRank(next);
+  return packLogoTop(packScoreTableRank(next));
 }
 
 function packScoreTableRank(settings) {
@@ -98,6 +101,28 @@ function packScoreTableRank(settings) {
   return next;
 }
 
+// Logo top space rides in the extra decimals of horizontal margin (5.00004vw
+// still lays out as 5vw). Stored as half-steps so 0.5vh survives the socket.
+function unpackLogoTop(marginHVw) {
+  if (typeof marginHVw !== "number" || !Number.isFinite(marginHVw)) return null;
+  const margin = nearestHalf(marginHVw);
+  const halves = Math.round((marginHVw - margin) * 100000);
+  if (halves <= 0 || halves > 48) return null;
+  return halves / 2;
+}
+
+function packLogoTop(settings) {
+  const next = { ...settings };
+  const margin = nearestHalf(next.marginHVw);
+  const halves = Math.round((next.logoTopVh ?? 0) * 2);
+  if (halves <= 0) {
+    next.marginHVw = margin;
+    return next;
+  }
+  next.marginHVw = margin + halves / 100000;
+  return next;
+}
+
 export function applySettings(settings) {
   const s = mergeSettings(settings);
   const root = document.documentElement;
@@ -108,8 +133,9 @@ export function applySettings(settings) {
   root.style.setProperty("--display-logo-header-h", s.logoHeaderH + "px");
   root.style.setProperty("--display-logo-cup-h", s.logoCupH + "px");
   root.style.setProperty("--display-logo-team-size", s.logoTeamSize + "px");
-  root.style.setProperty("--display-margin-h", s.marginHVw + "vw");
+  root.style.setProperty("--display-margin-h", nearestHalf(s.marginHVw) + "vw");
   root.style.setProperty("--display-margin-top", s.marginTopVh + "vh");
+  root.style.setProperty("--display-logo-top", (s.logoTopVh ?? 0) + "vh");
   root.style.setProperty("--display-court-name-size", s.courtNameSize + "px");
   root.style.setProperty("--display-sponsor-h", Math.round(s.sponsorH) + "px");
   root.style.setProperty(

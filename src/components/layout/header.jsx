@@ -16,6 +16,7 @@ export const Header = () => {
       style={{
         paddingLeft: "var(--display-header-padding-h)",
         paddingRight: "var(--display-header-padding-h)",
+        paddingTop: "var(--display-logo-top, 0vh)",
       }}
     >
       <div className="flex-1 flex justify-start items-center overflow-visible">
