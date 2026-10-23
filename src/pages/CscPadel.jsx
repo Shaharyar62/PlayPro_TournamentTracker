@@ -4,27 +4,22 @@ import { motion } from "framer-motion";
 import "../assets/css/home.css";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 
-const TOURNAMENT_ID = "73";
+const TOURNAMENT_ID = "96";
 const COURT_DISPLAY_ID = "99";
 const MULTI_COURT_LIVE_DISPLAY_ID = "991";
 const MULTI_COURT_SCHEDULE_DISPLAY_ID = "992";
 const SCORE_TABLE_DISPLAY_ID = "993";
 const TODAY_MATCH_DISPLAY_ID = "994";
 const THEME_ID = "csc";
-const BUTTON_COLOR = "#0b1220";
+const BUTTON_COLOR = "#0b1220"; 
 
-const COURT_IDS = "139,140,141,142,143,144,260,248";
-const SCORE_TABLE_TOURNAMENT_IDS = "264,265,266,267,268,269,270";
+const COURT_IDS = "465,466,467";
+const SCORE_TABLE_TOURNAMENT_IDS = "361,360,359,358,357";
 
 const COURTS = [
-  { courtId: "139", name: "Ocean 1" },
-  { courtId: "140", name: "Ocean 2" },
-  { courtId: "141", name: "Tera 1" },
-  { courtId: "142", name: "Tera 2" },
-  { courtId: "143", name: "Cherry 1" },
-  { courtId: "144", name: "Cherry 2" },
-  { courtId: "260", name: "MejorSet 1" },
-  { courtId: "248", name: "MejorSet 2" },
+  { courtId: "465", name: "Court 1" },
+  { courtId: "466", name: "Court 2" },
+  { courtId: "467", name: "Court 3" },
 ];
 
 const CscPadel = () => {
