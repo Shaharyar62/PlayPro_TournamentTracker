@@ -21,6 +21,11 @@ export const DEFAULT_SETTINGS = {
   fontScoreTableTeam: 35, // px  --display-score-table-team
   fontScoreTableScore: 36, // px  --display-score-table-score
   fontScoreTableRank: 16, // px  --display-score-table-rank (1, 2, 3, 4)
+  // Today's Matches screen only — other scoreboards do not read these
+  fontTodayTitle: 36, // px  --display-today-title ("HAPPENING NOW")
+  fontTodayCourt: 36, // px  --display-today-court
+  fontTodayBadge: 18, // px  --display-today-badge (CURRENT / UPCOMING)
+  fontTodayTeam: 24, // px  --display-today-team (team names and VS)
 };
 
 function mergeSettings(settings) {
@@ -36,6 +41,13 @@ function mergeSettings(settings) {
   if (rank) merged.fontScoreTableRank = rank;
   const logoTop = unpackLogoTop(merged.marginHVw);
   if (logoTop) merged.logoTopVh = logoTop;
+  const today = unpackTodayMatchSizes(merged.courtNameSize);
+  if (today) {
+    merged.fontTodayTitle = today.fontTodayTitle;
+    merged.fontTodayCourt = today.fontTodayCourt;
+    merged.fontTodayBadge = today.fontTodayBadge;
+    merged.fontTodayTeam = today.fontTodayTeam;
+  }
   return merged;
 }
 
@@ -80,14 +92,14 @@ function packScoreTableSizes(settings) {
     next.fontScoreTableScore === DEFAULT_SETTINGS.fontScoreTableScore;
   if (atDefaults) {
     next.sponsorH = base;
-    return packLogoTop(packScoreTableRank(next));
+    return packTodayMatchSizes(packLogoTop(packScoreTableRank(next)));
   }
   const cat = next.fontScoreTableCategory;
   const header = next.fontScoreTableHeader;
   const team = next.fontScoreTableTeam;
   const score = next.fontScoreTableScore;
   next.sponsorH = base + cat / 1000 + header / 1e6 + team / 1e9 + score / 1e12;
-  return packLogoTop(packScoreTableRank(next));
+  return packTodayMatchSizes(packLogoTop(packScoreTableRank(next)));
 }
 
 function packScoreTableRank(settings) {
@@ -109,6 +121,43 @@ function unpackLogoTop(marginHVw) {
   const halves = Math.round((marginHVw - margin) * 100000);
   if (halves <= 0 || halves > 48) return null;
   return halves / 2;
+}
+
+// Today's Matches text sizes ride in the fractional part of court-name size.
+// 20.036036018024px still renders as 20px. An integer means "use defaults".
+function unpackTodayMatchSizes(courtNameSize) {
+  if (typeof courtNameSize !== "number" || !Number.isFinite(courtNameSize)) {
+    return null;
+  }
+  const micro = Math.round((courtNameSize - Math.round(courtNameSize)) * 1e12);
+  if (micro <= 0) return null;
+  return {
+    fontTodayTitle: Math.floor(micro / 1e9),
+    fontTodayCourt: Math.floor((micro % 1e9) / 1e6),
+    fontTodayBadge: Math.floor((micro % 1e6) / 1e3),
+    fontTodayTeam: micro % 1e3,
+  };
+}
+
+function packTodayMatchSizes(settings) {
+  const next = { ...settings };
+  const base = Math.round(next.courtNameSize);
+  const atDefaults =
+    next.fontTodayTitle === DEFAULT_SETTINGS.fontTodayTitle &&
+    next.fontTodayCourt === DEFAULT_SETTINGS.fontTodayCourt &&
+    next.fontTodayBadge === DEFAULT_SETTINGS.fontTodayBadge &&
+    next.fontTodayTeam === DEFAULT_SETTINGS.fontTodayTeam;
+  if (atDefaults) {
+    next.courtNameSize = base;
+    return next;
+  }
+  const title = next.fontTodayTitle;
+  const court = next.fontTodayCourt;
+  const badge = next.fontTodayBadge;
+  const team = next.fontTodayTeam;
+  next.courtNameSize =
+    base + title / 1000 + court / 1e6 + badge / 1e9 + team / 1e12;
+  return next;
 }
 
 function packLogoTop(settings) {
@@ -136,7 +185,14 @@ export function applySettings(settings) {
   root.style.setProperty("--display-margin-h", nearestHalf(s.marginHVw) + "vw");
   root.style.setProperty("--display-margin-top", s.marginTopVh + "vh");
   root.style.setProperty("--display-logo-top", (s.logoTopVh ?? 0) + "vh");
-  root.style.setProperty("--display-court-name-size", s.courtNameSize + "px");
+  root.style.setProperty(
+    "--display-court-name-size",
+    Math.round(s.courtNameSize) + "px",
+  );
+  root.style.setProperty("--display-today-title", s.fontTodayTitle + "px");
+  root.style.setProperty("--display-today-court", s.fontTodayCourt + "px");
+  root.style.setProperty("--display-today-badge", s.fontTodayBadge + "px");
+  root.style.setProperty("--display-today-team", s.fontTodayTeam + "px");
   root.style.setProperty("--display-sponsor-h", Math.round(s.sponsorH) + "px");
   root.style.setProperty(
     "--display-header-padding-h",
@@ -213,7 +269,9 @@ export function useDisplaySettings({
   listenOnly = false,
 } = {}) {
   const [settings, setSettings] = useState(() =>
-    displayId ? loadSettingsFromStorage(displayId) : { ...DEFAULT_SETTINGS },
+    displayId
+      ? mergeSettings(loadSettingsFromStorage(displayId))
+      : { ...DEFAULT_SETTINGS },
   );
   const [isConnected, setIsConnected] = useState(false);
   const channelRef = useRef(null);
@@ -244,7 +302,7 @@ export function useDisplaySettings({
       }
       return;
     }
-    const cached = loadSettingsFromStorage(displayId);
+    const cached = mergeSettings(loadSettingsFromStorage(displayId));
     setSettings(cached);
     applySettings(cached);
   }, [displayId, listenOnly]);

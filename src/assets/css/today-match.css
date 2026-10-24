@@ -8,6 +8,23 @@
   color: var(--color-today-match-text);
   padding: 6px 14px;
   letter-spacing: 0.06em;
+  font-size: var(--display-today-badge, 18px);
+  line-height: 1.556;
+}
+
+.today-match-title {
+  font-size: var(--display-today-title, 36px);
+  line-height: 1.111;
+}
+
+.today-match-court {
+  font-size: var(--display-today-court, 36px);
+  line-height: 1.111;
+}
+
+.today-match-team {
+  font-size: var(--display-today-team, 24px);
+  line-height: 1.333;
 }
 
 .today-match-glass {
@@ -28,4 +45,14 @@
 
 .today-match-glass-content {
   color: var(--color-today-match-text);
+}
+
+/* CSC only — same black cards and green border as the live scoreboard */
+[data-tournament-theme="csc"] .today-match-title,
+[data-tournament-theme="csc"] .today-match-court,
+[data-tournament-theme="csc"] .today-match-badge-outline {
+  background: var(--color-score-table-card-header-bg, #0b1220);
+  color: #ffffff;
+  border: var(--color-card-outline, 2px solid #a8d800);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
 }

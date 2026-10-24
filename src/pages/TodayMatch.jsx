@@ -6,6 +6,7 @@ import Common from "../helper/common";
 import { TournamentMatchPlayStatusEnum } from "../const/appConstant";
 import Header from "../components/layout/header";
 import SponsorMarquee from "../components/SponsorMarquee";
+import { useDisplaySettings } from "../hooks/useDisplaySettings";
 import "../assets/css/today-match.css";
 
 const MatchScoreCard = () => {
@@ -17,6 +18,8 @@ const MatchScoreCard = () => {
 
   const [params] = useSearchParams();
   const tournamentId = params.get("tournamentId");
+  const displayId = params.get("displayId");
+  useDisplaySettings({ displayId, listenOnly: true });
 
   // Function to fetch tournament courts schedule
   const fetchTournamentCourtsSchedule = async () => {
@@ -80,14 +83,14 @@ const MatchScoreCard = () => {
 
   const renderMatchInfo = (match, type) => {
     const badgeClass =
-      "col-span-2 flex justify-center items-center today-match-badge-outline text-lg font-bold";
+      "col-span-2 flex justify-center items-center today-match-badge-outline font-bold";
 
     if (!match) {
       return (
         <div className="grid grid-cols-11 gap-4 items-stretch">
           <div className={badgeClass}>{type.toUpperCase()}</div>
           <div className="col-span-9 today-match-glass flex items-center justify-center py-4 px-5">
-            <span className="today-match-glass-content text-2xl font-bold">
+            <span className="today-match-glass-content today-match-team font-bold">
               No Match Scheduled
             </span>
           </div>
@@ -99,15 +102,15 @@ const MatchScoreCard = () => {
       <div className="grid grid-cols-11 gap-4 items-stretch">
         <div className={badgeClass}>{type.toUpperCase()}</div>
         <div className="col-span-9 today-match-glass grid grid-cols-9 gap-3 items-center py-4 px-5">
-          <div className="col-span-4 text-end today-match-glass-content text-2xl font-bold break-words overflow-hidden">
+          <div className="col-span-4 text-end today-match-glass-content today-match-team font-bold break-words overflow-hidden">
             <div className="truncate" title={getTeamDisplayName(match.teamA)}>
               {getTeamDisplayName(match.teamA)}
             </div>
           </div>
-          <div className="col-span-1 text-center today-match-glass-content text-2xl font-bold">
+          <div className="col-span-1 text-center today-match-glass-content today-match-team font-bold">
             VS
           </div>
-          <div className="col-span-4 text-start today-match-glass-content text-2xl font-bold break-words overflow-hidden">
+          <div className="col-span-4 text-start today-match-glass-content today-match-team font-bold break-words overflow-hidden">
             <div className="truncate" title={getTeamDisplayName(match.teamB)}>
               {getTeamDisplayName(match.teamB)}
             </div>
@@ -176,7 +179,7 @@ const MatchScoreCard = () => {
             <Header />
             <div className="p-[50px] pt-[20px] pb-[120px] grid grid-cols-1 gap-6 items-center">
               <div className="col-span-1 text-center">
-                <div className="inline-block bg-[var(--color-accent)] text-[var(--color-accent-text)] text-4xl font-bold mt-[-20px] mb-2 px-8 py-3 rounded-lg">
+                <div className="today-match-title inline-block bg-[var(--color-accent)] text-[var(--color-accent-text)] font-bold mt-[-20px] mb-2 px-8 py-3 rounded-lg">
                   HAPPENING NOW
                 </div>
               </div>
@@ -188,7 +191,7 @@ const MatchScoreCard = () => {
                   className="grid grid-cols-11 gap-4 items-center rounded-xl px-4 py-3"
                 >
                   <div className="col-span-3 text-center">
-                    <h2 className="text-4xl text-[var(--color-accent-text)] bg-[var(--color-accent)] py-2 px-3 mr-[70px] rounded-lg font-bold break-words overflow-hidden">
+                    <h2 className="today-match-court text-[var(--color-accent-text)] bg-[var(--color-accent)] py-2 px-3 mr-[70px] rounded-lg font-bold break-words overflow-hidden">
                       <div
                         className="truncate"
                         title={court.courtName || `Court ${court.courtId}`}

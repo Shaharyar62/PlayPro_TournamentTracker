@@ -83,4 +83,8 @@
   --display-score-table-team: 35px;
   --display-score-table-score: 36px;
   --display-score-table-rank: 16px;
+  --display-today-title: 36px;
+  --display-today-court: 36px;
+  --display-today-badge: 18px;
+  --display-today-team: 24px;
 }

@@ -199,7 +199,58 @@ const SLIDER_GROUPS = [
       },
     ],
   },
+  {
+    label: "Today's Matches",
+    icon: "📅",
+    sliders: [
+      {
+        key: "fontTodayTitle",
+        label: "Happening Now Title",
+        unit: "px",
+        min: 16,
+        max: 160,
+        step: 1,
+        hint: "The HAPPENING NOW banner on the today's matches screen",
+      },
+      {
+        key: "fontTodayCourt",
+        label: "Court Name",
+        unit: "px",
+        min: 16,
+        max: 160,
+        step: 1,
+        hint: "Court 1, Court 2, Court 3 labels on the today's matches screen",
+      },
+      {
+        key: "fontTodayBadge",
+        label: "Current / Upcoming Label",
+        unit: "px",
+        min: 10,
+        max: 80,
+        step: 1,
+        hint: "CURRENT and UPCOMING badges beside each match",
+      },
+      {
+        key: "fontTodayTeam",
+        label: "Team Names / VS",
+        unit: "px",
+        min: 12,
+        max: 160,
+        step: 1,
+        hint: "Player names and the VS text inside each match card",
+      },
+    ],
+  },
 ];
+
+function shownSettingValue(key, value) {
+  if (typeof value !== "number" || !Number.isFinite(value)) return value;
+  if (key === "sponsorH" || key === "courtNameSize") return Math.round(value);
+  if (key === "headerPaddingVw" || key === "marginHVw") {
+    return Math.round(value * 2) / 2;
+  }
+  return value;
+}
 
 // ─── Single Slider Row ────────────────────────────────────────────────────────
 const SliderRow = ({ config, value, onChange, disabled }) => {
@@ -303,6 +354,14 @@ const DisplayMaster = () => {
         displayId,
       });
       url = `${window.location.origin}/home/multi-court-schedule?${params.toString()}`;
+    } else if (targetPage === "today-match") {
+      const params = new URLSearchParams({
+        tournamentId,
+        displayId,
+      });
+      const themeId = searchParams.get("themeId");
+      if (themeId) params.set("themeId", themeId);
+      url = `${window.location.origin}/home/today-match?${params.toString()}`;
     } else {
       const params = new URLSearchParams({
         tournamentId,
@@ -472,8 +531,9 @@ const DisplayMaster = () => {
               {displayId}
             </code>
             . Open this page on your phone and the display on the TV — both sync
-            via WebSocket. Works with live-court, score-table, and
-            multi-court-schedule pages. Use{" "}
+            via WebSocket. Works with live-court, score-table,
+            multi-court-schedule, and today's matches. Logo sizes for that
+            screen are the Logo Sizes sliders above. Use{" "}
             <strong className="text-white">Copy Display URL</strong> to share
             the TV link
             {targetPage !== "live-court" && (
@@ -512,13 +572,7 @@ const DisplayMaster = () => {
                 <SliderRow
                   key={cfg.key}
                   config={cfg}
-                  value={
-                    cfg.key === "sponsorH"
-                      ? Math.round(settings[cfg.key])
-                      : cfg.key === "headerPaddingVw" || cfg.key === "marginHVw"
-                        ? Math.round(settings[cfg.key] * 2) / 2
-                        : settings[cfg.key]
-                  }
+                  value={shownSettingValue(cfg.key, settings[cfg.key])}
                   disabled={!slidersEnabled}
                   onChange={(val) => updateSetting(cfg.key, val)}
                 />
@@ -540,12 +594,7 @@ const DisplayMaster = () => {
               {Object.entries(settings).map(([key, val]) => {
                 const allSliders = SLIDER_GROUPS.flatMap((g) => g.sliders);
                 const cfg = allSliders.find((s) => s.key === key);
-                const shown =
-                  key === "sponsorH"
-                    ? Math.round(val)
-                    : key === "headerPaddingVw" || key === "marginHVw"
-                      ? Math.round(val * 2) / 2
-                      : val;
+                const shown = shownSettingValue(key, val);
                 const isDefault = DEFAULT_SETTINGS[key] === shown;
                 return (
                   <div
