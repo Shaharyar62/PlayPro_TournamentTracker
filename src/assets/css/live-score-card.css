@@ -85,6 +85,36 @@
     inset 0 -1px 0 rgba(0, 0, 0, 0.22);
 }
 
+/* UPL only — lighter cyan glass */
+[data-tournament-theme="upl"] .live-score-card-header,
+[data-tournament-theme="upl"] .live-score-game-cell,
+[data-tournament-theme="upl"] .live-score-meta-pill {
+  background: linear-gradient(
+    180deg,
+    rgba(210, 238, 252, 0.94) 0%,
+    rgba(186, 226, 246, 0.88) 100%
+  );
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  color: #0e3a8c;
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 8px 20px rgba(10, 70, 120, 0.1);
+  text-shadow: none;
+}
+
+[data-tournament-theme="upl"] .live-score-game-cell,
+[data-tournament-theme="upl"] .live-score-game-cell .text-white,
+[data-tournament-theme="upl"] .live-score-game-cell .animated-game-score {
+  color: #000000 !important;
+}
+
+[data-tournament-theme="upl"] .live-score-bottom-court {
+  color: #ffffff;
+  text-shadow: 0 1px 8px rgba(6, 24, 64, 0.55);
+}
+
 /* Sind Club only — same header shade as the score table title bar */
 [data-tournament-theme="sind-club"] .live-score-card .live-score-card-header::after {
   content: "";
