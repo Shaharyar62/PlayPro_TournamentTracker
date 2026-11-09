@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import "../assets/css/home.css";
 import { useTournamentImages } from "../context/TournamentImagesContext";
 
-const TOURNAMENT_ID = "109";
+const TOURNAMENT_ID = "73";
 const COURT_DISPLAY_ID = "102";
 const MULTI_COURT_LIVE_DISPLAY_ID = "1021";
 const MULTI_COURT_SCHEDULE_DISPLAY_ID = "1022";
@@ -13,10 +13,19 @@ const TODAY_MATCH_DISPLAY_ID = "1024";
 const THEME_ID = "lst";
 const BUTTON_COLOR = "#6e1018";
 
-const COURT_IDS = "58";
-const SCORE_TABLE_TOURNAMENT_IDS = "398";
+const COURT_IDS = "139,140,141,142,143,144,260,248";
+const SCORE_TABLE_TOURNAMENT_IDS = "264,265,266,267,268,269,270";
 
-const COURTS = [{ courtId: "58", name: "Court 1" }];
+const COURTS = [
+  { courtId: "139", name: "Ocean 1" },
+  { courtId: "140", name: "Ocean 2" },
+  { courtId: "141", name: "Tera 1" },
+  { courtId: "142", name: "Tera 2" },
+  { courtId: "143", name: "Cherry 1" },
+  { courtId: "144", name: "Cherry 2" },
+  { courtId: "260", name: "MejorSet 1" },
+  { courtId: "248", name: "MejorSet 2" },
+];
 
 const Lst = () => {
   const images = useTournamentImages();
