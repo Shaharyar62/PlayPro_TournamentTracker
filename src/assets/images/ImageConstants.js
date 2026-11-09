@@ -159,6 +159,13 @@ import cscRight from "./fix/csc-right.png";
 import cscSponsor from "./cc.png";
 import cscSponsor2 from "./fix/csc-sponsor2.png";
 
+import seniorPadelBg from "./senior-padel-bg.png";
+import seniorPadelLeft from "./fix/seniorleft.png";
+import seniorPadelCup from "./fix/senior-cener.png";
+import seniorPadelRight from "./fix/seniorright.png";
+import seniorPadelSponsor from "./senior1.png";
+import seniorPadelSponsor2 from "./senior2.png";
+
 import igniteLeft from "./fix/ignite-left.png";
 import igniteCup from "./fix/ignite-center.png";
 import igniteBg from "./ignitebg.png";
@@ -354,6 +361,12 @@ export const ALL_IMAGES = {
   cscBg,
   cscSponsor,
   cscSponsor2,
+  seniorPadelLeft,
+  seniorPadelCup,
+  seniorPadelRight,
+  seniorPadelBg,
+  seniorPadelSponsor,
+  seniorPadelSponsor2,
   igniteLeft,
   igniteCup,
   igniteBg,
@@ -448,6 +461,12 @@ export const ImageConstants = {
   cscRight,
   cscSponsor,
   cscSponsor2,
+  seniorPadelBg,
+  seniorPadelLeft,
+  seniorPadelCup,
+  seniorPadelRight,
+  seniorPadelSponsor,
+  seniorPadelSponsor2,
   kfcPadelBg,
   kfcPadelRight,
   kfcPadelLeft,

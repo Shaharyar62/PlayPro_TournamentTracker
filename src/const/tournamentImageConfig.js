@@ -298,6 +298,15 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "cscSponsor",
     sponsor2: null,
   },
+  "senior-padel": {
+    leftLogo: "seniorPadelLeft",
+    cupLogo: "seniorPadelCup",
+    rightLogo: "seniorPadelRight",
+    playproWhite: "seniorPadelRight",
+    bg: "seniorPadelBg",
+    sponsor1: "seniorPadelSponsor",
+    sponsor2: "seniorPadelSponsor2",
+  },
   87: {
     leftLogo: "tapmad",
     cupLogo: "ppllogo",

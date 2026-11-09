@@ -364,7 +364,7 @@ const MatchScoreCard = () => {
 
     const raw = getTeamName(team);
     const parts = String(raw)
-      .split(/\s*(?:&|\/)\s*/)
+      .split(/\s*(?:\$|\/)\s*/)
       .map((s) => s.trim())
       .filter(Boolean);
     return parts.length > 0 ? parts : [raw];
