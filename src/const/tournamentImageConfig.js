@@ -325,6 +325,15 @@ export const TOURNAMENT_IMAGES = {
     sponsor1: "uplSponsor",
     sponsor2: "uplSponsor2",
   },
+  imd: {
+    leftLogo: "imdLeft",
+    cupLogo: "imdCup",
+    rightLogo: "imdRight",
+    playproWhite: "imdRight",
+    bg: "imdBg",
+    sponsor1: null,
+    sponsor2: null,
+  },
   87: {
     leftLogo: "tapmad",
     cupLogo: "ppllogo",

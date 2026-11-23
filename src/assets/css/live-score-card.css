@@ -33,31 +33,31 @@
   justify-self: center;
 }
 
-/* 5 cards: keep the top row of 3, center the last pair */
+/* Last row has 2 cards (5, 8, 11…): keep full rows of 3, center the pair */
 .multi-court-cards-grid--cols-3:has(
-  > .multi-court-cards-grid__item:nth-child(5):last-child
+  > .multi-court-cards-grid__item:nth-child(3n + 2):last-child
 ) {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
 .multi-court-cards-grid--cols-3:has(
-    > .multi-court-cards-grid__item:nth-child(5):last-child
+    > .multi-court-cards-grid__item:nth-child(3n + 2):last-child
   )
   > .multi-court-cards-grid__item {
   grid-column: span 2;
 }
 
 .multi-court-cards-grid--cols-3:has(
-    > .multi-court-cards-grid__item:nth-child(5):last-child
+    > .multi-court-cards-grid__item:nth-child(3n + 2):last-child
   )
-  > .multi-court-cards-grid__item:nth-child(4) {
+  > .multi-court-cards-grid__item:nth-last-child(2) {
   grid-column: 2 / span 2;
 }
 
 .multi-court-cards-grid--cols-3:has(
-    > .multi-court-cards-grid__item:nth-child(5):last-child
+    > .multi-court-cards-grid__item:nth-child(3n + 2):last-child
   )
-  > .multi-court-cards-grid__item:nth-child(5) {
+  > .multi-court-cards-grid__item:last-child {
   grid-column: 4 / span 2;
 }
 

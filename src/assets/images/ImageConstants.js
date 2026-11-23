@@ -179,6 +179,11 @@ import uplRight from "./fix/upl-right.png";
 import uplSponsor from "./ul1.png";
 import uplSponsor2 from "./ul2.png";
 
+import imdBg from "./imd-bg.png";
+import imdLeft from "./fix/imd-left.png";
+import imdCup from "./fix/imd-center.png";
+import imdRight from "./fix/imd-right.png";
+
 import igniteLeft from "./fix/ignite-left.png";
 import igniteCup from "./fix/ignite-center.png";
 import igniteBg from "./ignitebg.png";
@@ -391,6 +396,10 @@ export const ALL_IMAGES = {
   uplBg,
   uplSponsor,
   uplSponsor2,
+  imdLeft,
+  imdCup,
+  imdRight,
+  imdBg,
   igniteLeft,
   igniteCup,
   igniteBg,
@@ -502,6 +511,10 @@ export const ImageConstants = {
   uplRight,
   uplSponsor,
   uplSponsor2,
+  imdBg,
+  imdLeft,
+  imdCup,
+  imdRight,
   kfcPadelBg,
   kfcPadelRight,
   kfcPadelLeft,
