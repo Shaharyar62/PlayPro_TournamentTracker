@@ -184,6 +184,11 @@ import imdLeft from "./fix/imd-left.png";
 import imdCup from "./fix/imd-center.png";
 import imdRight from "./fix/imd-right.png";
 
+import firstServeBg from "./first-serve-bg.png";
+import firstServeLeft from "./fix/first-serve-left.png";
+import firstServeCup from "./fix/first-serve-center.png";
+import firstServeRight from "./fix/first-serve-right.png";
+
 import igniteLeft from "./fix/ignite-left.png";
 import igniteCup from "./fix/ignite-center.png";
 import igniteBg from "./ignitebg.png";
@@ -400,6 +405,10 @@ export const ALL_IMAGES = {
   imdCup,
   imdRight,
   imdBg,
+  firstServeLeft,
+  firstServeCup,
+  firstServeRight,
+  firstServeBg,
   igniteLeft,
   igniteCup,
   igniteBg,
@@ -515,6 +524,10 @@ export const ImageConstants = {
   imdLeft,
   imdCup,
   imdRight,
+  firstServeBg,
+  firstServeLeft,
+  firstServeCup,
+  firstServeRight,
   kfcPadelBg,
   kfcPadelRight,
   kfcPadelLeft,

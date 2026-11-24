@@ -52,6 +52,7 @@ import SeniorPadel from "./pages/SeniorPadel";
 import Lst from "./pages/Lst";
 import Upl from "./pages/Upl";
 import Imd from "./pages/Imd";
+import FirstServe from "./pages/FirstServe";
 import Ignite from "./pages/Ignite";
 import MultiClub from "./pages/MultiClub";
 import PadAzadiCup from "./pages/PadAzadiCup";
@@ -140,6 +141,7 @@ function App() {
                 <Route path="lst" element={<Lst />} />
                 <Route path="upl" element={<Upl />} />
                 <Route path="imd" element={<Imd />} />
+                <Route path="first-serve" element={<FirstServe />} />
                 <Route path="ignite" element={<Ignite />} />
                 <Route path="multiclub" element={<MultiClub />} />
                 <Route path="pad-azadi-cup" element={<PadAzadiCup />} />
